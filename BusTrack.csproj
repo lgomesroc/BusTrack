@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="BusTrack.DB\InterfacesDB\IRepositoriesDB\ITripPassengerRepositoryDB.cs~RF2b2a924.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="2.24.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="BusTrack.API\ControllersAPI\" />
+    <Folder Include="BusTrack.API\ModelsAPI\" />
+    <Folder Include="BusTrack.API\InterfacesAPI\" />
+    <Folder Include="BusTrack.API\ServicesAPI\" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,115 @@
+{
+  "Buses": [
+    {
+      "Number": "1001",
+      "Plate": "ABC-1234",
+      "Line": "Linha 100",
+      "Routes": ["1", "2", "3"]
+    },
+    {
+      "Number": "1002",
+      "Plate": "DEF-5678",
+      "Line": "Linha 200",
+      "Routes": ["4", "5", "6"]
+    },
+    {
+      "Number": "1003",
+      "Plate": "GHI-9012",
+      "Line": "Linha 300",
+      "Routes": ["7", "8", "9"]
+    }
+  ],
+  "Routes": [
+    {
+      "Name": "Rota 1",
+      "Origin": "Barra da Tijuca",
+      "Destination": "Centro do Rio"
+    },
+    {
+      "Name": "Rota 2",
+      "Origin": "Ilha do Governador",
+      "Destination": "Barra da Tijuca"
+    },
+    {
+      "Name": "Rota 3",
+      "Origin": "Copacabana",
+      "Destination": "Ipanema"
+    }
+  ],
+  "Trips": [
+    {
+      "BusId": 1,
+      "DepartureTime": "2024-01-21T08:00:00",
+      "ArrivalTime": "2024-01-21T09:00:00",
+      "Duration": 60,
+      "LimitPassengers": 40,
+      "Passengers": [],
+      "DriverId": 1
+    },
+    {
+      "BusId": 2,
+      "DepartureTime": "2024-01-21T10:00:00",
+      "ArrivalTime": "2024-01-21T11:00:00",
+      "Duration": 60,
+      "LimitPassengers": 50,
+      "Passengers": [],
+      "DriverId": 2
+    },
+    {
+      "BusId": 3,
+      "DepartureTime": "2024-01-21T12:00:00",
+      "ArrivalTime": "2024-01-21T13:00:00",
+      "Duration": 60,
+      "LimitPassengers": 30,
+      "Passengers": [],
+      "DriverId": 3
+    }
+  ],
+  "Passengers": [
+    {
+      "Name": "João da Silva",
+      "Cpf": "12345678900",
+      "Email": "joao@email.com",
+      "Phone": "(21) 98765-4321"
+    },
+    {
+      "Name": "Maria Santos",
+      "Cpf": "98765432100",
+      "Email": "maria@email.com",
+      "Phone": "(21) 12345-6789"
+    },
+    {
+      "Name": "Pedro Oliveira",
+      "Cpf": "09876543210",
+      "Email": "pedro@email.com",
+      "Phone": "(21) 55555-5555"
+    }
+  ],
+  "Drivers": [
+    {
+      "Login": "jose",
+      "Name": "José da Silva",
+      "Cpf": "11111111111",
+      "Email": "jose@email.com"
+    },
+    {
+      "Login": "ana",
+      "Name": "Ana Maria",
+      "Cpf": "22222222222",
+      "Email": "ana@email.com"
+    },
+    {
+      "Login": "carlos",
+      "Name": "Carlos Alberto",
+      "Cpf": "33333333333",
+      "Email": "carlos@email.com"
+    }
+  ],
+  "TripsPassengers": [
+    {
+      "TripId": 1,
+      "PassengerIds": [1, 2, 3]
+    }
+  ]
+}
+
