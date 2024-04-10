@@ -90,12 +90,12 @@ BusTrack
 ├── BusTrack.DB            # Pasta em relação ao Banco de Dados
 │   │
 │   ├── ClassesDB          # Pasta para as classes das tabelas do banco de dados
-│   │   ├── BusDB.cs       # Classe BusDB
-│   │   ├── DriverDB.cs    # Classe DriverDB
-│   │   ├── PassengerDB.cs # Classe PassengerDB
-│   │   ├── RouteDB.cs     # Classe RouteDB
-│   │   ├── TripDB.cs      # Classe TripDB
-│   │   └── TripsPassengerDB.cs  # Classe TripsPassengerDB
+│   │   ├── BusDB.cs       # Define a classe BusDB, representando a tabela de ônibus
+│   │   ├── DriverDB.cs    # Define a classe DriverDB, representando a tabela de motoristas
+│   │   ├── PassengerDB.cs # Define a classe PassengerDB, representando a tabela de passageiros
+│   │   ├── RouteDB.cs     # Define a classe RouteDB, representando a tabela de rotas
+│   │   ├── TripDB.cs      # Define a classe TripDB, representando a tabela de viagens
+│   │   └── TripsPassengerDB.cs  # Define a classe TripsPassengerDB, representando a tabela de associação entre viagens e passageiros
 │   │
 │   ├── DataBaseDB         # Pasta para configuração do banco de dados
 │   │   └── database.json  # Arquivo de configuração do banco de dados
