@@ -51,6 +51,17 @@ Se você estiver implantando este projeto em um ambiente de produção ou se a s
 Para mais informações sobre a instalação e configuração do MongoDB, consulte a documentação oficial do MongoDB.
 
 
+## Histórico de Atualizações
+
+### 2024-04-10
+
+- Adicionados serviços relacionados ao banco de dados na pasta ServicesDB.
+
+### 2024-04-07
+
+- Lançamento inicial do projeto no GitHub.
+
+
 ### Segurança
 
 Não foi pensado em segurança para esse projeto
@@ -124,7 +135,13 @@ BusTrack
 │   │   └── TripsPassengerRepositoryDB.cs # Repositório para a classe TripsPassengerDB
 │   │
 │   ├── ServicesDB         # Pasta para serviços do banco de dados
-│   │   └── TripServiceDB.cs  # Arquivo de serviço relacionado às viagens
+│   │   ├── BusSingleTripConstraintServiceDB.cs   # Serviço para restrição de viagem única
+│   │   ├── DepartureTimeValidationServiceDB.cs  # Serviço para validação de hora de partida
+│   │   ├── MinTripDurationContraintServiceDB.cs # Serviço para restrição de duração mínima de viagem
+│   │   ├── PassengerLimitValidationServiceDB.cs # Serviço para validação de limite de passageiros
+│   │   ├── TripMappingServiceDB.cs             # Serviço para mapeamento de viagem
+│   │   ├── TripServiceDB.cs                    # Serviço relacionado às viagens
+│   │   └── TripStatusUpdateServiceDB.cs        # Serviço para atualização de status de viagem
 │   │
 │   └── ...
 │
@@ -133,20 +150,26 @@ BusTrack
 │   └── src                # Pasta principal do código-fonte do frontend
 │       └── ...            # Arquivos do código-fonte do frontend
 │
-├── BusTrack.Tests         # Pasta para o projeto de testes
-│   ├── UnitTests          # Pasta para testes unitários
-│   │   └── ...            # Arquivos dos testes unitários
+├── BusTrack.Program       # Pasta para o projeto principal do programa
 │   │
+│   └── Program.cs         # Arquivo principal do programa
+│
+├── BusTrack.Tests         # Pasta para o projeto de testes
 │   ├── IntegrationTests   # Pasta para testes de integração
 │   │   └── ...            # Arquivos dos testes de integração
 │   │
 │   ├── PerformanceTests   # Pasta para testes de performance
 │   │   └── ...            # Arquivos dos testes de performance
 │   │
+│   ├── UnitTests          # Pasta para testes unitários
+│   │   └── ...            # Arquivos dos testes unitários
+│   │
 │   └── UsabilityTests     # Pasta para testes de usabilidade
 │       └── ...            # Arquivos dos testes de usabilidade
 │
 └── BusTrack.sln           # Arquivo de solução do Visual Studio
+
+
 
 
 ## Estrutura do Projeto
