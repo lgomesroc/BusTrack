@@ -51,7 +51,17 @@ Se você estiver implantando este projeto em um ambiente de produção ou se a s
 Para mais informações sobre a instalação e configuração do MongoDB, consulte a documentação oficial do MongoDB.
 
 
+### Segurança
+
+Não foi pensado em segurança para esse projeto
+
+
+
 ## Histórico de Atualizações
+
+### 2024-04-10
+
+- Adicionado a conexão do projeto com o banco de dados Bus Track
 
 ### 2024-04-10
 
@@ -61,10 +71,6 @@ Para mais informações sobre a instalação e configuração do MongoDB, consul
 
 - Lançamento inicial do projeto no GitHub.
 
-
-### Segurança
-
-Não foi pensado em segurança para esse projeto
 
 
 ## Estrutura das pastas
@@ -97,8 +103,12 @@ BusTrack
 │   │   ├── TripDB.cs      # Define a classe TripDB, representando a tabela de viagens
 │   │   └── TripsPassengerDB.cs  # Define a classe TripsPassengerDB, representando a tabela de associação entre viagens e passageiros
 │   │
+│   ├── ConnectionDB         # Pasta para configuração do banco de dados
+│   │   └── ConnectionDB.cs # Configura a conexão do banco de dados
+│   │
+│   │
 │   ├── DataBaseDB         # Pasta para configuração do banco de dados
-│   │   └── database.json  # Arquivo de configuração do banco de dados
+│   │   └── database.json  # Arquivo de configuração do banco de dados com o projeto.
 │   │
 │   ├── InterfacesDB       # Pasta para interfaces do banco de dados
 │   │   │
