@@ -1,4 +1,5 @@
-﻿using BusTrack.BusTrack.API.DTOModelAPI;
+﻿using BusTrack.BusTrack.API.DTOAPI;
+using BusTrack.BusTrack.DB.Classes;
 
 namespace BusTrack.BusTrack.API.InterfacesAPI.ServicesAPI
 {
@@ -6,12 +7,12 @@ namespace BusTrack.BusTrack.API.InterfacesAPI.ServicesAPI
     {
         Task<IEnumerable<DriverDTOAPI>> GetAllDrivers();
 
-        Task<DriverDTOAPI> GetDriverById(int id);
+        Task<DriverDTOAPI> GetDriverById(string id);
 
         Task<DriverDTOAPI> CreateDriver(DriverDTOAPI driver);
 
-        Task<DriverDTOAPI> UpdateDriver(int id, DriverDTOAPI driver);
+        Task<DriverDTOAPI> UpdateDriver(string id, DriverDTOAPI driver);
 
-        Task<bool> DeleteDriver(int id);
+        Task<bool> DeleteDriver(string id);
     }
 }

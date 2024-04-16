@@ -15,8 +15,5 @@ namespace BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB
         Task<TripPassengerDB> CreateTripsPassenger(TripPassengerDB tripsPassenger);
         Task<TripPassengerDB> UpdateTripsPassenger(int id, TripPassengerDB tripPassenger);
         Task<bool> DeleteTripsPassenger(int id);
-
-
-
     }
 }

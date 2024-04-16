@@ -7,7 +7,9 @@ namespace BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB
         Task<IEnumerable<BusDB>> GetAllBusesAsync();
         Task<BusDB> GetBusByIdAsync(string id);
         Task AddBusAsync(BusDB bus);
+        Task<BusDB> CreateBus(BusDB bus);
         Task UpdateBusAsync(string id, BusDB bus);
         Task DeleteBusAsync(string id);
+        Task<bool> DeleteBus(string id);
     }
 }

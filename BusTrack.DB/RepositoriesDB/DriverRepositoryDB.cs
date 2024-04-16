@@ -40,5 +40,12 @@ namespace BusTrack.BusTrack.DB.RepositoriesDB
             var filter = Builders<DriverDB>.Filter.Eq(d => d.Id, id);
             await _driversCollection.DeleteOneAsync(filter);
         }
+
+        public async Task<bool> DeleteDriver(string id)
+        {
+            var filter = Builders<DriverDB>.Filter.Eq(p => p.Id, id);
+            var deleteResult = await _driversCollection.DeleteOneAsync(filter);
+            return deleteResult.DeletedCount > 0;
+        }
     }
 }

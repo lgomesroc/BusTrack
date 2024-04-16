@@ -1,5 +1,4 @@
 ﻿using BusTrack.BusTrack.API.DTOAPI;
-using BusTrack.BusTrack.DB.Classes;
 
 namespace BusTrack.BusTrack.API.InterfacesAPI.ServicesAPI
 {

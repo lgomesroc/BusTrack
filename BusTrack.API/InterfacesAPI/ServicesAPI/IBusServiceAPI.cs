@@ -1,4 +1,4 @@
-﻿using BusTrack.BusTrack.API.DTOModelAPI;
+﻿using BusTrack.BusTrack.API.DTOAPI;
 
 namespace BusTrack.BusTrack.API.InterfacesAPI.ServicesAPI
 {
@@ -6,12 +6,12 @@ namespace BusTrack.BusTrack.API.InterfacesAPI.ServicesAPI
     {
         Task<IEnumerable<BusDTOAPI>> GetAllBuses();
 
-        Task<BusDTOAPI> GetBusById(int id);
+        Task<BusDTOAPI> GetBusById(string id);
 
         Task<BusDTOAPI> CreateBus(BusDTOAPI bus);
 
-        Task<BusDTOAPI> UpdateBus(int id, BusDTOAPI bus);
+        Task<BusDTOAPI> UpdateBus(string id, BusDTOAPI bus);
 
-        Task<bool> DeleteBus(int id);
+        Task<bool> DeleteBus(string id);
     }
 }

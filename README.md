@@ -197,13 +197,17 @@ BusTrack                    # Nome do projeto
 │
 ├── BusTrack.Program       # Pasta para o projeto principal do programa
 │   │
-│   ├── Extensions         # Pasta para extensões do programa
+│   ├── DataBaseServicesExtensionsProgram  # Pasta para extensões de serviços de banco de dados
+│   │   └── DataBaseServicesExtensionsProgram.cs  # Arquivo que contém métodos de extensão para adicionar serviços de banco de dados ao contêiner de injeção de dependência
 │   │
-│   ├── Middleware         # Pasta para middleware do programa
-│   │   └── ErrorHandlingMiddleware.cs  # Arquivo para a classe ErrorHandlingMiddleware
+│   ├── ExtensionsProgram  # Pasta para extensões do programa
+│   │   └── ServiceExtensionProgram.cs  # Arquivo que contém métodos de extensão para adicionar serviços personalizados ao contêiner de injeção de dependência
 │   │
-│   └── Program.cs         # Arquivo principal do programa
-│
+│   ├── MiddlewareProgram  # Pasta para middleware do programa
+│   │   └── ErrorHandlingMiddleware.cs  # Arquivo para a classe ErrorHandlingMiddleware, que é um middleware personalizado para lidar com erros
+│   │
+│   └── Program.cs  # Arquivo principal do programa, que configura e executa o aplicativo
+│   │
 ├── BusTrack.Tests         # Pasta para o projeto de testes
 │   ├── IntegrationTests   # Pasta para testes de integração
 │   │   └── ...            # Arquivos dos testes de integração

@@ -1,5 +1,7 @@
-﻿using BusTrack.BusTrack.DB.Classes;
+﻿using AutoMapper;
+using BusTrack.BusTrack.DB.Classes;
 using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
+using BusTrack.BusTrack.DB.ModelsDB;
 using MongoDB.Driver;
 
 namespace BusTrack.BusTrack.DB.RepositoriesDB
@@ -7,7 +9,13 @@ namespace BusTrack.BusTrack.DB.RepositoriesDB
     public class TripPassengerRepositoryDB : ITripPassengerRepositoryDB
     {
         private readonly IMongoCollection<TripPassengerDB> _tripPassengerCollection;
+        private readonly IMapper _mapper;
 
+        public TripPassengerRepositoryDB(IMongoDatabase database, IMapper mapper)
+        {
+            _tripPassengerCollection = database.GetCollection<TripPassengerDB>("TripsPassenger");
+            _mapper = mapper;
+        }
         public TripPassengerRepositoryDB(IMongoDatabase database)
         {
             _tripPassengerCollection = database.GetCollection<TripPassengerDB>("TripsPassenger");
@@ -41,29 +49,70 @@ namespace BusTrack.BusTrack.DB.RepositoriesDB
             await _tripPassengerCollection.DeleteOneAsync(filter);
         }
 
-        public Task<IEnumerable<TripPassengerDB>> GetAllTripPassengersAsync()
+        public async Task<IEnumerable<TripPassengerModelDB>> GetAllTripsPassengers()
         {
-            throw new NotImplementedException();
+            var tripPassengers = await _tripPassengerCollection.Find(_ => true).ToListAsync();
+            return _mapper.Map<IEnumerable<TripPassengerModelDB>>(tripPassengers);
         }
 
-        public Task<IEnumerable<int>> GetPassengerIdsByTripIdAsync(int tripId)
+        public async Task<IEnumerable<TripPassengerDB>> GetAllTripPassengersAsync()
         {
-            throw new NotImplementedException();
+            return await _tripPassengerCollection.Find(_ => true).ToListAsync();
         }
 
-        public Task<IEnumerable<int>> GetTripIdsByPassengerIdAsync(int passengerId)
+        public async Task<IEnumerable<int>> GetTripIdsByPassengerIdAsync(int passengerId)
         {
-            throw new NotImplementedException();
+            var filter = Builders<TripPassengerDB>.Filter.Eq(tp => tp.PassengerId, passengerId);
+            var tripPassengers = await _tripPassengerCollection.Find(filter).ToListAsync();
+            return tripPassengers.Select(tp => tp.TripId);
         }
 
-        public Task AddTripPassengerAsync(TripPassengerDB tripPassenger)
+        public async Task<IEnumerable<int>> GetPassengerIdsByTripIdAsync(int tripId)
         {
-            throw new NotImplementedException();
+            var filter = Builders<TripPassengerDB>.Filter.Eq(tp => tp.TripId, tripId);
+            var tripPassengers = await _tripPassengerCollection.Find(filter).ToListAsync();
+            return tripPassengers.Select(tp => tp.PassengerId);
         }
 
-        public Task RemoveTripPassengerAsync(int tripId, int passengerId)
+        public async Task AddTripPassengerAsync(TripPassengerDB tripPassenger)
         {
-            throw new NotImplementedException();
+            await _tripPassengerCollection.InsertOneAsync(tripPassenger);
+        }
+
+        public async Task RemoveTripPassengerAsync(int tripId, int passengerId)
+        {
+            var filter = Builders<TripPassengerDB>.Filter.And(
+                Builders<TripPassengerDB>.Filter.Eq(tp => tp.TripId, tripId),
+                Builders<TripPassengerDB>.Filter.Eq(tp => tp.PassengerId, passengerId)
+            );
+            await _tripPassengerCollection.DeleteOneAsync(filter);
+        }
+
+        public async Task<TripPassengerModelDB> GetTripsPassengerById(int id)
+        {
+            var filter = Builders<TripPassengerDB>.Filter.Eq(tp => tp.TripId, id);
+            var tripPassenger = await _tripPassengerCollection.Find(filter).FirstOrDefaultAsync();
+            return _mapper.Map<TripPassengerModelDB>(tripPassenger);
+        }
+
+        public async Task<TripPassengerDB> CreateTripsPassenger(TripPassengerDB tripsPassenger)
+        {
+            await _tripPassengerCollection.InsertOneAsync(tripsPassenger);
+            return tripsPassenger;
+        }
+
+        public async Task<TripPassengerDB> UpdateTripsPassenger(int id, TripPassengerDB tripPassenger)
+        {
+            var filter = Builders<TripPassengerDB>.Filter.Eq(tp => tp.TripId, id);
+            await _tripPassengerCollection.ReplaceOneAsync(filter, tripPassenger);
+            return tripPassenger;
+        }
+
+        public async Task<bool> DeleteTripsPassenger(int id)
+        {
+            var filter = Builders<TripPassengerDB>.Filter.Eq(tp => tp.TripId, id);
+            var deleteResult = await _tripPassengerCollection.DeleteOneAsync(filter);
+            return deleteResult.DeletedCount > 0;
         }
     }
 }

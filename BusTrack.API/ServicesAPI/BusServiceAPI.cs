@@ -11,21 +11,17 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         private readonly IBusRepositoryDB _busRepository;
         private readonly IMapper _mapper;
 
-        public BusServiceAPI(IBusRepositoryDB busRepository, IMapper mapper)
-        {
-            _busRepository = busRepository;
-            _mapper = mapper;
-        }
+        public BusServiceAPI(IBusRepositoryDB busRepository, IMapper mapper) => (_busRepository, _mapper) = (busRepository, mapper);
 
         public async Task<IEnumerable<BusDTOAPI>> GetAllBuses()
         {
-            var buses = await _busRepository.GetAllBuses();
+            var buses = await _busRepository.GetAllBusesAsync();
             return _mapper.Map<IEnumerable<BusDTOAPI>>(buses);
         }
 
-        public async Task<BusDTOAPI> GetBusById(int id)
+        public async Task<BusDTOAPI> GetBusById(string id)
         {
-            var bus = await _busRepository.GetBusById(id);
+            var bus = await _busRepository.GetBusByIdAsync(id);
             return _mapper.Map<BusDTOAPI>(bus);
         }
 
@@ -36,28 +32,31 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             return _mapper.Map<BusDTOAPI>(createdBus);
         }
 
-        public async Task<BusDTOAPI> UpdateBus(int id, BusDTOAPI busDto)
+        public async Task<BusDTOAPI> UpdateBus(string id, BusDTOAPI busDto)
         {
-            var existingBus = await _busRepository.GetBusById(id);
+            var existingBus = await _busRepository.GetBusByIdAsync(id);
             if (existingBus == null)
             {
                 return null; // Ônibus não encontrado
             }
 
             _mapper.Map(busDto, existingBus);
-            var updatedBus = await _busRepository.UpdateBus(existingBus);
+            await _busRepository.UpdateBusAsync(id, existingBus);
+
+            // Recarregue o ônibus atualizado do banco para retorno
+            var updatedBus = await _busRepository.GetBusByIdAsync(id);
             return _mapper.Map<BusDTOAPI>(updatedBus);
         }
 
-        public async Task<bool> DeleteBus(int id)
+        public async Task<bool> DeleteBus(string id)
         {
-            var existingBus = await _busRepository.GetBusById(id);
+            var existingBus = await _busRepository.GetBusByIdAsync(id);
             if (existingBus == null)
             {
                 return false; // Ônibus não encontrado
             }
 
-            var result = await _busRepository.DeleteBus(existingBus);
+            var result = await _busRepository.DeleteBus(existingBus.Id);
             return result;
         }
     }

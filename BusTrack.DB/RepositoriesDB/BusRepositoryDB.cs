@@ -40,5 +40,19 @@ namespace BusTrack.BusTrack.DB.RepositoriesDB
             var filter = Builders<BusDB>.Filter.Eq(b => b.Id, id);
             await _busesCollection.DeleteOneAsync(filter);
         }
+
+        public async Task<bool> DeleteBus(string id)
+        {
+            var filter = Builders<BusDB>.Filter.Eq(b => b.Id, id);
+            var result = await _busesCollection.DeleteOneAsync(filter);
+            return result.DeletedCount > 0;
+        }
+
+        public async Task<BusDB> CreateBus(BusDB bus)
+        {
+            await _busesCollection.InsertOneAsync(bus);
+            return bus;
+        }
+
     }
 }

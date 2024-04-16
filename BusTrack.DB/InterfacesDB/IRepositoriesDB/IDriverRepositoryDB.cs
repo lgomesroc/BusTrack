@@ -9,5 +9,6 @@ namespace BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB
         Task AddDriverAsync(DriverDB driver);
         Task UpdateDriverAsync(string id, DriverDB driver);
         Task DeleteDriverAsync(string id);
+        Task<bool> DeleteDriver(string id);
     }
 }

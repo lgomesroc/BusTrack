@@ -1,4 +1,4 @@
-using BusTrack.BusTrack.Program;
+using BusTrack.BusTrack.Program.DatabaseServicesExtensionsProgram;
 using BusTrack.BusTrack.Program.ExtensionsProgram;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +9,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Adiciona os serviços e middleware personalizados.
-builder.Services.AddCustomServices();
+//builder.Services.AddCustomServices();
+builder.Services.AddDatabaseServices(builder.Configuration); // Adiciona os serviços do banco de dados
 
 // Constrói a aplicação.
 var app = builder.Build();
@@ -20,7 +21,6 @@ ConfigurePipeline(app);
 // Executa a aplicação.
 app.Run();
 
-// Método de configuração do pipeline de requisição HTTP.
 void ConfigurePipeline(WebApplication app)
 {
     if (app.Environment.IsDevelopment())
@@ -41,4 +41,4 @@ void ConfigurePipeline(WebApplication app)
 
     // Adiciona middleware personalizado.
     app.AddCustomMiddleware();
-}   
+}
