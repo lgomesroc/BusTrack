@@ -7,7 +7,10 @@ namespace BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB
         Task<IEnumerable<RouteDB>> GetAllRoutesAsync();
         Task<RouteDB> GetRouteByIdAsync(string id);
         Task AddRouteAsync(RouteDB route);
-        Task UpdateRouteAsync(string id, RouteDB route);
+        Task<RouteDB> UpdateRouteAsync(string id, RouteDB route);
         Task DeleteRouteAsync(string id);
+        Task<bool> DeleteRoute(int id);
+        Task<RouteDB> CreateRoute(RouteDB route);
+
     }
 }

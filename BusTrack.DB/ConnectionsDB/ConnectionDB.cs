@@ -1,6 +1,6 @@
 ﻿using MongoDB.Driver;
 
-namespace BusTrack.BusTrack.DB.ConnectionDB
+namespace BusTrack.BusTrack.DB.ConnectionsDB
 {
     public class ConnectionDB
     {

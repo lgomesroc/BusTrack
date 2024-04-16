@@ -1,37 +1,44 @@
+using BusTrack.BusTrack.Program;
+using BusTrack.BusTrack.Program.ExtensionsProgram;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Adiciona os serviços necessários ao contêiner.
 builder.Services.AddControllers();
-
-// Configure the API documentation (Swagger/OpenAPI).
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Build the application.
+// Adiciona os serviços e middleware personalizados.
+builder.Services.AddCustomServices();
+
+// Constrói a aplicação.
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configuração do pipeline de requisição HTTP.
 ConfigurePipeline(app);
 
-// Run the application.
+// Executa a aplicação.
 app.Run();
 
-// Configuration method for the HTTP request pipeline.
+// Método de configuração do pipeline de requisição HTTP.
 void ConfigurePipeline(WebApplication app)
 {
     if (app.Environment.IsDevelopment())
     {
-        // Enable Swagger and Swagger UI for development environment.
+        // Habilita o Swagger e Swagger UI para ambiente de desenvolvimento.
         app.UseSwagger();
         app.UseSwaggerUI();
     }
 
-    // Redirect HTTP requests to HTTPS.
+    // Redireciona requisições HTTP para HTTPS.
     app.UseHttpsRedirection();
 
-    // Enable authorization.
+    // Habilita autorização.
     app.UseAuthorization();
 
-    // Map controllers to HTTP endpoints.
+    // Mapeia os controllers para os endpoints HTTP.
     app.MapControllers();
-}
+
+    // Adiciona middleware personalizado.
+    app.AddCustomMiddleware();
+}   

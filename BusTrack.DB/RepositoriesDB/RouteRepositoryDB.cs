@@ -29,16 +29,30 @@ namespace BusTrack.BusTrack.DB.RepositoriesDB
             await _routesCollection.InsertOneAsync(route);
         }
 
-        public async Task UpdateRouteAsync(string id, RouteDB route)
+        public async Task<RouteDB> CreateRoute(RouteDB route)
+        {
+            await _routesCollection.InsertOneAsync(route);
+            return route;
+        }
+
+        public async Task<RouteDB> UpdateRouteAsync(string id, RouteDB route)
         {
             var filter = Builders<RouteDB>.Filter.Eq(r => r.Id, id);
             await _routesCollection.ReplaceOneAsync(filter, route);
+            return route;
         }
 
         public async Task DeleteRouteAsync(string id)
         {
             var filter = Builders<RouteDB>.Filter.Eq(r => r.Id, id);
             await _routesCollection.DeleteOneAsync(filter);
+        }
+
+        public async Task<bool> DeleteRoute(int id)
+        {
+            var filter = Builders<RouteDB>.Filter.Eq(r => r.Id, id.ToString());
+            var result = await _routesCollection.DeleteOneAsync(filter);
+            return result.DeletedCount > 0;
         }
     }
 }

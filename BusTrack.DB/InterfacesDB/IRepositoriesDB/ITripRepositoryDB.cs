@@ -1,4 +1,5 @@
 ﻿using BusTrack.BusTrack.DB.Classes;
+using BusTrack.BusTrack.DB.ModelsDB;
 
 namespace BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB
 {
@@ -8,6 +9,8 @@ namespace BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB
         Task<TripDB> GetTripByIdAsync(string id);
         Task AddTripAsync(TripDB trip);
         Task UpdateTripAsync(string id, TripDB trip);
-        Task DeleteTripAsync(string id);
+        Task<bool> DeleteTripAsync(string id);
+        Task<IEnumerable<TripDB>> GetAllTrips();
+        Task<TripDB> GetTripById(int id);
     }
 }

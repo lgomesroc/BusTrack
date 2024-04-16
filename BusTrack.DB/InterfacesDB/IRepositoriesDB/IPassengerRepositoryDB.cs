@@ -9,5 +9,6 @@ namespace BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB
         Task AddPassengerAsync(PassengerDB passenger);
         Task UpdatePassengerAsync(string id, PassengerDB passenger);
         Task DeletePassengerAsync(string id);
+        Task<bool> DeletePassenger(string id);
     }
 }

@@ -35,10 +35,22 @@ namespace BusTrack.BusTrack.DB.RepositoriesDB
             await _tripsCollection.ReplaceOneAsync(filter, trip);
         }
 
-        public async Task DeleteTripAsync(string id)
+        public async Task<bool> DeleteTripAsync(string id)
         {
             var filter = Builders<TripDB>.Filter.Eq(t => t.Id, id);
-            await _tripsCollection.DeleteOneAsync(filter);
+            var result = await _tripsCollection.DeleteOneAsync(filter);
+            return result.DeletedCount > 0;
+        }
+
+        public async Task<TripDB> GetTripById(int id)
+        {
+            var filter = Builders<TripDB>.Filter.Eq(t => t.Id, id.ToString());
+            return await _tripsCollection.Find(filter).FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<TripDB>> GetAllTrips()
+        {
+            return await _tripsCollection.Find(_ => true).ToListAsync();
         }
     }
 }

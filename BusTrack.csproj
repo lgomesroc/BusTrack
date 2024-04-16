@@ -11,15 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="MongoDB.Driver" Version="2.24.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="BusTrack.API\ControllersAPI\" />
-    <Folder Include="BusTrack.API\ModelsAPI\" />
-    <Folder Include="BusTrack.API\InterfacesAPI\" />
-    <Folder Include="BusTrack.API\ServicesAPI\" />
   </ItemGroup>
 
 </Project>

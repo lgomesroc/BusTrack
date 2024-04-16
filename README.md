@@ -59,7 +59,11 @@ Não foi pensado em segurança para esse projeto
 
 ## Histórico de Atualizações
 
-### 2024-04-10
+### 2024-04-16
+
+- Dividindo o Program em pastas e arquivos menores.
+
+### 2024-04-11
 
 - Adicionado a conexão do projeto com o banco de dados Bus Track
 
@@ -73,23 +77,55 @@ Não foi pensado em segurança para esse projeto
 
 
 
-## Estrutura das pastas
+## Estrutura das pastas do projeto
 
-BusTrack
+BusTrack                    # Nome do projeto
 │
 ├── BusTrack.API           # Pasta em relação à API
 │   │
 │   ├── ControllersAPI     # Pasta para controladores da API
-│   │   └── ...            # Arquivos dos controladores da API
+│   │   ├── BusControllerAPI.cs           # Controller para gerenciar operações relacionadas a ônibus
+│   │   ├── DriverControllerAPI.cs        # Controller para gerenciar operações relacionadas a motoristas
+│   │   ├── PassengerControllerAPI.cs     # Controller para gerenciar operações relacionadas a passageiros
+│   │   ├── RouteControllerAPI.cs         # Controller para gerenciar operações relacionadas a rotas
+│   │   ├── TripControllerAPI.cs          # Controller para gerenciar operações relacionadas a viagens
+│   │   └── TripsPassengerControllerAPI.cs# Controller para gerenciar operações relacionadas a viagens
+│   │
+│   ├── DTOAPI              # Pasta para DTOs da API
+│   │   ├── BusDTOAPI.cs                  # DTO para ônibus
+│   │   ├── DriverDTOAPI.cs               # DTO para motoristas
+│   │   ├── PassengerDTOAPI.cs            # DTO para passageiros
+│   │   ├── RouteDTOAPI.cs                # DTO para rotas
+│   │   ├── TripDTOAPI.cs                 # DTO para viagens
+│   │   └── TripsPassengerDTOAPI.cs       # DTO para associação entre viagens e passageiros
 │   │
 │   ├── InterfacesAPI      # Pasta para interfaces da API
-│   │   └── ...            # Arquivos das interfaces da API
+│   │   ├── IServicesAPI      # Pasta para interfaces de serviço da API
+│   │   │   ├── IBusServiceAPI.cs               # Interface para serviço relacionado a ônibus
+│   │   │   ├── IDriverServiceAPI.cs            # Interface para serviço relacionado a motoristas
+│   │   │   ├── IPassengerServiceAPI.cs         # Interface para serviço relacionado a passageiros
+│   │   │   ├── IRouteServiceAPI.cs             # Interface para serviço relacionado a rotas
+│   │   │   ├── ITripServiceAPI.cs              # Interface para serviço relacionado a viagens
+│   │   │   └── ITripsPassengerServiceAPI.cs    # Interface para serviço relacionado a viagens
 │   │
 │   ├── ModelsAPI          # Pasta para modelos da API
-│   │   └── ...            # Arquivos dos modelos da API
+│   │   ├── BusModelAPI.cs                  # Modelo para ônibus
+│   │   ├── DriverModelAPI.cs               # Modelo para motoristas
+│   │   ├── PassengerModelAPI.cs            # Modelo para passageiros
+│   │   ├── RouteModelAPI.cs                # Modelo para rotas
+│   │   ├── TripModelAPI.cs                 # Modelo para viagens
+│   │   └── TripsPassengerModelAPI.cs       # Modelo para associação entre viagens e passageiros
+│   │
+│   ├── MappingsAPI        # Pasta para configuração de mapeamentos
+│   │   └── MappingProfileAPI.cs            # Arquivo para configuração de mapeamentos
 │   │
 │   ├── ServicesAPI        # Pasta para serviços da API
-│   │   └── ...            # Arquivos dos serviços da API
+│   │   ├── BusServiceAPI.cs                # Serviço para operações relacionadas a ônibus
+│   │   ├── DriverServiceAPI.cs             # Serviço para operações relacionadas a motoristas
+│   │   ├── PassengerServiceAPI.cs          # Serviço para operações relacionadas a passageiros
+│   │   ├── RouteServiceAPI.cs              # Serviço para operações relacionadas a rotas
+│   │   ├── TripServiceAPI.cs               # Serviço para operações relacionadas a viagens
+│   │   └── TripsPassengerServiceAPI.cs     # Serviço para operações relacionadas a associação entre viagens e passageiros
 │   │
 │   └── ...
 │
@@ -103,9 +139,8 @@ BusTrack
 │   │   ├── TripDB.cs      # Define a classe TripDB, representando a tabela de viagens
 │   │   └── TripsPassengerDB.cs  # Define a classe TripsPassengerDB, representando a tabela de associação entre viagens e passageiros
 │   │
-│   ├── ConnectionDB         # Pasta para configuração do banco de dados
+│   ├── ConnectionsDB       # Pasta para configuração do banco de dados
 │   │   └── ConnectionDB.cs # Configura a conexão do banco de dados
-│   │
 │   │
 │   ├── DataBaseDB         # Pasta para configuração do banco de dados
 │   │   └── database.json  # Arquivo de configuração do banco de dados com o projeto.
@@ -162,6 +197,11 @@ BusTrack
 │
 ├── BusTrack.Program       # Pasta para o projeto principal do programa
 │   │
+│   ├── Extensions         # Pasta para extensões do programa
+│   │
+│   ├── Middleware         # Pasta para middleware do programa
+│   │   └── ErrorHandlingMiddleware.cs  # Arquivo para a classe ErrorHandlingMiddleware
+│   │
 │   └── Program.cs         # Arquivo principal do programa
 │
 ├── BusTrack.Tests         # Pasta para o projeto de testes
@@ -177,9 +217,14 @@ BusTrack
 │   └── UsabilityTests     # Pasta para testes de usabilidade
 │       └── ...            # Arquivos dos testes de usabilidade
 │
+├── BusTrack.Updater    # Pasta para atualização de dados
+│  │
+│  ├── Passenger     # Pasta para atualização de dados de passageiros
+│  │  └── PassengerNameUpdater.cs # Arquivo para atualizar nomes de passageiros
+│  │
+│  └── ...      # Outras subpastas para diferentes tipos de atualização (se necessário)
+│
 └── BusTrack.sln           # Arquivo de solução do Visual Studio
-
-
 
 
 ## Estrutura do Projeto
