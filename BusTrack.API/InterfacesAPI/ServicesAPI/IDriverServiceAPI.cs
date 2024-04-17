@@ -14,5 +14,7 @@ namespace BusTrack.BusTrack.API.InterfacesAPI.ServicesAPI
         Task<DriverDTOAPI> UpdateDriver(string id, DriverDTOAPI driver);
 
         Task<bool> DeleteDriver(string id);
+
+        List<DriverDB> GetDrivers();
     }
 }

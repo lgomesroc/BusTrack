@@ -1,4 +1,5 @@
 ﻿using BusTrack.BusTrack.API.DTOAPI;
+using BusTrack.BusTrack.DB.Classes;
 
 namespace BusTrack.BusTrack.API.InterfacesAPI.ServicesAPI
 {
@@ -13,5 +14,8 @@ namespace BusTrack.BusTrack.API.InterfacesAPI.ServicesAPI
         Task<BusDTOAPI> UpdateBus(string id, BusDTOAPI bus);
 
         Task<bool> DeleteBus(string id);
+
+        List<BusDB> GetBuses(); 
+
     }
 }

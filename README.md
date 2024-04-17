@@ -61,6 +61,10 @@ Não foi pensado em segurança para esse projeto
 
 ### 2024-04-16
 
+- Criado a estrutura da API.
+
+### 2024-04-15
+
 - Dividindo o Program em pastas e arquivos menores.
 
 ### 2024-04-11
@@ -198,13 +202,14 @@ BusTrack                    # Nome do projeto
 ├── BusTrack.Program       # Pasta para o projeto principal do programa
 │   │
 │   ├── DataBaseServicesExtensionsProgram  # Pasta para extensões de serviços de banco de dados
-│   │   └── DataBaseServicesExtensionsProgram.cs  # Arquivo que contém métodos de extensão para adicionar serviços de banco de dados ao contêiner de injeção de dependência
+│   │   └── DataBaseServicesExtensionsProgram.cs  # Contém métodos de extensão para adicionar serviços de banco de dados ao contêiner de injeção de dependência
 │   │
 │   ├── ExtensionsProgram  # Pasta para extensões do programa
+│   │   └── ExtensionsProgram.cs  # Arquivo que contém métodos de extensão para adicionar serviços personalizados ao contêiner de injeção de dependência
 │   │   └── ServiceExtensionProgram.cs  # Arquivo que contém métodos de extensão para adicionar serviços personalizados ao contêiner de injeção de dependência
 │   │
 │   ├── MiddlewareProgram  # Pasta para middleware do programa
-│   │   └── ErrorHandlingMiddleware.cs  # Arquivo para a classe ErrorHandlingMiddleware, que é um middleware personalizado para lidar com erros
+│   │   └── ErrorHandlingMiddleware.cs  # Arquivo que é um middleware personalizado para lidar com erros
 │   │
 │   └── Program.cs  # Arquivo principal do programa, que configura e executa o aplicativo
 │   │
@@ -223,7 +228,10 @@ BusTrack                    # Nome do projeto
 │
 ├── BusTrack.Updater    # Pasta para atualização de dados
 │  │
-│  ├── Passenger     # Pasta para atualização de dados de passageiros
+│  ├── DriversUpdater       # Pasta para atualização de dados de motoristas
+│  │  └── DriverNameUpdater.cs # Arquivo para atualizar nomes de motoristas
+│  │
+│  ├── PassengerUpdater     # Pasta para atualização de dados de passageiros
 │  │  └── PassengerNameUpdater.cs # Arquivo para atualizar nomes de passageiros
 │  │
 │  └── ...      # Outras subpastas para diferentes tipos de atualização (se necessário)

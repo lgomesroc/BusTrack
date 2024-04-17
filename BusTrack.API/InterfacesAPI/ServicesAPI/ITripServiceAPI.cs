@@ -15,5 +15,7 @@ namespace BusTrack.BusTrack.API.InterfacesAPI.ServicesAPI
 
         Task<bool> DeleteTrip(int id);
 
+        List<TripDB> GetTrip();
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using BusTrack.BusTrack.API.DTOAPI;
 using BusTrack.BusTrack.API.ModelsAPI;
+using BusTrack.BusTrack.DB.Classes;
 
 namespace BusTrack.BusTrack.API.InterfacesAPI.ServicesAPI
 {
@@ -12,7 +13,8 @@ namespace BusTrack.BusTrack.API.InterfacesAPI.ServicesAPI
         Task<RouteDTOAPI> CreateRoute(RouteDTOAPI route);
 
         Task<RouteDTOAPI> UpdateRouteAsync(string id, RouteModelAPI route);
-
         Task<bool> DeleteRoute(int id);
+
+        List<RouteDB> GetRoutes();
     }
 }

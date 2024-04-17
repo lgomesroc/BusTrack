@@ -1,4 +1,5 @@
 ﻿using BusTrack.BusTrack.API.DTOAPI;
+using BusTrack.BusTrack.DB.Classes;
 
 namespace BusTrack.BusTrack.API.InterfacesAPI.ServicesAPI
 {
@@ -9,6 +10,7 @@ namespace BusTrack.BusTrack.API.InterfacesAPI.ServicesAPI
         Task<TripPassengerDTOAPI> GetTripsPassengerById(int id);
         Task<TripPassengerDTOAPI> CreateTripsPassenger(TripPassengerDTOAPI tripsPassenger);
         Task<TripPassengerDTOAPI> UpdateTripsPassenger(int id, TripPassengerDTOAPI tripsPassenger);
+        List<TripPassengerDB> GetTripsPassengers();
 
     }
 }

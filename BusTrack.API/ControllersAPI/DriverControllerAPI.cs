@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BusTrack.BusTrack.API.InterfacesAPI.ServicesAPI;
+using BusTrack.BusTrack.API.ServicesAPI;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BusTrack.BusTrack.API.ControllersAPI
 {
@@ -6,6 +8,12 @@ namespace BusTrack.BusTrack.API.ControllersAPI
     [ApiController]
     public class DriverControllerAPI : ControllerBase
     {
+        private readonly IDriverServiceAPI _driveService;
+
+        public DriverControllerAPI(IDriverServiceAPI driveService)
+        {
+            _driveService = driveService;
+        }
         // GET: api/Driver
         [HttpGet]
         public IActionResult Get()

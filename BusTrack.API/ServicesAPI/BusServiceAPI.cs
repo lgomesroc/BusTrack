@@ -19,11 +19,18 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             return _mapper.Map<IEnumerable<BusDTOAPI>>(buses);
         }
 
+        public List<BusDB> GetBuses()
+        {
+            var buses = _busRepository.GetAllBusesAsync().Result;
+            return buses.ToList();
+        }
+
         public async Task<BusDTOAPI> GetBusById(string id)
         {
             var bus = await _busRepository.GetBusByIdAsync(id);
             return _mapper.Map<BusDTOAPI>(bus);
         }
+
 
         public async Task<BusDTOAPI> CreateBus(BusDTOAPI busDto)
         {

@@ -9,7 +9,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Adiciona os serviços e middleware personalizados.
-//builder.Services.AddCustomServices();
 builder.Services.AddDatabaseServices(builder.Configuration); // Adiciona os serviços do banco de dados
 
 // Constrói a aplicação.

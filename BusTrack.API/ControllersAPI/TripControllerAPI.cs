@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BusTrack.BusTrack.API.InterfacesAPI.ServicesAPI;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BusTrack.BusTrack.API.ControllersAPI
 {
@@ -6,6 +7,12 @@ namespace BusTrack.BusTrack.API.ControllersAPI
     [ApiController]
     public class TripControllerAPI : ControllerBase
     {
+        private readonly ITripServiceAPI _tripService;
+
+        public TripControllerAPI(ITripServiceAPI tripService)
+        {
+            _tripService = tripService;
+        }
         // GET: api/Trip
         [HttpGet]
         public IActionResult Get()

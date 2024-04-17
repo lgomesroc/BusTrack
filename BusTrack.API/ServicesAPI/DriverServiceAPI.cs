@@ -30,6 +30,12 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
         }
 
+        public List<DriverDB> GetDrivers()
+        {
+            var drivers = _driverRepository.GetAllDriversAsync().Result;
+            return drivers.ToList();
+        }
+
         public async Task<DriverDTOAPI> GetDriverById(string id)
         {
             var driver = await _driverRepository.GetDriverByIdAsync(id);
