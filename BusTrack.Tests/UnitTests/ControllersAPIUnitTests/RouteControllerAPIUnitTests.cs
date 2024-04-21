@@ -23,7 +23,7 @@ namespace BusTrack.Tests.UnitTests.ControllersAPIUnitTests.TripControllerAPIUnit
         public void Get_ReturnsOkResult()
         {
             // Arrange
-            _routeService.Setup(service => service.GetRoutes()).Returns(new List<RouteDB>() {/* retornar uma lista de rotas */});
+            _routeService.Setup(service => service.GetRoutes()).Returns(Task.FromResult(new List<RouteDB>() {/* retornar uma lista de rotas */}));
             // Act
             var result = _controller.Get();
 

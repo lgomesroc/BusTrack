@@ -5,12 +5,11 @@ namespace BusTrack.BusTrack.API.InterfacesAPI.ServicesAPI
 {
     public interface ITripsPassengerServiceAPI
     {
-        Task<bool> DeleteTripsPassenger(int id);
+        Task<bool> DeleteTripsPassenger(string id);
         Task<IEnumerable<TripPassengerDTOAPI>> GetAllTripsPassengers();
-        Task<TripPassengerDTOAPI> GetTripsPassengerById(int id);
+        Task<TripPassengerDTOAPI> GetTripsPassengerById(string id);
         Task<TripPassengerDTOAPI> CreateTripsPassenger(TripPassengerDTOAPI tripsPassenger);
-        Task<TripPassengerDTOAPI> UpdateTripsPassenger(int id, TripPassengerDTOAPI tripsPassenger);
-        List<TripPassengerDB> GetTripsPassengers();
-
+        Task<TripPassengerDTOAPI> UpdateTripsPassenger(string id, TripPassengerDTOAPI tripsPassenger);
+        Task<List<TripPassengerDB>> GetTripsPassengers();
     }
 }

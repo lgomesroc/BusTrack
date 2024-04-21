@@ -25,7 +25,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         }
 
 
-        public async Task<RouteDTOAPI> GetRouteById(int id)
+        public async Task<RouteDTOAPI> GetRouteById(string id)
         {
             var route = await _routeRepository.GetRouteByIdAsync(id.ToString());
             return _mapper.Map<RouteDTOAPI>(route);
@@ -55,9 +55,15 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             return _mapper.Map<RouteDTOAPI>(updatedRouteDB);
         }
 
-        public async Task<bool> DeleteRoute(int id)
+        public async Task<bool> DeleteRoute(string id)
         {
             return await _routeRepository.DeleteRoute(id);
+        }
+
+        public async Task<List<RouteDB>> GetRoutes()
+        {
+            var route = (await _routeRepository.GetAllRoutesAsync()).ToList();
+            return route;
         }
     }
 }

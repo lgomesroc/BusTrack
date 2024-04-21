@@ -17,7 +17,6 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         [HttpGet]
         public IActionResult Get()
         {
-            // Implementação para retornar a lista de viagens
             return Ok("Get all trips");
         }
 
@@ -25,7 +24,6 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         [HttpGet("{id}", Name = "GetTrip")]
         public IActionResult GetById(int id)
         {
-            // Implementação para retornar uma viagem pelo ID
             return Ok($"Get trip with ID: {id}");
         }
 
@@ -33,7 +31,6 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         [HttpPost]
         public IActionResult Post([FromBody] object value)
         {
-            // Implementação para criar uma nova viagem
             return Ok("Create new trip");
         }
 
@@ -41,7 +38,6 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] object value)
         {
-            // Implementação para atualizar uma viagem existente
             return Ok($"Update trip with ID: {id}");
         }
 
@@ -49,7 +45,6 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            // Implementação para excluir uma viagem pelo ID
             return Ok($"Delete trip with ID: {id}");
         }
     }

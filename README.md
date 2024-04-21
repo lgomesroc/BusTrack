@@ -59,6 +59,14 @@ Não foi pensado em segurança para esse projeto
 
 ## Histórico de Atualizações
 
+### 2024-04-17
+
+- Criado a estrutura de testes de integração.
+
+### 2024-04-17
+
+- Criado a estrutura de testes unitários.
+
 ### 2024-04-16
 
 - Criado a estrutura da API.
@@ -213,19 +221,42 @@ BusTrack                    # Nome do projeto
 │   │
 │   └── Program.cs  # Arquivo principal do programa, que configura e executa o aplicativo
 │   │
-├── BusTrack.Tests         # Pasta para o projeto de testes
-│   ├── IntegrationTests   # Pasta para testes de integração
-│   │   └── ...            # Arquivos dos testes de integração
+├── BusTrack.Tests
 │   │
-│   ├── PerformanceTests   # Pasta para testes de performance
-│   │   └── ...            # Arquivos dos testes de performance
+│   ├── IntegrationTests  # Contém testes de integração do sistema.
+│   │   ├── CustomWebApplicationFactory  # Contém classes auxiliares para testes de integração.
+│   │   │   └── CustomWebApplicationFactory.cs # Define a lógica para criar instância de teste do seu aplicativo web, facilitando a configuração e o controle do ambiente de teste.
 │   │
-│   ├── UnitTests          # Pasta para testes unitários
-│   │   └── ...            # Arquivos dos testes unitários
+│   │   ├── ControllersAPIIntegrationTests  # Testes de integração de controladores de API.
+│   │   │   ├── BusControllerAPIIntegrationTest.cs  # Testa o controlador de ônibus da API.
+│   │   │   ├── DriverControllerAPIIntegrationTest.cs  # Testa o controlador de motoristas da API.
+│   │   │   ├── PassengerControllerAPIIntegrationTest.cs  # Testa o controlador de passageiros da API.
+│   │   │   ├── RouteControllerAPIIntegrationTest.cs  # Testa o controlador de rotas da API.
+│   │   │   ├── TripControllerAPIIntegrationTest.cs  # Testa o controlador de viagens da API.
+│   │   │   └── TripsPassengerControllerAPIIntegrationTest.cs  # Testa o controlador de viagens de passageiros da API.
+│   │   │   
+│   ├── ServicesAPIIntegrationTests  # Testes de integração de serviços da API.
+│   │   ├── BusServiceAPIIntegrationTest.cs  # Testa o serviço de ônibus da API.
+│   │   ├── DriverServiceAPIIntegrationTest.cs  # Testa o serviço de motoristas da API.
+│   │   ├── PassengerServiceAPIIntegrationTest.cs  # Testa o serviço de passageiros da API.
+│   │   ├── RouteServiceAPIIntegrationTest.cs  # Testa o serviço de rotas da API.
+│   │   ├── TripServiceAPIIntegrationTest.cs  # Testa o serviço de viagens da API.
+│   │   └── TripsPassengerServiceAPIIntegrationTest.cs  # Testa o serviço de viagens de passage pasageiros da API.
 │   │
-│   └── UsabilityTests     # Pasta para testes de usabilidade
-│       └── ...            # Arquivos dos testes de usabilidade
-│
+│   ├── PerformanceTests  # Contém testes de performance do sistema (arquivos não mostrados).
+│   │
+│   ├── UnitTests  # Contém testes unitários do sistema.
+│   │   ├── ControllersAPIUnitTests  # Testes unitários de controladores de API.
+│   │   │   ├── BusControllerAPIUnitTests.cs  # Testa a lógica do controlador de ônibus da API.
+│   │   │   ├── DriverControllerAPIUnitTests.cs  # Testa a lógica do controlador de motoristas da API.
+│   │   │   ├── PassengerControllerAPIUnitTests.cs  # Testa a lógica do controlador de passageiros da API.
+│   │   │   ├── RouteControllerAPIUnitTests.cs  # Testa a lógica do controlador de rotas da API.
+│   │   │   ├── TripControllerAPIUnitTests.cs  # Testa a lógica do controlador de viagens da API.
+│   │   │   └── TripsPassengerControllerAPIUnitTests.cs  # Testa a lógica do controlador de viagens de passageiros da API.
+│   └── ...  # Outros testes unitários (arquivos não mostrados).
+│   │
+│   ├── UsabilityTests  # Contém testes de usabilidade do sistema (arquivos não mostrados).
+│ 
 ├── BusTrack.Updater    # Pasta para atualização de dados
 │  │
 │  ├── DriversUpdater       # Pasta para atualização de dados de motoristas

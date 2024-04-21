@@ -2,10 +2,10 @@
 {
     public class TripDTOAPI
     {
-        public int Id { get; set; }
-        public int BusId { get; set; }
-        public int DriverId { get; set; }
-        public int RouteId { get; set; }
+        public string? Id { get; set; }
+        public string? BusId { get; set; }
+        public string? DriverId { get; set; }
+        public string? RouteId { get; set; }
         public DateTime DepartureTime { get; set; }
     }
 }

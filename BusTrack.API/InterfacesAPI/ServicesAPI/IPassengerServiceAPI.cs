@@ -11,6 +11,8 @@ namespace BusTrack.BusTrack.API.InterfacesAPI.ServicesAPI
         Task<PassengerDTOAPI> CreatePassenger(PassengerDTOAPI passenger);
         Task<PassengerDTOAPI> UpdatePassenger(string id, PassengerDTOAPI passenger);
         Task<bool> DeletePassenger(string id);
-        List<PassengerDB> GetPassengers();
+        Task<List<PassengerDB>> GetPassengers();
+        Task UpdatePassengerAsync(string id, PassengerDTOAPI passenger);
+
     }
 }

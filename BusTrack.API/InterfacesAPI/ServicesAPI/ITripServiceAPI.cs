@@ -6,16 +6,10 @@ namespace BusTrack.BusTrack.API.InterfacesAPI.ServicesAPI
     public interface ITripServiceAPI
     {
         Task<IEnumerable<TripDTOAPI>> GetAllTrips();
-
         Task<TripDTOAPI> GetTripById(int id);
-
         Task<TripDTOAPI> CreateTrip(TripDTOAPI trip);
-
         Task<TripDTOAPI> UpdateTrip(int id, TripDTOAPI trip);
-
         Task<bool> DeleteTrip(int id);
-
-        List<TripDB> GetTrip();
-
+        Task<List<TripDB>> GetTrip();
     }
 }

@@ -18,7 +18,6 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         [HttpGet]
         public IActionResult Get()
         {
-            // Implementação para retornar a lista de motoristas
             return Ok("Get all drivers");
         }
 
@@ -26,7 +25,6 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         [HttpGet("{id}", Name = "GetDriver")]
         public IActionResult GetById(int id)
         {
-            // Implementação para retornar um motorista pelo ID
             return Ok($"Get driver with ID: {id}");
         }
 
@@ -34,7 +32,6 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         [HttpPost]
         public IActionResult Post([FromBody] object value)
         {
-            // Implementação para criar um novo motorista
             return Ok("Create new driver");
         }
 
@@ -42,7 +39,6 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] object value)
         {
-            // Implementação para atualizar um motorista existente
             return Ok($"Update driver with ID: {id}");
         }
 
@@ -50,7 +46,6 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            // Implementação para excluir um motorista pelo ID
             return Ok($"Delete driver with ID: {id}");
         }
     }

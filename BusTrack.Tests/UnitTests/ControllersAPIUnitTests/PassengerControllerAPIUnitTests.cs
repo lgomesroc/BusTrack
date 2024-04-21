@@ -23,7 +23,8 @@ namespace BusTrack.Tests.UnitTests.ControllersAPIUnitTests.TripControllerAPIUnit
         public void Get_ReturnsOkResult()
         {
             // Arrange
-            _passengerService.Setup(service => service.GetPassengers()).Returns(new List<PassengerDB>() {/* retornar uma lista de passageiros */});
+            _passengerService.Setup(service => service.GetPassengers()).Returns(Task.FromResult(new List<PassengerDB>() {/* retornar uma lista de passageiros */}));
+
             // Act
             var result = _controller.Get();
 

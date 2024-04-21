@@ -68,5 +68,11 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         {
             return await _tripRepository.DeleteTripAsync(id.ToString());
         }
+
+        public async Task<List<TripDB>> GetTrip()
+        {
+            var trip = (await _tripRepository.GetAllTripsAsync()).ToList();
+            return trip;
+        }
     }
 }

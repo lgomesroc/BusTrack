@@ -25,7 +25,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
         public async Task<IEnumerable<PassengerDTOAPI>> GetAllPassengers()
         {
-            var passengers = await _passengerRepository.GetAllPassengersAsync(); // Use o método atualizado
+            var passengers = await _passengerRepository.GetAllPassengersAsync();
             return _mapper.Map<IEnumerable<PassengerDTOAPI>>(passengers);
         }
 
@@ -34,7 +34,6 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             var passenger = await _passengerRepository.GetPassengerByIdAsync(id);
             if (passenger == null)
             {
-                // Tratar o caso de passageiro não encontrado
                 return null;
             }
             return _mapper.Map<PassengerDTOAPI>(passenger);
@@ -44,23 +43,19 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         {
             var passengerModel = _mapper.Map<PassengerModelAPI>(passenger);
 
-            // Converter PassengerModelAPI para PassengerDB antes de chamar AddPassengerAsync
             var passengerDB = _mapper.Map<PassengerDB>(passengerModel);
 
             await _passengerRepository.AddPassengerAsync(passengerDB);
 
-            // Converter de volta para PassengerModelAPI para retorno
             return _mapper.Map<PassengerDTOAPI>(passengerDB);
         }
 
         public async Task<PassengerDTOAPI> UpdatePassenger(string id, PassengerDTOAPI passenger)
         {
-            // Mapeie o PassengerDTOAPI para PassengerDB antes de chamar UpdatePassengerAsync
             var passengerDB = _mapper.Map<PassengerDB>(passenger);
 
             await _passengerRepository.UpdatePassengerAsync(id, passengerDB);
 
-            // Recarregue o passageiro atualizado do banco para retorno (opcional)
             var updatedPassenger = await _passengerRepository.GetPassengerByIdAsync(id);
             return _mapper.Map<PassengerDTOAPI>(updatedPassenger);
         }
@@ -69,7 +64,6 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         {
             var filter = Builders<PassengerDB>.Filter.Eq("Id", id);
 
-            // Crie uma classe de atualização específica para o nome
             var nameUpdate = new PassengerNameUpdater { Name = passenger.Name };
 
             var update = Builders<PassengerDB>.Update.Set(p => p.Name, nameUpdate.Name);
@@ -85,6 +79,19 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         public async Task<bool> DeletePassenger(string id)
         {
             return await _passengerRepository.DeletePassenger(id);
+        }
+
+        public async Task<List<PassengerDB>> GetPassengers()
+        {
+            var passengers = (await _passengerRepository.GetAllPassengersAsync()).ToList();
+            return passengers;
+        }
+
+        public async Task UpdatePassengerAsync(string id, PassengerDTOAPI passenger)
+        {
+            var passengerDB = _mapper.Map<PassengerDB>(passenger);
+
+            await _passengerRepository.UpdatePassengerAsync(id, passengerDB);
         }
     }
 }

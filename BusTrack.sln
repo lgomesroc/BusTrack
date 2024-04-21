@@ -5,7 +5,11 @@ VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusTrack", "BusTrack.csproj", "{7CA10DCE-DA32-4458-8483-7D16A07605A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusTrack.Tests", "BusTrack.Tests\BusTrack.Tests.csproj", "{795C9E67-01E4-44BD-B006-7B1536A2D9B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusTrack.Tests", "BusTrack.Tests\BusTrack.Tests.csproj", "{795C9E67-01E4-44BD-B006-7B1536A2D9B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusTrack.Frontend.Server", "BusTrack.Frontend\BusTrack.Frontend.Server\BusTrack.Frontend.Server.csproj", "{266A4F84-185D-468E-9034-7E317EBBED54}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "bustrack.frontend.client", "BusTrack.Frontend\bustrack.frontend.client\bustrack.frontend.client.esproj", "{823CDBC2-AA6C-4030-A3AF-F8FF8D89F4BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,16 @@ Global
 		{795C9E67-01E4-44BD-B006-7B1536A2D9B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{795C9E67-01E4-44BD-B006-7B1536A2D9B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{795C9E67-01E4-44BD-B006-7B1536A2D9B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{266A4F84-185D-468E-9034-7E317EBBED54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{266A4F84-185D-468E-9034-7E317EBBED54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{266A4F84-185D-468E-9034-7E317EBBED54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{266A4F84-185D-468E-9034-7E317EBBED54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{823CDBC2-AA6C-4030-A3AF-F8FF8D89F4BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{823CDBC2-AA6C-4030-A3AF-F8FF8D89F4BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{823CDBC2-AA6C-4030-A3AF-F8FF8D89F4BC}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{823CDBC2-AA6C-4030-A3AF-F8FF8D89F4BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{823CDBC2-AA6C-4030-A3AF-F8FF8D89F4BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{823CDBC2-AA6C-4030-A3AF-F8FF8D89F4BC}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

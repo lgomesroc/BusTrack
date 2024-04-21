@@ -5,7 +5,7 @@ namespace BusTrack.BusTrack.DB.Classes
 {
     public class TripPassengerDB
     {
-        public int TripId { get; set; }
-        public int PassengerId { get; set; }
+        public string? TripId { get; set; }
+        public string? PassengerId { get; set; }
     }
 }
