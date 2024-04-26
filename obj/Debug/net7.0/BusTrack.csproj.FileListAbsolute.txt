@@ -1,0 +1,7 @@
+D:\Programas testes\BusTrack\obj\Debug\net7.0\BusTrack.csproj.AssemblyReference.cache
+D:\Programas testes\BusTrack\obj\Debug\net7.0\BusTrack.GeneratedMSBuildEditorConfig.editorconfig
+D:\Programas testes\BusTrack\obj\Debug\net7.0\BusTrack.AssemblyInfoInputs.cache
+D:\Programas testes\BusTrack\obj\Debug\net7.0\BusTrack.AssemblyInfo.cs
+D:\Programas testes\BusTrack\obj\Debug\net7.0\BusTrack.csproj.CoreCompileInputs.cache
+D:\Programas testes\BusTrack\obj\Debug\net7.0\BusTrack.MvcApplicationPartsAssemblyInfo.cs
+D:\Programas testes\BusTrack\obj\Debug\net7.0\BusTrack.MvcApplicationPartsAssemblyInfo.cache

@@ -7,6 +7,7 @@ using Moq;
 using MongoDB.Driver;
 using BusTrack.Tests.MappingsIntegrationTests;
 using BusTrack.BusTrack.API.ModelsAPI;
+using BusTrack.BusTrack.DB.ModelsDB;
 
 namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 {
@@ -27,9 +28,10 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         [Fact]
         public async Task GetAllTripsPassengers_ReturnsAllTripsPassengers()
         {
+            List<TripPassengerDB> tripsPassengers = new List<TripPassengerDB>();
             // Arrange
-            var tripsPassengers = new List<TripPassengerDB> { new TripPassengerDB(), new TripPassengerDB() };
-            _tripsPassengerRepository.Setup(x => x.GetAllTripsPassengers()).ReturnsAsync(tripsPassengers);
+            var tripPassengerModelDBs = tripsPassengers.Select(tp => _mapper.Map<TripPassengerModelDB>(tp)).ToList();
+            _tripsPassengerRepository.Setup(x => x.GetAllTripsPassengers()).Returns(Task.FromResult<IEnumerable<TripPassengerModelDB>>(tripPassengerModelDBs));
 
             // Act
             var result = await _tripsPassengerServiceAPI.GetAllTripsPassengers();
@@ -40,11 +42,15 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 
         public async Task<TripPassengerDTOAPI> CreateTripsPassenger(TripPassengerDTOAPI tripsPassenger)
         {
+            // Configuração do método mock
+            _tripsPassengerRepository.Setup(repo => repo.CreateTripsPassenger(It.IsAny<TripPassengerDB>()))
+                .ReturnsAsync((TripPassengerDB tripPassengerDB) => tripPassengerDB);
+
             var tripPassengerModelAPI = _mapper.Map<TripsPassengerModelAPI>(tripsPassenger);
 
             var tripPassengerDB = ConvertToDBModel(tripPassengerModelAPI);
 
-            var createdTripPassenger = await _tripsPassengerRepository.CreateTripsPassenger(tripPassengerDB);
+            var createdTripPassenger = await _tripsPassengerRepository.Object.CreateTripsPassenger(tripPassengerDB);
             return _mapper.Map<TripPassengerDTOAPI>(createdTripPassenger);
         }
 
@@ -64,18 +70,19 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 
             var tripPassengerDB = ConvertToDBModel(tripPassengerModelAPI);
 
-            var updatedTripPassenger = await _tripsPassengerRepository.UpdateTripsPassenger(id, tripPassengerDB);
+            var updatedTripPassenger = await _tripsPassengerRepository.Object.UpdateTripsPassenger(id, tripPassengerDB);
             return _mapper.Map<TripPassengerDTOAPI>(updatedTripPassenger);
         }
 
         public async Task<bool> DeleteTripsPassenger(int id)
         {
-            return await _tripsPassengerRepository.DeleteTripsPassenger(id);
+            return await _tripsPassengerRepository.Object.DeleteTripsPassenger(id);
         }
+
 
         public async Task<List<TripPassengerDB>> GetTripsPassengers()
         {
-            var tripsPassengers = (await _tripsPassengerRepository.GetAllTripsPassengers()).ToList();
+            var tripsPassengers = (await _tripsPassengerRepository.Object.GetAllTripsPassengers()).ToList();
             var mappedTripsPassengers = _mapper.Map<List<TripPassengerDB>>(tripsPassengers);
             return mappedTripsPassengers;
         }

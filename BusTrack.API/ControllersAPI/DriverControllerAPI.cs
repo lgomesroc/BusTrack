@@ -1,5 +1,4 @@
 ﻿using BusTrack.BusTrack.API.InterfacesAPI.ServicesAPI;
-using BusTrack.BusTrack.API.ServicesAPI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusTrack.BusTrack.API.ControllersAPI

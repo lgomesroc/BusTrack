@@ -43,10 +43,10 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
             // Arrange
             var tripId = "tripId";
             var trip = new TripDB { Id = tripId };
-            _tripRepository.Setup(x => x.GetTripById(tripId)).ReturnsAsync(trip);
+            _tripRepository.Setup(x => x.GetTripById(Int32.Parse(tripId))).ReturnsAsync(trip);
 
             // Act
-            var result = await _tripServiceAPI.GetTripById(tripId);
+            var result = await _tripServiceAPI.GetTripById(Int32.Parse(tripId));
 
             // Assert
             Assert.NotNull(result);
@@ -57,9 +57,9 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         public async Task CreateTrip_ReturnsAddedTrip()
         {
             // Arrange
-            var tripDTO = new TripDTOAPI { BusId = 1, DriverId = 1, RouteId = 1, DepartureTime = DateTime.UtcNow };
+            var tripDTO = new TripDTOAPI { BusId = "2", DriverId = "Mot02", RouteId = "Queimados X Barra da Tijuca", DepartureTime = DateTime.UtcNow };
             var tripDB = _mapper.Map<TripDB>(tripDTO);
-            _tripRepository.Setup(x => x.AddTripAsync(It.IsAny<TripDB>())).ReturnsAsync(tripDB);
+            _tripRepository.Setup(x => x.AddTripAsync(It.IsAny<TripDB>())).Returns(Task.FromResult(tripDB));
 
             // Act
             var result = await _tripServiceAPI.CreateTrip(tripDTO);
@@ -76,11 +76,12 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         public async Task UpdateTrip_ReturnsUpdatedTrip()
         {
             // Arrange
-            var tripId = "tripId";
-            var tripDTO = new TripDTOAPI { BusId = 1, DriverId = 1, RouteId = 1, DepartureTime = DateTime.UtcNow };
-            var existingTrip = new TripDB { Id = tripId };
+            var tripId = 01;
+            var tripDTO = new TripDTOAPI { BusId = "1", DriverId = "Mot01", RouteId = "Nova Iguaçu X Barra da Tijuca", DepartureTime = DateTime.UtcNow };
+            var tripDB = _mapper.Map<TripDB>(tripDTO);
+            var existingTrip = new TripDB { Id = tripId.ToString() };
 
-            _tripRepository.Setup(x => x.UpdateTripAsync(tripId, It.IsAny<TripDB>())).ReturnsAsync(existingTrip);
+            _tripRepository.Setup(x => x.AddTripAsync(It.IsAny<TripDB>())).Returns(Task.FromResult(tripDB));
 
             // Act
             var result = await _tripServiceAPI.UpdateTrip(tripId, tripDTO);
@@ -101,7 +102,7 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
             _tripRepository.Setup(x => x.DeleteTripAsync(tripId)).ReturnsAsync(true);
 
             // Act
-            var result = await _tripServiceAPI.DeleteTrip(tripId);
+            var result = await _tripServiceAPI.DeleteTrip(Int32.Parse(tripId));
 
             // Assert
             Assert.True(result);

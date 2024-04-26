@@ -1,0 +1,1 @@
+D:\Programas testes\BusTrack\BusTrack.Front.Angular\bustrack.front.angular.client\obj\Debug\bustrack.front.angular.client.esproj.CoreCompileInputs.cache

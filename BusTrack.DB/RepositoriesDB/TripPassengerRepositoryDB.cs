@@ -28,7 +28,7 @@ namespace BusTrack.BusTrack.DB.RepositoriesDB
 
         public async Task<TripPassengerDB> GetTripsPassengerByIdAsync(int id)
         {
-            var filter = Builders<TripPassengerDB>.Filter.Eq(t => t.TripId, id);
+            var filter = Builders<TripPassengerDB>.Filter.Eq(t => t.TripId, id.ToString());
             return await _tripPassengerCollection.Find(filter).FirstOrDefaultAsync();
         }
 
@@ -39,13 +39,13 @@ namespace BusTrack.BusTrack.DB.RepositoriesDB
 
         public async Task UpdateTripsPassengerAsync(int id, TripPassengerDB tripPassenger)
         {
-            var filter = Builders<TripPassengerDB>.Filter.Eq(t => t.TripId, id);
+            var filter = Builders<TripPassengerDB>.Filter.Eq(t => t.TripId, id.ToString());
             await _tripPassengerCollection.ReplaceOneAsync(filter, tripPassenger);
         }
 
         public async Task DeleteTripsPassengerAsync(int id)
         {
-            var filter = Builders<TripPassengerDB>.Filter.Eq(t => t.TripId, id);
+            var filter = Builders<TripPassengerDB>.Filter.Eq(t => t.TripId, id.ToString());
             await _tripPassengerCollection.DeleteOneAsync(filter);
         }
 
@@ -62,16 +62,16 @@ namespace BusTrack.BusTrack.DB.RepositoriesDB
 
         public async Task<IEnumerable<int>> GetTripIdsByPassengerIdAsync(int passengerId)
         {
-            var filter = Builders<TripPassengerDB>.Filter.Eq(tp => tp.PassengerId, passengerId);
+            var filter = Builders<TripPassengerDB>.Filter.Eq(tp => tp.PassengerId, passengerId.ToString());
             var tripPassengers = await _tripPassengerCollection.Find(filter).ToListAsync();
-            return tripPassengers.Select(tp => tp.TripId);
+            return tripPassengers.Select(tp => (Int32.Parse(tp.TripId)));
         }
 
         public async Task<IEnumerable<int>> GetPassengerIdsByTripIdAsync(int tripId)
         {
-            var filter = Builders<TripPassengerDB>.Filter.Eq(tp => tp.TripId, tripId);
+            var filter = Builders<TripPassengerDB>.Filter.Eq(tp => tp.TripId, tripId.ToString());
             var tripPassengers = await _tripPassengerCollection.Find(filter).ToListAsync();
-            return tripPassengers.Select(tp => tp.PassengerId);
+            return tripPassengers.Select(tp => (Int32.Parse(tp.PassengerId)));
         }
 
         public async Task AddTripPassengerAsync(TripPassengerDB tripPassenger)
@@ -82,15 +82,15 @@ namespace BusTrack.BusTrack.DB.RepositoriesDB
         public async Task RemoveTripPassengerAsync(int tripId, int passengerId)
         {
             var filter = Builders<TripPassengerDB>.Filter.And(
-                Builders<TripPassengerDB>.Filter.Eq(tp => tp.TripId, tripId),
-                Builders<TripPassengerDB>.Filter.Eq(tp => tp.PassengerId, passengerId)
+                Builders<TripPassengerDB>.Filter.Eq(tp => tp.TripId, tripId.ToString()),
+                Builders<TripPassengerDB>.Filter.Eq(tp => tp.PassengerId, passengerId.ToString())
             );
             await _tripPassengerCollection.DeleteOneAsync(filter);
         }
 
         public async Task<TripPassengerModelDB> GetTripsPassengerById(int id)
         {
-            var filter = Builders<TripPassengerDB>.Filter.Eq(tp => tp.TripId, id);
+            var filter = Builders<TripPassengerDB>.Filter.Eq(tp => tp.TripId, id.ToString());
             var tripPassenger = await _tripPassengerCollection.Find(filter).FirstOrDefaultAsync();
             return _mapper.Map<TripPassengerModelDB>(tripPassenger);
         }
@@ -103,14 +103,14 @@ namespace BusTrack.BusTrack.DB.RepositoriesDB
 
         public async Task<TripPassengerDB> UpdateTripsPassenger(int id, TripPassengerDB tripPassenger)
         {
-            var filter = Builders<TripPassengerDB>.Filter.Eq(tp => tp.TripId, id);
+            var filter = Builders<TripPassengerDB>.Filter.Eq(tp => tp.TripId, id.ToString());
             await _tripPassengerCollection.ReplaceOneAsync(filter, tripPassenger);
             return tripPassenger;
         }
 
         public async Task<bool> DeleteTripsPassenger(int id)
         {
-            var filter = Builders<TripPassengerDB>.Filter.Eq(tp => tp.TripId, id);
+            var filter = Builders<TripPassengerDB>.Filter.Eq(tp => tp.TripId, id.ToString());
             var deleteResult = await _tripPassengerCollection.DeleteOneAsync(filter);
             return deleteResult.DeletedCount > 0;
         }

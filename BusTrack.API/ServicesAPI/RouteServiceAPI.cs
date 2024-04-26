@@ -55,7 +55,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             return _mapper.Map<RouteDTOAPI>(updatedRouteDB);
         }
 
-        public async Task<bool> DeleteRoute(string id)
+        public async Task<bool> DeleteRoute(int id)
         {
             return await _routeRepository.DeleteRoute(id);
         }

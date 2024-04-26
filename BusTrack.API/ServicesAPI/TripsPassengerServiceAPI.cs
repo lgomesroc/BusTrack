@@ -74,7 +74,12 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
         public async Task<bool> DeleteTripsPassenger(int id)
         {
-            return await _tripsPassengerRepository.DeleteTripsPassenger(id);
+            // Aqui você pode implementar a lógica para excluir um passageiro de viagem com base no ID fornecido.
+            // Por exemplo:
+            var tripPassengerDeleted = await _tripsPassengerRepository.DeleteTripsPassenger(id);
+
+            // Retorne true se o passageiro da viagem for excluído com sucesso, ou false caso contrário.
+            return tripPassengerDeleted;
         }
 
         public async Task<List<TripPassengerDB>> GetTripsPassengers()

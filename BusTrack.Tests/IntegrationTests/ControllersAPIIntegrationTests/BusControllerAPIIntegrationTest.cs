@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using BusTrack.Tests.IntegrationTests.CustomWebApplicationFactory;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 
-
 namespace BusTrack.Tests.IntegrationTests.ControllersAPIIntegrationTests
 {
     public class BusControllerAPIIntegrationTest : IClassFixture<CustomWebApplicationFactory<Program>>

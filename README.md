@@ -207,10 +207,73 @@ BusTrack                    # Nome do projeto
 │   └── ...
 │
 ├── BusTrack.Frontend      # Pasta para o projeto do frontend (Angular, por exemplo)
-│   │
-│   └── src                # Pasta principal do código-fonte do frontend
-│       └── ...            # Arquivos do código-fonte do frontend
+│   │  
+│   ├── BusTrack.Frontend                # Pasta para o projeto do frontend (Angular)
+│   │   │    
+│   │   ├── src                          # Pasta principal do código-fonte do frontend
+│   │   │   ├── app                      # Pasta para os componentes da aplicação
+│   │   │   ├── components           # Pasta para os componentes reutilizáveis
+│   │   │   │   ├── login            # Componente para a página de login
+│   │   │   │   │   ├── login.component.html     # Template HTML para a página de login
+│   │   │   │   │   ├── login.component.ts       # Componente TypeScript para a página de login
+│   │   │   │   │   ├── login.component.scss     # Estilos Sass para a página de login
+│   │   │   │   │   └── login.service.ts         # Serviço para autenticação de login
+│   │   │   │   ├── dashboard         # Componente para a página principal (dashboard)
+│   │   │   │   │   ├── dashboard.component.html  # Template HTML para a página principal
+│   │   │   │   │   ├── dashboard.component.ts    # Componente TypeScript para a página principal
+│   │   │   │   │   └── dashboard.component.scss  # Estilos Sass para a página principal
+│   │   │   │   │   └── ...               # Outros componentes reutilizáveis
+│   │   │   │  
+│   │   │   ├── shared               # Pasta para módulos e componentes compartilhados
+│   │   │   │   ├── header           # Componente para o cabeçalho da aplicação
+│   │   │   │   │   ├── header.component.html     # Template HTML para o cabeçalho
+│   │   │   │   │   ├── header.component.ts       # Componente TypeScript para o cabeçalho
+│   │   │   │   │   └── header.component.scss     # Estilos Sass para o cabeçalho
+│   │   │   │   ├── footer           # Componente para o rodapé da aplicação
+│   │   │   │   │   ├── footer.component.html     # Template HTML para o rodapé
+│   │   │   │   │   ├── footer.component.ts       # Componente TypeScript para o rodapé
+│   │   │   │   │   └── footer.component.scss     # Estilos Sass para o rodapé
+│   │   │   │   │   └── ...              # Outros componentes compartilhados
+│   │   │   │
+│   │   │   ├── services            # Pasta para os serviços da aplicação
+│   │   │   │   ├── auth.service.ts   # Serviço para autenticação de usuários
+│   │   │   │   ├── user.service.ts   # Serviço para gerenciamento de informações do usuário
+│   │   │   │   └── ...              # Outros serviços da aplicação
+│   │   │   │ 
+│   │   │   ├── models              # Pasta para os modelos de dados
+│   │   │   │   ├── user.model.ts    # Modelo de dados para usuário
+│   │   │   │   └── ...              # Outros modelos de dados
+│   │   │   │
+│   │   │   ├── guards              # Pasta para os guards de rota
+│   │   │   │   ├── auth.guard.ts    # Guarda de rota para proteger rotas autenticadas
+│   │   │   │   └── ...              # Outros guards de rota
+│   │   │   │
+│   │   │   ├── interceptors        # Pasta para os interceptors HTTP
+│   │   │   │   ├── auth.interceptor.ts   # Interceptor HTTP para adicionar cabeçalho de autenticação
+│   │   │   │   └── ...              # Outros interceptors HTTP
+│   │   │   │
+│   │   │   └── ...                  # Outros módulos da aplicação
+│   │   │
+│   │   ├── assets                   # Pasta para arquivos estáticos (imagens, ícones, etc.)
+│   │   │   └── ...                  # Outros arquivos estáticos
+│   │   │
+│   │   ├── environments             # Pasta para os arquivos de configuração do ambiente
+│   │   │   ├── environment.prod.ts  # Configurações de ambiente de produção
+│   │   │   └── environment.ts       # Configurações de ambiente padrão
+│   │   │
+│   │   ├── index.html               # Arquivo HTML principal
+│   │   ├── main.ts                  # Arquivo TypeScript principal para inicialização da aplicação
+│   │   ├── styles.scss              # Arquivo Sass principal para estilos globais
+│   └── ...                      # Outros arquivos e pastas
+│   │   
+│   ├── angular.json                # Arquivo de configuração do Angular CLI
+│   ├── package.json                # Arquivo de configuração do gerenciador de pacotes npm
+│   └── ...                         # Outros arquivos do projeto
 │
+│   ├── bustrack.frontend.client # Contém o cliente do frontend, que pode ser distribuído e implantado em dispositivos de usuários finais.
+│   │  
+│   ├── BusTrack.Frontend.Server # Contém o servidor de desenvolvimento ou algum código relacionado à configuração do servidor para o frontend
+│   │  
 ├── BusTrack.Program       # Pasta para o projeto principal do programa
 │   │
 │   ├── DataBaseServicesExtensionsProgram  # Pasta para extensões de serviços de banco de dados

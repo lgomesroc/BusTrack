@@ -45,10 +45,11 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
             var id = 1;
 
             // Act
-            var response = await _client.GetAsync($"/api/Driver/{id}");
+            var result = await _routeServiceAPI.GetRouteById(id.ToString());
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotNull(result);
+            // Adicione asserções adicionais conforme necessário para verificar o resultado retornado.
         }
 
         [Fact]
@@ -58,10 +59,11 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
             var id = "1";
 
             // Act
-            var response = await _client.GetAsync($"/api/Route/{id}");
+            var result = await _routeServiceAPI.GetRouteById(id);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotNull(result);
+            // Adicione asserções adicionais conforme necessário para verificar o resultado retornado.
         }
 
 
@@ -106,10 +108,10 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         {
             // Arrange
             var routeId = "routeId";
-            _routeRepository.Setup(x => x.DeleteRoute(routeId)).ReturnsAsync(true);
+            _routeRepository.Setup(x => x.DeleteRoute(Int32.Parse(routeId))).ReturnsAsync(true);
 
             // Act
-            var result = await _routeServiceAPI.DeleteRoute(routeId);
+            var result = await _routeServiceAPI.DeleteRoute((Int32.Parse(routeId)));
 
             // Assert
             Assert.True(result);

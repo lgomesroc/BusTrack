@@ -30,7 +30,7 @@ namespace BusTrack.Tests.IntegrationTests.CustomWebApplicationFactory
         public HttpClient CreateClient()
         {
             // Cria um cliente HTTP para interagir com a aplicação hospedada
-            return CreateClient();
+            return base.CreateClient();
         }
     }
 }

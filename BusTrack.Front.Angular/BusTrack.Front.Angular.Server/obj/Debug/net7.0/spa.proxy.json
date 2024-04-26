@@ -1,0 +1,8 @@
+{
+"SpaProxyServer": {
+"ServerUrl": "https://localhost:4200",
+"LaunchCommand": "npm start",
+"WorkingDirectory": "D:\\Programas testes\\BusTrack\\BusTrack.Front.Angular\\BusTrack.Front.Angular.Server\\..\\bustrack.front.angular.client",
+"MaxTimeoutInSeconds": "120"
+}
+}

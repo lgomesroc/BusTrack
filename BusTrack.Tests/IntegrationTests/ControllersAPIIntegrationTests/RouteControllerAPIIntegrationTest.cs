@@ -3,6 +3,7 @@ using System.Net;
 using Newtonsoft.Json;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 using BusTrack.Tests.IntegrationTests.CustomWebApplicationFactory;
+using BusTrack.BusTrack.Program;
 
 namespace BusTrack.Tests.IntegrationTests.ControllersAPIIntegrationTests
 {
