@@ -59,6 +59,11 @@ Não foi pensado em segurança para esse projeto
 
 ## Histórico de Atualizações
 
+### 2024-04-26
+
+- Retirada de todos os erros do projeto.
+
+
 ### 2024-04-21
 
 - Criado a estrutura do frontend com Angular.
