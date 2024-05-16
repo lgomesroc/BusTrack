@@ -19,6 +19,7 @@
     "@angular/forms": "^17.3.6",
     "@angular/platform-browser": "^17.3.0",
     "@angular/platform-browser-dynamic": "^17.3.0",
+    "bootstrap": "^5.3.3",
     "jest-editor-support": "*",
     "run-script-os": "*",
     "rxjs": "~7.8.0",

@@ -1,12 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\Programas testes\\BusTrack\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{9FE1AD31-BD44-4776-B92C-33DA3F200BF9}|BusTrack.Frontend\\bustrack.frontend.client\\bustrack.frontend.client.esproj|d:\\programas testes\\bustrack\\bustrack.frontend\\bustrack.frontend.client\\src\\app\\app.component.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{9FE1AD31-BD44-4776-B92C-33DA3F200BF9}|BusTrack.Frontend\\bustrack.frontend.client\\bustrack.frontend.client.esproj|solutionrelative:bustrack.frontend\\bustrack.frontend.client\\src\\app\\app.component.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -14,21 +9,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": -1,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "app.component.html",
-              "DocumentMoniker": "D:\\Programas testes\\BusTrack\\BusTrack.Frontend\\bustrack.frontend.client\\src\\app\\app.component.html",
-              "RelativeDocumentMoniker": "BusTrack.Frontend\\bustrack.frontend.client\\src\\app\\app.component.html",
-              "ToolTip": "D:\\Programas testes\\BusTrack\\BusTrack.Frontend\\bustrack.frontend.client\\src\\app\\app.component.html",
-              "RelativeToolTip": "BusTrack.Frontend\\bustrack.frontend.client\\src\\app\\app.component.html",
-              "ViewState": "AQIAAAUBAAAAAAAAAAAAAB0BAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2024-05-16T11:52:13.425Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
