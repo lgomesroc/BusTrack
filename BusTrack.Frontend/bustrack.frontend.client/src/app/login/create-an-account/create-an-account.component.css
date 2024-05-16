@@ -1,0 +1,59 @@
+/* Estilos para a tela de criação de conta */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.blue-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+  .blue-button:hover {
+    background-color: #0056b3;
+  }
+
+img {
+  width: 200px;
+  height: auto;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.error-message {
+  color: red;
+}
+
+/* Responsividade */
+@media screen and (min-width: 768px) {
+  .container {
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  .button-container {
+    flex-direction: row;
+  }
+
+  .blue-button {
+    width: 150px;
+  }
+}

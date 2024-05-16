@@ -2,6 +2,38 @@
   "version": 3,
   "targets": {
     "net7.0": {
+      "Auth0.Core/7.10.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.3"
+        },
+        "compile": {
+          "lib/netstandard2.0/Auth0.Core.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Auth0.Core.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Auth0.ManagementApi/7.10.0": {
+        "type": "package",
+        "dependencies": {
+          "Auth0.Core": "7.10.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Auth0.ManagementApi.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Auth0.ManagementApi.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "AutoMapper/13.0.1": {
         "type": "package",
         "dependencies": {
@@ -184,7 +216,7 @@
           "Microsoft.AspNetCore.App"
         ],
         "build": {
-          "build/_._": {}
+          "build/Microsoft.AspNetCore.SpaProxy.targets": {}
         }
       },
       "Microsoft.AspNetCore.TestHost/7.0.18": {
@@ -368,10 +400,12 @@
       "Microsoft.Extensions.ApiDescription.Server/6.0.5": {
         "type": "package",
         "build": {
-          "build/_._": {}
+          "build/Microsoft.Extensions.ApiDescription.Server.props": {},
+          "build/Microsoft.Extensions.ApiDescription.Server.targets": {}
         },
         "buildMultiTargeting": {
-          "buildMultiTargeting/_._": {}
+          "buildMultiTargeting/Microsoft.Extensions.ApiDescription.Server.props": {},
+          "buildMultiTargeting/Microsoft.Extensions.ApiDescription.Server.targets": {}
         }
       },
       "Microsoft.Extensions.Caching.Abstractions/3.1.3": {
@@ -606,6 +640,67 @@
         },
         "build": {
           "buildTransitive/netcoreapp3.1/_._": {}
+        }
+      },
+      "Microsoft.IdentityModel.Abstractions/7.5.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/Microsoft.IdentityModel.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Microsoft.IdentityModel.Abstractions.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.IdentityModel.JsonWebTokens/7.5.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Tokens": "7.5.1"
+        },
+        "compile": {
+          "lib/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.IdentityModel.Logging/7.5.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Abstractions": "7.5.1"
+        },
+        "compile": {
+          "lib/net6.0/Microsoft.IdentityModel.Logging.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Microsoft.IdentityModel.Logging.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.IdentityModel.Tokens/7.5.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Logging": "7.5.1"
+        },
+        "compile": {
+          "lib/net6.0/Microsoft.IdentityModel.Tokens.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Microsoft.IdentityModel.Tokens.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Microsoft.NET.Test.Sdk/17.9.0": {
@@ -1441,7 +1536,7 @@
           "Swashbuckle.AspNetCore.SwaggerUI": "6.5.0"
         },
         "build": {
-          "build/_._": {}
+          "build/Swashbuckle.AspNetCore.props": {}
         }
       },
       "Swashbuckle.AspNetCore.Swagger/6.5.0": {
@@ -1723,6 +1818,23 @@
           "runtimes/win/lib/netstandard1.3/System.Globalization.Extensions.dll": {
             "assetType": "runtime",
             "rid": "win"
+          }
+        }
+      },
+      "System.IdentityModel.Tokens.Jwt/7.5.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.JsonWebTokens": "7.5.1",
+          "Microsoft.IdentityModel.Tokens": "7.5.1"
+        },
+        "compile": {
+          "lib/net6.0/System.IdentityModel.Tokens.Jwt.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/System.IdentityModel.Tokens.Jwt.dll": {
+            "related": ".xml"
           }
         }
       },
@@ -2804,9 +2916,11 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
+          "Auth0.ManagementApi": "7.10.0",
           "AutoMapper": "13.0.1",
           "Microsoft.AspNetCore.Hosting.Abstractions": "2.2.0",
           "Microsoft.AspNetCore.OpenApi": "7.0.17",
+          "Microsoft.AspNetCore.SpaProxy": "7.0.18",
           "Microsoft.AspNetCore.TestHost": "7.0.18",
           "Microsoft.NET.Test.Sdk": "17.9.0",
           "Microsoft.TestPlatform.TestHost": "17.9.0",
@@ -2817,6 +2931,7 @@
           "Moq": "4.20.70",
           "Newtonsoft.Json": "13.0.3",
           "Swashbuckle.AspNetCore": "6.5.0",
+          "System.IdentityModel.Tokens.Jwt": "7.5.1",
           "xunit": "2.4.2"
         },
         "compile": {
@@ -2824,46 +2939,6 @@
         },
         "runtime": {
           "bin/placeholder/BusTrack.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.AspNetCore.App"
-        ]
-      },
-      "bustrack.front.angular.client/1.0.0": {
-        "type": "project",
-        "compile": {
-          "bin/placeholder/bustrack.front.angular.client.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/bustrack.front.angular.client.dll": {}
-        }
-      },
-      "BusTrack.Front.Angular.Server/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v7.0",
-        "dependencies": {
-          "AutoMapper": "13.0.1",
-          "Microsoft.AspNetCore.Hosting.Abstractions": "2.2.0",
-          "Microsoft.AspNetCore.OpenApi": "7.0.17",
-          "Microsoft.AspNetCore.SpaProxy": "7.0.0-0",
-          "Microsoft.AspNetCore.TestHost": "7.0.18",
-          "Microsoft.NET.Test.Sdk": "17.9.0",
-          "Microsoft.TestPlatform.TestHost": "17.9.0",
-          "Microsoft.VisualStudio.TestPlatform": "14.0.0",
-          "Mock": "1.0.0",
-          "MongoDB.Bson": "2.25.0",
-          "MongoDB.Driver": "2.25.0",
-          "Moq": "4.20.70",
-          "Newtonsoft.Json": "13.0.3",
-          "Swashbuckle.AspNetCore": "6.5.0",
-          "bustrack.front.angular.client": "1.0.0",
-          "xunit": "2.4.2"
-        },
-        "compile": {
-          "bin/placeholder/BusTrack.Front.Angular.Server.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/BusTrack.Front.Angular.Server.dll": {}
         },
         "frameworkReferences": [
           "Microsoft.AspNetCore.App"
@@ -2872,6 +2947,38 @@
     }
   },
   "libraries": {
+    "Auth0.Core/7.10.0": {
+      "sha512": "V0SF2lYVzYDpFD+0s+tvzAQGlBF5l80w6CqV1KrbA4U3shbLUdXN+Hq6LP1/e/nwpu2r8VVWH2+LBE6hc/KQXQ==",
+      "type": "package",
+      "path": "auth0.core/7.10.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Auth0Icon.png",
+        "auth0.core.7.10.0.nupkg.sha512",
+        "auth0.core.nuspec",
+        "lib/net452/Auth0.Core.dll",
+        "lib/net452/Auth0.Core.xml",
+        "lib/netstandard2.0/Auth0.Core.dll",
+        "lib/netstandard2.0/Auth0.Core.xml"
+      ]
+    },
+    "Auth0.ManagementApi/7.10.0": {
+      "sha512": "1zaTPjd63xmkTEjqdchi1tqf62h6QmR8Ap1pZExfL/opFz1NW+Zr/5Rey6Cpa7+c1aXMDzCzhPVLQYxNZLlYQg==",
+      "type": "package",
+      "path": "auth0.managementapi/7.10.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Auth0Icon.png",
+        "auth0.managementapi.7.10.0.nupkg.sha512",
+        "auth0.managementapi.nuspec",
+        "lib/net452/Auth0.ManagementApi.dll",
+        "lib/net452/Auth0.ManagementApi.xml",
+        "lib/netstandard2.0/Auth0.ManagementApi.dll",
+        "lib/netstandard2.0/Auth0.ManagementApi.xml"
+      ]
+    },
     "AutoMapper/13.0.1": {
       "sha512": "/Fx1SbJ16qS7dU4i604Sle+U9VLX+WSNVJggk6MupKVkYvvBm4XqYaeFuf67diHefHKHs50uQIS2YEDFhPCakQ==",
       "type": "package",
@@ -3866,6 +3973,98 @@
         "microsoft.extensions.primitives.6.0.0.nupkg.sha512",
         "microsoft.extensions.primitives.nuspec",
         "useSharedDesignerContext.txt"
+      ]
+    },
+    "Microsoft.IdentityModel.Abstractions/7.5.1": {
+      "sha512": "PT16ZFbPIiMsYv07oy3zOjqUOJ7xutGBkJTOX0+IbNyU6+O6X7aIxjq9EaSSRLWbekRgamgtmfg8Xjw6A6Ua9g==",
+      "type": "package",
+      "path": "microsoft.identitymodel.abstractions/7.5.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net461/Microsoft.IdentityModel.Abstractions.dll",
+        "lib/net461/Microsoft.IdentityModel.Abstractions.xml",
+        "lib/net462/Microsoft.IdentityModel.Abstractions.dll",
+        "lib/net462/Microsoft.IdentityModel.Abstractions.xml",
+        "lib/net472/Microsoft.IdentityModel.Abstractions.dll",
+        "lib/net472/Microsoft.IdentityModel.Abstractions.xml",
+        "lib/net6.0/Microsoft.IdentityModel.Abstractions.dll",
+        "lib/net6.0/Microsoft.IdentityModel.Abstractions.xml",
+        "lib/net8.0/Microsoft.IdentityModel.Abstractions.dll",
+        "lib/net8.0/Microsoft.IdentityModel.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.IdentityModel.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.IdentityModel.Abstractions.xml",
+        "microsoft.identitymodel.abstractions.7.5.1.nupkg.sha512",
+        "microsoft.identitymodel.abstractions.nuspec"
+      ]
+    },
+    "Microsoft.IdentityModel.JsonWebTokens/7.5.1": {
+      "sha512": "93CGSa8RPdZU8zfvA3nf9NGKUqEnQrE12VzYlMqKh72ddhzusosqLNEUgH/YhFWBLRFOnY1RCgHMV7pR+sAx2w==",
+      "type": "package",
+      "path": "microsoft.identitymodel.jsonwebtokens/7.5.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net461/Microsoft.IdentityModel.JsonWebTokens.dll",
+        "lib/net461/Microsoft.IdentityModel.JsonWebTokens.xml",
+        "lib/net462/Microsoft.IdentityModel.JsonWebTokens.dll",
+        "lib/net462/Microsoft.IdentityModel.JsonWebTokens.xml",
+        "lib/net472/Microsoft.IdentityModel.JsonWebTokens.dll",
+        "lib/net472/Microsoft.IdentityModel.JsonWebTokens.xml",
+        "lib/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll",
+        "lib/net6.0/Microsoft.IdentityModel.JsonWebTokens.xml",
+        "lib/net8.0/Microsoft.IdentityModel.JsonWebTokens.dll",
+        "lib/net8.0/Microsoft.IdentityModel.JsonWebTokens.xml",
+        "lib/netstandard2.0/Microsoft.IdentityModel.JsonWebTokens.dll",
+        "lib/netstandard2.0/Microsoft.IdentityModel.JsonWebTokens.xml",
+        "microsoft.identitymodel.jsonwebtokens.7.5.1.nupkg.sha512",
+        "microsoft.identitymodel.jsonwebtokens.nuspec"
+      ]
+    },
+    "Microsoft.IdentityModel.Logging/7.5.1": {
+      "sha512": "PnpAQX20BAiDIPYmWUyQSlEaWD8BLXzHpiDGTCT568Cs0ReOeyzNe401LzCeiv6ilug/KefVeV1CeqtCHTo8dw==",
+      "type": "package",
+      "path": "microsoft.identitymodel.logging/7.5.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net461/Microsoft.IdentityModel.Logging.dll",
+        "lib/net461/Microsoft.IdentityModel.Logging.xml",
+        "lib/net462/Microsoft.IdentityModel.Logging.dll",
+        "lib/net462/Microsoft.IdentityModel.Logging.xml",
+        "lib/net472/Microsoft.IdentityModel.Logging.dll",
+        "lib/net472/Microsoft.IdentityModel.Logging.xml",
+        "lib/net6.0/Microsoft.IdentityModel.Logging.dll",
+        "lib/net6.0/Microsoft.IdentityModel.Logging.xml",
+        "lib/net8.0/Microsoft.IdentityModel.Logging.dll",
+        "lib/net8.0/Microsoft.IdentityModel.Logging.xml",
+        "lib/netstandard2.0/Microsoft.IdentityModel.Logging.dll",
+        "lib/netstandard2.0/Microsoft.IdentityModel.Logging.xml",
+        "microsoft.identitymodel.logging.7.5.1.nupkg.sha512",
+        "microsoft.identitymodel.logging.nuspec"
+      ]
+    },
+    "Microsoft.IdentityModel.Tokens/7.5.1": {
+      "sha512": "Q3DKpyFViP84IUlTFKH/zIkswIrmSh2Vd/eFDo4wlOHy4DYxoweZEEw4kDEiKt9VCX6o7SddK3HK2xDYyFpexA==",
+      "type": "package",
+      "path": "microsoft.identitymodel.tokens/7.5.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net461/Microsoft.IdentityModel.Tokens.dll",
+        "lib/net461/Microsoft.IdentityModel.Tokens.xml",
+        "lib/net462/Microsoft.IdentityModel.Tokens.dll",
+        "lib/net462/Microsoft.IdentityModel.Tokens.xml",
+        "lib/net472/Microsoft.IdentityModel.Tokens.dll",
+        "lib/net472/Microsoft.IdentityModel.Tokens.xml",
+        "lib/net6.0/Microsoft.IdentityModel.Tokens.dll",
+        "lib/net6.0/Microsoft.IdentityModel.Tokens.xml",
+        "lib/net8.0/Microsoft.IdentityModel.Tokens.dll",
+        "lib/net8.0/Microsoft.IdentityModel.Tokens.xml",
+        "lib/netstandard2.0/Microsoft.IdentityModel.Tokens.dll",
+        "lib/netstandard2.0/Microsoft.IdentityModel.Tokens.xml",
+        "microsoft.identitymodel.tokens.7.5.1.nupkg.sha512",
+        "microsoft.identitymodel.tokens.nuspec"
       ]
     },
     "Microsoft.NET.Test.Sdk/17.9.0": {
@@ -5576,6 +5775,29 @@
         "runtimes/win/lib/netstandard1.3/System.Globalization.Extensions.dll",
         "system.globalization.extensions.4.3.0.nupkg.sha512",
         "system.globalization.extensions.nuspec"
+      ]
+    },
+    "System.IdentityModel.Tokens.Jwt/7.5.1": {
+      "sha512": "UUw+E0R73lZLlXgneYIJQxNs1kfbcxjVzw64JQyiwjqCd4HMpAbjn+xRo86QZT84uHq8/MkqvfH82tgjgPzpuw==",
+      "type": "package",
+      "path": "system.identitymodel.tokens.jwt/7.5.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net461/System.IdentityModel.Tokens.Jwt.dll",
+        "lib/net461/System.IdentityModel.Tokens.Jwt.xml",
+        "lib/net462/System.IdentityModel.Tokens.Jwt.dll",
+        "lib/net462/System.IdentityModel.Tokens.Jwt.xml",
+        "lib/net472/System.IdentityModel.Tokens.Jwt.dll",
+        "lib/net472/System.IdentityModel.Tokens.Jwt.xml",
+        "lib/net6.0/System.IdentityModel.Tokens.Jwt.dll",
+        "lib/net6.0/System.IdentityModel.Tokens.Jwt.xml",
+        "lib/net8.0/System.IdentityModel.Tokens.Jwt.dll",
+        "lib/net8.0/System.IdentityModel.Tokens.Jwt.xml",
+        "lib/netstandard2.0/System.IdentityModel.Tokens.Jwt.dll",
+        "lib/netstandard2.0/System.IdentityModel.Tokens.Jwt.xml",
+        "system.identitymodel.tokens.jwt.7.5.1.nupkg.sha512",
+        "system.identitymodel.tokens.jwt.nuspec"
       ]
     },
     "System.IO/4.3.0": {
@@ -8321,24 +8543,16 @@
       "type": "project",
       "path": "../BusTrack.csproj",
       "msbuildProject": "../BusTrack.csproj"
-    },
-    "bustrack.front.angular.client/1.0.0": {
-      "type": "project",
-      "path": "../BusTrack.Front.Angular/bustrack.front.angular.client/bustrack.front.angular.client.esproj",
-      "msbuildProject": "../BusTrack.Front.Angular/bustrack.front.angular.client/bustrack.front.angular.client.esproj"
-    },
-    "BusTrack.Front.Angular.Server/1.0.0": {
-      "type": "project",
-      "path": "../BusTrack.Front.Angular/BusTrack.Front.Angular.Server/BusTrack.Front.Angular.Server.csproj",
-      "msbuildProject": "../BusTrack.Front.Angular/BusTrack.Front.Angular.Server/BusTrack.Front.Angular.Server.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net7.0": [
+      "Auth0.ManagementApi >= 7.10.0",
       "AutoMapper >= 13.0.1",
       "BusTrack >= 1.0.0",
-      "BusTrack.Front.Angular.Server >= 1.0.0",
       "Microsoft.AspNetCore.Hosting.Abstractions >= 2.2.0",
+      "Microsoft.AspNetCore.OpenApi >= 7.0.17",
+      "Microsoft.AspNetCore.SpaProxy >= 7.0.18",
       "Microsoft.AspNetCore.TestHost >= 7.0.18",
       "Microsoft.NET.Test.Sdk >= 17.9.0",
       "Microsoft.TestPlatform.TestHost >= 17.9.0",
@@ -8348,7 +8562,8 @@
       "MongoDB.Driver >= 2.25.0",
       "Moq >= 4.20.70",
       "Newtonsoft.Json >= 13.0.3",
-      "bustrack.front.angular.client >= 1.0.0",
+      "Swashbuckle.AspNetCore >= 6.5.0",
+      "System.IdentityModel.Tokens.Jwt >= 7.5.1",
       "coverlet.collector >= 6.0.2",
       "xunit >= 2.4.2",
       "xunit.runner.visualstudio >= 2.4.5"
@@ -8388,12 +8603,6 @@
           "projectReferences": {
             "D:\\Programas testes\\BusTrack\\BusTrack.csproj": {
               "projectPath": "D:\\Programas testes\\BusTrack\\BusTrack.csproj"
-            },
-            "D:\\Programas testes\\BusTrack\\BusTrack.Front.Angular\\bustrack.front.angular.client\\bustrack.front.angular.client.esproj": {
-              "projectPath": "D:\\Programas testes\\BusTrack\\BusTrack.Front.Angular\\bustrack.front.angular.client\\bustrack.front.angular.client.esproj"
-            },
-            "D:\\Programas testes\\BusTrack\\BusTrack.Front.Angular\\BusTrack.Front.Angular.Server\\BusTrack.Front.Angular.Server.csproj": {
-              "projectPath": "D:\\Programas testes\\BusTrack\\BusTrack.Front.Angular\\BusTrack.Front.Angular.Server\\BusTrack.Front.Angular.Server.csproj"
             }
           }
         }
@@ -8413,6 +8622,10 @@
       "net7.0": {
         "targetAlias": "net7.0",
         "dependencies": {
+          "Auth0.ManagementApi": {
+            "target": "Package",
+            "version": "[7.10.0, )"
+          },
           "AutoMapper": {
             "target": "Package",
             "version": "[13.0.1, )"
@@ -8420,6 +8633,14 @@
           "Microsoft.AspNetCore.Hosting.Abstractions": {
             "target": "Package",
             "version": "[2.2.0, )"
+          },
+          "Microsoft.AspNetCore.OpenApi": {
+            "target": "Package",
+            "version": "[7.0.17, )"
+          },
+          "Microsoft.AspNetCore.SpaProxy": {
+            "target": "Package",
+            "version": "[7.0.18, )"
           },
           "Microsoft.AspNetCore.TestHost": {
             "target": "Package",
@@ -8456,6 +8677,14 @@
           "Newtonsoft.Json": {
             "target": "Package",
             "version": "[13.0.3, )"
+          },
+          "Swashbuckle.AspNetCore": {
+            "target": "Package",
+            "version": "[6.5.0, )"
+          },
+          "System.IdentityModel.Tokens.Jwt": {
+            "target": "Package",
+            "version": "[7.5.1, )"
           },
           "coverlet.collector": {
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",

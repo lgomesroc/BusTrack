@@ -1,7 +1,7 @@
 ﻿using Moq;
 using Microsoft.AspNetCore.Mvc;
 using BusTrack.BusTrack.API.ControllersAPI;
-using BusTrack.BusTrack.API.InterfacesAPI.ServicesAPI;
+using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using BusTrack.BusTrack.DB.Classes;
 
 namespace BusTrack.Tests.UnitTests.ControllersAPIUnitTests.TripsPassengerControllerAPIUnitTests

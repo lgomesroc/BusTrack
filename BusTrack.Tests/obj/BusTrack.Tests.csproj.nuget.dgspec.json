@@ -49,162 +49,10 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
-            "AutoMapper": {
+            "Auth0.ManagementApi": {
               "target": "Package",
-              "version": "[13.0.1, )"
+              "version": "[7.10.0, )"
             },
-            "Microsoft.AspNetCore.Hosting.Abstractions": {
-              "target": "Package",
-              "version": "[2.2.0, )"
-            },
-            "Microsoft.AspNetCore.OpenApi": {
-              "target": "Package",
-              "version": "[7.0.17, )"
-            },
-            "Microsoft.AspNetCore.TestHost": {
-              "target": "Package",
-              "version": "[7.0.18, )"
-            },
-            "Microsoft.NET.Test.Sdk": {
-              "target": "Package",
-              "version": "[17.9.0, )"
-            },
-            "Microsoft.TestPlatform.TestHost": {
-              "target": "Package",
-              "version": "[17.9.0, )"
-            },
-            "Microsoft.VisualStudio.TestPlatform": {
-              "target": "Package",
-              "version": "[14.0.0, )"
-            },
-            "Mock": {
-              "target": "Package",
-              "version": "[1.0.0, )"
-            },
-            "MongoDB.Bson": {
-              "target": "Package",
-              "version": "[2.25.0, )"
-            },
-            "MongoDB.Driver": {
-              "target": "Package",
-              "version": "[2.25.0, )"
-            },
-            "Moq": {
-              "target": "Package",
-              "version": "[4.20.70, )"
-            },
-            "Newtonsoft.Json": {
-              "target": "Package",
-              "version": "[13.0.3, )"
-            },
-            "Swashbuckle.AspNetCore": {
-              "target": "Package",
-              "version": "[6.5.0, )"
-            },
-            "coverlet.collector": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[6.0.2, )"
-            },
-            "xunit": {
-              "target": "Package",
-              "version": "[2.4.2, )"
-            },
-            "xunit.runner.visualstudio": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[2.4.5, )"
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.AspNetCore.App": {
-              "privateAssets": "none"
-            },
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204\\RuntimeIdentifierGraph.json"
-        }
-      }
-    },
-    "D:\\Programas testes\\BusTrack\\BusTrack.Front.Angular\\bustrack.front.angular.client\\bustrack.front.angular.client.esproj": {
-      "restore": {
-        "projectUniqueName": "D:\\Programas testes\\BusTrack\\BusTrack.Front.Angular\\bustrack.front.angular.client\\bustrack.front.angular.client.esproj",
-        "projectName": "bustrack.front.angular.client",
-        "projectPath": "D:\\Programas testes\\BusTrack\\BusTrack.Front.Angular\\bustrack.front.angular.client\\bustrack.front.angular.client.esproj",
-        "frameworks": {
-          "net472": {
-            "projectReferences": {}
-          }
-        }
-      },
-      "frameworks": {
-        "net472": {}
-      }
-    },
-    "D:\\Programas testes\\BusTrack\\BusTrack.Front.Angular\\BusTrack.Front.Angular.Server\\BusTrack.Front.Angular.Server.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "D:\\Programas testes\\BusTrack\\BusTrack.Front.Angular\\BusTrack.Front.Angular.Server\\BusTrack.Front.Angular.Server.csproj",
-        "projectName": "BusTrack.Front.Angular.Server",
-        "projectPath": "D:\\Programas testes\\BusTrack\\BusTrack.Front.Angular\\BusTrack.Front.Angular.Server\\BusTrack.Front.Angular.Server.csproj",
-        "packagesPath": "C:\\Users\\lgome\\.nuget\\packages\\",
-        "outputPath": "D:\\Programas testes\\BusTrack\\BusTrack.Front.Angular\\BusTrack.Front.Angular.Server\\obj\\",
-        "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
-        "configFilePaths": [
-          "C:\\Users\\lgome\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
-        ],
-        "originalTargetFrameworks": [
-          "net7.0"
-        ],
-        "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "net7.0": {
-            "targetAlias": "net7.0",
-            "projectReferences": {
-              "D:\\Programas testes\\BusTrack\\BusTrack.Front.Angular\\bustrack.front.angular.client\\bustrack.front.angular.client.esproj": {
-                "projectPath": "D:\\Programas testes\\BusTrack\\BusTrack.Front.Angular\\bustrack.front.angular.client\\bustrack.front.angular.client.esproj"
-              }
-            }
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        }
-      },
-      "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
-          "dependencies": {
             "AutoMapper": {
               "target": "Package",
               "version": "[13.0.1, )"
@@ -219,7 +67,7 @@
             },
             "Microsoft.AspNetCore.SpaProxy": {
               "target": "Package",
-              "version": "[7.*-*, )"
+              "version": "[7.0.18, )"
             },
             "Microsoft.AspNetCore.TestHost": {
               "target": "Package",
@@ -260,6 +108,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.5.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[7.5.1, )"
             },
             "coverlet.collector": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
@@ -331,12 +183,6 @@
             "projectReferences": {
               "D:\\Programas testes\\BusTrack\\BusTrack.csproj": {
                 "projectPath": "D:\\Programas testes\\BusTrack\\BusTrack.csproj"
-              },
-              "D:\\Programas testes\\BusTrack\\BusTrack.Front.Angular\\bustrack.front.angular.client\\bustrack.front.angular.client.esproj": {
-                "projectPath": "D:\\Programas testes\\BusTrack\\BusTrack.Front.Angular\\bustrack.front.angular.client\\bustrack.front.angular.client.esproj"
-              },
-              "D:\\Programas testes\\BusTrack\\BusTrack.Front.Angular\\BusTrack.Front.Angular.Server\\BusTrack.Front.Angular.Server.csproj": {
-                "projectPath": "D:\\Programas testes\\BusTrack\\BusTrack.Front.Angular\\BusTrack.Front.Angular.Server\\BusTrack.Front.Angular.Server.csproj"
               }
             }
           }
@@ -356,6 +202,10 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "Auth0.ManagementApi": {
+              "target": "Package",
+              "version": "[7.10.0, )"
+            },
             "AutoMapper": {
               "target": "Package",
               "version": "[13.0.1, )"
@@ -363,6 +213,14 @@
             "Microsoft.AspNetCore.Hosting.Abstractions": {
               "target": "Package",
               "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.OpenApi": {
+              "target": "Package",
+              "version": "[7.0.17, )"
+            },
+            "Microsoft.AspNetCore.SpaProxy": {
+              "target": "Package",
+              "version": "[7.0.18, )"
             },
             "Microsoft.AspNetCore.TestHost": {
               "target": "Package",
@@ -399,6 +257,14 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.3, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.5.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[7.5.1, )"
             },
             "coverlet.collector": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",

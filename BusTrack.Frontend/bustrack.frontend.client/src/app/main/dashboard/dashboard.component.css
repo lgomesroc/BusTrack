@@ -1,0 +1,83 @@
+/* dashboard.component.css */
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.top-bar {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  text-align: right;
+}
+
+.main-content-body {
+  margin-top: 20px;
+}
+
+form {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+  form div {
+    margin-bottom: 10px;
+  }
+
+label {
+  display: block;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="time"],
+input[type="number"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+button[type="submit"] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+  button[type="submit"]:hover {
+    background-color: #45a049;
+  }
+
+/* Responsividade */
+
+/* Tablets e dispositivos móveis em modo paisagem */
+@media screen and (max-width: 768px) {
+  .dashboard-container {
+    flex-direction: column;
+  }
+
+  .main-content {
+    padding: 10px;
+  }
+
+  form {
+    max-width: none;
+  }
+}
+
+/* Dispositivos móveis em modo retrato */
+@media screen and (max-width: 480px) {
+  .top-bar {
+    font-size: 14px;
+  }
+}

@@ -108,8 +108,36 @@
   "TripsPassengers": [
     {
       "TripId": 1,
-      "PassengerIds": [1, 2, 3]
+      "PassengerIds": [ 1, 2, 3 ]
     }
-  ]
+  ],
+  "Users": [
+    {
+      "Login": "john@example.com",
+      "Password": "57asZX@#"
+    },
+    {
+      "Login": "jane@example.com",
+      "Password": "sD7Ac1@!"
+    }
+  ],
+    {
+    "Inspectors": [
+      {
+        "Id": 1,
+        "FullName": "John Doe",
+        "CPF": "444.444.444-44",
+        "Email": "john@example.com",
+        "Password": "57asZX@#"
+      },
+      {
+        "Id": 2,
+        "FullName": "Jane Smith",
+        "CPF": "555.555.555-55",
+        "Email": "jane@example.com",
+        "Password": "sD7Ac1@!"
+      }
+    ]
+  }
 }
 

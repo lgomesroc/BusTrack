@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.271090-alpha">
+  <PropertyGroup>
+    <StartupCommand>npm start</StartupCommand>
+    <JavaScriptTestFramework>Jasmine</JavaScriptTestFramework>
+    <!-- Allows the build (or compile) script located on package.json to run on Build -->
+    <ShouldRunBuildScript>false</ShouldRunBuildScript>
+    <!-- Folder where production build objects will be placed -->
+    <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\bustrack.frontend.client\</BuildOutputFolder>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="src\app\login\update-password\update-password.component\**" />
+    <TypeScriptConfiguration Remove="src\app\login\update-password\update-password.component\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\app\login\rules\disableKeyboardShortcutsRules\" />
+    <Folder Include="src\app\login\rules\blockSavePasswordRules\" />
+    <Folder Include="src\app\main\rules-main\limitCharactersRules\" />
+    <Folder Include="src\app\main\rules-main\validateEmailFormatRules\" />
+    <Folder Include="src\app\main\rules-main\validateFieldsRequiredRules\" />
+    <Folder Include="src\app\services\" />
+  </ItemGroup>
+</Project>

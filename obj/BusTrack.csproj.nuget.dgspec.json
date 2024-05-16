@@ -49,6 +49,10 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "Auth0.ManagementApi": {
+              "target": "Package",
+              "version": "[7.10.0, )"
+            },
             "AutoMapper": {
               "target": "Package",
               "version": "[13.0.1, )"
@@ -60,6 +64,10 @@
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[7.0.17, )"
+            },
+            "Microsoft.AspNetCore.SpaProxy": {
+              "target": "Package",
+              "version": "[7.0.18, )"
             },
             "Microsoft.AspNetCore.TestHost": {
               "target": "Package",
@@ -100,6 +108,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.5.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[7.5.1, )"
             },
             "coverlet.collector": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
