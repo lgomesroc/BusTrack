@@ -1,0 +1,53 @@
+/* Estilos para o sidebar */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 15%;
+  height: 100%;
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+}
+
+/* Estilos para as informações do usuário */
+.user-info h2 {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+/* Estilos para as regras de usabilidade */
+.usability-rules h3 {
+  margin-top: 20px;
+}
+
+.usability-rules ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+/* Estilos para o conteúdo principal */
+.content {
+  margin-left: 15%; /* Ajuste para deixar espaço para o sidebar */
+  padding: 20px;
+}
+
+/* Estilos para a tela principal */
+.main-screen {
+  text-align: center;
+}
+
+/* Regras de mídia para telas menores */
+@media screen and (max-width: 768px) {
+  .sidebar {
+    width: 100%; /* Altera a largura do sidebar para ocupar toda a largura da tela */
+    position: relative; /* Remove a posição fixa para o sidebar ocupar o fluxo normal do documento */
+    padding: 10px; /* Reduz o preenchimento do sidebar para economizar espaço */
+    height: auto; /* Define a altura automática para ajustar ao conteúdo */
+  }
+
+  .content {
+    margin-left: 0; /* Remove a margem à esquerda para ocupar toda a largura da tela */
+    padding: 10px; /* Reduz o preenchimento para economizar espaço */
+  }
+}

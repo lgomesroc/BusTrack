@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Auth0.ManagementApi" Version="7.10.0" />
     <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
     <PackageReference Include="coverlet.collector" Version="6.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -17,6 +18,7 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.17" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="7.0.18" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="7.0.18" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageReference Include="Microsoft.TestPlatform.TestHost" Version="17.9.0" />
     <PackageReference Include="Microsoft.VisualStudio.TestPlatform" Version="14.0.0" />
@@ -25,6 +27,7 @@
     <PackageReference Include="MongoDB.Driver" Version="2.25.0" />
     <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Selenium.WebDriver" Version="4.20.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.1" />
     <PackageReference Include="xunit" Version="2.4.2" />

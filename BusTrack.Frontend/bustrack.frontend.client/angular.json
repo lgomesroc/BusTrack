@@ -30,7 +30,7 @@
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
-            "preserveSymlinks": true  
+            "preserveSymlinks": true,  
             "assets": [
               "src/favicon.ico",
               "src/assets"

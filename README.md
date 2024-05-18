@@ -324,6 +324,8 @@ BusTrack                                       # Nome do projeto
 │   │   ├── TripServiceAPIIntegrationTest.cs  # Testa o serviço de viagens da API.
 │   │   └── TripsPassengerServiceAPIIntegrationTest.cs  # Testa o serviço de viagens de passageiros da API.
 │   ├── PerformanceTests  # Contém testes de performance do sistema (arquivos não mostrados).
+│   │   ├── PassengerServiceAPIPerformanceTests.cs
+│   │   └── RouteServiceAPIPerformanceTests.cs
 │   ├── UnitTests  # Contém testes unitários do sistema.
 │   │   ├── ControllersAPIUnitTests  # Testes unitários de controladores de API.
 │   │   │   ├── BusControllerAPIUnitTests.cs  # Testa a lógica do controlador de ônibus da API.
@@ -333,7 +335,8 @@ BusTrack                                       # Nome do projeto
 │   │   │   ├── TripControllerAPIUnitTests.cs  # Testa a lógica do controlador de viagens da API.
 │   │   │   └── TripsPassengerControllerAPIUnitTests.cs  # Testa a lógica do controlador de viagens de passageiros da API.
 │   └── ...  # Outros testes unitários (arquivos não mostrados).
-│   ├── UsabilityTests  # Contém testes de usabilidade do sistema (arquivos não mostrados).
+│   ├── UsabilityTests  # Contém testes de usabilidade do sistema
+│   │   └── UsabilityTests.cs
 ├── BusTrack.Updater    # Pasta para atualização de dados
 │  ├── DriversUpdater       # Pasta para atualização de dados de motoristas
 │  │  └── DriverNameUpdater.cs # Arquivo para atualizar nomes de motoristas

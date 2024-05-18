@@ -14,6 +14,7 @@
   <ItemGroup>
     <Folder Include="src\app\login\rules\disableKeyboardShortcutsRules\" />
     <Folder Include="src\app\login\rules\blockSavePasswordRules\" />
+    <Folder Include="src\app\login\rules\blockCopyRules\" />
     <Folder Include="src\app\main\rules-main\limitCharactersRules\" />
     <Folder Include="src\app\main\rules-main\validateEmailFormatRules\" />
     <Folder Include="src\app\main\rules-main\validateFieldsRequiredRules\" />

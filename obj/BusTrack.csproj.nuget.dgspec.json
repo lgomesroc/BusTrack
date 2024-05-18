@@ -57,6 +57,10 @@
               "target": "Package",
               "version": "[13.0.1, )"
             },
+            "BenchmarkDotNet": {
+              "target": "Package",
+              "version": "[0.13.12, )"
+            },
             "Microsoft.AspNetCore.Hosting.Abstractions": {
               "target": "Package",
               "version": "[2.2.0, )"
@@ -72,6 +76,10 @@
             "Microsoft.AspNetCore.TestHost": {
               "target": "Package",
               "version": "[7.0.18, )"
+            },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[7.0.0, )"
             },
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
@@ -104,6 +112,10 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.3, )"
+            },
+            "Selenium.WebDriver": {
+              "target": "Package",
+              "version": "[4.20.0, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

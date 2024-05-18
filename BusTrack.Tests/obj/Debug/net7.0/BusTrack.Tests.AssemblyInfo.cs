@@ -8,16 +8,16 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-/*using System;
+using System;
 using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("BusTrack.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9d1e8fc87290f7fc6c879c315df8530e256a0393")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bcb4194e5fc3b9ffe76900a074544d1362d19f53")]
 [assembly: System.Reflection.AssemblyProductAttribute("BusTrack.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BusTrack.Tests")]
-[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]*/
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // Gerado pela classe WriteCodeFragment do MSBuild.
 

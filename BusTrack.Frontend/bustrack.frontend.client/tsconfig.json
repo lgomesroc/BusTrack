@@ -8,7 +8,7 @@
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true,
+    "skipLibCheck": false, // Set to false for stricter type checking
     "esModuleInterop": true,
     "sourceMap": true,
     "declaration": false,
@@ -18,19 +18,35 @@
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
-    "lib": [ "ES2022", "dom" ],
+    "lib": [ 
+      "ES2022",
+      "dom",
+    ],
     "paths": {
-      "@angular/*": [ "node_modules/@angular/*" ],
+      "@angular/*": [
+        "node_modules/@angular/*"
+      ]
     },
-    "types": [ "node", "jest" ],
-    "typeRoots": [ "./node_modules/@types" ],
+    "types": [
+      "node",
+      "jest"
+    ],
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
     "resolveJsonModule": true,
     "strictNullChecks": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true
   },
-  "include": [ "src/**/*" ],
-  "exclude": [ "node_modules", "dist", "**/*.spec.ts" ],
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.spec.ts"
+  ],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,

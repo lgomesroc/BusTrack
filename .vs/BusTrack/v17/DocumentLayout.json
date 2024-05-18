@@ -1,7 +1,12 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\Programas testes\\BusTrack\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{9FE1AD31-BD44-4776-B92C-33DA3F200BF9}|BusTrack.Frontend\\bustrack.frontend.client\\bustrack.frontend.client.esproj|d:\\programas testes\\bustrack\\bustrack.frontend\\bustrack.frontend.client\\src\\app\\login\\rules\\inactivitytimerrules\\inactivitytimerrule.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{9FE1AD31-BD44-4776-B92C-33DA3F200BF9}|BusTrack.Frontend\\bustrack.frontend.client\\bustrack.frontend.client.esproj|solutionrelative:bustrack.frontend\\bustrack.frontend.client\\src\\app\\login\\rules\\inactivitytimerrules\\inactivitytimerrule.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,8 +14,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 0,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "inactivityTimerRule.ts",
+              "DocumentMoniker": "D:\\Programas testes\\BusTrack\\BusTrack.Frontend\\bustrack.frontend.client\\src\\app\\login\\rules\\inactivityTimerRules\\inactivityTimerRule.ts",
+              "RelativeDocumentMoniker": "BusTrack.Frontend\\bustrack.frontend.client\\src\\app\\login\\rules\\inactivityTimerRules\\inactivityTimerRule.ts",
+              "ToolTip": "D:\\Programas testes\\BusTrack\\BusTrack.Frontend\\bustrack.frontend.client\\src\\app\\login\\rules\\inactivityTimerRules\\inactivityTimerRule.ts",
+              "RelativeToolTip": "BusTrack.Frontend\\bustrack.frontend.client\\src\\app\\login\\rules\\inactivityTimerRules\\inactivityTimerRule.ts",
+              "ViewState": "AQIAAAsAAAAAAAAAAADwvx0AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2024-05-18T13:06:02.06Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"

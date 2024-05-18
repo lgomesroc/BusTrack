@@ -1,6 +1,9 @@
+// preventBackNavigationRule.ts
 export function preventBackNavigationRule(): void {
-    window.history.pushState(null, '', window.location.href);
-    window.onpopstate = function () {
-        window.history.go(1);
-    };
+  window.addEventListener('popstate', () => {
+    history.pushState(null, document.title, location.href);
+    alert('Navegação para trás está desativada.');
+  });
+
+  history.pushState(null, document.title, location.href);
 }

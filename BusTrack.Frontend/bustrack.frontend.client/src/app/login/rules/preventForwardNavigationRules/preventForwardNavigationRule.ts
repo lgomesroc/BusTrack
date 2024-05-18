@@ -1,7 +1,9 @@
+// preventForwardNavigationRule.ts
 export function preventForwardNavigationRule(): void {
-  window.addEventListener('beforeunload', function (e) {
-    const confirmationMessage = 'Deseja sair desta página?';
-    (e || window.event).returnValue = confirmationMessage;
-    return confirmationMessage;
+  window.addEventListener('popstate', () => {
+    history.pushState(null, document.title, location.href);
+    alert('Navegação para frente está desativada.');
   });
+
+  history.pushState(null, document.title, location.href);
 }
