@@ -1,0 +1,8 @@
+{
+"SpaProxyServer": {
+"ServerUrl": "",
+"LaunchCommand": "",
+"WorkingDirectory": "D:\\Programas testes\\BusTrack\\BusTrack.Tests",
+"MaxTimeoutInSeconds": "120"
+}
+}

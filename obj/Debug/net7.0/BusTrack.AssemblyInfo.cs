@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BusTrack")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bcb4194e5fc3b9ffe76900a074544d1362d19f53")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d278422ca067ad93551e4e8406b6c4d2000a3daa")]
 [assembly: System.Reflection.AssemblyProductAttribute("BusTrack")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BusTrack")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

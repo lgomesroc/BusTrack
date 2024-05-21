@@ -1,0 +1,1 @@
+D:\Programas testes\BusTrack\BusTrack.Frontend\bustrack.frontend.client\obj\Debug\bustrack.frontend.client.esproj.CoreCompileInputs.cache

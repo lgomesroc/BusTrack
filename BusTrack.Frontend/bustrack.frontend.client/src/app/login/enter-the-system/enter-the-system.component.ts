@@ -5,7 +5,7 @@ import { startInactivityTimerRule } from '../rules/inactivityTimerRules/inactivi
 import { disableKeyboardShortcutsRule } from '../rules/disableKeyboardShortcutsRules/disableKeyboardShortcutsRule';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-enter-the-system',
   templateUrl: './enter-the-system.component.html',
   styleUrls: ['./enter-the-system.component.css']
 })

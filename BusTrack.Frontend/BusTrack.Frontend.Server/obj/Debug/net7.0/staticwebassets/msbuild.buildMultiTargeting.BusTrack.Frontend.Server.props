@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\BusTrack.Frontend.Server.props" />
+</Project>

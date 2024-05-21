@@ -1,0 +1,23 @@
+{
+  "Version": 1,
+  "Hash": "IBx+qBt1EYdqEFlgNSneudc00z0ZtvlJ6fDTAgFKHoU=",
+  "Source": "BusTrack.Frontend.Server",
+  "BasePath": "_content/BusTrack.Frontend.Server",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [
+    {
+      "Identity": "d:\\Programas testes\\BusTrack\\BusTrack.Frontend\\bustrack.frontend.client\\bustrack.frontend.client.esproj",
+      "Version": 2,
+      "Source": "bustrack.frontend.client",
+      "GetPublishAssetsTargets": "GetCurrentProjectPublishStaticWebAssetItems",
+      "AdditionalPublishProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework;RuntimeIdentifier;SelfContained",
+      "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
+      "AdditionalBuildProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework;RuntimeIdentifier;SelfContained"
+    }
+  ],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
