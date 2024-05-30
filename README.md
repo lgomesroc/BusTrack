@@ -17,11 +17,12 @@ O objetivo principal do projeto é realizar o controle tanto de quantos passagei
 - Passageiros: Informações sobre os passageiros, como nome, idade e endereço.
 
 ## Ferramentas utilizadas
+
 O projeto BusTrack.API utiliza as seguintes ferramentas e tecnologias:
 
 - Testes:
-XUnit: Framework de testes unitários para .NET.
-MSTest: Framework de testes unitários da Microsoft.
+  XUnit: Framework de testes unitários para .NET.
+  MSTest: Framework de testes unitários da Microsoft.
 
 - Banco de dados: NoSQL e o escolhido é o MongoDB
 
@@ -33,12 +34,11 @@ MSTest: Framework de testes unitários da Microsoft.
 
 Os testes unitários cobrem as funcionalidades da API, incluindo a validação de dados, o tratamento de erros e o desempenho.
 
-O banco de dados utilizado é o MongoDB. 
+O banco de dados utilizado é o MongoDB.
 
 A API é implementada usando o ASP.NET Core. O Swagger é usado para documentar as rotas e os métodos da API.
 
 A injeção de dependência é usada para desacoplar os componentes da API. O Autofac é o framework de injeção de dependência utilizado.
-
 
 ###Configuração do MongoDB
 
@@ -50,19 +50,15 @@ Se você estiver implantando este projeto em um ambiente de produção ou se a s
 
 Para mais informações sobre a instalação e configuração do MongoDB, consulte a documentação oficial do MongoDB.
 
-
 ### Segurança
 
 Não foi pensado em segurança para esse projeto
-
-
 
 ## Histórico de Atualizações
 
 ### 2024-04-26
 
 - Retirada de todos os erros do projeto.
-
 
 ### 2024-04-21
 
@@ -96,199 +92,198 @@ Não foi pensado em segurança para esse projeto
 
 - Lançamento inicial do projeto no GitHub.
 
-
-
 ## Estrutura das pastas do projeto
 
-BusTrack                                       # Nome do projeto
-├── BusTrack.API                              # Pasta em relação à API
-│   ├── ControllersAPI                       # Pasta para controladores da API
-│   │   ├── AccountControllerAPI.cs          # Controller para operações relacionadas a contas de usuário
-│   │   ├── AuthenticationControllerAPI.cs   # Controller para autenticação de usuários.
-│   │   ├── BusControllerAPI.cs              # Controller para gerenciar operações relacionadas a ônibus
-│   │   ├── CreateAccountControllerAPI.cs    # Controller para criar novas contas de usuário.
-│   │   ├── DashboardControllerAPI.cs        # Controlador para endpoints relacionados ao dashboard e salvamento de dados
-│   │   ├── DriverControllerAPI.cs           # Controller para gerenciar operações relacionadas a motoristas
-│   │   ├── PassengerControllerAPI.cs        # Controller para gerenciar operações relacionadas a passageiros
-│   │   ├── RouteControllerAPI.cs            # Controller para gerenciar operações relacionadas a rotas
-│   │   ├── TripControllerAPI.cs             # Controller para gerenciar operações relacionadas a viagens
-│   │   ├── TripsPassengerControllerAPI.cs   # Controller para gerenciar operações relacionadas a viagens
-│   │   └── UserControllerAPI.cs             # Controller para gerenciar operações relacionadas a usuários
-│   ├── DTOAPI                               # Pasta para DTOs da API
-│   │   ├── BusDTOAPI.cs                     # DTO para ônibus
-│   │   ├── DriverDTOAPI.cs                  # DTO para motoristas
-│   │   ├── PassengerDTOAPI.cs               # DTO para passageiros
-│   │   ├── RouteDTOAPI.cs                   # DTO para rotas
-│   │   ├── TripDTOAPI.cs                    # DTO para viagens
-│   │   └── TripPassengerDTOAPI.cs           # DTO para associação entre viagens e passageiros
-│   ├── InterfacesAPI                        # Pasta para interfaces da API
-│   │   ├── ServicesAPI                          # Pasta para interfaces de serviço da API
-│   │   │   ├── IAccountServiceAPI.cs            # Interface para o serviço relacionado a contas de usuário.
-│   │   │   ├── IBusServiceAPI.cs                # Interface para serviço relacionado a ônibus
-│   │   │   ├── IDriverServiceAPI.cs             # Interface para serviço relacionado a motoristas
-│   │   │   ├── IEmailConfirmationServiceAPI.cs  # Interface para o serviço de confirmação de e-mail na API
-│   │   │   ├── IPassengerServiceAPI.cs          # Interface para serviço relacionado a passageiros
-│   │   │   ├── IRouteServiceAPI.cs              # Interface para serviço relacionado a rotas
-│   │   │   ├── ITripServiceAPI.cs              # Interface para serviço relacionado a viagens
-│   │   │   ├── ITripsPassengerServiceAPI.cs    # Interface para serviço relacionado a viagens
-│   │   │   ├── IUserAuthenticationServiceAPI.cs   # Interface para o serviço de autenticação de usuários na API
-│   │   │   └── IUserServiceAPI.cs   # Interface para o serviço de usuário na API
-│   ├── MappingsAPI                             # Pasta para configuração de mapeamentos
-│   │   └── MappingProfileAPI.cs               # Arquivo para configuração de mapeamentos
-│   ├── ModelsAPI                               # Pasta para modelos da API
-│   │   ├── AccountModelAPI.cs              # Modelo para contas de usuário
-│   │   ├── BusModelAPI.cs                  # Modelo para ônibus
-│   │   ├── DriverModelAPI.cs               # Modelo para motoristas
-│   │   ├── PassengerModelAPI.cs            # Modelo para passageiros
-│   │   ├── RouteModelAPI.cs                # Modelo para rotas
-│   │   ├── TripModelAPI.cs                 # Modelo para viagens
-│   │   ├── TripsPassengerModelAPI.cs       # Modelo para associação entre viagens e passageiros
-│   │   └── UserModelAPI.cs                 # Modelo para usuários.
-│   ├── ServicesAPI                         # Pasta para serviços da API
-│   │   └── AccountServiceAPI.cs            # Serviço para operações relacionadas a contas de usuário
-│   │   ├── BusServiceAPI.cs                # Serviço para operações relacionadas a ônibus
-│   │   ├── DriverServiceAPI.cs             # Serviço para operações relacionadas a motoristas
-│   │   ├── PassengerServiceAPI.cs          # Serviço para operações relacionadas a passageiros
-│   │   ├── RouteServiceAPI.cs              # Serviço para operações relacionadas a rotas
-│   │   ├── TripServiceAPI.cs               # Serviço para operações relacionadas a viagens
-│   │   ├── TripsPassengerServiceAPI.cs     # Serviço para operações relacionadas a associação entre viagens e passageiros
-│   │   ├── UserAuthenticationServiceAPI.cs    # Serviço para autenticação de usuários.
-│   │   └── UserServiceAPI.cs        # serviço para operações relacionados aos usuários
-├── BusTrack.DB                             # Pasta em relação ao Banco de Dados
-│   ├── ClassesDB                           # Pasta para as classes das tabelas do banco de dados
-│   │   ├── BusDB.cs                        # Define a classe BusDB, representando a tabela de ônibus
-│   │   ├── DriverDB.cs                     # Define a classe DriverDB, representando a tabela de motoristas
-│   │   ├── EmailConfirmationDB             # Classe para representar a confirmação de e-mail.
-│   │   ├── InspectorDB                     # Classe para representar inspetores.
-│   │   ├── LoginDB                         # Classe para representar informações de login.
-│   │   ├── PassengerDB.cs                  # Define a classe PassengerDB, representando a tabela de passageiros
-│   │   ├── PasswordRecordDB.cs             # Define a classe PasswordRecordDB, que representa a tabela de registros de senhas.
-│   │   ├── RouteDB.cs                      # Define a classe RouteDB, representando a tabela de rotas
-│   │   ├── TripDB.cs                       # Define a classe TripDB, representando a tabela de viagens
-│   │   ├── TripsPassengerDB.cs             # Define a classe TripsPassengerDB, representando a tabela de associação entre viagens e passageiros
-│   │   └── UserDB.cs                       # Define a classe UserDB, para representar a tabela de usuários no banco de dados
-│   │   └── UserRegistrationDB.cs           # Define a classe UserRegistrationDB, que representa a tabela de registros de usuários.
-│   ├── ConnectionsDB                             # Pasta para configuração do banco de dados
-│   │   └── ConnectionDB.cs                      # Configura a conexão do banco de dados
-│   ├── DataBaseDB                               # Pasta para configuração do banco de dados
-│   │   └── database.json                        # Arquivo de configuração do banco de dados com o projeto.
-│   ├── InterfacesDB                             # Pasta para interfaces do banco de dados
-│   │   ├── IModelsDB                            # Pasta das interfaces dos modelos do banco de dados
-│   │   │   ├── IBusModelDB.cs                   # Interface IBusModelDB
-│   │   │   ├── IDriverModelDB.cs                # Interface IDriverModelDB
-│   │   │   ├── IPassengerModelDB.cs             # Interface IPassengerModelDB
-│   │   │   ├── IRouteModelDB.cs                 # Interface IRouteModelDB
-│   │   │   ├── ITripModelDB.cs                  # Interface ITripModelDB
-│   │   │   └── ITripsPassengerModelDB.cs        # Interface ITripsPassengerModelDB
-│   │   └── IRepositoriesDB                      # Pasta das interfaces dos repositórios do banco de dados
-│   │   │    ├── IBusRepositoryDB.cs             # Interface IBusRepositoryDB
-│   │   │    ├── IDriverRepositoryDB.cs          # Interface IDriverRepositoryDB
-│   │   │    ├── IPassengerRepositoryDB.cs       # Interface IPassengerRepositoryDB
-│   │   │    ├── IRouteRepositoryDB.cs           # Interface IRouteRepositoryDB
-│   │   │    ├── ITripRepositoryDB.cs            # Interface ITripRepositoryDB
-│   │   │    ├── ITripsPassengerRepositoryDB.cs  # Interface ITripsPassengerRepositoryDB
-│   │   │    └── IUserRepositoryDB               # Interface para repositório de usuários.
-│   ├── ModelsDB           # Pasta para modelos do banco de dados
+```plaintext
+BusTrack
+├── BusTrack.API
+│   ├── ControllersAPI
+│   │   ├── AccountControllerAPI.cs
+│   │   ├── AuthenticationControllerAPI.cs
+│   │   ├── BusControllerAPI.cs
+│   │   ├── CreateAccountControllerAPI.cs
+│   │   ├── DashboardControllerAPI.cs
+│   │   ├── DriverControllerAPI.cs
+│   │   ├── PassengerControllerAPI.cs
+│   │   ├── RouteControllerAPI.cs
+│   │   ├── TripControllerAPI.cs
+│   │   ├── TripsPassengerControllerAPI.cs
+│   │   └── UserControllerAPI.cs
+│   ├── DTOAPI
+│   │   ├── BusDTOAPI.cs
+│   │   ├── DriverDTOAPI.cs
+│   │   ├── PassengerDTOAPI.cs
+│   │   ├── RouteDTOAPI.cs
+│   │   ├── TripDTOAPI.cs
+│   │   └── TripPassengerDTOAPI.cs
+│   ├── InterfacesAPI
+│   │   ├── ServicesAPI
+│   │   │   ├── IAccountServiceAPI.cs
+│   │   │   ├── IBusServiceAPI.cs
+│   │   │   ├── IDriverServiceAPI.cs
+│   │   │   ├── IEmailConfirmationServiceAPI.cs
+│   │   │   ├── IPassengerServiceAPI.cs
+│   │   │   ├── IRouteServiceAPI.cs
+│   │   │   ├── ITripServiceAPI.cs
+│   │   │   ├── ITripsPassengerServiceAPI.cs
+│   │   │   ├── IUserAuthenticationServiceAPI.cs
+│   │   │   └── IUserServiceAPI.cs
+│   ├── MappingsAPI
+│   │   └── MappingProfileAPI.cs
+│   ├── ModelsAPI
+│   │   ├── AccountModelAPI.cs
+│   │   ├── BusModelAPI.cs
+│   │   ├── DriverModelAPI.cs
+│   │   ├── PassengerModelAPI.cs
+│   │   ├── RouteModelAPI.cs
+│   │   ├── TripModelAPI.cs
+│   │   ├── TripsPassengerModelAPI.cs
+│   │   └── UserModelAPI.cs
+│   ├── ServicesAPI
+│   │   └── AccountServiceAPI.cs
+│   │   ├── BusServiceAPI.cs
+│   │   ├── DriverServiceAPI.cs
+│   │   ├── PassengerServiceAPI.cs
+│   │   ├── RouteServiceAPI.cs
+│   │   ├── TripServiceAPI.cs
+│   │   ├── TripsPassengerServiceAPI.cs
+│   │   ├── UserAuthenticationServiceAPI.cs
+│   │   └── UserServiceAPI.cs
+├── BusTrack.DB
+│   ├── ClassesDB
+│   │   ├── BusDB.cs
+│   │   ├── DriverDB.cs
+│   │   ├── EmailConfirmationDB
+│   │   ├── InspectorDB
+│   │   ├── LoginDB
+│   │   ├── PassengerDB.cs
+│   │   ├── PasswordRecordDB.cs
+│   │   ├── RouteDB.cs
+│   │   ├── TripDB.cs
+│   │   ├── TripsPassengerDB.cs
+│   │   └── UserDB.cs
+│   │   └── UserRegistrationDB.cs
+│   ├── ConnectionsDB
+│   │   └── ConnectionDB.cs
+│   ├── DataBaseDB
+│   │   └── database.json
+│   ├── InterfacesDB
+│   │   ├── IModelsDB
+│   │   │   ├── IBusModelDB.cs
+│   │   │   ├── IDriverModelDB.cs
+│   │   │   ├── IPassengerModelDB.cs
+│   │   │   ├── IRouteModelDB.cs
+│   │   │   ├── ITripModelDB.cs
+│   │   │   └── ITripsPassengerModelDB.cs
+│   │   └── IRepositoriesDB
+│   │   │    ├── IBusRepositoryDB.cs
+│   │   │    ├── IDriverRepositoryDB.cs
+│   │   │    ├── IPassengerRepositoryDB.cs
+│   │   │    ├── IRouteRepositoryDB.cs
+│   │   │    ├── ITripRepositoryDB.cs
+│   │   │    ├── ITripsPassengerRepositoryDB.cs
+│   │   │    └── IUserRepositoryDB
+│   ├── ModelsDB
 │   │   ├── AccountModelDB.cs
-│   │   ├── BusModelDB.cs             # Implementação da interface IBusModelDB
-│   │   ├── DriverModelDB.cs          # Implementação da interface IDriverModelDB
-│   │   ├── PassengerModelDB.cs       # Implementação da interface IPassengerModelDB
-│   │   ├── RouteModelDB.cs           # Implementação da interface IRouteModelDB
-│   │   ├── TripModelDB.cs            # Implementação da interface ITripModelDB
-│   │   ├── TripsPassengerModelDB.cs  # Implementação da interface ITripsPassengerModelDB
+│   │   ├── BusModelDB.cs
+│   │   ├── DriverModelDB.cs
+│   │   ├── PassengerModelDB.cs
+│   │   ├── RouteModelDB.cs
+│   │   ├── TripModelDB.cs
+│   │   ├── TripsPassengerModelDB.cs
 │   │   └── UserModelDB.cs
-│   ├── RepositoriesDB     # Pasta para repositórios do banco de dados
-│   │   ├── BusRepositoryDB.cs            # Repositório para a classe BusDB
-│   │   ├── DriverRepositoryDB.cs         # Repositório para a classe DriverDB
+│   ├── RepositoriesDB
+│   │   ├── BusRepositoryDB.cs
+│   │   ├── DriverRepositoryDB.cs
 │   │   ├── InspectorRepositoryDB.cs
-│   │   ├── PassengerRepositoryDB.cs      # Repositório para a classe PassengerDB
-│   │   ├── RouteRepositoryDB.cs          # Repositório para a classe RouteDB
-│   │   ├── TripRepositoryDB.cs           # Repositório para a classe TripDB
-│   │   ├── TripsPassengerRepositoryDB.cs # Repositório para a classe TripsPassengerDB
+│   │   ├── PassengerRepositoryDB.cs
+│   │   ├── RouteRepositoryDB.cs
+│   │   ├── TripRepositoryDB.cs
+│   │   ├── TripsPassengerRepositoryDB.cs
 │   │   └── UserRepositoryDB.cs
-│   ├── ServicesDB         # Pasta para serviços do banco de dados
-│   │   ├── BusSingleTripConstraintServiceDB.cs   # Serviço para restrição de viagem única
-│   │   ├── DepartureTimeValidationServiceDB.cs  # Serviço para validação de hora de partida
-│   │   ├── MinTripDurationContraintServiceDB.cs # Serviço para restrição de duração mínima de viagem
-│   │   ├── PassengerLimitValidationServiceDB.cs # Serviço para validação de limite de passageiros
-│   │   ├── TripMappingServiceDB.cs             # Serviço para mapeamento de viagem
-│   │   ├── TripServiceDB.cs                    # Serviço relacionado às viagens
-│   │   └── TripStatusUpdateServiceDB.cs        # Serviço para atualização de status de viagem
+│   ├── ServicesDB
+│   │   ├── BusSingleTripConstraintServiceDB.cs
+│   │   ├── DepartureTimeValidationServiceDB.cs
+│   │   ├── MinTripDurationContraintServiceDB.cs
+│   │   ├── PassengerLimitValidationServiceDB.cs
+│   │   ├── TripMappingServiceDB.cs
+│   │   ├── TripServiceDB.cs
+│   │   └── TripStatusUpdateServiceDB.cs
 │   └── ...
-├── BusTrack.Front.Angular            # Pasta raiz do projeto frontend
-│   ├── bustrack.frontend.client     # Pasta do cliente frontend
-│   │   ├── src                       # Pasta de código-fonte
-│   │   │   ├── app                   # Pasta principal do aplicativo
-│   │   │   │   ├── login             # Pasta contendo componentes relacionados ao login
-│   │   │   │   │   ├── concluded/         # Pasta contendo componentes relacionados à conclusão
-│   │   │   │   │   │   ├── concluded.component.css    # Estilos CSS para a tela de conclusão
-│   │   │   │   │   │   ├── concluded.component.html   # Template HTML para a tela de conclusão
-│   │   │   │   │   │   ├── concluded.component.spec.ts   # Teste para o componente de conclusão
-│   │   │   │   │   │   ├── concluded.component.ts     # Lógica TypeScript para a tela de conclusão
-│   │   │   │   │   │   ├── OIG4.jpgeg                 # Imagem que aparece nas telas do projeto
-│   │   │   │   │   ├── confirmation/      # Pasta contendo componentes relacionados à confirmação
-│   │   │   │   │   │   ├── confirmation.component.css    # Estilos CSS para a tela de confirmação
-│   │   │   │   │   │   ├── confirmation.component.html   # Template HTML para a tela de confirmação
-│   │   │   │   │   │   ├── confirmation.component.spec.ts   # Teste para o componente de confirmação
-│   │   │   │   │   │   ├── confirmation.component.ts     # Lógica TypeScript para a tela de confirmação
-│   │   │   │   │   │   ├── OIG4.jpgeg                    # Imagem que aparece nas telas do projeto
-│   │   │   │   │   ├── create-an-account   # Pasta contendo componentes relacionados à criação de conta
-│   │   │   │   │   │   ├── create-an-account.component.css   # Estilos CSS para a tela de criação de conta
-│   │   │   │   │   │   ├── create-an-account.component.html  # Template HTML para a tela de criação de conta
-│   │   │   │   │   │   ├── create-an-account.component.spec.ts   # Teste para o componente de criação de conta
-│   │   │   │   │   │   ├── create-an-account.component.ts    # Lógica TypeScript para a tela de criação de conta
-│   │   │   │   │   │   ├── OIG4.jpgeg                        # Imagem que aparece nas telas do projeto
-│   │   │   │   │   ├── enter-the-system    # Pasta contendo componentes relacionados à entrada no sistema
-│   │   │   │   │   │   ├── enter-the-system.component.css    # Estilos CSS para a tela de entrada no sistema
-│   │   │   │   │   │   ├── enter-the-system.component.html   # Template HTML para a tela de entrada no sistema
-│   │   │   │   │   │   ├── enter-the-system.component.spec.ts   # Teste para o componente de entrada no sistema
-│   │   │   │   │   │   ├── enter-the-system.component.ts     # Lógica TypeScript para a tela de entrada no sistema
-│   │   │   │   │   │   ├── OIG4.jpgeg                       # Imagem que aparece nas telas do projeto
-│   │   │   │   │   ├── main-screen        # Pasta contendo componentes relacionados à tela principal
-│   │   │   │   │   │   ├── main-screen.component.css   # Estilos CSS para a tela principal
-│   │   │   │   │   │   ├── main-screen.component.html  # Template HTML para a tela principal
-│   │   │   │   │   │   ├── main-screen.component.spec.ts   # Teste para o componente de tela principal
-│   │   │   │   │   │   ├── main-screen.component.ts    # Lógica TypeScript para a tela principal
-│   │   │   │   │   │   ├── OIG4.jpeg                  # Imagem que aparece nas telas do projeto
-│   │   │   │   │   ├── rules    # Regras
-│   │   │   │   │   │   ├── blockSavePasswordRules   # Regras de Bloqueio de Salvamento de Senha
-│   │   │   │   │   │   │   ├── blockSavePasswordRule.ts # Contém a lógica TypeScript relacionada à regra de bloqueio de salvamento de senha.
+├── BusTrack.Front.Angular
+│   ├── bustrack.frontend.client
+│   │   ├── src
+│   │   │   ├── app
+│   │   │   │   ├── login
+│   │   │   │   │   ├── concluded/
+│   │   │   │   │   │   ├── concluded.component.css
+│   │   │   │   │   │   ├── concluded.component.html
+│   │   │   │   │   │   ├── concluded.component.spec.ts
+│   │   │   │   │   │   ├── concluded.component.ts
+│   │   │   │   │   │   ├── OIG4.jpgeg
+│   │   │   │   │   ├── confirmation/
+│   │   │   │   │   │   ├── confirmation.component.css
+│   │   │   │   │   │   ├── confirmation.component.html
+│   │   │   │   │   │   ├── confirmation.component.spec.ts
+│   │   │   │   │   │   ├── confirmation.component.ts
+│   │   │   │   │   │   ├── OIG4.jpgeg
+│   │   │   │   │   ├── create-an-account
+│   │   │   │   │   │   ├── create-an-account.component.css
+│   │   │   │   │   │   ├── create-an-account.component.html
+│   │   │   │   │   │   ├── create-an-account.component.spec.ts
+│   │   │   │   │   │   ├── create-an-account.component.ts
+│   │   │   │   │   │   ├── OIG4.jpgeg
+│   │   │   │   │   ├── enter-the-system
+│   │   │   │   │   │   ├── enter-the-system.component.css
+│   │   │   │   │   │   ├── enter-the-system.component.html
+│   │   │   │   │   │   ├── enter-the-system.component.spec.ts
+│   │   │   │   │   │   ├── enter-the-system.component.ts
+│   │   │   │   │   │   ├── OIG4.jpgeg
+│   │   │   │   │   ├── main-screen        # Pasta contendo
+│   │   │   │   │   │   ├── main-screen.component.css
+│   │   │   │   │   │   ├── main-screen.component.html
+│   │   │   │   │   │   ├── main-screen.component.spec.ts
+│   │   │   │   │   │   ├── main-screen.component.ts
+│   │   │   │   │   │   ├── OIG4.jpeg
+│   │   │   │   │   ├── rules
+│   │   │   │   │   │   ├── blockSavePasswordRules
+│   │   │   │   │   │   │   ├── blockSavePasswordRule.ts
 │   │   │   │   │   │   ├── checkPasswordStrengthpasswordRules
 │   │   │   │   │   │   │   ├── checkPasswordStrengthpasswordRule.ts
-│   │   │   │   │   │   ├── disableInteractionsRules   # Regras de Desativação de Interações
-│   │   │   │   │   │   │   ├── disableInteractionsRule.ts   # Contém a lógica TypeScript relacionada à regra de desativação de interações.
-│   │   │   │   │   │   ├── disableKeyboardShortcutsRules   # Regras de Desativação de Atalhos de Teclado
-│   │   │   │   │   │   │   ├── disableKeyboardShortcutsRule.ts   # Contém a lógica TypeScript relacionada à regra de desativação de atalhos de teclado.
+│   │   │   │   │   │   ├── disableInteractionsRules
+│   │   │   │   │   │   │   ├── disableInteractionsRule.ts
+│   │   │   │   │   │   ├── disableKeyboardShortcutsRules
+│   │   │   │   │   │   │   ├── disableKeyboardShortcutsRule.ts
 │   │   │   │   │   │   ├── hasRepeatedOrSequentialNumbersRules
 │   │   │   │   │   │   │   ├── hasRepeatedOrSequentialNumbersRule.ts
-│   │   │   │   │   │   ├── inactivityTimerRules   # Regras do Temporizador de Inatividade
-│   │   │   │   │   │   │   ├── inactivityTimerRule.ts  # Contém a lógica TypeScript relacionada às regras do temporizador de inatividade.
-│   │   │   │   │   │   ├── preventBackNavigationRules   # Regras de Prevenção de Navegação para Trás
-│   │   │   │   │   │   │   ├── preventBackNavigationRule.ts   # Contém a lógica TypeScript relacionada às regras de prevenção de navegação para trás.
-│   │   │   │   │   │   ├── preventForwardNavigationRules  # Regras de Prevenção de Navegação para Frente
-│   │   │   │   │   │   │   ├── preventForwardNavigationRule.ts  # Contém a lógica TypeScript relacionada às regras de prevenção de navegação para frente.
-│   │   │   │   │   │   ├── sessionTimeoutRules   # Regras de Expiração de Sessão):
-│   │   │   │   │   │   │   ├── sessionTimeoutRule.ts   # Contém a lógica TypeScript relacionada às regras de expiração de sessão.
-│   │   │   │   │   │   ├── startInactivityTimerRules   # Regras de Início do Temporizador de Inatividade
-│   │   │   │   │   │   │   ├── startInactivityTimerRule.ts   #  Contém a lógica TypeScript relacionada às regras de início do temporizador de inatividade.
-│   │   │   │   │   ├── update-password         #Pasta contendo componentes relacionados à atualização de senha.
-│   │   │   │   │   │   ├── OIG4.jpeg           # Imagem que aparece nas telas do projeto
-│   │   │   │   │   │   ├── update-password.component.css   # Estilos CSS para o componente de atualização de senha.
-│   │   │   │   │   │   ├── update-password.component.html  #  Template HTML para o componente de atualização de senha.
-│   │   │   │   │   │   ├── update-password.component.spec.ts  # Teste para o componente de atualização de senha.
-│   │   │   │   │   │   ├── update-password.component.ts   #  Lógica TypeScript para o componente de atualização de senha.
-│   │   │   │   │   ├── login.component.css       # Estilos CSS para o componente de login
-│   │   │   │   │   ├── login.component.html      # Template HTML para o componente de login
-│   │   │   │   │   ├── login.component.spec.ts   # Teste para o componente de login
-│   │   │   │   │   ├── login.component.ts        # Lógica TypeScript para o componente de login
-│   │   │   │   │   ├── OIG4.jpeg                # Imagem que aparece nas telas do projeto
+│   │   │   │   │   │   ├── inactivityTimerRules
+│   │   │   │   │   │   │   ├── inactivityTimerRule.ts
+│   │   │   │   │   │   ├── preventBackNavigationRules
+│   │   │   │   │   │   │   ├── preventBackNavigationRule.ts
+│   │   │   │   │   │   ├── preventForwardNavigationRules
+│   │   │   │   │   │   │   ├── preventForwardNavigationRule.ts
+│   │   │   │   │   │   ├── sessionTimeoutRules
+│   │   │   │   │   │   │   ├── sessionTimeoutRule.ts
+│   │   │   │   │   │   ├── startInactivityTimerRules
+│   │   │   │   │   │   │   ├── startInactivityTimerRule.ts
+│   │   │   │   │   ├── update-password
+│   │   │   │   │   │   ├── OIG4.jpeg
+│   │   │   │   │   │   ├── update-password.component.css
+│   │   │   │   │   │   ├── update-password.component.html
+│   │   │   │   │   │   ├── update-password.component.spec
+│   │   │   │   │   │   ├── update-password.component.ts
+│   │   │   │   │   ├── login.component.css
+│   │   │   │   │   ├── login.component.html
+│   │   │   │   │   ├── login.component.spec.ts
+│   │   │   │   │   ├── login.component.ts
+│   │   │   │   │   ├── OIG4.jpeg
 │   │   │   │   ├── main
 │   │   │   │   │   ├── dashboard
 │   │   │   │   │   │   ├── dashboard.component.css
 │   │   │   │   │   │   ├── dashboard.component.html
 │   │   │   │   │   │   ├── dashboard.component.spec.ts
 │   │   │   │   │   │   ├── dashboard.component.ts
-│   │   │   │   │   │   ├── OIG4.jpeg         # Imagem que aparece nas telas do projeto
+│   │   │   │   │   │   ├── OIG4.jpeg
 │   │   │   │   │   ├── rules-main
 │   │   │   │   │   │   ├── limitCharactersRules
 │   │   │   │   │   │   │   ├── limitCharactersRule.ts
@@ -303,56 +298,56 @@ BusTrack                                       # Nome do projeto
 │   │   │   │   │   │   ├── sidebar.component.ts
 │   ├── BusTrack.Frontend.Server
 │   │    └── ...
-│   └── ... 
-├── BusTrack.Program       # Pasta para o projeto principal do programa
-│   ├── DataBaseServicesExtensionsProgram  # Pasta para extensões de serviços de banco de dados
-│   │   └── DataBaseServicesExtensionsProgram.cs  # Contém métodos de extensão para adicionar serviços de banco de dados ao contêiner de injeção de dependência
-│   ├── ExtensionsProgram  # Pasta para extensões do programa
-│   │   └── ExtensionsProgram.cs  # Arquivo que contém métodos de extensão para adicionar serviços personalizados ao contêiner de injeção de dependência
-│   │   └── ServiceExtensionProgram.cs  # Arquivo que contém métodos de extensão para adicionar serviços personalizados ao contêiner de injeção de dependência
-│   ├── MiddlewareProgram  # Pasta para middleware do programa
-│   │   └── ErrorHandlingMiddleware.cs  # Arquivo que é um middleware personalizado para lidar com erros
-│   └── Program.cs  # Arquivo principal do programa, que configura e executa o aplicativo
+│   └── ...
+├── BusTrack.Program
+│   ├── DataBaseServicesExtensionsProgram
+│   │   └── DataBaseServicesExtensionsProgram.cs
+│   ├── ExtensionsProgram
+│   │   └── ExtensionsProgram.cs
+│   │   └── ServiceExtensionProgram.cs
+│   ├── MiddlewareProgram
+│   │   └── ErrorHandlingMiddleware.cs
+│   └── Program.cs
 ├── BusTrack.Tests
-│   ├── IntegrationTests  # Contém testes de integração do sistema.
-│   │   ├── CustomWebApplicationFactory  # Contém classes auxiliares para testes de integração.
-│   │   │   └── CustomWebApplicationFactory.cs # Define a lógica para criar instância de teste do seu aplicativo web, facilitando a configuração e o controle do ambiente de teste.
-│   │   ├── ControllersAPIIntegrationTests  # Testes de integração de controladores de API.
-│   │   │   ├── BusControllerAPIIntegrationTest.cs  # Testa o controlador de ônibus da API.
-│   │   │   ├── DriverControllerAPIIntegrationTest.cs  # Testa o controlador de motoristas da API.
-│   │   │   ├── PassengerControllerAPIIntegrationTest.cs  # Testa o controlador de passageiros da API.
-│   │   │   ├── RouteControllerAPIIntegrationTest.cs  # Testa o controlador de rotas da API.
-│   │   │   ├── TripControllerAPIIntegrationTest.cs  # Testa o controlador de viagens da API.
-│   │   │   └── TripsPassengerControllerAPIIntegrationTest.cs  # Testa o controlador de viagens de passageiros da API. 
-│   ├── ServicesAPIIntegrationTests  # Testes de integração de serviços da API.
-│   │   ├── BusServiceAPIIntegrationTest.cs  # Testa o serviço de ônibus da API.
-│   │   ├── DriverServiceAPIIntegrationTest.cs  # Testa o serviço de motoristas da API.
-│   │   ├── PassengerServiceAPIIntegrationTest.cs  # Testa o serviço de passageiros da API.
-│   │   ├── RouteServiceAPIIntegrationTest.cs  # Testa o serviço de rotas da API.
-│   │   ├── TripServiceAPIIntegrationTest.cs  # Testa o serviço de viagens da API.
-│   │   └── TripsPassengerServiceAPIIntegrationTest.cs  # Testa o serviço de viagens de passageiros da API.
-│   ├── PerformanceTests  # Contém testes de performance do sistema (arquivos não mostrados).
+│   ├── IntegrationTests
+│   │   ├── CustomWebApplicationFactory
+│   │   │   └── CustomWebApplicationFactory.cs
+│   │   ├── ControllersAPIIntegrationTests
+│   │   │   ├── BusControllerAPIIntegrationTest.cs
+│   │   │   ├── DriverControllerAPIIntegrationTest.cs
+│   │   │   ├── PassengerControllerAPIIntegrationTest.cs
+│   │   │   ├── RouteControllerAPIIntegrationTest.cs
+│   │   │   ├── TripControllerAPIIntegrationTest.cs
+│   │   │   └── TripsPassengerControllerAPIIntegrationTest.cs
+│   ├── ServicesAPIIntegrationTests
+│   │   ├── BusServiceAPIIntegrationTest.cs
+│   │   ├── DriverServiceAPIIntegrationTest.cs
+│   │   ├── PassengerServiceAPIIntegrationTest.cs
+│   │   ├── RouteServiceAPIIntegrationTest.cs
+│   │   ├── TripServiceAPIIntegrationTest.cs
+│   │   └── TripsPassengerServiceAPIIntegrationTest.cs
+│   ├── PerformanceTests
 │   │   ├── PassengerServiceAPIPerformanceTests.cs
 │   │   └── RouteServiceAPIPerformanceTests.cs
-│   ├── UnitTests  # Contém testes unitários do sistema.
-│   │   ├── ControllersAPIUnitTests  # Testes unitários de controladores de API.
-│   │   │   ├── BusControllerAPIUnitTests.cs  # Testa a lógica do controlador de ônibus da API.
-│   │   │   ├── DriverControllerAPIUnitTests.cs  # Testa a lógica do controlador de motoristas da API.
-│   │   │   ├── PassengerControllerAPIUnitTests.cs  # Testa a lógica do controlador de passageiros da API.
-│   │   │   ├── RouteControllerAPIUnitTests.cs  # Testa a lógica do controlador de rotas da API.
-│   │   │   ├── TripControllerAPIUnitTests.cs  # Testa a lógica do controlador de viagens da API.
-│   │   │   └── TripsPassengerControllerAPIUnitTests.cs  # Testa a lógica do controlador de viagens de passageiros da API.
+│   ├── UnitTests
+│   │   ├── ControllersAPIUnitTests
+│   │   │   ├── BusControllerAPIUnitTests.cs
+│   │   │   ├── DriverControllerAPIUnitTests.cs
+│   │   │   ├── PassengerControllerAPIUnitTests.cs
+│   │   │   ├── RouteControllerAPIUnitTests.cs
+│   │   │   ├── TripControllerAPIUnitTests.cs
+│   │   │   └── TripsPassengerControllerAPIUnitTests.cs
 │   └── ...  # Outros testes unitários (arquivos não mostrados).
-│   ├── UsabilityTests  # Contém testes de usabilidade do sistema
+│   ├── UsabilityTests
 │   │   └── UsabilityTests.cs
-├── BusTrack.Updater    # Pasta para atualização de dados
-│  ├── DriversUpdater       # Pasta para atualização de dados de motoristas
-│  │  └── DriverNameUpdater.cs # Arquivo para atualizar nomes de motoristas
-│  ├── PassengerUpdater     # Pasta para atualização de dados de passageiros
-│  │  └── PassengerNameUpdater.cs # Arquivo para atualizar nomes de passageiros
+├── BusTrack.Updater
+│  ├── DriversUpdater
+│  │  └── DriverNameUpdater.cs
+│  ├── PassengerUpdater
+│  │  └── PassengerNameUpdater.cs
 │  └── ...      # Outras subpastas para diferentes tipos de atualização (se necessário)
-└── BusTrack.sln           # Arquivo de solução do Visual Studio
-
+└── BusTrack.sln
+```
 
 ## Estrutura do Projeto
 
@@ -387,9 +382,8 @@ A API fornece as seguintes rotas:
 /passengers/{id}: Exclui um passageiro existente.
 Para usar a API, você pode usar uma ferramenta como o Postman ou o Insomnia para enviar solicitações HTTP à API.
 
-
 - **BusTrack.Test:** Camada de testes.
-Aqui estão alguns exemplos de testes que podem ser realizados:
+  Aqui estão alguns exemplos de testes que podem ser realizados:
 
 Teste de validação de dados:
 Testa se os dados enviados à API são válidos.
@@ -403,16 +397,13 @@ Teste de desempenho:
 Testa o desempenho da API.
 Por exemplo, um teste pode verificar quanto tempo leva para a API retornar uma lista de todos os ônibus.
 
-
 ### Nomenclatura
 
 Todos os componentes, incluindo nomes de classes, projetos, tabelas e propriedades, foram nomeados em inglês, seguindo as melhores práticas de programação.
 
-
 ## Feedback
 
 Sinta-se à vontade para explorar e dar feedback através de elogios, sugestões e críticas.
-
 
 ## Como Contribuir
 
