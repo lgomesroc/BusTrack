@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';  // Importar HttpClientModule
 
 import { AppRoutingModule } from './app-routing.module';
@@ -30,10 +30,10 @@ import { SidebarComponent } from './main/sidebar/sidebar.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule  // Adicionar HttpClientModule aqui
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
-

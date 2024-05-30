@@ -18,6 +18,6 @@
     <Folder Include="src\app\main\rules-main\limitCharactersRules\" />
     <Folder Include="src\app\main\rules-main\validateEmailFormatRules\" />
     <Folder Include="src\app\main\rules-main\validateFieldsRequiredRules\" />
-    <Folder Include="src\app\services\" />
+    <Folder Include="src\app\models\" />
   </ItemGroup>
 </Project>

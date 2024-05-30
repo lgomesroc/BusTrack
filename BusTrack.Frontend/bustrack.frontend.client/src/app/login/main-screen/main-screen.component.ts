@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { startInactivityTimerRule } from '../rules/inactivityTimerRules/inactivityTimerRule';
-import { disableKeyboardShortcutsRule } from '../rules/disableKeyboardShortcutsRules/disableKeyboardShortcutsRule';
-
-
+//import { startInactivityTimerRule } from '../rules/inactivityTimerRules/inactivityTimerRule';
+//import { disableKeyboardShortcutsRule } from '../rules/disableKeyboardShortcutsRules/disableKeyboardShortcutsRule';
+import { preventBackNavigationRule } from'../rules/preventBackNavigationRules/preventBackNavigationRule';
+import { preventForwardNavigationRule } from '../rules/preventForwardNavigationRules/preventForwardNavigationRule';
 @Component({
   selector: 'app-main-screen',
   templateUrl: './main-screen.component.html',
@@ -14,7 +14,9 @@ export class MainScreenComponent implements OnInit {
   inactivityTimer: any; // Adicionado
   INACTIVITY_TIMEOUT_MS = 1200000; // Adicionado
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+  ) { }
 
   entrarNoSistema() {
     this.router.navigate(['/enter-the-system']);
@@ -26,7 +28,9 @@ export class MainScreenComponent implements OnInit {
 
   ngOnInit(): void {
     // Implementação de regras comuns a todas as telas
-    disableKeyboardShortcutsRule();
-    startInactivityTimerRule(this.INACTIVITY_TIMEOUT_MS);
+    //disableKeyboardShortcutsRule();
+    //startInactivityTimerRule(this.INACTIVITY_TIMEOUT_MS);
+    preventBackNavigationRule();
+    preventForwardNavigationRule();
   }
 }

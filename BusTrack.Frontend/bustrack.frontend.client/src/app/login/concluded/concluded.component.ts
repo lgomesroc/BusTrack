@@ -27,7 +27,7 @@ export class ConcludedComponent implements OnInit {
 
   redirectToLogin(): void {
     // Redireciona o usuário para a tela de login
-    this.router.navigate(['/login']);
+    this.router.navigate(['/enter-the-system']);
   }
 }
 

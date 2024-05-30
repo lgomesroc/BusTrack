@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\BusTrack.Frontend.Server.props" />
-</Project>

@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { NgForm } from '@angular/forms'; // Importar NgForm
 import { startInactivityTimerRule } from '../rules/inactivityTimerRules/inactivityTimerRule';
 import { disableKeyboardShortcutsRule } from '../rules/disableKeyboardShortcutsRules/disableKeyboardShortcutsRule';
+import { blockSavePasswordRule } from '../rules/blockSavePasswordRules/blockSavePasswordRule'; // Importando a regra
+import { ValidationService } from '../../services/validation.service'; // Importe o serviço
 
 @Component({
   selector: 'app-create-an-account',
@@ -21,21 +24,55 @@ export class CreateAnAccountComponent implements OnInit {
   INACTIVITY_TIMEOUT_MS = 1200000; // Adicionado
   cpfInvalido: boolean = false; // Adicione esta propriedade
 
-  constructor(private router: Router, private http: HttpClient) {
+  constructor(private router: Router, private http: HttpClient, private validationService: ValidationService) {
   }
 
   ngOnInit(): void {
     // Implementação de regras comuns a todas as telas
     disableKeyboardShortcutsRule();
     startInactivityTimerRule(this.INACTIVITY_TIMEOUT_MS);
-    this.bloquearSalvarSenhas();
+    blockSavePasswordRule(); // Aplicando a regra de bloqueio de salvar senhas
+    //this.bloquearSalvarSenhas();
   }
 
-  bloquearSalvarSenhas(): void {
+  /*bloquearSalvarSenhas(): void {
     const inputs = document.querySelectorAll('input[type="text"]');
     inputs.forEach(input => {
       input.setAttribute('autocomplete', 'new-password');
     });
+  }*/
+
+  login(form: NgForm): void {
+    if (form.valid) {
+      const credentials = { email: this.email, password: this.password };
+      this.http.post<any>('http://localhost:7072/auth/login', credentials).subscribe({
+        next: (response) => {
+          if (response.success) {
+            alert(response.welcomeMessage); // Usando 'response'
+            alert('Sucesso. Seja bem-vindo ao painel principal do Bus Track');
+            this.router.navigate(['/main-screen']);
+          } else {
+            alert('Login falhou. Por favor, verifique suas credenciais e tente novamente.');
+          }
+          // Login bem-sucedido
+          alert('Sucesso. Seja bem-vindo ao painel principal do Bus Track');
+        },
+        error: err => {
+          // Login falhou
+          alert(`Erro ao fazer login: ${err.error.message}`); // Usando 'err'
+          if (this.loginAttempts > 0) {
+            alert(`E-mail, senha ou ambos não encontrados. Por favor, tente novamente. Tentativas restantes: ${this.loginAttempts}`);
+            this.loginAttempts--;
+          } else {
+            alert('Você excedeu o número máximo de tentativas de login. Redirecionando para a tela de criar conta.');
+            this.router.navigate(['/create-an-account']);
+          }
+        }
+      });
+    } else {
+      // Se o formulário não for válido, mostre uma mensagem de erro
+      alert('Por favor, preencha todos os campos corretamente.');
+    }
   }
 
   criarConta(): void {
@@ -52,13 +89,11 @@ export class CreateAnAccountComponent implements OnInit {
     }
 
     // Lógica para verificar se o CPF é válido
-    if (!this.validarCPF(this.cpf)) {
+    if (!this.validationService.validarCPF(this.cpf)) {
       this.errorMessage = 'CPF inválido. Por favor, digite novamente.';
       return;
     }
-
-    // Lógica para verificar se a senha atende aos requisitos
-    if (!this.validarSenha(this.password)) {
+    if (!this.validationService.validarSenha(this.password)) {
       this.errorMessage = 'Senha inválida. Por favor, escolha uma senha mais forte.';
       return;
     }
@@ -110,7 +145,6 @@ export class CreateAnAccountComponent implements OnInit {
       }
     });
   }
-
 
   enviarEmailConfirmacao(email: string): void {
     // Construir a mensagem de e-mail de confirmação
@@ -234,6 +268,14 @@ export class CreateAnAccountComponent implements OnInit {
 
   realizarLogin(): void {
     // Redirecionar para a tela de login
-    this.router.navigate(['/login']);
+    this.router.navigate(['/enter-the-system']);
+  }
+  onSubmit(form: NgForm) {
+    if (form.valid) {
+      this.login(form);
+    } else {
+      // Se o formulário não for válido, mostre uma mensagem de erro
+      alert('Por favor, preencha todos os campos corretamente.');
+    }
   }
 }

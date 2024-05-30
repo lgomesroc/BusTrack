@@ -1,5 +1,5 @@
 /* Estilo para o contêiner principal */
-.container {
+/**.container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -7,14 +7,14 @@
   height: 100vh;
 }
 
-/* Estilo para os botões no formulário principal */
+/* Estilo para os botões no formulário principal
 .button-container {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
 }
 
-/* Estilo para os botões azuis */
+/* Estilo para os botões azuis
 .blue-button {
   padding: 10px;
   background-color: #007bff;
@@ -24,7 +24,7 @@
   cursor: pointer;
 }
 
-/* Estilo para os formulários */
+/* Estilo para os formulários
 form {
   display: flex;
   flex-direction: column;
@@ -35,7 +35,7 @@ form {
   border-radius: 5px;
 }
 
-/* Estilo para os campos de entrada */ 
+/* Estilo para os campos de entrada
 label {
   font-weight: bold;
 }
@@ -48,7 +48,7 @@ input[name="cpf"] {
   border-radius: 5px;
 }
 
-/* Estilo para o botão de submissão */
+/* Estilo para o botão de submissão
 button[type="submit"] {
   padding: 10px;
   background-color: #007bff;
@@ -58,7 +58,7 @@ button[type="submit"] {
   cursor: pointer;
 }
 
-/* Estilo para a mensagem de erro */
+/* Estilo para a mensagem de erro
 .error-message,
 .error-message-cpf {
   color: red;
@@ -66,18 +66,18 @@ button[type="submit"] {
   font-style: italic;
 }
 
-/* Estilo para a força da senha */
+/* Estilo para a força da senha
 .password-strength {
   font-size: 14px;
   font-style: italic;
 }
 
-/* Estilo para a senha fraca */
+/* Estilo para a senha fraca
 .weak {
   color: red;
 }
 
-/* Estilo para a senha forte */
+/* Estilo para a senha forte
 .strong {
   color: green;
-}
+}**/

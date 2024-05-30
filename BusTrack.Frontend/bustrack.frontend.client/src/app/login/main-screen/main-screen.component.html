@@ -8,13 +8,14 @@
 </head>
 <body>
   <div class="container">
-    <h1>Sistema Bus Track</h1>
-    <img src="OIG4.jpeg" alt="Sistema Bus Track Logo">
-    <div class="button-container">
-      <button class="blue-button" (click)="entrarNoSistema()"><a target="_blank" href='http://localhost:4200/enter-the-system'>Entrar no Sistema</a></button>
-      <button class="blue-button" (click)="entrarNoSistema()">Entrar no Sistema</button>
-      <button class="blue-button" (click)="criarConta()">Criar Conta</button>
-    </div>
+   <h1 class="centered-title">Seja bem-vindo a página Principal do Sistema Bus Track</h1>
+   <img class="img-responsive" src="../../../assets/imagem/OIG4.jpeg" alt="Sistema Bus Track Logo" class="centralized-image" style="width: 200px; height: auto;">
+   <div class="button-container-horizontal">
+      <button class="blue-button" (click)="entrarNoSistema()" routerLink="/enter-the-system">Entrar no Sistema</button>
+      <button class="blue-button" (click)="criarConta()" routerLink="create-an-account">Criar Conta</button>
+      <!--<a [routerLink]="['/enter-the-system']" class="blue-button">Entrar no Sistema</a>
+      <a [routerLink]="['/create-an-account']" class="blue-button">Criar Conta</a>-->
+   </div>
   </div>
 </body>
 </html>

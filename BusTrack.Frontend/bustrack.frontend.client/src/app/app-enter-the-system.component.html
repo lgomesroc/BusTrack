@@ -8,9 +8,9 @@
 </head>
 <body>
   <div class="container">
-    <h1 class="centered-title">Seja bem-vindo a página de Entrada do Sistema Bus Track</h1>
-    <img class="img-responsive" src="assets/imagem/OIG4.jpeg" alt="Sistema Bus Track Logo" class="centralized-image" style="width: 200px; height: auto;">
-    <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+    <h1>Sistema Bus Track</h1>
+    <img src="OIG4.jpeg" alt="Sistema Bus Track Logo">
+    <form>
       <div class="form-group">
         <label for="email">E-mail:</label>
         <input type="email" id="email" name="email" [(ngModel)]="email" required>
@@ -20,9 +20,9 @@
         <input type="password" id="password" name="password" [(ngModel)]="password" required>
       </div>
       <div class="button-container">
-        <button class="blue-button" [disabled]="!f.valid" [class.disabled-button]="!f.valid" (click)="login(f)" routerlink="/dashboard"> Entrar</button>
-        <button class="blue-button" (click)="cancelar()" routerlink="/main-screen"> Cancelar</button>
-        <button class="blue-button" (click)="voltar()" routerlink="/create-an-account">Criar Conta</button>
+        <button type="button" class="blue-button" (click)="login()">Entrar</button>
+        <button type="button" class="blue-button" (click)="cancelar()">Cancelar</button>
+        <button type="button" class="blue-button" (click)="voltar()">Criar Conta</button>
       </div>
     </form>
   </div>

@@ -253,10 +253,14 @@ BusTrack                                       # Nome do projeto
 │   │   │   │   │   ├── rules    # Regras
 │   │   │   │   │   │   ├── blockSavePasswordRules   # Regras de Bloqueio de Salvamento de Senha
 │   │   │   │   │   │   │   ├── blockSavePasswordRule.ts # Contém a lógica TypeScript relacionada à regra de bloqueio de salvamento de senha.
+│   │   │   │   │   │   ├── checkPasswordStrengthpasswordRules
+│   │   │   │   │   │   │   ├── checkPasswordStrengthpasswordRule.ts
 │   │   │   │   │   │   ├── disableInteractionsRules   # Regras de Desativação de Interações
 │   │   │   │   │   │   │   ├── disableInteractionsRule.ts   # Contém a lógica TypeScript relacionada à regra de desativação de interações.
 │   │   │   │   │   │   ├── disableKeyboardShortcutsRules   # Regras de Desativação de Atalhos de Teclado
 │   │   │   │   │   │   │   ├── disableKeyboardShortcutsRule.ts   # Contém a lógica TypeScript relacionada à regra de desativação de atalhos de teclado.
+│   │   │   │   │   │   ├── hasRepeatedOrSequentialNumbersRules
+│   │   │   │   │   │   │   ├── hasRepeatedOrSequentialNumbersRule.ts
 │   │   │   │   │   │   ├── inactivityTimerRules   # Regras do Temporizador de Inatividade
 │   │   │   │   │   │   │   ├── inactivityTimerRule.ts  # Contém a lógica TypeScript relacionada às regras do temporizador de inatividade.
 │   │   │   │   │   │   ├── preventBackNavigationRules   # Regras de Prevenção de Navegação para Trás
@@ -293,6 +297,10 @@ BusTrack                                       # Nome do projeto
 │   │   │   │   │   │   ├── validateFieldsRequiredRules
 │   │   │   │   │   │   │   ├── validateFieldsRequiredRule.ts
 │   │   │   │   │   ├── sidebar
+│   │   │   │   │   │   ├── sidebar.component.css
+│   │   │   │   │   │   ├── sidebar.component.html
+│   │   │   │   │   │   ├── sidebar.component.spec.ts
+│   │   │   │   │   │   ├── sidebar.component.ts
 │   ├── BusTrack.Frontend.Server
 │   │    └── ...
 │   └── ... 

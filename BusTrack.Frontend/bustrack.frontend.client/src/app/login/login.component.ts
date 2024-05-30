@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+/*import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
@@ -119,4 +119,4 @@ export class LoginComponent {
     cpf = cpf.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
     this.createData.cpf = cpf;
   }
-} 
+}*/

@@ -7,18 +7,13 @@
   <link rel="stylesheet" href="concluded.component.css">
 </head>
 <body>
-  <header>
-    <div class="logo">
-      <h1>Sistema Bus Track</h1>
-      <img src="OIG4.jpeg" alt="Sistema Bus Track">
-    </div>
-  </header>
-  <main>
-    <div class="message">
+  <div class="container">
+    <h1 class="centered-title">Seja bem-vindo a página de Conclusão do Sistema Bus Track</h1>
+    <img class="img-responsive" src="../../../assets/imagem/OIG4.jpeg" alt="Sistema Bus Track Logo" class="centralized-image" style="width: 200px; height: auto;">
+    <div class="confirmation-message">
       <p>Confirmado o cadastro, por favor se conecta no sistema clicando no botão "OK" abaixo.</p>
     </div>
-    <button class="ok-button" onclick="redirectToLogin()">OK</button>
-  </main>
-  <script src="concluded.component.ts"></script>
+    <button class="ok-button" onclick="redirectToLogin()" routerLink="/enter-the-system">OK</button>
+    </div>
 </body>
 </html>
