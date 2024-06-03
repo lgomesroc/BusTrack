@@ -54,7 +54,6 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         {
             var tripPassengerModelAPI = _mapper.Map<TripsPassengerModelAPI>(tripsPassenger);
 
-            // Converta o TripsPassengerModelAPI para TripPassengerDB aqui
             var tripPassengerDB = ConvertToDBModel1(tripPassengerModelAPI);
 
             var updatedTripPassenger = await _tripsPassengerRepository.UpdateTripsPassenger(id, tripPassengerDB);
@@ -65,7 +64,6 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         {
             var dbModel = new TripPassengerDB();
 
-            // Copie os campos do modelAPI para dbModel
             dbModel.TripId = modelAPI.TripId;
             dbModel.PassengerId = modelAPI.PassengerId;
 
@@ -74,11 +72,9 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
         public async Task<bool> DeleteTripsPassenger(int id)
         {
-            // Aqui você pode implementar a lógica para excluir um passageiro de viagem com base no ID fornecido.
-            // Por exemplo:
+
             var tripPassengerDeleted = await _tripsPassengerRepository.DeleteTripsPassenger(id);
 
-            // Retorne true se o passageiro da viagem for excluído com sucesso, ou false caso contrário.
             return tripPassengerDeleted;
         }
 

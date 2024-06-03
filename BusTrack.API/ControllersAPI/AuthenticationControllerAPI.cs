@@ -23,8 +23,6 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             if (user == null)
                 return Unauthorized(new { message = "E-mail ou senha incorretos" });
 
-            // Aqui você pode gerar o token JWT ou criar uma sessão de usuário, etc.
-
             return Ok(new { message = "Login bem-sucedido" });
         }
 

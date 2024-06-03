@@ -6,7 +6,6 @@ using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
 using Moq;
 using MongoDB.Driver;
 using BusTrack.Tests.MappingsIntegrationTests;
-using System.Net;
 
 namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 {
@@ -27,58 +26,44 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         [Fact]
         public async Task GetAllRoutes_ReturnsAllRoutes()
         {
-            // Arrange
             var routes = new List<RouteDB> { new RouteDB(), new RouteDB() };
             _routeRepository.Setup(x => x.GetAllRoutesAsync()).ReturnsAsync(routes);
 
-            // Act
             var result = await _routeServiceAPI.GetAllRoutes();
 
-            // Assert
             Assert.Equal(2, result.Count());
         }
 
         [Fact]
         public async Task GetRouteById_ReturnsRoute()
         {
-            // Arrange
             var id = 1;
 
-            // Act
             var result = await _routeServiceAPI.GetRouteById(id.ToString());
 
-            // Assert
             Assert.NotNull(result);
-            // Adicione asserções adicionais conforme necessário para verificar o resultado retornado.
         }
 
         [Fact]
         public async Task GetById_ReturnsSuccessStatusCode()
         {
-            // Arrange
             var id = "1";
 
-            // Act
             var result = await _routeServiceAPI.GetRouteById(id);
 
-            // Assert
             Assert.NotNull(result);
-            // Adicione asserções adicionais conforme necessário para verificar o resultado retornado.
         }
 
 
         [Fact]
         public async Task CreateRoute_ReturnsAddedRoute()
         {
-            // Arrange
             var routeDTO = new RouteDTOAPI { Name = "Route Name", Description = "Route Description" };
             var routeDB = _mapper.Map<RouteDB>(routeDTO);
             _routeRepository.Setup(x => x.CreateRoute(It.IsAny<RouteDB>())).ReturnsAsync(routeDB);
 
-            // Act
             var result = await _routeServiceAPI.CreateRoute(routeDTO);
 
-            // Assert
             Assert.NotNull(result);
             Assert.Equal(routeDTO.Name, result.Name);
             Assert.Equal(routeDTO.Description, result.Description);
@@ -87,17 +72,14 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         [Fact]
         public async Task UpdateRoute_ReturnsUpdatedRoute()
         {
-            // Arrange
             var routeId = "routeId";
             var routeDTO = new RouteDTOAPI { Name = "Updated Name", Description = "Updated Description" };
             var existingRoute = new RouteDB { Id = routeId };
 
             _routeRepository.Setup(x => x.UpdateRouteAsync(routeId, It.IsAny<RouteDB>())).ReturnsAsync(existingRoute);
 
-            // Act
             var result = await _routeServiceAPI.UpdateRoute(routeId, routeDTO);
 
-            // Assert
             Assert.NotNull(result);
             Assert.Equal(routeDTO.Name, result.Name);
             Assert.Equal(routeDTO.Description, result.Description);
@@ -106,14 +88,11 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         [Fact]
         public async Task DeleteRoute_ReturnsTrueWhenDeleted()
         {
-            // Arrange
             var routeId = "routeId";
             _routeRepository.Setup(x => x.DeleteRoute(Int32.Parse(routeId))).ReturnsAsync(true);
 
-            // Act
             var result = await _routeServiceAPI.DeleteRoute((Int32.Parse(routeId)));
 
-            // Assert
             Assert.True(result);
         }
     }

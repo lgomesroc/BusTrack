@@ -8,15 +8,11 @@ namespace BusTrack.Tests.MappingsIntegrationTests
     {
         public AutoMapperProfile()
         {
-            // Mapeando BusDB para BusDTO
             CreateMap<BusDB, BusDTOAPI>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.LicensePlate, opt => opt.MapFrom(src => src.Plate));
-                //.ForMember(dest => **// Adicione outros mapeamentos de propriedades aqui**);
 
-        // Mapeando outros objetos (opcional)
-        // CreateMap<Origem, Destino>()
-        // ...
+
        }
     }
 }

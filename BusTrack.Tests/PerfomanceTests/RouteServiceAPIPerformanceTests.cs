@@ -14,7 +14,6 @@ namespace BusTrack.BusTrack.Tests.PerfomanceTests
         {
             var services = new ServiceCollection();
             services.AddScoped<IRouteServiceAPI, RouteServiceAPI>();
-            // Adicione outras dependências necessárias
             var serviceProvider = services.BuildServiceProvider();
             _routeService = serviceProvider.GetRequiredService<IRouteServiceAPI>();
         }
@@ -35,17 +34,17 @@ namespace BusTrack.BusTrack.Tests.PerfomanceTests
         [Benchmark]
         public async Task GetRouteTest()
         {
-            var routeId = 1; // Assuming the ID of the route to retrieve
+            var routeId = 1; 
             await _routeService.GetRouteAsync(routeId);
         }
 
         [Benchmark]
         public async Task UpdateRouteTest()
         {
-            var routeId = 1; // Assuming the ID of the route to update
+            var routeId = 1; 
             var updatedRouteDto = new RouteDTOAPI
             {
-                Id = routeId.ToString(), // Assuming Id is an integer
+                Id = routeId.ToString(),
                 Origin = "Updated Performance City A",
                 Destination = "Updated Performance City B",
                 Distance = 150
@@ -55,7 +54,7 @@ namespace BusTrack.BusTrack.Tests.PerfomanceTests
         [Benchmark]
         public async Task DeleteRouteTest()
         {
-            var routeId = 1; // Assuming the ID of the route to delete
+            var routeId = 1; 
             await _routeService.DeleteRouteAsync(routeId);
         }
     }

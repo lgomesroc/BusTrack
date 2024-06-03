@@ -31,8 +31,6 @@ namespace BusTrack.BusTrack.Tests.UsabilityTests
             Assert.Equal("Passenger added successfully!", successMessage.Text);
         }
 
-        // Adicione outros testes de usabilidade conforme necessário.
-
         public void Dispose()
         {
             _driver.Quit();

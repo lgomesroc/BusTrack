@@ -25,7 +25,6 @@ export function disableKeyboardShortcutsRule(): void {
   });
 
   document.addEventListener('keydown', (event: KeyboardEvent) => {
-    // Impede atalhos de teclado (Ctrl+C, Ctrl+V, etc.)
     if (event.ctrlKey && ['c', 'v', 'x', 'p'].includes(event.key)) {
       event.preventDefault();
       alert('Atalhos de teclado estão desativados.');

@@ -13,35 +13,31 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         {
             _routeService = routeService;
         }
-        // GET: api/Route
+
         [HttpGet]
         public IActionResult Get()
         {
             return Ok("Get all routes");
         }
 
-        // GET: api/Route/5
         [HttpGet("{id}", Name = "GetRoute")]
         public IActionResult GetById(int id)
         {
             return Ok($"Get route with ID: {id}");
         }
 
-        // POST: api/Route
         [HttpPost]
         public IActionResult Post([FromBody] object value)
         {
             return Ok("Create new route");
         }
 
-        // PUT: api/Route/5
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] object value)
         {
             return Ok($"Update route with ID: {id}");
         }
 
-        // DELETE: api/Route/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

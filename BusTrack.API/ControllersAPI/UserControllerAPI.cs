@@ -30,7 +30,7 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         public async Task<IActionResult> GetAllUsers()
         {
             var usersDb = await _userService.GetAll();
-            var usersApi = usersDb.Select(userDb => new UserModelAPI { /* mapeie os campos de UserModelDB para UserModelsAPI aqui */ }).ToList();
+            var usersApi = usersDb.Select(userDb => new UserModelAPI {  }).ToList();
             return Ok(usersApi);
         }
 
@@ -42,14 +42,14 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             {
                 return NotFound();
             }
-            var userApi = new UserModelAPI { /* mapeie os campos de UserModelDB para UserModelsAPI aqui */ };
+            var userApi = new UserModelAPI {  };
             return Ok(userApi);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(string id, UserModelAPI user)
         {
-            var userDb = new UserModelDB { /* mapeie os campos de UserModelsAPI para UserModelDB aqui */ };
+            var userDb = new UserModelDB { };
             await _userService.Update(id, userDb);
             return Ok("User updated successfully.");
         }

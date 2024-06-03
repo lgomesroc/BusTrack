@@ -1,15 +1,13 @@
-// user.service.ts
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { UserData } from '../models/user.model'; // Importe a interface UserData
+import { UserData } from '../models/user.model'; 
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = 'https://seuservidor.com/api/user'; // Substitua pela URL real do seu backend
+  private apiUrl = 'http://localhost:7072/api/user'; 
 
   constructor(private http: HttpClient) { }
 

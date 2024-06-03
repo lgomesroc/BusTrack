@@ -2,8 +2,8 @@
 {
     public class PasswordRecordDB
     {
-        public string Hash { get; set; } // O hash da senha do usuário
-        public DateTime CreationDate { get; set; } // A data de criação da senha
+        public string Hash { get; set; } 
+        public DateTime CreationDate { get; set; } 
 
         public PasswordRecordDB(string hash, DateTime creationDate)
         {

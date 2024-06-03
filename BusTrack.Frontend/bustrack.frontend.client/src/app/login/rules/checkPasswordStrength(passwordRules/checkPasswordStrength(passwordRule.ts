@@ -15,7 +15,6 @@ export function checkPasswordStrengthRule(password: string): 'weak' | 'medium' |
   const passwordLength = password.length;
 
   if (passwordLength >= 8 && hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChars) {
-    // Se a função hasRepeatedOrSequentialNumbers for necessária, defina-a ou remova a linha abaixo.
     if (!hasRepeatedOrSequentialNumbersRule(password)) {
       return 'strong';
     } else {

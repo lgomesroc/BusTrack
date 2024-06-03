@@ -29,20 +29,16 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         public async Task GetAllTripsPassengers_ReturnsAllTripsPassengers()
         {
             List<TripPassengerDB> tripsPassengers = new List<TripPassengerDB>();
-            // Arrange
             var tripPassengerModelDBs = tripsPassengers.Select(tp => _mapper.Map<TripPassengerModelDB>(tp)).ToList();
             _tripsPassengerRepository.Setup(x => x.GetAllTripsPassengers()).Returns(Task.FromResult<IEnumerable<TripPassengerModelDB>>(tripPassengerModelDBs));
 
-            // Act
             var result = await _tripsPassengerServiceAPI.GetAllTripsPassengers();
 
-            // Assert
             Assert.Equal(2, result.Count());
         }
 
         public async Task<TripPassengerDTOAPI> CreateTripsPassenger(TripPassengerDTOAPI tripsPassenger)
         {
-            // Configuração do método mock
             _tripsPassengerRepository.Setup(repo => repo.CreateTripsPassenger(It.IsAny<TripPassengerDB>()))
                 .ReturnsAsync((TripPassengerDB tripPassengerDB) => tripPassengerDB);
 

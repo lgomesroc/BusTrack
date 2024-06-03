@@ -30,7 +30,7 @@ body {
 
 .centralized-image {
   display: block;
-  margin: 20px auto; /* Espaço abaixo do título */
+  margin: 20px auto;
   max-width: 50%;
 }
 
@@ -38,15 +38,15 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%; /* Set width as per layout requirement */
-  margin-bottom: 20px; /* Space between form fields */
+  width: 100%; 
+  margin-bottom: 20px; 
 }
 
 .button-container-horizontal {
   display: flex;
-  justify-content: center; /* Centraliza os botões */
+  justify-content: center; 
   width: 100%;
-  margin-top: 40px; /* Ajustado para descer um pouco mais */
+  margin-top: 40px; 
 }
 
 .blue-button {
@@ -57,7 +57,7 @@ body {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin: 0 10px; /* Adiciona margem aos lados dos botões */
+  margin: 0 10px; 
 }
 
   .blue-button:hover {
@@ -69,8 +69,6 @@ body {
     color: #808080;
     cursor: not-allowed;
   }
-
-/* Responsiveness */
 
 @media (max-width: 768px) {
   .centralized-image {

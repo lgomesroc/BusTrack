@@ -16,7 +16,6 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
         public async Task<UserModelDB> Authenticate(string email, string password)
         {
-            // Implemente a lógica de autenticação aqui
             return null;
         }
 

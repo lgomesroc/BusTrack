@@ -12,13 +12,12 @@ import { preventForwardNavigationRule } from '../rules/preventForwardNavigationR
 })
 export class ConcludedComponent implements OnInit {
   inactivityTimer: any;
-  INACTIVITY_TIMEOUT_MS = 1200000; // Tempo de inatividade em milissegundos
+  INACTIVITY_TIMEOUT_MS = 1200000;
 
   constructor(private router: Router) {
   }
 
   ngOnInit(): void {
-    // Implementação de regras comuns a todas as telas
     disableKeyboardShortcutsRule();
     startInactivityTimerRule(this.INACTIVITY_TIMEOUT_MS);
     preventBackNavigationRule();
@@ -26,8 +25,6 @@ export class ConcludedComponent implements OnInit {
   }
 
   redirectToLogin(): void {
-    // Redireciona o usuário para a tela de login
     this.router.navigate(['/enter-the-system']);
   }
 }
-

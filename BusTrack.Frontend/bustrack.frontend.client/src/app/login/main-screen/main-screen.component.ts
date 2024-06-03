@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-//import { startInactivityTimerRule } from '../rules/inactivityTimerRules/inactivityTimerRule';
-//import { disableKeyboardShortcutsRule } from '../rules/disableKeyboardShortcutsRules/disableKeyboardShortcutsRule';
 import { preventBackNavigationRule } from'../rules/preventBackNavigationRules/preventBackNavigationRule';
 import { preventForwardNavigationRule } from '../rules/preventForwardNavigationRules/preventForwardNavigationRule';
 @Component({
@@ -11,8 +9,8 @@ import { preventForwardNavigationRule } from '../rules/preventForwardNavigationR
 })
 
 export class MainScreenComponent implements OnInit {
-  inactivityTimer: any; // Adicionado
-  INACTIVITY_TIMEOUT_MS = 1200000; // Adicionado
+  inactivityTimer: any; 
+  INACTIVITY_TIMEOUT_MS = 1200000; 
 
   constructor(
     private router: Router,
@@ -27,9 +25,6 @@ export class MainScreenComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Implementação de regras comuns a todas as telas
-    //disableKeyboardShortcutsRule();
-    //startInactivityTimerRule(this.INACTIVITY_TIMEOUT_MS);
     preventBackNavigationRule();
     preventForwardNavigationRule();
   }

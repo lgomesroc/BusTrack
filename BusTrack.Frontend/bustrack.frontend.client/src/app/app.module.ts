@@ -31,7 +31,7 @@ import { SidebarComponent } from './main/sidebar/sidebar.component';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule  // Adicionar HttpClientModule aqui
+    HttpClientModule  
   ],
   providers: [],
   bootstrap: [AppComponent]

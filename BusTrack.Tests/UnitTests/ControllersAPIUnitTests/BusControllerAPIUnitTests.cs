@@ -20,16 +20,12 @@ namespace BusTrack.Tests.UnitTests.ControllersAPIUnitTests.BusControllerAPIUnitT
         [Fact]
         public void Get_ReturnsOkResult()
         {
-            // Arrange
             _busService.Setup(service => service.GetBuses()).Returns(new List<BusDB>());
 
-            // Act
             var result = _controller.Get();
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
         }
 
-        // Adicione mais testes para os outros métodos do controlador
     }
 }

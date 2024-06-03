@@ -1,7 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
-namespace BusTrack.BusTrack.DB.Classes
+﻿namespace BusTrack.BusTrack.DB.Classes
 {
     public class TripPassengerDB
     {

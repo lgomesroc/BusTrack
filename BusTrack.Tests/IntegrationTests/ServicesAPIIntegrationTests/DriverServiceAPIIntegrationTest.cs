@@ -26,29 +26,23 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         [Fact]
         public async Task GetAllDrivers_ReturnsAllDrivers()
         {
-            // Arrange
             var drivers = new List<DriverDB> { new DriverDB(), new DriverDB() };
             _driverRepository.Setup(x => x.GetAllDriversAsync()).ReturnsAsync(drivers.AsEnumerable());
 
-            // Act
             var result = await _driverServiceAPI.GetAllDrivers();
 
-            // Assert
             Assert.Equal(2, result.Count());
         }
 
         [Fact]
         public async Task GetDriverById_ReturnsDriverWhenFound()
         {
-            // Arrange
             var existingDriverId = "123";
             var existingDriver = new DriverDB { Id = existingDriverId, Name = "John Doe", Cpf = "000000000-00" };
             _driverRepository.Setup(x => x.GetDriverByIdAsync(existingDriverId)).ReturnsAsync(existingDriver);
 
-            // Act
             var result = await _driverServiceAPI.GetDriverById(existingDriverId);
 
-            // Assert
             Assert.NotNull(result);
             Assert.Equal(existingDriverId, result.Id);
             Assert.Equal(existingDriver.Name, result.Name);
@@ -58,21 +52,17 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         [Fact]
         public async Task GetDriverById_ReturnsNullWhenNotFound()
         {
-            // Arrange
             var nonExistingDriverId = "999";
             _driverRepository.Setup(x => x.GetDriverByIdAsync(nonExistingDriverId)).ReturnsAsync(() => null);
 
-            // Act
             var result = await _driverServiceAPI.GetDriverById(nonExistingDriverId);
 
-            // Assert
             Assert.Null(result);
         }
 
         [Fact]
         public async Task CreateDriver_CreatesAndMapsDriver()
         {
-            // Arrange
             var newDriverDto = new DriverDTOAPI { Name = "Jane Doe", LicenseNumber = "DEF54321" };
             var expectedDriverId = "new-driver-id";
 
@@ -82,10 +72,8 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                 return Task.FromResult(driver);
             });
 
-            // Act
             var addedDriverDto = await _driverServiceAPI.CreateDriver(newDriverDto);
 
-            // Assert
             _driverRepository.Verify(x => x.AddDriverAsync(It.IsAny<DriverDB>()), Times.Once);
             Assert.NotNull(addedDriverDto);
             Assert.Equal(expectedDriverId, addedDriverDto.Id);
@@ -97,7 +85,6 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         [Fact]
         public async Task UpdateDriver_UpdatesAndMapsDriver()
         {
-            // Arrange
             var existingDriverId = "123";
             var existingDriver = new DriverDB { Id = existingDriverId, Name = "John Doe", Cpf = "ABC12345" };
             var updateDriverDto = new DriverDTOAPI { Name = "John Smith", LicenseNumber = "FED65432" };
@@ -105,10 +92,8 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
             _driverRepository.Setup(x => x.GetDriverByIdAsync(existingDriverId)).ReturnsAsync(existingDriver);
             _driverRepository.Setup(x => x.UpdateDriverAsync(existingDriverId, It.IsAny<DriverDB>())).Returns(Task.FromResult(true));
 
-            // Act
             var updatedDriverDto = await _driverServiceAPI.UpdateDriver(existingDriverId, updateDriverDto);
 
-            // Assert
             _driverRepository.Verify(x => x.GetDriverByIdAsync(existingDriverId), Times.Once);
             _driverRepository.Verify(x => x.UpdateDriverAsync(existingDriverId, It.IsAny<DriverDB>()), Times.Once);
             Assert.NotNull(updatedDriverDto);
@@ -120,14 +105,11 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         [Fact]
         public async Task DeleteDriver_DeletesDriverAndReturnsTrueWhenFound()
         {
-            // Arrange
             var existingDriverId = "123";
             _driverRepository.Setup(x => x.GetDriverByIdAsync(existingDriverId)).ReturnsAsync(new DriverDB { Id = existingDriverId });
             _driverRepository.Setup(x => x.DeleteDriver(existingDriverId)).ReturnsAsync(true);
-            // Act
             var result = await _driverServiceAPI.DeleteDriver(existingDriverId);
 
-            // Assert
             _driverRepository.Verify(x => x.GetDriverByIdAsync(existingDriverId), Times.Once);
             _driverRepository.Verify(x => x.DeleteDriverAsync(existingDriverId), Times.Once);
             Assert.True(result);
@@ -136,14 +118,11 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         [Fact]
         public async Task DeleteDriver_ReturnsFalseWhenNotFound()
         {
-            // Arrange
             var nonExistingDriverId = "999";
             _driverRepository.Setup(x => x.DeleteDriver(nonExistingDriverId)).ReturnsAsync(true);
 
-            // Act
             var result = await _driverServiceAPI.DeleteDriver(nonExistingDriverId);
 
-            // Assert
             _driverRepository.Verify(x => x.GetDriverByIdAsync(nonExistingDriverId), Times.Once);
             _driverRepository.Verify(x => x.DeleteDriverAsync(nonExistingDriverId), Times.Never);
             Assert.False(result);

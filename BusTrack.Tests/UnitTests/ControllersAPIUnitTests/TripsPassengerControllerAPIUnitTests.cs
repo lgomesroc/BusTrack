@@ -20,15 +20,11 @@ namespace BusTrack.Tests.UnitTests.ControllersAPIUnitTests.TripsPassengerControl
         [Fact]
         public void Get_ReturnsOkResult()
         {
-            // Arrange
             _tripsPassengerService.Setup(service => service.GetTripsPassengers()).Returns(Task.FromResult(new List<TripPassengerDB>() {/* retornar uma lista de associações entre viagens e passageiros */}));
-            // Act
             var result = _controller.Get();
 
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
         }
 
-        // Adicione mais testes para os outros métodos do controlador
     }
 }

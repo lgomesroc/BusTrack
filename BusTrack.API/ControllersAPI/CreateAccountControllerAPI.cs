@@ -10,7 +10,6 @@ namespace BusTrack.BusTrack.API.ControllersAPI
     [ApiController]
     public class CreateAccountControllerAPI : ControllerBase
     {
-        // Supondo que você tenha um serviço para lidar com confirmações de e-mail
         private readonly IEmailConfirmationServiceAPI _emailConfirmationService;
 
         public CreateAccountControllerAPI(IEmailConfirmationServiceAPI emailConfirmationService)
@@ -23,17 +22,14 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         {
             try
             {
-                // Adicionar a confirmação de e-mail ao banco de dados
                 var confirmation = _emailConfirmationService.Create(request);
 
-                // Configurar cliente SMTP
                 using (var client = new SmtpClient("smtp.gmail.com", 587))
                 {
                     client.EnableSsl = true;
                     client.UseDefaultCredentials = false;
                     client.Credentials = new NetworkCredential("seu-email@gmail.com", "sua-senha-do-email");
 
-                    // Construir e-mail de confirmação
                     var mailMessage = new MailMessage
                     {
                         From = new MailAddress("seu-email@gmail.com"),
@@ -43,7 +39,6 @@ namespace BusTrack.BusTrack.API.ControllersAPI
                     };
                     mailMessage.To.Add(request.Email);
 
-                    // Enviar e-mail
                     await client.SendMailAsync(mailMessage);
 
                     return Ok("E-mail de confirmação enviado com sucesso");

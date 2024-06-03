@@ -4,7 +4,6 @@ using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using BusTrack.BusTrack.API.ModelsAPI;
 using BusTrack.BusTrack.DB.Classes;
 using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
-using BusTrack.BusTrack.Updater;
 using MongoDB.Driver;
 
 namespace BusTrack.BusTrack.API.ServicesAPI
@@ -60,22 +59,6 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             return _mapper.Map<PassengerDTOAPI>(updatedPassenger);
         }
 
-        public async Task UpdatePassengerAsync(string id, PassengerDB passenger)
-        {
-            var filter = Builders<PassengerDB>.Filter.Eq("Id", id);
-
-            var nameUpdate = new PassengerNameUpdater { Name = passenger.Name };
-
-            var update = Builders<PassengerDB>.Update.Set(p => p.Name, nameUpdate.Name);
-
-            var updateResult = await _passengersCollection.UpdateOneAsync(filter, update);
-
-            if (updateResult.ModifiedCount == 0)
-            {
-                throw new Exception($"Passenger with ID {id} not found or not updated.");
-            }
-        }
-
         public async Task<bool> DeletePassenger(string id)
         {
             return await _passengerRepository.DeletePassenger(id);
@@ -87,11 +70,33 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             return passengers;
         }
 
-        public async Task UpdatePassengerAsync(string id, PassengerDTOAPI passenger)
+        public async Task AddPassengerAsync(PassengerDTOAPI passengerDto)
         {
-            var passengerDB = _mapper.Map<PassengerDB>(passenger);
+            var passengerDB = _mapper.Map<PassengerDB>(passengerDto);
+            await _passengerRepository.AddPassengerAsync(passengerDB);
+        }
 
-            await _passengerRepository.UpdatePassengerAsync(id, passengerDB);
+        public async Task<PassengerDTOAPI> GetPassengerByIdAsync(int id)
+        {
+            var passenger = await _passengerRepository.GetPassengerByIdAsync(id.ToString());
+            return _mapper.Map<PassengerDTOAPI>(passenger);
+        }
+
+        public async Task UpdatePassengerAsync(PassengerDTOAPI passengerDto)
+        {
+            var passengerDB = _mapper.Map<PassengerDB>(passengerDto);
+            await _passengerRepository.UpdatePassengerAsync(passengerDB.Id, passengerDB);
+        }
+
+        public async Task DeletePassengerAsync(int id)
+        {
+            await _passengerRepository.DeletePassenger(id.ToString());
+        }
+
+        public async Task<IEnumerable<PassengerDTOAPI>> GetAllPassengersAsync()
+        {
+            var passengers = await _passengerRepository.GetAllPassengersAsync();
+            return _mapper.Map<IEnumerable<PassengerDTOAPI>>(passengers);
         }
     }
 }

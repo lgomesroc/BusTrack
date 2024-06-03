@@ -1,4 +1,3 @@
-// sidebar.component.ts
 import { Component, OnInit } from '@angular/core';
 import { BlockCopyRule } from '../../login/rules/blockCopyRules/blockCopyRule';
 import { disableKeyboardShortcutsRule } from '../../login/rules/disableKeyboardShortcutsRules/disableKeyboardShortcutsRule';
@@ -14,7 +13,7 @@ import { startInactivityTimerRule, clearInactivityTimerRule } from '../../login/
 export class SidebarComponent implements OnInit {
   nomeUsuario: string = "João Silva";
   cpfUsuario: string = "123.456.789-00";
-  INACTIVITY_TIMEOUT_MS = 1200000; // Tempo de inatividade em milissegundos
+  INACTIVITY_TIMEOUT_MS = 1200000; 
 
   constructor() { }
 

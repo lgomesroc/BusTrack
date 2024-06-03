@@ -1,5 +1,4 @@
-﻿using BusTrack.BusTrack.DB.Classes;
-using BusTrack.BusTrack.DB.ClassesDB;
+﻿using BusTrack.BusTrack.DB.ClassesDB;
 using MongoDB.Driver;
 
 namespace BusTrack.BusTrack.DB.RepositoriesDB

@@ -9,7 +9,6 @@ export class DataService {
     constructor(private http: HttpClient) { }
 
     saveDataToMongoDB(data: any): Observable<any> {
-        // Substitua 'your-api-url' pela URL da sua API
-        return this.http.post('your-api-url', data);
+      return this.http.post('http://localhost:7072', data);
     }
 }

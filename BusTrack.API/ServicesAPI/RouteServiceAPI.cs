@@ -5,6 +5,7 @@ using BusTrack.BusTrack.API.ModelsAPI;
 using BusTrack.BusTrack.DB.Classes;
 using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
 
+
 namespace BusTrack.BusTrack.API.ServicesAPI
 {
     public class RouteServiceAPI : IRouteServiceAPI
@@ -24,7 +25,6 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             return _mapper.Map<IEnumerable<RouteDTOAPI>>(routes);
         }
 
-
         public async Task<RouteDTOAPI> GetRouteById(string id)
         {
             var route = await _routeRepository.GetRouteByIdAsync(id.ToString());
@@ -38,7 +38,6 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             var createdRouteDB = await _routeRepository.CreateRoute(routeDB);
             return _mapper.Map<RouteDTOAPI>(createdRouteDB);
         }
-
 
         public async Task<RouteDTOAPI> UpdateRoute(string id, RouteDTOAPI route)
         {
@@ -64,6 +63,24 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         {
             var route = (await _routeRepository.GetAllRoutesAsync()).ToList();
             return route;
+        }
+
+        public async Task<RouteDTOAPI> GetRouteAsync(int routeId)
+        {
+            var route = await _routeRepository.GetRouteByIdAsync(routeId.ToString());
+            return _mapper.Map<RouteDTOAPI>(route);
+        }
+
+        public async Task AddRouteAsync(RouteDTOAPI routeDto)
+        {
+            var routeModel = _mapper.Map<RouteModelAPI>(routeDto);
+            var routeDB = _mapper.Map<RouteDB>(routeModel);
+            await _routeRepository.CreateRoute(routeDB);
+        }
+
+        public async Task DeleteRouteAsync(int routeId)
+        {
+            await _routeRepository.DeleteRoute(routeId);
         }
     }
 }

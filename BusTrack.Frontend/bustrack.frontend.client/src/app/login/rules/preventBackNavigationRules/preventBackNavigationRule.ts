@@ -1,4 +1,3 @@
-// preventBackNavigationRule.ts
 export function preventBackNavigationRule(): void {
   window.addEventListener('popstate', () => {
     history.pushState(null, document.title, location.href);

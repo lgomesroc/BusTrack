@@ -15,7 +15,6 @@ namespace BusTrack.BusTrack.Tests.PerfomanceTests
         {
             var services = new ServiceCollection();
             services.AddScoped<IPassengerServiceAPI, PassengerServiceAPI>();
-            // Adicione outras dependências necessárias
             var serviceProvider = services.BuildServiceProvider();
             _passengerService = serviceProvider.GetRequiredService<IPassengerServiceAPI>();
         }
@@ -36,7 +35,6 @@ namespace BusTrack.BusTrack.Tests.PerfomanceTests
         [Benchmark]
         public async Task GetPassengerTest()
         {
-            // Assumindo que existe um passageiro com ID 1
             await _passengerService.GetPassengerByIdAsync(1);
         }
 
@@ -45,7 +43,7 @@ namespace BusTrack.BusTrack.Tests.PerfomanceTests
         {
             var passengerDto = new PassengerDTOAPI
             {
-                Id = "1", // Assumindo que existe um passageiro com ID 1
+                Id = "1", 
                 Name = "Updated Performance Test",
                 Email = "updated.performance.test@example.com",
                 Age = 31
@@ -57,7 +55,6 @@ namespace BusTrack.BusTrack.Tests.PerfomanceTests
         [Benchmark]
         public async Task DeletePassengerTest()
         {
-            // Assumindo que existe um passageiro com ID 1
             await _passengerService.DeletePassengerAsync(1);
         }
 

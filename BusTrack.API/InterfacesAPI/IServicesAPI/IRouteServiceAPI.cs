@@ -12,9 +12,8 @@ namespace BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI
         Task<RouteDTOAPI> UpdateRouteAsync(string id, RouteModelAPI route);
         Task<bool> DeleteRoute(int id);
         Task<List<RouteDB>> GetRoutes();
-        Task GetRouteAsync(int routeId);
+        Task<RouteDTOAPI> GetRouteAsync(int routeId);
         Task AddRouteAsync(RouteDTOAPI routeDto);
         Task DeleteRouteAsync(int routeId);
-
     }
 }

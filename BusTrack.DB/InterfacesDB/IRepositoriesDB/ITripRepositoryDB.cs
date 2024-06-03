@@ -1,5 +1,4 @@
 ﻿using BusTrack.BusTrack.DB.Classes;
-using BusTrack.BusTrack.DB.ModelsDB;
 
 namespace BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB
 {

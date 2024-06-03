@@ -11,11 +11,10 @@ namespace BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI
         Task<PassengerDTOAPI> UpdatePassenger(string id, PassengerDTOAPI passenger);
         Task<bool> DeletePassenger(string id);
         Task<List<PassengerDB>> GetPassengers();
-        Task UpdatePassengerAsync(string id, PassengerDTOAPI passenger);
         Task AddPassengerAsync(PassengerDTOAPI passengerDto);
-        Task GetPassengerByIdAsync(int Id);
+        Task<PassengerDTOAPI> GetPassengerByIdAsync(int id);
         Task UpdatePassengerAsync(PassengerDTOAPI passengerDto);
-        Task DeletePassengerAsync(int Id);
-        Task GetAllPassengersAsync();
+        Task DeletePassengerAsync(int id);
+        Task<IEnumerable<PassengerDTOAPI>> GetAllPassengersAsync();
     }
 }

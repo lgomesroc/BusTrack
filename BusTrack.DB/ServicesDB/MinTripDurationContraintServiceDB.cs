@@ -9,8 +9,8 @@ namespace BusTrack.BusTrack.DB.ServicrDB
         {
             var tripsCollection = database.GetCollection<BsonDocument>("Trips");
 
-            var filter = Builders<BsonDocument>.Filter.Empty; // Filtro vazio para atualizar todos os documentos
-            var update = Builders<BsonDocument>.Update.Inc("arrivalTime", TimeSpan.FromHours(1)); // Adiciona uma hora à arrivalTime
+            var filter = Builders<BsonDocument>.Filter.Empty;
+            var update = Builders<BsonDocument>.Update.Inc("arrivalTime", TimeSpan.FromHours(1));
 
             tripsCollection.UpdateMany(filter, update);
         }

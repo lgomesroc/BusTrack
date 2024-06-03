@@ -41,7 +41,6 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         {
             var tripModelAPI = _mapper.Map<TripModelAPI>(trip);
 
-            // Converta o TripModelAPI para TripDB aqui
             var tripDB = ConvertToDBModel(tripModelAPI);
 
             await _tripRepository.UpdateTripAsync(id.ToString(), tripDB);
@@ -53,13 +52,10 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         {
             var dbModel = new TripDB();
 
-            // Copie os campos do modelAPI para dbModel
             dbModel.Id = modelAPI.Id.ToString();
             dbModel.BusId = modelAPI.BusId.ToString();
             dbModel.DriverId = modelAPI.DriverId.ToString();
-            // dbModel.RouteId = modelAPI.RouteId; // Adicione este campo em TripDB se necessário
             dbModel.DepartureTime = modelAPI.DepartureTime;
-            // dbModel.PassengerCount = modelAPI.PassengerCount; // Adicione este campo em TripDB se necessário
 
             return dbModel;
         }

@@ -1,7 +1,5 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Driver.Core.Misc;
-using MongoDB.Bson.Serialization;
 
 namespace BusTrack.BusTrack.DB.ServicrDB
 {
@@ -80,7 +78,6 @@ namespace BusTrack.BusTrack.DB.ServicrDB
                 Validator = validator
             };
 
-            // Ensure the collection exists before setting the validator
             if (!CollectionExists(database, "Trips"))
             {
                 database.CreateCollection("Trips", validationOptions);

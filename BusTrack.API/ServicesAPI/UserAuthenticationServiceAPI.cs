@@ -17,18 +17,14 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
         public UserDB Authenticate(string email, string password)
         {
-            // Exemplo de lógica de autenticação - consulte o banco de dados para encontrar o usuário com o e-mail fornecido
             var user = _userRepository.GetByEmail(email);
 
-            // Verifica se o usuário existe e se a senha está correta
             if (user != null && user.Password == password)
             {
-                // Autenticação bem-sucedida, retorna o usuário autenticado
                 return user;
             }
             else
             {
-                // Autenticação falhou, retorna null
                 return null;
             }
         }

@@ -1,5 +1,3 @@
-
-
 namespace BusTrack.BusTrack.DB.ClassesDB
 {
     public class UserPasswordHistoryDB

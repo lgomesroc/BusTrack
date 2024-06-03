@@ -1,4 +1,3 @@
-/* dashboard.component.css */
 .dashboard-container {
   display: flex;
   height: 100vh;
@@ -58,9 +57,6 @@ button[type="submit"] {
     background-color: #45a049;
   }
 
-/* Responsividade */
-
-/* Tablets e dispositivos móveis em modo paisagem */
 @media screen and (max-width: 768px) {
   .dashboard-container {
     flex-direction: column;
@@ -75,7 +71,6 @@ button[type="submit"] {
   }
 }
 
-/* Dispositivos móveis em modo retrato */
 @media screen and (max-width: 480px) {
   .top-bar {
     font-size: 14px;

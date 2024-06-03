@@ -41,7 +41,6 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             var driver = await _driverRepository.GetDriverByIdAsync(id);
             if (driver == null)
             {
-                // Tratar o caso de passageiro não encontrado
                 return null;
             }
             return _mapper.Map<DriverDTOAPI>(driver);
@@ -51,12 +50,10 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         {
             var driverModel = _mapper.Map<DriverModelAPI>(driver);
 
-            // Converter PassengerModelAPI para PassengerDB antes de chamar AddPassengerAsync
             var driverDB = _mapper.Map<DriverDB>(driverModel);
 
             await _driverRepository.AddDriverAsync(driverDB);
 
-            // Converter de volta para PassengerModelAPI para retorno
             return _mapper.Map<DriverDTOAPI>(driverDB);
         }
 
@@ -67,7 +64,6 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
             await _driverRepository.UpdateDriverAsync(id, driverDB);
 
-            // Recarregue o motorista atualizado do banco para retorno (opcional)
             var updatedDriver = await _driverRepository.GetDriverByIdAsync(id);
             return _mapper.Map<DriverDTOAPI>(updatedDriver);
         }
@@ -76,7 +72,6 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         {
             var filter = Builders<DriverDB>.Filter.Eq("Id", id);
 
-            // Crie uma classe de atualização específica para o nome
             var nameUpdate = new DriverNameUpdater { Name = driver.Name };
 
             var update = Builders<DriverDB>.Update.Set(p => p.Name, nameUpdate.Name);

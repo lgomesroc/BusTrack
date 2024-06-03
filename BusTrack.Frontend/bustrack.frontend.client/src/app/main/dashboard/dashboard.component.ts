@@ -16,50 +16,44 @@ import { limitCharactersRule } from '../rules-main/limitCharactersRules/limitCha
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  user: any; // Adicione esta linha
-  constructor(private dataService: DataService) { } // Injetando o serviço de dados
+  user: any; 
+  constructor(private dataService: DataService) { } 
 
   ngOnInit(): void {
-    // Ativar regras de segurança
     blockSavePasswordRule();
     disableInteractionsRule();
     disableRightClick();
     disableKeyboardShortcutsRule();
     preventBackNavigationRule();
 
-    // Aqui você precisa passar os argumentos corretos para as funções
     const emailInput = document.getElementById('email') as HTMLInputElement;
     validateEmailFormatRule(emailInput.value);
 
     const requiredField = document.getElementById('requiredField') as HTMLInputElement;
-    validateFieldsRequiredRule(requiredField); // Passando 'requiredField' como argumento
+    validateFieldsRequiredRule(requiredField); 
 
     const characterLimitField = document.getElementById('characterLimitField') as HTMLInputElement;
     limitCharactersRule(characterLimitField, 200);
 
-    // Iniciar temporizador de inatividade e timeout da sessão
-    const inactivityTimeout = 600000; // 10 minutos de inatividade
+    const inactivityTimeout = 600000; 
     startInactivityTimerRule(inactivityTimeout);
 
-    const sessionTimeout = 1800000; // 30 minutos de sessão
+    const sessionTimeout = 1800000; 
     startSessionTimeoutRule(sessionTimeout);
 
-    // Limpar temporizadores ao sair do componente
     window.onunload = () => {
       clearInactivityTimerRule();
       clearSessionTimeoutRule();
     };
 
     this.user = {
-      name: 'Nome do Usuário', // Substitua isso pelos dados reais do usuário
-      id: 'ID do Usuário' // Substitua isso pelo ID real do usuário
-      // outras propriedades do usuário aqui
+      name: 'Nome do Usuário',
+      id: 'ID do Usuário'
     };
   }
 
 
   saveData() {
-    // Aqui você pode coletar os dados do formulário e enviá-los para o seu serviço de dados
     const formData = {
       lineNumber: (document.getElementById('lineNumber') as HTMLInputElement).value,
       origin: (document.getElementById('origin') as HTMLInputElement).value,
@@ -70,10 +64,8 @@ export class DashboardComponent implements OnInit {
 
     this.dataService.saveDataToMongoDB(formData).subscribe(response => {
       console.log('Dados salvos com sucesso:', response);
-      // Aqui você pode adicionar qualquer lógica adicional após salvar os dados, como limpar o formulário ou exibir uma mensagem de sucesso
     }, error => {
       console.error('Erro ao salvar os dados:', error);
-      // Aqui você pode adicionar lógica para lidar com erros de salvamento, como exibir uma mensagem de erro ao usuário
     });
   }
 }

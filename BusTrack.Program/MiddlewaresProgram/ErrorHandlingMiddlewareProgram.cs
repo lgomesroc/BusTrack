@@ -19,10 +19,8 @@
             }
             catch (Exception ex)
             {
-                // Registra a exceção.
                 _logger.LogError(ex, "Ocorreu um erro inesperado.");
 
-                // Retorna uma resposta de erro para o cliente.
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 await context.Response.WriteAsync("Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.");
             }

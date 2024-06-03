@@ -30,7 +30,7 @@ body {
 
 img {
   display: block;
-  margin: 20px auto; /* Espaço abaixo do título */
+  margin: 20px auto; 
   max-width: 50%;
   height: auto;
 }
@@ -39,17 +39,17 @@ img {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%; /* Set width as per layout requirement */
-  margin-bottom: 20px; /* Space between form fields */
+  width: 100%; 
+  margin-bottom: 20px; 
 }
 
 .button-container {
   display: flex;
-  flex-direction: row; /* Change to row */
-  justify-content: space-between; /* Add space between buttons */
+  flex-direction: row; 
+  justify-content: space-between; 
   align-items: center;
   gap: 20px;
-  margin-top: auto; /* Adjust space above as needed */
+  margin-top: auto; 
 }
 
 .blue-button {
@@ -60,7 +60,7 @@ img {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color .3s ease-in-out;
-  margin: 0 10px; /* Adiciona margem aos lados dos botões */
+  margin: 0 10px; 
 }
 
   .blue-button:hover {
@@ -77,15 +77,13 @@ img {
   color: red;
 }
 
-/* Responsiveness */
-
 @media (max-width :768px) {
   img {
     max-width: 80%;
   }
 
   .button-container {
-    flex-direction: column; /* Change to column for small screens */
+    flex-direction: column; 
     gap: 10px;
   }
 }
