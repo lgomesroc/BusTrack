@@ -450,7 +450,7 @@ Todos os componentes, incluindo nomes de classes, projetos, tabelas e propriedad
 ![Tela de atualizar a senha.](1717028557715.jpeg)
 ![Tela de confirmação.](1717028558230.jpeg)
 ![Tela de conclusão.](1717028557758.jpeg)
-![Tela de sashboard.](1717028557775.jpeg)
+![Tela de dashboard.](1717028557775.jpeg)
 
 
 ## Feedback
