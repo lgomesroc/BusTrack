@@ -94,7 +94,7 @@ Já no frontend criei regras para não salvar senha, copiar informações tanto 
 
 ## Histórico de Atualizações
 
-#2024-06-03
+## 2024-06-03
 
 - Lançamento do sistema Bus Track. Foi salvo no GitHub a versão completa.
 
@@ -136,13 +136,11 @@ Já no frontend criei regras para não salvar senha, copiar informações tanto 
 
 - Lançamento inicial do projeto no GitHub.
 
-
-
 ## Estrutura das pastas do projeto com suas respectivas funções:
 
-#### BusTrack                                                # Nome do projeto
-#### ├── BusTrack.API                                        # Pasta em relação à API
-#### │   ├── ControllersAPI                                  # Pasta para controladores da API
+#### BusTrack                                       # Nome do projeto
+#### ├── BusTrack.API                                  # Pasta em relação à API
+#### │   ├── ControllersAPI                               # Pasta para controladores da API
 #### │   │   ├── AccountControllerAPI.cs                     # Controller para operações relacionadas a contas de usuário
 #### │   │   ├── AuthenticationControllerAPI.cs              # Controller para autenticação de usuários.
 #### │   │   ├── BusControllerAPI.cs                         # Controller para gerenciar operações relacionadas a ônibus
@@ -154,7 +152,7 @@ Já no frontend criei regras para não salvar senha, copiar informações tanto 
 #### │   │   ├── TripControllerAPI.cs                        # Controller para gerenciar operações relacionadas a viagens
 #### │   │   ├── TripsPassengerControllerAPI.cs              # Controller para gerenciar operações relacionadas entre viagens e passageiros
 #### │   │   └── UserControllerAPI.cs                        # Controller para gerenciar operações relacionadas a usuários
-#### │   ├── DTOAPI                                          # Pasta para DTOs da API
+#### │   ├── DTOAPI                                       # Pasta para DTOs da API
 #### │   │   ├── BusDTOAPI.cs                                # DTO para ônibus
 #### │   │   ├── DriverDTOAPI.cs                             # DTO para motoristas
 #### │   │   ├── PassengerDTOAPI.cs                          # DTO para passageiros
@@ -162,20 +160,20 @@ Já no frontend criei regras para não salvar senha, copiar informações tanto 
 #### │   │   ├── TripDTOAPI.cs                               # DTO para viagens
 #### │   │   ├── TripPassengerDTOAPI.cs                      # DTO para associação entre viagens e passageiros
 #### │   │   └── UpdatePasswordDTOAPI.cs                     # DTO para atualização de senha.
-#### │   ├── InterfacesAPI                                   # Pasta para interfaces da API
-#### │   │   ├── ServicesAPI                                 # Pasta para interfaces de serviço da API
-#### │   │   │   ├── IAccountServiceAPI.cs                   # Interface para o serviço relacionado a contas de usuário.
-#### │   │   │   ├── IBusServiceAPI.cs                       # Interface para serviço relacionado a ônibus
-#### │   │   │   ├── IDriverServiceAPI.cs                    # Interface para serviço relacionado a motoristas
-#### │   │   │   ├── IEmailConfirmationServiceAPI.cs         # Interface para o serviço de confirmação de e-mail na API
-#### │   │   │   ├── IPassengerServiceAPI.cs                 # Interface para serviço relacionado a passageiros
-#### │   │   │   ├── IRouteServiceAPI.cs                     # Interface para serviço relacionado a rotas
-#### │   │   │   ├── ITripServiceAPI.cs                      # Interface para serviço relacionado a viagens
-#### │   │   │   ├── ITripsPassengerServiceAPI.cs            # Interface para serviço relacionado entre viagens e passageiros
-#### │   │   │   ├── IUpdatePasswordServiceAPI.cs            # Interface para serviço de atualização de senha. 
-#### │   │   │   ├── IUserAuthenticationServiceAPI.cs        # Interface para o serviço de autenticação de usuários na API
-#### │   │   │   └── IUserServiceAPI.cs                      # Interface para o serviço de usuário na API
-#### │   ├── MappingsAPI                                     # Pasta para configuração de mapeamentos
+#### │   ├── InterfacesAPI                                      # Pasta para interfaces da API
+#### │   │   ├── ServicesAPI                                    # Pasta para interfaces de serviço da API
+#### │   │   │   ├── IAccountServiceAPI.cs                      # Interface para o serviço relacionado a contas de usuário.
+#### │   │   │   ├── IBusServiceAPI.cs                          # Interface para serviço relacionado a ônibus
+#### │   │   │   ├── IDriverServiceAPI.cs                       # Interface para serviço relacionado a motoristas
+#### │   │   │   ├── IEmailConfirmationServiceAPI.cs            # Interface para o serviço de confirmação de e-mail na API
+#### │   │   │   ├── IPassengerServiceAPI.cs                    # Interface para serviço relacionado a passageiros
+#### │   │   │   ├── IRouteServiceAPI.cs                        # Interface para serviço relacionado a rotas
+#### │   │   │   ├── ITripServiceAPI.cs                         # Interface para serviço relacionado a viagens
+#### │   │   │   ├── ITripsPassengerServiceAPI.cs               # Interface para serviço relacionado entre viagens e passageiros
+#### │   │   │   ├── IUpdatePasswordServiceAPI.cs               # Interface para serviço de atualização de senha. 
+#### │   │   │   ├── IUserAuthenticationServiceAPI.cs           # Interface para o serviço de autenticação de usuários na API
+#### │   │   │   └── IUserServiceAPI.cs                         # Interface para o serviço de usuário na API
+#### │   ├── MappingsAPI                                      # Pasta para configuração de mapeamentos
 #### │   │   └── MappingProfileAPI.cs                        # Arquivo para configuração de mapeamentos
 #### │   ├── ModelsAPI                                       # Pasta para modelos da API
 #### │   │   ├── AccountModelAPI.cs                          # Modelo para contas de usuário
@@ -213,27 +211,27 @@ Já no frontend criei regras para não salvar senha, copiar informações tanto 
 #### │   │   └── UserDB.cs                                   # Define a classe UserDB, para representar a tabela de usuários no banco de dados
 #### │   │   └── UserPasswordHistoryDB.cs                    # Classe representando o histórico de senhas de usuários.
 #### │   │   └── UserRegistrationDB.cs                       # Define a classe UserRegistrationDB, que representa a tabela de registros de usuários.
-#### │   ├── ConnectionsDB                                   # Pasta para configuração do banco de dados
+#### │   ├── ConnectionsDB                                # Pasta para configuração do banco de dados
 #### │   │   └── ConnectionDB.cs                             # Configura a conexão do banco de dados
-#### │   ├── DataBaseDB                                      # Pasta para configuração do banco de dados
+#### │   ├── DataBaseDB                                   # Pasta para configuração do banco de dados
 #### │   │   └── database.json                               # Arquivo de configuração do banco de dados com o projeto.
-#### │   ├── InterfacesDB                                    # Pasta para interfaces do banco de dados
+#### │   ├── InterfacesDB                                 # Pasta para interfaces do banco de dados
 #### │   │   ├── IModelsDB                                   # Pasta das interfaces dos modelos do banco de dados
-#### │   │   │   ├── IBusModelDB.cs                          # Interface IBusModelDB
-#### │   │   │   ├── IDriverModelDB.cs                       # Interface IDriverModelDB
-#### │   │   │   ├── IPassengerModelDB.cs                    # Interface IPassengerModelDB
-#### │   │   │   ├── IRouteModelDB.cs                        # Interface IRouteModelDB
-#### │   │   │   ├── ITripModelDB.cs                         # Interface ITripModelDB
-#### │   │   │   └── ITripsPassengerModelDB.cs               # Interface ITripsPassengerModelDB
+#### │   │   │   ├── IBusModelDB.cs                             # Interface IBusModelDB
+#### │   │   │   ├── IDriverModelDB.cs                          # Interface IDriverModelDB
+#### │   │   │   ├── IPassengerModelDB.cs                       # Interface IPassengerModelDB
+#### │   │   │   ├── IRouteModelDB.cs                           # Interface IRouteModelDB
+#### │   │   │   ├── ITripModelDB.cs                            # Interface ITripModelDB
+#### │   │   │   └── ITripsPassengerModelDB.cs                  # Interface ITripsPassengerModelDB
 #### │   │   └── IRepositoriesDB                             # Pasta das interfaces dos repositórios do banco de dados
-#### │   │       ├── IBusRepositoryDB.cs                     # Interface IBusRepositoryDB
-#### │   │       ├── IDriverRepositoryDB.cs                  # Interface IDriverRepositoryDB
-#### │   │       ├── IPassengerRepositoryDB.cs               # Interface IPassengerRepositoryDB
-#### │   │       ├── IRouteRepositoryDB.cs                   # Interface IRouteRepositoryDB
-#### │   │       ├── ITripRepositoryDB.cs                    # Interface ITripRepositoryDB
-#### │   │       ├── ITripsPassengerRepositoryDB.cs          # Interface ITripsPassengerRepositoryDB
-#### │   │       └── IUserRepositoryDB.cs                    # Interface para repositório de usuários.
-#### │   ├── ModelsDB                                        # Pasta para modelos do banco de dados
+#### │   │       ├── IBusRepositoryDB.cs                        # Interface IBusRepositoryDB
+#### │   │       ├── IDriverRepositoryDB.cs                     # Interface IDriverRepositoryDB
+#### │   │       ├── IPassengerRepositoryDB.cs                  # Interface IPassengerRepositoryDB
+#### │   │       ├── IRouteRepositoryDB.cs                      # Interface IRouteRepositoryDB
+#### │   │       ├── ITripRepositoryDB.cs                       # Interface ITripRepositoryDB
+#### │   │       ├── ITripsPassengerRepositoryDB.cs             # Interface ITripsPassengerRepositoryDB
+#### │   │       └── IUserRepositoryDB.cs                       # Interface para repositório de usuários.
+#### │   ├── ModelsDB                                     # Pasta para modelos do banco de dados
 #### │   │   ├── AccountModelDB.cs                           # Implementação do modelo de contas.
 #### │   │   ├── BusModelDB.cs                               # Implementação da interface IBusModelDB
 #### │   │   ├── DriverModelDB.cs                            # Implementação da interface IDriverModelDB
@@ -241,7 +239,7 @@ Já no frontend criei regras para não salvar senha, copiar informações tanto 
 #### │   │   ├── RouteModelDB.cs                             # Implementação da interface IRouteModelDB
 #### │   │   ├── TripModelDB.cs                              # Implementação da interface ITripModelDB
 #### │   │   └── TripsPassengerModelDB.cs                    # Implementação da interface ITripsPassengerModelDB
-#### │   ├── RepositoriesDB                                  # Pasta para repositórios do banco de dados
+#### │   ├── RepositoriesDB                               # Pasta para repositórios do banco de dados
 #### │   │   ├── BusRepositoryDB.cs                          # Repositório para a classe BusDB
 #### │   │   ├── DriverRepositoryDB.cs                       # Repositório para a classe DriverDB
 #### │   │   ├── InspectorRepositoryDB.cs                    # Repositório para a classe InspectorDB.
@@ -250,7 +248,7 @@ Já no frontend criei regras para não salvar senha, copiar informações tanto 
 #### │   │   ├── TripRepositoryDB.cs                         # Repositório para a classe TripDB
 #### │   │   ├── TripsPassengerRepositoryDB.cs               # Repositório para a classe TripsPassengerDB
 #### │   │   └── UserRepositoryDB.cs                         # Repositório para a classe UserDB.
-#### │   ├── ServicesDB                                      # Pasta para serviços do banco de dados
+#### │   ├── ServicesDB                                   # Pasta para serviços do banco de dados
 #### │   │   ├── BusSingleTripConstraintServiceDB.cs         # Serviço para restrição de viagem única
 #### │   │   ├── DepartureTimeValidationServiceDB.cs         # Serviço para validação de hora de partida
 #### │   │   ├── MinTripDurationContraintServiceDB.cs        # Serviço para restrição de duração mínima de viagem
@@ -263,75 +261,75 @@ Já no frontend criei regras para não salvar senha, copiar informações tanto 
 #### │   │   ├── TripStatusUpdateServiceDB.cs                # Serviço para atualização de status de viagem
 #### │   │   ├── UserEmailValidationServiceDB.cs             # Serviço de validação de e-mail de usuário.
 #### │   │   └── UserRoleValidationServiceDB.cs              # Serviço de validação de função de usuário.
-#### ├── BusTrack.Frontend                                   # Pasta raiz do projeto frontend
-#### │   └── bustrack.frontend.client                        # Pasta do cliente frontend
-#### │       └── src                                         # Pasta de código-fonte
-#### │           └── app                                     # Pasta principal do aplicativo
-#### │               ├── login                               # Pasta contendo componentes relacionados ao login
-#### │               │   ├── concluded                       # Pasta contendo componentes relacionados à conclusão
-#### │               │   │   ├── concluded.component.css     # Estilos CSS para a tela de conclusão
-#### │               │   │   ├── concluded.component.html    # Template HTML para a tela de conclusão
-#### │               │   │   ├── concluded.component.spec.ts # Teste para o componente de conclusão
-#### │               │   │   └── concluded.component.ts      # Lógica TypeScript para a tela de conclusão
-#### │               │   ├── confirmation                    # Pasta contendo componentes relacionados à confirmação
-#### │               │   │   ├── confirmation.component.css  # Estilos CSS para a tela de confirmação
-#### │               │   │   ├── confirmation.component.html # Template HTML para a tela de confirmação
-#### │               │   │   ├── confirmation.component.spec.ts # Teste para o componente de confirmação
-#### │               │   │   └── confirmation.component.ts   # Lógica TypeScript para a tela de confirmação
-#### │               │   ├── create-an-account               # Pasta contendo componentes relacionados à criação de conta
-#### │               │   │   ├── create-an-account.component.css # Estilos CSS para a tela de criação de conta
-#### │               │   │   ├── create-an-account.component.html # Template HTML para a tela de criação de conta
-#### │               │   │   ├── create-an-account.component.spec.ts # Teste para o componente de criação de conta
-#### │               │   │   └── create-an-account.component.ts # Lógica TypeScript para a tela de criação de conta
-#### │               │   ├── enter-the-system                # Pasta contendo componentes relacionados à entrada no sistema
-#### │               │   │   ├── enter-the-system.component.css # Estilos CSS para a tela de entrada no sistema
-#### │               │   │   ├── enter-the-system.component.html # Template HTML para a tela de entrada no sistema
-#### │               │   │   ├── enter-the-system.component.spec.ts # Teste para o componente de entrada no sistema
-#### │               │   │   └── enter-the-system.component.ts # Lógica TypeScript para a tela de entrada no sistema
-#### │               │   ├── main-screen                     # Pasta contendo componentes relacionados à tela principal
-#### │               │   │   ├── main-screen.component.css   # Estilos CSS para a tela principal
-#### │               │   │   ├── main-screen.component.html  # Template HTML para a tela principal
-#### │               │   │   ├── main-screen.component.spec.ts # Teste para o componente de tela principal
+#### ├── BusTrack.Frontend                             # Pasta raiz do projeto frontend
+#### │   └── bustrack.frontend.client                 # Pasta do cliente frontend
+#### │       └── src                                 # Pasta de código-fonte
+#### │           └── app                             # Pasta principal do aplicativo
+#### │               ├── login                       # Pasta contendo componentes relacionados ao login
+#### │               │   ├── concluded               # Pasta contendo componentes relacionados à conclusão
+#### │               │   │   ├── concluded.component.css    # Estilos CSS para a tela de conclusão
+#### │               │   │   ├── concluded.component.html   # Template HTML para a tela de conclusão
+#### │               │   │   ├── concluded.component.spec.ts    # Teste para o componente de conclusão
+#### │               │   │   └── concluded.component.ts    # Lógica TypeScript para a tela de conclusão
+#### │               │   ├── confirmation             # Pasta contendo componentes relacionados à confirmação
+#### │               │   │   ├── confirmation.component.css    # Estilos CSS para a tela de confirmação
+#### │               │   │   ├── confirmation.component.html   # Template HTML para a tela de confirmação
+#### │               │   │   ├── confirmation.component.spec.ts    # Teste para o componente de confirmação
+#### │               │   │   └── confirmation.component.ts    # Lógica TypeScript para a tela de confirmação
+#### │               │   ├── create-an-account        # Pasta contendo componentes relacionados à criação de conta
+#### │               │   │   ├── create-an-account.component.css    # Estilos CSS para a tela de criação de conta
+#### │               │   │   ├── create-an-account.component.html   # Template HTML para a tela de criação de conta
+#### │               │   │   ├── create-an-account.component.spec.ts    # Teste para o componente de criação de conta
+#### │               │   │   └── create-an-account.component.ts    # Lógica TypeScript para a tela de criação de conta
+#### │               │   ├── enter-the-system         # Pasta contendo componentes relacionados à entrada no sistema
+#### │               │   │   ├── enter-the-system.component.css    # Estilos CSS para a tela de entrada no sistema
+#### │               │   │   ├── enter-the-system.component.html   # Template HTML para a tela de entrada no sistema
+#### │               │   │   ├── enter-the-system.component.spec.ts    # Teste para o componente de entrada no sistema
+#### │               │   │   └── enter-the-system.component.ts    # Lógica TypeScript para a tela de entrada no sistema
+#### │               │   ├── main-screen              # Pasta contendo componentes relacionados à tela principal
+#### │               │   │   ├── main-screen.component.css    # Estilos CSS para a tela principal
+#### │               │   │   ├── main-screen.component.html   # Template HTML para a tela principal
+#### │               │   │   ├── main-screen.component.spec.ts    # Teste para o componente de tela principal
 #### │               │   │   └── main-screen.component.ts    # Lógica TypeScript para a tela principal
-#### │               │   ├── rules                           # Regras
-#### │               │   │   ├── blockCopyRules              # Regras de bloqueio de cópia de informações sensíveis ou confidenciais
-#### │               │   │   │   └── blockCopyRule.ts        # Contém a lógica TypeScript relacionada à regra de bloqueio de cópia de informações sensíveis ou confidenciais
-#### │               │   │   ├── blockSavePasswordRules      # Regras de Bloqueio de Salvamento de Senha
-#### │               │   │   │   └── blockSavePasswordRule.ts # Contém a lógica TypeScript relacionada à regra de bloqueio de salvamento de senha.
-#### │               │   │   ├── checkPasswordStrengthpasswordRules # Regras de verificação da força das senhas dos usuários
-#### │               │   │   │   └── checkPasswordStrengthpasswordRule.ts # Contém a lógica TypeScript relacionada à regra de verificação da força das senhas dos usuários
-#### │               │   │   ├── disableInteractionsRules    # Regras de Desativação de Interações
-#### │               │   │   │   └── disableInteractionsRule.ts # Contém a lógica TypeScript relacionada à regra de desativação de interações.
-#### │               │   │   ├── disableKeyboardShortcutsRules  # Regras de Desativação de Atalhos de Teclado
-#### │               │   │   ├── disableKeyboardShortcutsRule.ts # Contém a lógica TypeScript relacionada à regra de desativação de atalhos de teclado.
-#### │               │   │   ├── hasRepeatedOrSequentialNumbersRules # Regras de detecção de números repetidos ou sequenciais em senhas
-#### │               │   │   │   └── hasRepeatedOrSequentialNumbersRule.ts # Contém a lógica TypeScript relacionada à regra de detecção de números repetidos ou sequenciais em senhas
+#### │               │   ├── rules                    # Regras
+#### │               │   │   ├── blockCopyRules       # Regras de bloqueio de cópia de informações sensíveis ou confidenciais
+#### │               │   │   │   └── blockCopyRule.ts    # Contém a lógica TypeScript relacionada à regra de bloqueio de cópia de informações sensíveis ou confidenciais
+#### │               │   │   ├── blockSavePasswordRules   # Regras de Bloqueio de Salvamento de Senha
+#### │               │   │   │   └── blockSavePasswordRule.ts    # Contém a lógica TypeScript relacionada à regra de bloqueio de salvamento de senha.
+#### │               │   │   ├── checkPasswordStrengthpasswordRules   # Regras de verificação da força das senhas dos usuários
+#### │               │   │   │   └── checkPasswordStrengthpasswordRule.ts    # Contém a lógica TypeScript relacionada à regra de verificação da força das senhas dos usuários
+#### │               │   │   ├── disableInteractionsRules     # Regras de Desativação de Interações
+#### │               │   │   │   └── disableInteractionsRule.ts    # Contém a lógica TypeScript relacionada à regra de desativação de interações.
+#### │               │   │   ├── disableKeyboardShortcutsRules    # Regras de Desativação de Atalhos de Teclado
+#### │               │   │   ├── disableKeyboardShortcutsRule.ts    # Contém a lógica TypeScript relacionada à regra de desativação de atalhos de teclado.
+#### │               │   │   ├── hasRepeatedOrSequentialNumbersRules     # Regras de detecção de números repetidos ou sequenciais em senhas
+#### │               │   │   │   └── hasRepeatedOrSequentialNumbersRule.ts  # Contém a lógica TypeScript relacionada à regra de detecção de números repetidos ou sequenciais em senhas
 #### │               │   │   ├── inactivityTimerRules                    # Regras do Temporizador de Inatividade
-#### │               │   │   │   └── inactivityTimerRule.ts  # Contém a lógica TypeScript relacionada às regras do temporizador de inatividade.
-#### │               │   │   ├── preventBackNavigationRules  # Regras de Prevenção de Navegação para Trás
-#### │               │   │   │   └── preventBackNavigationRule.ts # Contém a lógica TypeScript relacionada às regras de prevenção de navegação para trás.
-#### │               │   │   ├── preventForwardNavigationRules # Regras de Prevenção de Navegação para Frente
-#### │               │   │   │   └── preventForwardNavigationRule.ts # Contém a lógica TypeScript relacionada às regras de prevenção de navegação para frente.
-#### │               │   │   ├── sessionTimeoutRules          # Regras de Expiração de Sessão
-#### │               │   │   │   └── sessionTimeoutRule.ts    # Contém a lógica TypeScript relacionada às regras de expiração de sessão.
-#### │               │   ├── update-password                  # Pasta contendo componentes relacionados à atualização de senha.
-#### │               │   │   ├── update-password.component.css # Estilos CSS para o componente de atualização de senha.
-#### │               │   │   ├── update-password.component.html # Template HTML para o componente de atualização de senha.
-#### │               │   │   ├── update-password.component.spec.ts # Teste para o componente de atualização de senha.
-#### │               │   │   └── update-password.component.ts # Lógica TypeScript para o componente de atualização de senha.
-#### │               ├── main                                 # Pasta contendo componentes principais da aplicação, responsáveis por exibir a interface do usuário principal.
-#### │               │   ├── dashboard                        # Contém os arquivos relacionados ao componente do painel principal da aplicação.
-#### │               │   │   ├── dashboard.component.css      # Arquivo de estilos CSS específicos para o componente do painel principal.
-#### │               │   │   ├── dashboard.component.html     # Template HTML que define a estrutura do componente do painel principal.
-#### │               │   │   ├── dashboard.component.spec.ts  # Arquivo de teste unitário para o componente do painel principal.
-#### │               │   │   └── dashboard.component.ts       # Lógica TypeScript para o componente do painel principal.
-#### │               │   ├── rules-main                       # Pasta que contém as regras específicas relacionadas ao painel principal da aplicação
-#### │               │   │   ├── limitCharactersRules         # Pasta que contém as regras relacionadas à limitação de caracteres em campos específicos do painel principal.
-#### │               │   │   │   └── limitCharactersRule.ts   # Arquivo que define a lógica para a regra de limitação de caracteres.
-#### │               │   │   ├── validateEmailFormatRules     # Pasta que Contém as regras relacionadas à validação do formato de email em campos específicos do painel principal
-#### │               │   │   │   └── validateEmailFormatRule.ts  # Arquivo que define a lógica para a regra de validação do formato de email em campos específicos do painel principal
-#### │               │   │   ├── validateFieldsRequiredRules  # Pasta que Contém as regras relacionadas à validação de campos obrigatórios em campos específicos do painel principal
-#### │               │   │   │   └── validateFieldsRequiredRule.ts # Arquivo que define a lógica para a regra de validação de campos obrigatórios em campos específicos do painel principal
+#### │               │   │   │   └── inactivityTimerRule.ts                 # Contém a lógica TypeScript relacionada às regras do temporizador de inatividade.
+#### │               │   │   ├── preventBackNavigationRules              # Regras de Prevenção de Navegação para Trás
+#### │               │   │   │   └── preventBackNavigationRule.ts           # Contém a lógica TypeScript relacionada às regras de prevenção de navegação para trás.
+#### │               │   │   ├── preventForwardNavigationRules           # Regras de Prevenção de Navegação para Frente
+#### │               │   │   │   └── preventForwardNavigationRule.ts        # Contém a lógica TypeScript relacionada às regras de prevenção de navegação para frente.
+#### │               │   │   ├── sessionTimeoutRules                     # Regras de Expiração de Sessão
+#### │               │   │   │   └── sessionTimeoutRule.ts                  # Contém a lógica TypeScript relacionada às regras de expiração de sessão.
+#### │               │   ├── update-password                          # Pasta contendo componentes relacionados à atualização de senha.
+#### │               │   │   ├── update-password.component.css           # Estilos CSS para o componente de atualização de senha.
+#### │               │   │   ├── update-password.component.html          # Template HTML para o componente de atualização de senha.
+#### │               │   │   ├── update-password.component.spec.ts       # Teste para o componente de atualização de senha.
+#### │               │   │   └── update-password.component.ts            # Lógica TypeScript para o componente de atualização de senha.
+#### │               ├── main                                      # Pasta contendo componentes principais da aplicação, responsáveis por exibir a interface do usuário principal.
+#### │               │   ├── dashboard                                # Contém os arquivos relacionados ao componente do painel principal da aplicação.
+#### │               │   │   ├── dashboard.component.css                 # Arquivo de estilos CSS específicos para o componente do painel principal.
+#### │               │   │   ├── dashboard.component.html                # Template HTML que define a estrutura do componente do painel principal.
+#### │               │   │   ├── dashboard.component.spec.ts             # Arquivo de teste unitário para o componente do painel principal.
+#### │               │   │   └── dashboard.component.ts                  # Lógica TypeScript para o componente do painel principal.
+#### │               │   ├── rules-main                               # Pasta que contém as regras específicas relacionadas ao painel principal da aplicação
+#### │               │   │   ├── limitCharactersRules                    # Pasta que contém as regras relacionadas à limitação de caracteres em campos específicos do painel principal.
+#### │               │   │   │   └── limitCharactersRule.ts                 # Arquivo que define a lógica para a regra de limitação de caracteres.
+#### │               │   │   ├── validateEmailFormatRules                # Pasta que Contém as regras relacionadas à validação do formato de email em campos específicos do painel principal
+#### │               │   │   │   └── validateEmailFormatRule.ts              # Arquivo que define a lógica para a regra de validação do formato de email em campos específicos do painel principal
+#### │               │   │   ├── validateFieldsRequiredRules             # Pasta que Contém as regras relacionadas à validação de campos obrigatórios em campos específicos do painel principal
+#### │               │   │   │   └── validateFieldsRequiredRule.ts          # Arquivo que define a lógica para a regra de validação de campos obrigatórios em campos específicos do painel principal
 #### │               │   ├── sidebar                                  # Pasta que contém os arquivos relacionados ao componente da barra lateral da aplicação.
 #### │               │   │   ├── sidebar.component.css                   # Arquivo de estilos CSS específicos para o componente da barra lateral.
 #### │               │   │   ├── sidebar.component.html                  # Template HTML que define a estrutura do componente da barra lateral.
@@ -383,8 +381,7 @@ Já no frontend criei regras para não salvar senha, copiar informações tanto 
 #### │   │   └── DriverNameUpdater.cs                        # Arquivo para atualizar nomes de motoristas
 #### │   └── PassengerUpdater                             # Pasta para atualização de dados de passageiros
 #### │       └── PassengerNameUpdater.cs                     # Arquivo para atualizar nomes de passageiros
-#### ├── BusTrack.sln                                  # Arquivo de solução do Visual Studio
-
+#### └── BusTrack.sln                                  # Arquivo de solução do Visual Studio
 
 
 ## Estrutura do Projeto
@@ -444,6 +441,16 @@ Nesta parte foi instalado o Angular onde criei as telas e a funcionalidade princ
 ### Nomenclatura
 
 Todos os componentes, incluindo nomes de classes, projetos, tabelas e propriedades, foram nomeados em inglês, seguindo as melhores práticas de programação.
+
+
+## Telas
+![Tela principal.](1717028557844.jpeg)
+![Tela de login.](1717028557779.jpeg)
+![Tela de criar conta.](1717028557786.jpeg)
+![Tela de atualizar a senha.](1717028557715.jpeg)
+![Tela de confirmação.](1717028558230.jpeg)
+![Tela de conclusão.](1717028557758.jpeg)
+![Tela de sashboard.](1717028557775.jpeg)
 
 
 ## Feedback
