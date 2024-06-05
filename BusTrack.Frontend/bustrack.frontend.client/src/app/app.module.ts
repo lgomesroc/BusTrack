@@ -13,6 +13,7 @@ import { ConfirmationComponent } from './login/confirmation/confirmation.compone
 import { ConcludedComponent } from './login/concluded/concluded.component';
 import { DashboardComponent } from './main/dashboard/dashboard.component';
 import { SidebarComponent } from './main/sidebar/sidebar.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,9 @@ import { SidebarComponent } from './main/sidebar/sidebar.component';
     ReactiveFormsModule,
     HttpClientModule  
   ],
-  providers: [],
+  providers: [
+    provideAnimationsAsync()
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
