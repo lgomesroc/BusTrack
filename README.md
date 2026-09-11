@@ -154,90 +154,269 @@ Já no frontend criei regras para não salvar senha, copiar informações tanto 
 A solução está organizada em projetos separados para a API, banco de dados, frontend, servidor do frontend, testes e componentes auxiliares.
 
 ```text
-BusTrack/
-│
-├── BusTrack.API/
-│   ├── ControllersAPI/
-│   │   ├── AccountControllerAPI.cs
-│   │   ├── AuthenticationControllerAPI.cs
-│   │   ├── BusControllerAPI.cs
-│   │   ├── CreateAccountControllerAPI.cs
-│   │   ├── DashboardControllerAPI.cs
-│   │   ├── DriverControllerAPI.cs
-│   │   ├── PassengerControllerAPI.cs
-│   │   ├── RouteControllerAPI.cs
-│   │   ├── TripControllerAPI.cs
-│   │   ├── TripsPassengerControllerAPI.cs
-│   │   └── UserControllerAPI.cs
-│   │
-│   ├── DTOAPI/
-│   ├── InterfacesAPI/
-│   │   └── ServicesAPI/
-│   ├── MappingsAPI/
-│   ├── ModelsAPI/
-│   └── ServicesAPI/
-│
-├── BusTrack.DB/
-│   ├── ClassesDB/
-│   ├── ConnectionsDB/
-│   ├── DataBaseDB/
-│   ├── InterfacesDB/
-│   │   ├── IModelsDB/
-│   │   └── IRepositoriesDB/
-│   ├── ModelsDB/
-│   ├── RepositoriesDB/
-│   └── ServicesDB/
-│
-├── BusTrack.Frontend/
-│   ├── BusTrack.Frontend.Server/
+BusTrack                                   
+├── BusTrack.API                                  
+│   ├── ControllersAPI                             
+│   │   ├── AccountControllerAPI.cs                     
+│   │   ├── AuthenticationControllerAPI.cs            
+│   │   ├── BusControllerAPI.cs                       
+│   │   ├── CreateAccountControllerAPI.cs             
+│   │   ├── DashboardControllerAPI.cs                
+│   │   ├── DriverControllerAPI.cs                    
+│   │   ├── PassengerControllerAPI.cs                  
+│   │   ├── RouteControllerAPI.cs                     
+│   │   ├── TripControllerAPI.cs                       
+│   │   ├── TripsPassengerControllerAPI.cs             
+│   │   └── UserControllerAPI.cs                      
+│   ├── DTOAPI                                      
+│   │   ├── BusDTOAPI.cs                            
+│   │   ├── DriverDTOAPI.cs                          
+│   │   ├── PassengerDTOAPI.cs                        
+│   │   ├── RouteDTOAPI.cs                            
+│   │   ├── TripDTOAPI.cs                             
+│   │   ├── TripPassengerDTOAPI.cs                  
+│   │   └── UpdatePasswordDTOAPI.cs                     
+│   ├── InterfacesAPI                                    
+│   │   ├── ServicesAPI                                
+│   │   │   ├── IAccountServiceAPI.cs              
+│   │   │   ├── IBusServiceAPI.cs                      
+│   │   │   ├── IDriverServiceAPI.cs                   
+│   │   │   ├── IEmailConfirmationServiceAPI.cs          
+│   │   │   ├── IPassengerServiceAPI.cs                  
+│   │   │   ├── IRouteServiceAPI.cs                       
+│   │   │   ├── ITripServiceAPI.cs                      
+│   │   │   ├── ITripsPassengerServiceAPI.cs            
+│   │   │   ├── IUpdatePasswordServiceAPI.cs                
+│   │   │   ├── IUserAuthenticationServiceAPI.cs          
+│   │   │   └── IUserServiceAPI.cs                        
+│   ├── MappingsAPI                                   
+│   │   └── MappingProfileAPI.cs                       
+│   ├── ModelsAPI                                     
+│   │   ├── AccountModelAPI.cs                         
+│   │   ├── BusModelAPI.cs                            
+│   │   ├── DriverModelAPI.cs                         
+│   │   ├── PassengerModelAPI.cs                      
+│   │   ├── RouteModelAPI.cs                           
+│   │   ├── TripModelAPI.cs                             
+│   │   ├── TripsPassengerModelAPI.cs                  
+│   │   └── UserModelAPI.cs                           
+│   └── ServicesAPI                                 
+│   │   ├── AccountServiceAPI.cs                     
+│   │   ├── BusServiceAPI.cs                       
+│   │   ├── DriverServiceAPI.cs                      
+│   │   ├── PassengerServiceAPI.cs                  
+│   │   ├── RouteServiceAPI.cs                 
+│   │   ├── TripServiceAPI.cs                        
+│   │   ├── TripsPassengerServiceAPI.cs         
+│   │   ├── UpdatePasswordServiceAPI.cs               
+│   │   ├── UserAuthenticationServiceAPI.cs         
+│   │   └── UserServiceAPI.cs                       
+├── BusTrack.DB                                       
+│   ├── ClassesDB                                   
+│   │   ├── BusDB.cs                                   
+│   │   ├── DriverDB.cs                               
+│   │   ├── EmailConfirmationDB                      
+│   │   ├── InspectorDB                               
+│   │   ├── LoginDB                                    
+│   │   ├── PassengerDB.cs                             
+│   │   ├── PasswordHistoryDB.cs                       
+│   │   ├── PasswordRecordDB.cs                   
+│   │   ├── RouteDB.cs                             
+│   │   ├── TripDB.cs                                 
+│   │   └── TripsPassengerDB.cs                       
+│   │   └── UserDB.cs                               
+│   │   └── UserPasswordHistoryDB.cs                
+│   │   └── UserRegistrationDB.cs                 
+│   ├── ConnectionsDB                              
+│   │   └── ConnectionDB.cs                         
+│   ├── DataBaseDB                                  
+│   │   └── database.json                            
+│   ├── InterfacesDB                               
+│   │   ├── IModelsDB                                
+│   │   │   ├── IBusModelDB.cs                            
+│   │   │   ├── IDriverModelDB.cs                          
+│   │   │   ├── IPassengerModelDB.cs                    
+│   │   │   ├── IRouteModelDB.cs                        
+│   │   │   ├── ITripModelDB.cs                         
+│   │   │   └── ITripsPassengerModelDB.cs                 
+│   │   └── IRepositoriesDB                         
+│   │   │   ├── IBusRepositoryDB.cs                      
+│   │   │   ├── IDriverRepositoryDB.cs                   
+│   │   │   ├── IPassengerRepositoryDB.cs                
+│   │   │   ├── IRouteRepositoryDB.cs                    
+│   │   │   ├── ITripRepositoryDB.cs                    
+│   │   │   ├── ITripsPassengerRepositoryDB.cs         
+│   │   │   └── IUserRepositoryDB.cs                      
+│   ├── ModelsDB                                     
+│   │   ├── AccountModelDB.cs                           
+│   │   ├── BusModelDB.cs                          
+│   │   ├── DriverModelDB.cs                        
+│   │   ├── PassengerModelDB.cs                     
+│   │   ├── RouteModelDB.cs                            
+│   │   ├── TripModelDB.cs                             
+│   │   └── TripsPassengerModelDB.cs                  
+│   ├── RepositoriesDB                             
+│   │   ├── BusRepositoryDB.cs                       
+│   │   ├── DriverRepositoryDB.cs                     
+│   │   ├── InspectorRepositoryDB.cs                
+│   │   ├── PassengerRepositoryDB.cs                  
+│   │   ├── RouteRepositoryDB.cs                      
+│   │   ├── TripRepositoryDB.cs                        
+│   │   ├── TripsPassengerRepositoryDB.cs            
+│   │   └── UserRepositoryDB.cs                       
+│   ├── ServicesDB                                 
+│   │   ├── BusSingleTripConstraintServiceDB.cs        
+│   │   ├── DepartureTimeValidationServiceDB.cs        
+│   │   ├── MinTripDurationContraintServiceDB.cs       
+│   │   ├── PassengerLimitValidationServiceDB.cs      
+│   │   ├── PasswordHistoryValidationServiceDB.cs     
+│   │   ├── RouteConflictServiceDB.cs                  
+│   │   ├── RouteSchedulerServiceDB.cs                
+│   │   ├── TripMappingServiceDB.cs                   
+│   │   ├── TripServiceDB.cs                            
+│   │   ├── TripStatusUpdateServiceDB.cs               
+│   │   ├── UserEmailValidationServiceDB.cs          
+│   │   └── UserRoleValidationServiceDB.cs             
+├── BusTrack.Frontend                            
+│   ├── bustrack.frontend.client
+│   │   ├── src                                
+│   │   │   └── app                            
+│   │   │   │   ├── login                      
+│   │   │   │   │   │   ├── concluded              
+│   │   │   │   │   │   │   ├── concluded.component.css   
+│   │   │   │   │   │   │   ├── concluded.component.html   
+│   │   │   │   │   │   │   ├── concluded.component.spec.ts   
+│   │   │   │   │   │   │   └── concluded.component.ts   
+│   │   │   │   │   ├── confirmation            
+│   │   │   │   │   │   ├── confirmation.component.css   
+│   │   │   │   │   │   ├── confirmation.component.html  
+│   │   │   │   │   │   ├── confirmation.component.spec.ts  
+│   │   │   │   │   │   └── confirmation.component.ts   
+│   │   │   │   │   ├── create-an-account       
+│   │   │   │   │   │   ├── create-an-account.component.css   
+│   │   │   │   │   │   ├── create-an-account.component.html  
+│   │   │   │   │   │   ├── create-an-account.component.spec.ts  
+│   │   │   │   │   │   └── create-an-account.component.ts   
+│   │   │   │   │   ├── enter-the-system        
+│   │   │   │   │   │   ├── enter-the-system.component.css  
+│   │   │   │   │   │   ├── enter-the-system.component.html  
+│   │   │   │   │   │   ├── enter-the-system.component.spec.ts    
+│   │   │   │   │   │   └── enter-the-system.component.ts   
+│   │   │   │   │   ├── main-screen             
+│   │   │   │   │   │   ├── main-screen.component.css   
+│   │   │   │   │   │   ├── main-screen.component.html   
+│   │   │   │   │   │   ├── main-screen.component.spec.ts   
+│   │   │   │   │   │   └── main-screen.component.ts   
+│   │   │   │   │   ├── rules               
+│   │   │   │   │   │   ├── blockCopyRules       
+│   │   │   │   │   │   │   └── blockCopyRule.ts   
+│   │   │   │   │   │   ├── blockSavePasswordRules   
+│   │   │   │   │   │   │   └── blockSavePasswordRule.ts   
+│   │   │   │   │   │   ├── checkPasswordStrengthpasswordRules  
+│   │   │   │   │   │   │   └── checkPasswordStrengthpasswordRule.ts   
+│   │   │   │   │   │   ├── disableInteractionsRules    
+│   │   │   │   │   │   │   └── disableInteractionsRule.ts  
+│   │   │   │   │   │   ├── disableKeyboardShortcutsRules   
+│   │   │   │   │   │   │   └── disableKeyboardShortcutsRule.ts  
+│   │   │   │   │   │   ├── hasRepeatedOrSequentialNumbersRules    
+│   │   │   │   │   │   │   └── hasRepeatedOrSequentialNumbersRule.ts  
+│   │   │   │   │   │   ├── inactivityTimerRules                  
+│   │   │   │   │   │   │   └── inactivityTimerRule.ts               
+│   │   │   │   │   │   ├── preventBackNavigationRules           
+│   │   │   │   │   │   │   └── preventBackNavigationRule.ts       
+│   │   │   │   │   │   ├── preventForwardNavigationRules         
+│   │   │   │   │   │   │   └── preventForwardNavigationRule.ts      
+│   │   │   │   │   │   ├── sessionTimeoutRules                    
+│   │   │   │   │   │   │   └── sessionTimeoutRule.ts               
+│   │   │   │   │   ├── update-password                      
+│   │   │   │   │   │   ├── update-password.component.css         
+│   │   │   │   │   │   ├── update-password.component.html        
+│   │   │   │   │   │   ├── update-password.component.spec.ts      
+│   │   │   │   │   │   └── update-password.component.ts           
+│   │   │   │   ├── main                                      
+│   │   │   │   │   ├── dashboard                             
+│   │   │   │   │   │   ├── dashboard.component.css             
+│   │   │   │   │   │   ├── dashboard.component.html             
+│   │   │   │   │   │   ├── dashboard.component.spec.ts         
+│   │   │   │   │   │   └── dashboard.component.ts               
+│   │   │   │   │   ├── rules-main                             
+│   │   │   │   │   │   ├── limitCharactersRules                   
+│   │   │   │   │   │   │   └── limitCharactersRule.ts               
+│   │   │   │   │   │   ├── validateEmailFormatRules             
+│   │   │   │   │   │   │   └── validateEmailFormatRule.ts             
+│   │   │   │   │   │   ├── validateFieldsRequiredRules            
+│   │   │   │   │   │   │   └── validateFieldsRequiredRule.ts       
+│   │   │   │   │   ├── sidebar                               
+│   │   │   │   │   │   ├── sidebar.component.css                
+│   │   │   │   │   │   ├── sidebar.component.html                
+│   │   │   │   │   │   ├── sidebar.component.spec.ts           
+│   │   │   │   │   │   └── sidebar.component.ts                  
+│   │   │   │   ├── models                                  
+│   │   │   │   │   └── user.model.ts                        
+│   │   │   │   ├── services                               
+│   │   │   │   │   ├── data.service.ts                      
+│   │   │   │   │   ├── user.service.ts                        
+│   │   │   │   │   └── validation.service.ts                
+│   │   │   │   ├── app-routing.module.ts                  
+│   │   │   │   ├── app.component.css                       
+│   │   │   │   ├── app.component.html                       
+│   │   │   │   ├── app.component.ts                        
+│   │   │   │   └── app.module.ts                         
+│   │   │   └── assets                                   
+│   │   │   │   └── imagem                                   
+│   │   │   │   │   └── OIG4.jpeg
+│   │   ├── angular.json
+│   │   ├── bustrack.frontend.client.esproj
+│   │   ├── OIG4.jpeg
+│   │   ├── package-lock.json
+│   │   ├── package.json
+│   │   ├── tsconfig.app.json
+│   │   └── tsconfig.json                      
+│   └── BusTrack.Frontend.Server
 │   │   ├── Properties/
-│   │   ├── Program.cs
-│   │   └── BusTrack.Frontend.Server.csproj
-│   │
-│   └── bustrack.frontend.client/
-│       ├── src/
-│       │   ├── app/
-│       │   │   ├── login/
-│       │   │   ├── main/
-│       │   │   ├── models/
-│       │   │   └── services/
-│       │   └── assets/
-│       ├── package.json
-│       └── bustrack.frontend.client.esproj
-│
-├── BusTrack.Program/
-│   ├── DataBaseServicesExtensionsProgram/
-│   ├── ExtensionsProgram/
-│   ├── MiddlewareProgram/
-│   └── Program.cs
-│
-├── BusTrack.Tests/
-│   ├── IntegrationTests/
-│   │   ├── ControllersAPIIntegrationTests/
-│   │   ├── ServicesAPIIntegrationTests/
-│   │   ├── CustomWebApplicationFactory/
-│   │   └── WebApplicationFactory/
-│   │
-│   ├── PerfomanceTests/
-│   │   ├── PassengerServiceAPIPerformanceTests.cs
-│   │   └── RouteServiceAPIPerformanceTests.cs
-│   │
-│   ├── UnitTests/
-│   │   └── ControllersAPIUnitTests/
-│   │
-│   ├── UsabilityTests/
-│   │   └── UsabilityTests.cs
-│   │
-│   └── BusTrack.Tests.csproj
-│
-├── BusTrack.Updater/
-│   ├── DriversUpdater/
-│   └── PassengerUpdater/
-│
-├── BusTrack.csproj
-├── BusTrack.sln
+│   │   ├── BusTrack.Frontend.Server.csproj
+│   │   └── Program.cs            
+├── BusTrack.Program                             
+│   ├── DataBaseServicesExtensionsProgram           
+│   │   └── DataBaseServicesExtensionsProgram.cs        
+│   ├── ExtensionsProgram                            
+│   │   ├── ExtensionsProgram.cs                        
+│   │   └── ServiceExtensionProgram.cs                  
+│   ├── MiddlewareProgram                          
+│   │   └── ErrorHandlingMiddleware.cs                
+│   └── Program.cs                                 
+├── BusTrack.Tests                              
+│   ├── IntegrationTests                          
+│   │   └── CustomWebApplicationFactory                
+│   │       └── CustomWebApplicationFactory.cs          
+│   ├── PerformanceTests                            
+│   │   ├── PassengerServiceAPIPerformanceTests.cs     
+│   │   └── RouteServiceAPIPerformanceTests.cs         
+│   ├── UnitTests                                    
+│   │   ├── ControllersAPIUnitTests                    
+│   │   │   ├── BusControllerAPIUnitTests.cs             
+│   │   │   ├── DriverControllerAPIUnitTests.cs            
+│   │   │   ├── PassengerControllerAPIUnitTests.cs       
+│   │   │   ├── RouteControllerAPIUnitTests.cs            
+│   │   │   ├── TripControllerAPIUnitTests.cs             
+│   │   │   └── TripsPassengerControllerAPIUnitTests.cs   
+│   └── UsabilityTests                               
+│   │   └── UsabilityTests.cs           
+├── BusTrack.Updater                           
+│   ├── DriversUpdater                               
+│   │   └── DriverNameUpdater.cs                       
+│   └── PassengerUpdater                             
+│   │   └── PassengerNameUpdater.cs                   
 ├── appsettings.json
 ├── appsettings.Development.json
+├── BusTrack.csproj
+├── BusTrack.sln
+├── firebase.firebaserc
+├── fiberase.json
+├── LICENSE.md
+├── OIG4.jpeg
+├── package-lock.json
+├── package.json
 └── README.md
 ```
 
