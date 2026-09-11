@@ -3,7 +3,3 @@
   "lockfileVersion": 3,
   "packages": {}
 }
-
-"scripts": {
-    "build": " npm run build"
-}
