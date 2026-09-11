@@ -3,11 +3,12 @@ using BusTrack.BusTrack.API.DTOAPI;
 using BusTrack.BusTrack.API.ServicesAPI;
 using BusTrack.BusTrack.DB.Classes;
 using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
-using Moq;
-using MongoDB.Driver;
 using BusTrack.Tests.MappingsIntegrationTests;
 using BusTrack.BusTrack.API.ModelsAPI;
 using BusTrack.BusTrack.DB.ModelsDB;
+using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
+using MongoDB.Driver;
 
 namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 {
@@ -20,7 +21,9 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         public TripsPassengerServiceAPIIntegrationTest()
         {
             _tripsPassengerRepository = new Mock<ITripPassengerRepositoryDB>();
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfile>());
+            var config = new MapperConfiguration(
+                cfg => cfg.AddProfile<AutoMapperProfile>(),
+                NullLoggerFactory.Instance);
             _mapper = config.CreateMapper();
             _tripsPassengerServiceAPI = new TripsPassengerServiceAPI(_tripsPassengerRepository.Object, _mapper);
         }
@@ -74,7 +77,6 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         {
             return await _tripsPassengerRepository.Object.DeleteTripsPassenger(id);
         }
-
 
         public async Task<List<TripPassengerDB>> GetTripsPassengers()
         {

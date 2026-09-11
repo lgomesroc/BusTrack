@@ -27,4 +27,3 @@ namespace BusTrack.Tests.IntegrationTests.CustomWebApplicationFactory
         }
     }
 }
-

@@ -3,9 +3,10 @@ using BusTrack.BusTrack.API.DTOAPI;
 using BusTrack.BusTrack.API.ServicesAPI;
 using BusTrack.BusTrack.DB.Classes;
 using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
+using BusTrack.Tests.MappingsIntegrationTests;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using MongoDB.Driver;
-using BusTrack.Tests.MappingsIntegrationTests;
 
 namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 {
@@ -18,7 +19,9 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         public RouteServiceAPIIntegrationTest()
         {
             _routeRepository = new Mock<IRouteRepositoryDB>();
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfile>());
+            var config = new MapperConfiguration(
+                cfg => cfg.AddProfile<AutoMapperProfile>(),
+                NullLoggerFactory.Instance);
             _mapper = config.CreateMapper();
             _routeServiceAPI = new RouteServiceAPI(_routeRepository.Object, _mapper);
         }
@@ -53,7 +56,6 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 
             Assert.NotNull(result);
         }
-
 
         [Fact]
         public async Task CreateRoute_ReturnsAddedRoute()

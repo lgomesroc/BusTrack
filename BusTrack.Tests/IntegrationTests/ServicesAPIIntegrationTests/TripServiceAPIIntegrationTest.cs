@@ -3,9 +3,10 @@ using BusTrack.BusTrack.API.DTOAPI;
 using BusTrack.BusTrack.API.ServicesAPI;
 using BusTrack.BusTrack.DB.Classes;
 using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
+using BusTrack.Tests.MappingsIntegrationTests;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using MongoDB.Driver;
-using BusTrack.Tests.MappingsIntegrationTests;
 
 namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 {
@@ -18,7 +19,9 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         public TripServiceAPIIntegrationTest()
         {
             _tripRepository = new Mock<ITripRepositoryDB>();
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfile>());
+            var config = new MapperConfiguration(
+                cfg => cfg.AddProfile<AutoMapperProfile>(),
+                NullLoggerFactory.Instance);
             _mapper = config.CreateMapper();
             _tripServiceAPI = new TripServiceAPI(_tripRepository.Object, _mapper);
         }
@@ -93,5 +96,4 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
             Assert.True(result);
         }
     }
-
 }

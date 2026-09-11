@@ -7,7 +7,7 @@ namespace BusTrack.Tests.IntegrationTests.CustomWebApplicationFactory
     {
         protected virtual void ConfigureWebHost(IWebHostBuilder builder)
         {
-            builder.UseStartup<TProgram>(); 
+            builder.UseStartup<TProgram>();
         }
 
         public HttpClient CreateClient()
@@ -19,3 +19,4 @@ namespace BusTrack.Tests.IntegrationTests.CustomWebApplicationFactory
         }
     }
 }
+

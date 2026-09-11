@@ -3,9 +3,10 @@ using BusTrack.BusTrack.API.DTOAPI;
 using BusTrack.BusTrack.API.ServicesAPI;
 using BusTrack.BusTrack.DB.Classes;
 using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
+using BusTrack.Tests.MappingsIntegrationTests;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using MongoDB.Driver;
-using BusTrack.Tests.MappingsIntegrationTests;
 
 namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 {
@@ -18,7 +19,9 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         public PassengerServiceAPITests()
         {
             _passengerRepository = new Mock<IPassengerRepositoryDB>();
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfile>());
+            var config = new MapperConfiguration(
+                cfg => cfg.AddProfile<AutoMapperProfile>(),
+                NullLoggerFactory.Instance);
             _mapper = config.CreateMapper();
             _passengerServiceAPI = new PassengerServiceAPI(new MongoClient(), _passengerRepository.Object, _mapper);
         }
@@ -32,10 +35,11 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 
             // Act
             var result = await _passengerServiceAPI.GetAllPassengers();
-                
+
             // Assert
             Assert.Equal(2, result.Count());
         }
+
         [Fact]
         public async Task GetPassengerById_ReturnsPassenger()
         {
@@ -48,7 +52,6 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
             Assert.NotNull(result);
             Assert.Equal(passengerId, result.Id);
         }
-
 
         [Fact]
         public async Task AddPassenger_ReturnsAddedPassenger()
