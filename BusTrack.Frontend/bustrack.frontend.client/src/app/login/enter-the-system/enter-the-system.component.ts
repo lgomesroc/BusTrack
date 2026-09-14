@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { NgForm } from '@angular/forms'; // Importar NgForm
+import { NgForm } from '@angular/forms';
 import { startInactivityTimerRule } from '../rules/inactivityTimerRules/inactivityTimerRule';
 import { disableKeyboardShortcutsRule } from '../rules/disableKeyboardShortcutsRules/disableKeyboardShortcutsRule';
 import { preventBackNavigationRule } from '../rules/preventBackNavigationRules/preventBackNavigationRule';
-import { preventForwardNavigationRule } from '../rules/preventForwardNavigationRules/preventForwardNavigationRule';
-import { blockSavePasswordRule } from '../rules/blockSavePasswordRules/blockSavePasswordRule'; 
-
+import { preventForwardNavigationRule } from '../rules/preventForwardNavigationRule/preventForwardNavigationRule';
+import { blockSavePasswordRule } from '../rules/blockSavePasswordRules/blockSavePasswordRule';
 
 @Component({
   selector: 'app-enter-the-system',
@@ -20,8 +19,8 @@ export class EnterTheSystemComponent implements OnInit {
   errorMessage: string = '';
   loginAttempts: number = 5;
   inactivityTimer: any;
-  INACTIVITY_TIMEOUT_MS = 1200000; 
-  totalLoginAttempts: number = 5; 
+  INACTIVITY_TIMEOUT_MS = 1200000;
+  totalLoginAttempts: number = 5;
 
   constructor(private router: Router, private http: HttpClient) {
   }
@@ -36,25 +35,38 @@ export class EnterTheSystemComponent implements OnInit {
 
   login(form: NgForm): void {
     if (form.valid) {
-      const credentials = { email: this.email, password: this.password };
-      this.http.post<any>('http://localhost:7072/auth/login', credentials).subscribe({
+      const credentials = {
+        email: this.email,
+        password: this.password
+      };
+
+      this.http.post<any>(
+        'http://localhost:5066/AuthenticationControllerAPI/login',
+        credentials
+      ).subscribe({
         next: (response) => {
           if (response.success) {
-            alert(response.welcomeMessage); 
+            alert(response.welcomeMessage);
             alert('Sucesso. Seja bem-vindo ao painel principal do Bus Track');
             this.router.navigate(['/dashboard']);
           } else {
             alert('Login falhou. Por favor, verifique suas credenciais e tente novamente.');
           }
+
           alert('Sucesso. Seja bem-vindo ao painel principal do Bus Track');
         },
         error: err => {
-          alert(`Erro ao fazer login: ${err.error.message}`); 
+          alert(`Erro ao fazer login: ${err.error.message}`);
+
           if (this.loginAttempts > 0) {
-            alert(`E-mail, senha ou ambos não encontrados. Por favor, tente novamente. Tentativas restantes: ${this.loginAttempts}`);
+            alert(
+              `E-mail, senha ou ambos não encontrados. Por favor, tente novamente. Tentativas restantes: ${this.loginAttempts}`
+            );
             this.loginAttempts--;
           } else {
-            alert('Você excedeu o número máximo de tentativas de login. Redirecionando para a tela de criar conta.');
+            alert(
+              'Você excedeu o número máximo de tentativas de login. Redirecionando para a tela de criar conta.'
+            );
             this.router.navigate(['/create-an-account']);
           }
         }
@@ -63,7 +75,6 @@ export class EnterTheSystemComponent implements OnInit {
       alert('Por favor, preencha todos os campos corretamente.');
     }
   }
-
 
   cancelar(): void {
     this.email = '';
@@ -74,6 +85,7 @@ export class EnterTheSystemComponent implements OnInit {
 
   voltar(): void {
     const isFirstLoginAttempt = this.loginAttempts === this.totalLoginAttempts;
+
     if (isFirstLoginAttempt) {
       this.router.navigate(['/create-an-account']);
     } else {
