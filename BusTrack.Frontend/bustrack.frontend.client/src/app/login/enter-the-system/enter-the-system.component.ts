@@ -1,11 +1,11 @@
+
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { NgForm } from '@angular/forms';
-import { startInactivityTimerRule } from '../rules/inactivityTimerRules/inactivityTimerRule';
 import { disableKeyboardShortcutsRule } from '../rules/disableKeyboardShortcutsRules/disableKeyboardShortcutsRule';
 import { preventBackNavigationRule } from '../rules/preventBackNavigationRules/preventBackNavigationRule';
-import { preventForwardNavigationRule } from '../rules/preventForwardNavigationRule/preventForwardNavigationRule';
+import { preventForwardNavigationRule } from '../rules/preventForwardNavigationRules/preventForwardNavigationRule';
 import { blockSavePasswordRule } from '../rules/blockSavePasswordRules/blockSavePasswordRule';
 
 @Component({
@@ -18,8 +18,6 @@ export class EnterTheSystemComponent implements OnInit {
   password: string = '';
   errorMessage: string = '';
   loginAttempts: number = 5;
-  inactivityTimer: any;
-  INACTIVITY_TIMEOUT_MS = 1200000;
   totalLoginAttempts: number = 5;
 
   constructor(private router: Router, private http: HttpClient) {
@@ -27,7 +25,6 @@ export class EnterTheSystemComponent implements OnInit {
 
   ngOnInit(): void {
     disableKeyboardShortcutsRule();
-    startInactivityTimerRule(this.INACTIVITY_TIMEOUT_MS);
     preventBackNavigationRule();
     preventForwardNavigationRule();
     blockSavePasswordRule();
@@ -62,11 +59,13 @@ export class EnterTheSystemComponent implements OnInit {
             alert(
               `E-mail, senha ou ambos não encontrados. Por favor, tente novamente. Tentativas restantes: ${this.loginAttempts}`
             );
+
             this.loginAttempts--;
           } else {
             alert(
               'Você excedeu o número máximo de tentativas de login. Redirecionando para a tela de criar conta.'
             );
+
             this.router.navigate(['/create-an-account']);
           }
         }
@@ -79,7 +78,9 @@ export class EnterTheSystemComponent implements OnInit {
   cancelar(): void {
     this.email = '';
     this.password = '';
+
     alert('Operação de login cancelada.');
+
     this.router.navigate(['/main-screen']);
   }
 
