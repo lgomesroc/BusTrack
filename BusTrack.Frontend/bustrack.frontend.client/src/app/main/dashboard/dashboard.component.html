@@ -1,46 +1,141 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard</title>
-  <link rel="stylesheet" href="dashboard.component.css">
-</head>
-<body>
-  <div class="dashboard-container">
-    <app-sidebar></app-sidebar>
-    <div class="main-content">
-      <div class="top-bar">
-        <span>{{ user.name }}</span>
-        <span>{{ user.id }}</span>
+<div class="dashboard-container">
+
+  <app-sidebar></app-sidebar>
+
+  <main class="main-content">
+
+    <header class="top-bar">
+      <div>
+        <span class="system-name">Bus Track</span>
       </div>
-      <div class="main-content-body">
-        <form (submit)="saveData()">
-          <h2>Anote os horários de saída dos ônibus:</h2>
-          <div>
-            <label for="lineNumber">Número da Linha:</label>
-            <input type="text" id="lineNumber" name="lineNumber">
-          </div>
-          <div>
-            <label for="origin">Origem:</label>
-            <input type="text" id="origin" name="origin">
-          </div>
-          <div>
-            <label for="destination">Destino:</label>
-            <input type="text" id="destination" name="destination">
-          </div>
-          <div>
-            <label for="departureTime">Horário de Saída:</label>
-            <input type="time" id="departureTime" name="departureTime">
-          </div>
-          <div>
-            <label for="passengerAverage">Média de Passageiros:</label>
-            <input type="number" id="passengerAverage" name="passengerAverage">
-          </div>
-          <button type="submit">Salvar</button>
-        </form>
+
+      <div class="user-area">
+        <span>Área administrativa</span>
+
+        <button
+          type="button"
+          class="logout-button"
+          (click)="sair()">
+          Sair
+        </button>
       </div>
-    </div>
-  </div>
-</body>
-</html>
+    </header>
+
+    <section class="dashboard-body">
+
+      <div class="welcome-section">
+        <h1>Bem-vindo ao Bus Track</h1>
+
+        <p>
+          Gerencie viagens, ônibus, rotas, motoristas e passageiros
+          em um único lugar.
+        </p>
+      </div>
+
+      <section class="dashboard-cards">
+
+        <button
+          type="button"
+          class="dashboard-card"
+          (click)="navegarParaViagens()">
+
+          <span class="card-icon">🚌</span>
+
+          <div>
+            <h2>Viagens</h2>
+            <p>Visualize e gerencie as viagens cadastradas.</p>
+          </div>
+
+        </button>
+
+        <button
+          type="button"
+          class="dashboard-card"
+          (click)="navegarParaCriarViagem()">
+
+          <span class="card-icon">＋</span>
+
+          <div>
+            <h2>Criar viagem</h2>
+            <p>Cadastre uma nova viagem no sistema.</p>
+          </div>
+
+        </button>
+
+        <button
+          type="button"
+          class="dashboard-card"
+          (click)="navegarParaOnibus()">
+
+          <span class="card-icon">🚍</span>
+
+          <div>
+            <h2>Ônibus</h2>
+            <p>Consulte e gerencie os ônibus cadastrados.</p>
+          </div>
+
+        </button>
+
+        <button
+          type="button"
+          class="dashboard-card"
+          (click)="navegarParaRotas()">
+
+          <span class="card-icon">🗺️</span>
+
+          <div>
+            <h2>Rotas</h2>
+            <p>Gerencie as rotas utilizadas pelo sistema.</p>
+          </div>
+
+        </button>
+
+        <button
+          type="button"
+          class="dashboard-card"
+          (click)="navegarParaMotoristas()">
+
+          <span class="card-icon">👤</span>
+
+          <div>
+            <h2>Motoristas</h2>
+            <p>Consulte e gerencie os motoristas.</p>
+          </div>
+
+        </button>
+
+        <button
+          type="button"
+          class="dashboard-card"
+          (click)="navegarParaPassageiros()">
+
+          <span class="card-icon">👥</span>
+
+          <div>
+            <h2>Passageiros</h2>
+            <p>Consulte e gerencie os passageiros.</p>
+          </div>
+
+        </button>
+
+        <button
+          type="button"
+          class="dashboard-card"
+          (click)="navegarParaManutencao()">
+
+          <span class="card-icon">🔧</span>
+
+          <div>
+            <h2>Serviços / Manutenção</h2>
+            <p>Acompanhe os serviços e manutenções dos ônibus.</p>
+          </div>
+
+        </button>
+
+      </section>
+
+    </section>
+
+  </main>
+
+</div>
