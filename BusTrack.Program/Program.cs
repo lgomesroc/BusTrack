@@ -1,6 +1,9 @@
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using BusTrack.BusTrack.API.ServicesAPI;
+using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
+using BusTrack.BusTrack.DB.RepositoriesDB;
 using BusTrack.BusTrack.Program.DatabaseServicesExtensionsProgram;
+using MongoDB.Driver;
 
 public partial class Program
 {
@@ -33,6 +36,18 @@ public partial class Program
         var databaseName =
             builder.Configuration.GetConnectionString("DatabaseName")
             ?? builder.Configuration["ConnectionStrings:DatabaseName"];
+
+        builder.Services.AddSingleton<IMongoDatabase>(sp =>
+        {
+            var client = sp.GetRequiredService<IMongoClient>();
+            return client.GetDatabase(databaseName);
+        });
+
+        builder.Services.AddScoped<IUserRepositoryDB, UserRepositoryDB>();
+
+        builder.Services.AddScoped<
+            IUserAuthenticationServiceAPI,
+            UserAuthenticationServiceAPI>();
 
         builder.Services.AddScoped<IAccountServiceAPI>(_ =>
             new AccountServiceAPI(connectionString!, databaseName!));
