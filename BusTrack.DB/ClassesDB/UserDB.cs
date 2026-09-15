@@ -17,6 +17,6 @@ namespace BusTrack.BusTrack.DB.ClassesDB
 
         public string? Password { get; set; }
 
-        public string? Login { get; set; } // Adicionando o campo Login
+        public string? Login { get; set; }
     }
 }
