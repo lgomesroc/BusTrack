@@ -6,11 +6,11 @@ namespace BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB
     {
         List<UserDB> Get();
 
-        UserDB GetByEmail(string email);
+        UserDB? GetByEmail(string email);
 
         UserDB Create(UserDB user);
 
-        UserDB Read(string id);
+        UserDB? Read(string id);
 
         bool Update(string id, UserDB user);
 
