@@ -14,10 +14,6 @@ export class DashboardComponent {
     this.router.navigate(['/trips']);
   }
 
-  navegarParaCriarViagem(): void {
-    this.router.navigate(['/trips/create']);
-  }
-
   navegarParaOnibus(): void {
     this.router.navigate(['/buses']);
   }
