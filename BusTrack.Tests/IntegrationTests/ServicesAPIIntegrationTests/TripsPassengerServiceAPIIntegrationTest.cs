@@ -4,85 +4,405 @@ using BusTrack.BusTrack.API.ServicesAPI;
 using BusTrack.BusTrack.DB.Classes;
 using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
 using BusTrack.Tests.MappingsIntegrationTests;
-using BusTrack.BusTrack.API.ModelsAPI;
-using BusTrack.BusTrack.DB.ModelsDB;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using MongoDB.Driver;
 
 namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 {
     public class TripsPassengerServiceAPIIntegrationTest
     {
-        private Mock<ITripPassengerRepositoryDB> _tripsPassengerRepository;
-        private IMapper _mapper;
-        private TripsPassengerServiceAPI _tripsPassengerServiceAPI;
+        private readonly Mock<ITripPassengerRepositoryDB>
+            _tripsPassengerRepository;
+
+        private readonly IMapper _mapper;
+
+        private readonly TripsPassengerServiceAPI
+            _tripsPassengerServiceAPI;
 
         public TripsPassengerServiceAPIIntegrationTest()
         {
-            _tripsPassengerRepository = new Mock<ITripPassengerRepositoryDB>();
+            _tripsPassengerRepository =
+                new Mock<ITripPassengerRepositoryDB>();
+
             var config = new MapperConfiguration(
-                cfg => cfg.AddProfile<AutoMapperProfile>(),
+                cfg =>
+                {
+                    cfg.AddProfile<AutoMapperProfile>();
+                },
                 NullLoggerFactory.Instance);
+
             _mapper = config.CreateMapper();
-            _tripsPassengerServiceAPI = new TripsPassengerServiceAPI(_tripsPassengerRepository.Object, _mapper);
+
+            _tripsPassengerServiceAPI =
+                new TripsPassengerServiceAPI(
+                    _tripsPassengerRepository.Object,
+                    _mapper);
         }
 
         [Fact]
-        public async Task GetAllTripsPassengers_ReturnsAllTripsPassengers()
+        public async Task GetAllAsync_ReturnsAllTripsPassengers()
         {
-            List<TripPassengerDB> tripsPassengers = new List<TripPassengerDB>();
-            var tripPassengerModelDBs = tripsPassengers.Select(tp => _mapper.Map<TripPassengerModelDB>(tp)).ToList();
-            _tripsPassengerRepository.Setup(x => x.GetAllTripsPassengers()).Returns(Task.FromResult<IEnumerable<TripPassengerModelDB>>(tripPassengerModelDBs));
+            var tripsPassengers =
+                new List<TripPassengerDB>
+                {
+                    new TripPassengerDB
+                    {
+                        Id = "507f1f77bcf86cd799439011",
+                        TripId = "507f1f77bcf86cd799439012",
+                        PassengerId = "507f1f77bcf86cd799439013"
+                    },
+                    new TripPassengerDB
+                    {
+                        Id = "507f1f77bcf86cd799439014",
+                        TripId = "507f1f77bcf86cd799439015",
+                        PassengerId = "507f1f77bcf86cd799439016"
+                    }
+                };
 
-            var result = await _tripsPassengerServiceAPI.GetAllTripsPassengers();
+            _tripsPassengerRepository
+                .Setup(repository => repository.GetAllAsync())
+                .ReturnsAsync(tripsPassengers);
 
+            var result =
+                await _tripsPassengerServiceAPI.GetAllAsync();
+
+            Assert.NotNull(result);
             Assert.Equal(2, result.Count());
+
+            _tripsPassengerRepository.Verify(
+                repository => repository.GetAllAsync(),
+                Times.Once);
         }
 
-        public async Task<TripPassengerDTOAPI> CreateTripsPassenger(TripPassengerDTOAPI tripsPassenger)
+        [Fact]
+        public async Task GetByIdAsync_WhenTripPassengerExists_ReturnsTripPassenger()
         {
-            _tripsPassengerRepository.Setup(repo => repo.CreateTripsPassenger(It.IsAny<TripPassengerDB>()))
-                .ReturnsAsync((TripPassengerDB tripPassengerDB) => tripPassengerDB);
+            const string id =
+                "507f1f77bcf86cd799439011";
 
-            var tripPassengerModelAPI = _mapper.Map<TripsPassengerModelAPI>(tripsPassenger);
+            var tripPassenger =
+                new TripPassengerDB
+                {
+                    Id = id,
+                    TripId = "507f1f77bcf86cd799439012",
+                    PassengerId = "507f1f77bcf86cd799439013"
+                };
 
-            var tripPassengerDB = ConvertToDBModel(tripPassengerModelAPI);
+            _tripsPassengerRepository
+                .Setup(repository =>
+                    repository.GetByIdAsync(id))
+                .ReturnsAsync(tripPassenger);
 
-            var createdTripPassenger = await _tripsPassengerRepository.Object.CreateTripsPassenger(tripPassengerDB);
-            return _mapper.Map<TripPassengerDTOAPI>(createdTripPassenger);
+            var result =
+                await _tripsPassengerServiceAPI.GetByIdAsync(id);
+
+            Assert.NotNull(result);
+            Assert.Equal(id, result!.Id);
+            Assert.Equal(
+                tripPassenger.TripId,
+                result.TripId);
+            Assert.Equal(
+                tripPassenger.PassengerId,
+                result.PassengerId);
         }
 
-        private TripPassengerDB ConvertToDBModel(TripsPassengerModelAPI modelAPI)
+        [Fact]
+        public async Task GetByIdAsync_WhenTripPassengerDoesNotExist_ReturnsNull()
         {
-            var dbModel = new TripPassengerDB();
+            const string id =
+                "507f1f77bcf86cd799439011";
 
-            dbModel.TripId = modelAPI.TripId;
-            dbModel.PassengerId = modelAPI.PassengerId;
+            _tripsPassengerRepository
+                .Setup(repository =>
+                    repository.GetByIdAsync(id))
+                .ReturnsAsync(
+                    (TripPassengerDB?)null);
 
-            return dbModel;
+            var result =
+                await _tripsPassengerServiceAPI.GetByIdAsync(id);
+
+            Assert.Null(result);
         }
 
-        public async Task<TripPassengerDTOAPI> UpdateTripsPassenger(int id, TripPassengerDTOAPI tripsPassenger)
+        [Fact]
+        public async Task GetByTripIdAsync_ReturnsTripPassengers()
         {
-            var tripPassengerModelAPI = _mapper.Map<TripsPassengerModelAPI>(tripsPassenger);
+            const string tripId =
+                "507f1f77bcf86cd799439012";
 
-            var tripPassengerDB = ConvertToDBModel(tripPassengerModelAPI);
+            var tripsPassengers =
+                new List<TripPassengerDB>
+                {
+                    new TripPassengerDB
+                    {
+                        Id = "507f1f77bcf86cd799439011",
+                        TripId = tripId,
+                        PassengerId = "507f1f77bcf86cd799439013"
+                    }
+                };
 
-            var updatedTripPassenger = await _tripsPassengerRepository.Object.UpdateTripsPassenger(id, tripPassengerDB);
-            return _mapper.Map<TripPassengerDTOAPI>(updatedTripPassenger);
+            _tripsPassengerRepository
+                .Setup(repository =>
+                    repository.GetByTripIdAsync(tripId))
+                .ReturnsAsync(tripsPassengers);
+
+            var result =
+                await _tripsPassengerServiceAPI
+                    .GetByTripIdAsync(tripId);
+
+            Assert.NotNull(result);
+            Assert.Single(result);
+            Assert.Equal(
+                tripId,
+                result.First().TripId);
         }
 
-        public async Task<bool> DeleteTripsPassenger(int id)
+        [Fact]
+        public async Task GetByPassengerIdAsync_ReturnsTripPassengers()
         {
-            return await _tripsPassengerRepository.Object.DeleteTripsPassenger(id);
+            const string passengerId =
+                "507f1f77bcf86cd799439013";
+
+            var tripsPassengers =
+                new List<TripPassengerDB>
+                {
+                    new TripPassengerDB
+                    {
+                        Id = "507f1f77bcf86cd799439011",
+                        TripId = "507f1f77bcf86cd799439012",
+                        PassengerId = passengerId
+                    }
+                };
+
+            _tripsPassengerRepository
+                .Setup(repository =>
+                    repository.GetByPassengerIdAsync(
+                        passengerId))
+                .ReturnsAsync(tripsPassengers);
+
+            var result =
+                await _tripsPassengerServiceAPI
+                    .GetByPassengerIdAsync(
+                        passengerId);
+
+            Assert.NotNull(result);
+            Assert.Single(result);
+            Assert.Equal(
+                passengerId,
+                result.First().PassengerId);
         }
 
-        public async Task<List<TripPassengerDB>> GetTripsPassengers()
+        [Fact]
+        public async Task CreateAsync_ReturnsCreatedTripPassenger()
         {
-            var tripsPassengers = (await _tripsPassengerRepository.Object.GetAllTripsPassengers()).ToList();
-            var mappedTripsPassengers = _mapper.Map<List<TripPassengerDB>>(tripsPassengers);
-            return mappedTripsPassengers;
+            var tripPassenger =
+                new TripPassengerDTOAPI
+                {
+                    TripId = "507f1f77bcf86cd799439012",
+                    PassengerId = "507f1f77bcf86cd799439013"
+                };
+
+            _tripsPassengerRepository
+                .Setup(repository =>
+                    repository.CreateAsync(
+                        It.IsAny<TripPassengerDB>()))
+                .ReturnsAsync(
+                    (TripPassengerDB tripPassengerDB) =>
+                    {
+                        tripPassengerDB.Id =
+                            "507f1f77bcf86cd799439011";
+
+                        return tripPassengerDB;
+                    });
+
+            var result =
+                await _tripsPassengerServiceAPI
+                    .CreateAsync(tripPassenger);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Id);
+
+            Assert.Equal(
+                tripPassenger.TripId,
+                result.TripId);
+
+            Assert.Equal(
+                tripPassenger.PassengerId,
+                result.PassengerId);
+
+            _tripsPassengerRepository.Verify(
+                repository =>
+                    repository.CreateAsync(
+                        It.IsAny<TripPassengerDB>()),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_WhenTripPassengerExists_ReturnsUpdatedTripPassenger()
+        {
+            const string id =
+                "507f1f77bcf86cd799439011";
+
+            var tripPassenger =
+                new TripPassengerDTOAPI
+                {
+                    Id = id,
+                    TripId = "507f1f77bcf86cd799439012",
+                    PassengerId = "507f1f77bcf86cd799439013"
+                };
+
+            _tripsPassengerRepository
+                .Setup(repository =>
+                    repository.UpdateAsync(
+                        id,
+                        It.IsAny<TripPassengerDB>()))
+                .ReturnsAsync(
+                    (string _,
+                        TripPassengerDB tripPassengerDB) =>
+                    {
+                        tripPassengerDB.Id = id;
+
+                        return tripPassengerDB;
+                    });
+
+            var result =
+                await _tripsPassengerServiceAPI
+                    .UpdateAsync(
+                        id,
+                        tripPassenger);
+
+            Assert.NotNull(result);
+            Assert.Equal(id, result!.Id);
+
+            Assert.Equal(
+                tripPassenger.TripId,
+                result.TripId);
+
+            Assert.Equal(
+                tripPassenger.PassengerId,
+                result.PassengerId);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_WhenTripPassengerDoesNotExist_ReturnsNull()
+        {
+            const string id =
+                "507f1f77bcf86cd799439011";
+
+            var tripPassenger =
+                new TripPassengerDTOAPI
+                {
+                    Id = id,
+                    TripId = "507f1f77bcf86cd799439012",
+                    PassengerId = "507f1f77bcf86cd799439013"
+                };
+
+            _tripsPassengerRepository
+                .Setup(repository =>
+                    repository.UpdateAsync(
+                        id,
+                        It.IsAny<TripPassengerDB>()))
+                .ReturnsAsync(
+                    (TripPassengerDB?)null);
+
+            var result =
+                await _tripsPassengerServiceAPI
+                    .UpdateAsync(
+                        id,
+                        tripPassenger);
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task DeleteAsync_WhenTripPassengerExists_ReturnsTrue()
+        {
+            const string id =
+                "507f1f77bcf86cd799439011";
+
+            _tripsPassengerRepository
+                .Setup(repository =>
+                    repository.DeleteAsync(id))
+                .ReturnsAsync(true);
+
+            var result =
+                await _tripsPassengerServiceAPI
+                    .DeleteAsync(id);
+
+            Assert.True(result);
+
+            _tripsPassengerRepository.Verify(
+                repository =>
+                    repository.DeleteAsync(id),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task DeleteAsync_WhenTripPassengerDoesNotExist_ReturnsFalse()
+        {
+            const string id =
+                "507f1f77bcf86cd799439011";
+
+            _tripsPassengerRepository
+                .Setup(repository =>
+                    repository.DeleteAsync(id))
+                .ReturnsAsync(false);
+
+            var result =
+                await _tripsPassengerServiceAPI
+                    .DeleteAsync(id);
+
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task DeleteByTripAndPassengerAsync_WhenAssociationExists_ReturnsTrue()
+        {
+            const string tripId =
+                "507f1f77bcf86cd799439012";
+
+            const string passengerId =
+                "507f1f77bcf86cd799439013";
+
+            _tripsPassengerRepository
+                .Setup(repository =>
+                    repository.DeleteByTripAndPassengerAsync(
+                        tripId,
+                        passengerId))
+                .ReturnsAsync(true);
+
+            var result =
+                await _tripsPassengerServiceAPI
+                    .DeleteByTripAndPassengerAsync(
+                        tripId,
+                        passengerId);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task DeleteByTripAndPassengerAsync_WhenAssociationDoesNotExist_ReturnsFalse()
+        {
+            const string tripId =
+                "507f1f77bcf86cd799439012";
+
+            const string passengerId =
+                "507f1f77bcf86cd799439013";
+
+            _tripsPassengerRepository
+                .Setup(repository =>
+                    repository.DeleteByTripAndPassengerAsync(
+                        tripId,
+                        passengerId))
+                .ReturnsAsync(false);
+
+            var result =
+                await _tripsPassengerServiceAPI
+                    .DeleteByTripAndPassengerAsync(
+                        tripId,
+                        passengerId);
+
+            Assert.False(result);
         }
     }
 }
