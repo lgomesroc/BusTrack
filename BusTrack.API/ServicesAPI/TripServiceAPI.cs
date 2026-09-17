@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BusTrack.BusTrack.API.DTOAPI;
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
-using BusTrack.BusTrack.API.ModelsAPI;
 using BusTrack.BusTrack.DB.Classes;
 using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
 
@@ -12,63 +11,103 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         private readonly ITripRepositoryDB _tripRepository;
         private readonly IMapper _mapper;
 
-        public TripServiceAPI(ITripRepositoryDB tripRepository, IMapper mapper)
+        public TripServiceAPI(
+            ITripRepositoryDB tripRepository,
+            IMapper mapper)
         {
             _tripRepository = tripRepository;
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<TripDTOAPI>> GetAllTrips()
+        public async Task<IEnumerable<TripDTOAPI>> GetAllTripsAsync()
         {
-            var trips = await _tripRepository.GetAllTrips();
-            return _mapper.Map<IEnumerable<TripDTOAPI>>(trips);
+            var trips =
+                await _tripRepository.GetAllTripsAsync();
+
+            return _mapper.Map<IEnumerable<TripDTOAPI>>(
+                trips);
         }
 
-        public async Task<TripDTOAPI> GetTripById(int id)
+        public async Task<TripDTOAPI?> GetTripByIdAsync(
+            string? id)
         {
-            var trip = await _tripRepository.GetTripById(id);
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return null;
+            }
+
+            var trip =
+                await _tripRepository.GetTripByIdAsync(id);
+
+            if (trip == null)
+            {
+                return null;
+            }
+
             return _mapper.Map<TripDTOAPI>(trip);
         }
 
-        public async Task<TripDTOAPI> CreateTrip(TripDTOAPI trip)
+        public async Task<TripDTOAPI> CreateTripAsync(
+            TripDTOAPI trip)
         {
-            var tripDB = _mapper.Map<TripDB>(trip);
-            await _tripRepository.AddTripAsync(tripDB);
-            return _mapper.Map<TripDTOAPI>(tripDB);
+            var tripDB =
+                _mapper.Map<TripDB>(trip);
+
+            var createdTrip =
+                await _tripRepository.AddTripAsync(
+                    tripDB);
+
+            return _mapper.Map<TripDTOAPI>(
+                createdTrip);
         }
 
-        public async Task<TripDTOAPI> UpdateTrip(int id, TripDTOAPI trip)
+        public async Task<TripDTOAPI?> UpdateTripAsync(
+            string? id,
+            TripDTOAPI trip)
         {
-            var tripModelAPI = _mapper.Map<TripModelAPI>(trip);
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return null;
+            }
 
-            var tripDB = ConvertToDBModel(tripModelAPI);
+            var existingTrip =
+                await _tripRepository.GetTripByIdAsync(id);
 
-            await _tripRepository.UpdateTripAsync(id.ToString(), tripDB);
-            var updatedTrip = await _tripRepository.GetTripByIdAsync(id.ToString());
-            return _mapper.Map<TripDTOAPI>(updatedTrip);
+            if (existingTrip == null)
+            {
+                return null;
+            }
+
+            _mapper.Map(
+                trip,
+                existingTrip);
+
+            existingTrip.Id = id;
+
+            var updatedTrip =
+                await _tripRepository.UpdateTripAsync(
+                    id,
+                    existingTrip);
+
+            if (updatedTrip == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<TripDTOAPI>(
+                updatedTrip);
         }
 
-        private TripDB ConvertToDBModel(TripModelAPI modelAPI)
+        public async Task<bool> DeleteTripAsync(
+            string? id)
         {
-            var dbModel = new TripDB();
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return false;
+            }
 
-            dbModel.Id = modelAPI.Id.ToString();
-            dbModel.BusId = modelAPI.BusId.ToString();
-            dbModel.DriverId = modelAPI.DriverId.ToString();
-            dbModel.DepartureTime = modelAPI.DepartureTime;
-
-            return dbModel;
-        }
-
-        public async Task<bool> DeleteTrip(int id)
-        {
-            return await _tripRepository.DeleteTripAsync(id.ToString());
-        }
-
-        public async Task<List<TripDB>> GetTrip()
-        {
-            var trip = (await _tripRepository.GetAllTripsAsync()).ToList();
-            return trip;
+            return await _tripRepository
+                .DeleteTripAsync(id);
         }
     }
 }
