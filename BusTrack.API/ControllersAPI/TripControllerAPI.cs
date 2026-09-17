@@ -1,4 +1,5 @@
-﻿using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
+﻿using BusTrack.BusTrack.API.DTOAPI;
+using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusTrack.BusTrack.API.ControllersAPI
@@ -9,39 +10,91 @@ namespace BusTrack.BusTrack.API.ControllersAPI
     {
         private readonly ITripServiceAPI _tripService;
 
-        public TripControllerAPI(ITripServiceAPI tripService)
+        public TripControllerAPI(
+            ITripServiceAPI tripService)
         {
             _tripService = tripService;
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok("Get all trips");
+            var trips =
+                await _tripService.GetAllTripsAsync();
+
+            return Ok(trips);
         }
 
         [HttpGet("{id}", Name = "GetTrip")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(
+            string id)
         {
-            return Ok($"Get trip with ID: {id}");
+            var trip =
+                await _tripService.GetTripByIdAsync(id);
+
+            if (trip == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(trip);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] object value)
+        public async Task<IActionResult> Create(
+            [FromBody] TripDTOAPI trip)
         {
-            return Ok("Create new trip");
+            if (trip == null)
+            {
+                return BadRequest();
+            }
+
+            var createdTrip =
+                await _tripService.CreateTripAsync(
+                    trip);
+
+            return CreatedAtRoute(
+                "GetTrip",
+                new { id = createdTrip.Id },
+                createdTrip);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] object value)
+        public async Task<IActionResult> Update(
+            string id,
+            [FromBody] TripDTOAPI trip)
         {
-            return Ok($"Update trip with ID: {id}");
+            if (trip == null)
+            {
+                return BadRequest();
+            }
+
+            var updatedTrip =
+                await _tripService.UpdateTripAsync(
+                    id,
+                    trip);
+
+            if (updatedTrip == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(updatedTrip);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(
+            string id)
         {
-            return Ok($"Delete trip with ID: {id}");
+            var deleted =
+                await _tripService.DeleteTripAsync(id);
+
+            if (!deleted)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
     }
 }
