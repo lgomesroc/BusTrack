@@ -8,7 +8,12 @@
 
   <ItemGroup>
     <Compile Remove="BusTrack.Tests\**" />
+    <Content Remove="BusTrack.Tests\**" />
+    <None Remove="BusTrack.Tests\**" />
+
     <Compile Remove="BusTrack.Frontend\BusTrack.Frontend.Server\**" />
+    <Content Remove="BusTrack.Frontend\BusTrack.Frontend.Server\**" />
+    <None Remove="BusTrack.Frontend\BusTrack.Frontend.Server\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,13 +21,10 @@
     <PackageReference Include="AutoMapper" Version="16.2.0" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
-
     <PackageReference Include="MongoDB.Bson" Version="3.11.1" />
     <PackageReference Include="MongoDB.Driver" Version="3.11.1" />
-
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="10.0.11" />
-
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Selenium.WebDriver" Version="4.20.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
