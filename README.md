@@ -4,8 +4,11 @@ README
 
 ![Venha conhecer o projeto Bus Track.](OIG4.jpeg)
 
-O projeto Bus Track fornece uma API RESTful para gerenciar dados de ônibus. A API permite que os fiscais obtenham, criem, atualizem e excluam dados de ônibus.
-O DB é o banco de dados NoSQL e o escolhido foi o MongoDB. O Front é o que o fiscal que é o usuário irá verificar e interagir com o sistema e o escolhido foi o Angular. Tem os testes que serão o unitário, integração, perfomance e usabilidade. O unitário para verificar pequenas partes do código se está saindo como o planejado e o de usabilidade para garantir que a interface do usuário seja intuitiva e fácil de usar.
+O projeto Bus Track fornece uma aplicação para gerenciamento de informações relacionadas ao transporte de passageiros, incluindo ônibus, motoristas, rotas, passageiros e viagens.
+
+O backend disponibiliza uma API RESTful desenvolvida em C# com ASP.NET Core e .NET 10. O banco de dados utilizado é o MongoDB, responsável pela persistência das informações. O frontend é desenvolvido com Angular e fornece a interface utilizada pelos usuários do sistema.
+
+O projeto também possui diferentes tipos de testes automatizados, incluindo testes unitários, testes de integração, testes de performance e testes de usabilidade.
 
 ## Funcionalidades Principais
 
@@ -97,6 +100,38 @@ Já no frontend criei regras para não salvar senha, copiar informações tanto 
 
 
 ## Histórico de Atualizações
+
+### 2026-09-17
+
+* Continuação da modernização do projeto para .NET 10.
+* Atualização da estrutura dos serviços, repositórios, DTOs, modelos e interfaces da API.
+* Ajustes de nulabilidade e contratos assíncronos para adequação ao .NET 10.
+* Atualização das operações de viagens e passageiros associados a viagens utilizando persistência assíncrona com MongoDB.
+* Atualização das configurações de mapeamento utilizando AutoMapper.
+* Atualização das rotas e da estrutura principal do frontend Angular.
+* Implementação da tela de Viagens com listagem, formulário e integração com a API.
+* Atualização da navegação do Dashboard para os módulos do sistema.
+* Ajustes na infraestrutura dos testes de integração, incluindo a factory utilizada pelos testes.
+* Correção de avisos de compilação relacionados a nulabilidade e APIs obsoletas.
+* Criação da documentação de arquitetura do projeto em `docs/architecture.md`.
+* Criação da documentação da migração para .NET 10 em `docs/dotnet-10-migration.md`.
+* Validação da compilação do projeto com **0 erros e 0 warnings**.
+* Execução da suíte de testes revelou problemas de compatibilidade na infraestrutura e em alguns testes existentes, que permanecem em correção antes da integração da branch com a `main`.
+
+### 2026-09-16
+
+* Início da refatoração estrutural do BusTrack após a migração para .NET 10.
+* Atualização dos contratos e implementações dos serviços de ônibus, motoristas, passageiros, viagens, passageiros de viagens e usuários.
+* Atualização dos contratos e implementações dos repositórios utilizados pelos módulos refatorados.
+* Atualização dos modelos e DTOs utilizados pela API.
+* Adequação das operações de persistência ao uso assíncrono do MongoDB.
+* Correções de mapeamento entre DTOs, modelos da API e entidades do banco de dados.
+* Ajustes na configuração de injeção de dependências da aplicação.
+* Correções de nulabilidade para eliminar warnings durante a compilação.
+* Atualização da infraestrutura de testes para acompanhar as mudanças realizadas na aplicação.
+* Atualização da estrutura de autenticação e criação de conta, incluindo tratamento de senha com BCrypt.
+* Ajustes iniciais na estrutura do Dashboard e na navegação entre os módulos do sistema.
+* Validação da compilação após as alterações estruturais.
 
 ### 2026-09-11
 
@@ -338,7 +373,7 @@ BusTrack
 │   │   │   │   │   │   ├── dashboard.component.css             
 │   │   │   │   │   │   ├── dashboard.component.html             
 │   │   │   │   │   │   ├── dashboard.component.spec.ts         
-│   │   │   │   │   │   └── dashboard.component.ts               
+│   │   │   │   │   │   └── dashboard.component.ts            
 │   │   │   │   │   ├── rules-main                             
 │   │   │   │   │   │   ├── limitCharactersRules                   
 │   │   │   │   │   │   │   └── limitCharactersRule.ts               
@@ -350,7 +385,11 @@ BusTrack
 │   │   │   │   │   │   ├── sidebar.component.css                
 │   │   │   │   │   │   ├── sidebar.component.html                
 │   │   │   │   │   │   ├── sidebar.component.spec.ts           
-│   │   │   │   │   │   └── sidebar.component.ts                  
+│   │   │   │   │   │   └── sidebar.component.ts 
+│   │   │   │   │   └── trips
+│   │   │   │   │   │   ├── tripscomponent.css
+│   │   │   │   │   │   ├── tripscomponent.html
+│   │   │   │   │   │   └── tripscomponent.ts
 │   │   │   │   ├── models                                  
 │   │   │   │   │   └── user.model.ts                        
 │   │   │   │   ├── services                               
@@ -406,7 +445,10 @@ BusTrack
 │   ├── DriversUpdater                               
 │   │   └── DriverNameUpdater.cs                       
 │   └── PassengerUpdater                             
-│   │   └── PassengerNameUpdater.cs                   
+│   │   └── PassengerNameUpdater.cs
+├── docs
+│   ├── architecture.md
+│   └── dotnet-10-migration.md         
 ├── appsettings.json
 ├── appsettings.Development.json
 ├── BusTrack.csproj
