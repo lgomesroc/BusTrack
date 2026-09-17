@@ -2,7 +2,8 @@
 {
     public interface ITripPassengerModelDB
     {
-        int TripId { get; set; }
-        List<int> PassengerIds { get; set; }
+        string? TripId { get; set; }
+
+        List<string>? PassengerIds { get; set; }
     }
 }
