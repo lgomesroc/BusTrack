@@ -12,65 +12,120 @@ namespace BusTrack.BusTrack.API.ControllersAPI
     {
         private readonly IEmailConfirmationServiceAPI _emailConfirmationService;
 
-        public CreateAccountControllerAPI(IEmailConfirmationServiceAPI emailConfirmationService)
+        public CreateAccountControllerAPI(
+            IEmailConfirmationServiceAPI emailConfirmationService)
         {
-            _emailConfirmationService = emailConfirmationService;
+            _emailConfirmationService =
+                emailConfirmationService;
         }
 
         [HttpPost("enviar-email-confirmacao")]
-        public async Task<IActionResult> EnviarEmailConfirmacao([FromBody] EmailConfirmationDB request)
+        public async Task<IActionResult> EnviarEmailConfirmacao(
+            [FromBody] EmailConfirmationDB request)
         {
+            if (string.IsNullOrWhiteSpace(request.Email))
+            {
+                return BadRequest(
+                    "O e-mail é obrigatório.");
+            }
+
             try
             {
-                var confirmation = _emailConfirmationService.Create(request);
+                var confirmation =
+                    _emailConfirmationService.Create(request);
 
-                using (var client = new SmtpClient("smtp.gmail.com", 587))
+                using (var client =
+                    new SmtpClient("smtp.gmail.com", 587))
                 {
                     client.EnableSsl = true;
                     client.UseDefaultCredentials = false;
-                    client.Credentials = new NetworkCredential("seu-email@gmail.com", "sua-senha-do-email");
+                    client.Credentials =
+                        new NetworkCredential(
+                            "seu-email@gmail.com",
+                            "sua-senha-do-email");
 
                     var mailMessage = new MailMessage
                     {
-                        From = new MailAddress("seu-email@gmail.com"),
-                        Subject = "Confirmação de Cadastro - Sistema Bus Track",
+                        From =
+                            new MailAddress(
+                                "seu-email@gmail.com"),
+
+                        Subject =
+                            "Confirmação de Cadastro - Sistema Bus Track",
+
                         IsBodyHtml = true,
-                        Body = $"Prezado(a), <br><br> Verificamos que você se cadastrou no nosso sistema e solicitamos que clique no link abaixo ou no botão \"Confirmar\" para finalizar o cadastro.<br><br> <a href=\"URL_DO_BACKEND/confirmar-cadastro/{request.Email}\">Confirmar</a><br><br> Você tem 30 minutos para confirmar. <br><br> Atenciosamente, <br> Equipe do Sistema Bus Track",
+
+                        Body =
+                            $"Prezado(a), <br><br> " +
+                            $"Verificamos que você se cadastrou " +
+                            $"no nosso sistema e solicitamos que " +
+                            $"clique no link abaixo ou no botão " +
+                            $"\"Confirmar\" para finalizar o cadastro." +
+                            $"<br><br> " +
+                            $"<a href=\"URL_DO_BACKEND/confirmar-cadastro/" +
+                            $"{request.Email}\">Confirmar</a>" +
+                            $"<br><br> " +
+                            $"Você tem 30 minutos para confirmar." +
+                            $"<br><br> " +
+                            $"Atenciosamente, <br> " +
+                            $"Equipe do Sistema Bus Track",
                     };
+
                     mailMessage.To.Add(request.Email);
 
-                    await client.SendMailAsync(mailMessage);
+                    await client.SendMailAsync(
+                        mailMessage);
 
-                    return Ok("E-mail de confirmação enviado com sucesso");
+                    return Ok(
+                        "E-mail de confirmação enviado com sucesso");
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Erro ao enviar e-mail de confirmação: {ex.Message}");
+                return StatusCode(
+                    500,
+                    $"Erro ao enviar e-mail de confirmação: " +
+                    $"{ex.Message}");
             }
         }
-
 
         [HttpGet("{id}")]
         public IActionResult Read(string id)
         {
-            var confirmation = _emailConfirmationService.Read(id);
+            var confirmation =
+                _emailConfirmationService.Read(id);
+
             return Ok(confirmation);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(string id, [FromBody] EmailConfirmationDB confirmation)
+        public IActionResult Update(
+            string id,
+            [FromBody] EmailConfirmationDB confirmation)
         {
-            _emailConfirmationService.Update(id, confirmation);
-            return Ok(new { message = "Confirmação de e-mail atualizada com sucesso" });
+            _emailConfirmationService.Update(
+                id,
+                confirmation);
+
+            return Ok(
+                new
+                {
+                    message =
+                        "Confirmação de e-mail atualizada com sucesso"
+                });
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
             _emailConfirmationService.Delete(id);
-            return Ok(new { message = "Confirmação de e-mail deletada com sucesso" });
+
+            return Ok(
+                new
+                {
+                    message =
+                        "Confirmação de e-mail deletada com sucesso"
+                });
         }
     }
-
 }
