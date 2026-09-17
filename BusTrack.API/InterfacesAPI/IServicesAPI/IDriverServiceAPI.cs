@@ -7,14 +7,23 @@ namespace BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI
     {
         Task<IEnumerable<DriverDTOAPI>> GetAllDrivers();
 
-        Task<DriverDTOAPI> GetDriverById(string id);
+        Task<DriverDTOAPI?> GetDriverById(
+            string id);
 
-        Task<DriverDTOAPI> CreateDriver(DriverDTOAPI driver);
+        Task<DriverDTOAPI> CreateDriver(
+            DriverDTOAPI driver);
 
-        Task<DriverDTOAPI> UpdateDriver(string id, DriverDTOAPI driver);
+        Task<DriverDTOAPI> UpdateDriver(
+            string id,
+            DriverDTOAPI driver);
 
-        Task<bool> DeleteDriver(string id);
+        Task<bool> DeleteDriver(
+            string id);
 
         List<DriverDB> GetDrivers();
+
+        Task UpdateDriverAsync(
+            string id,
+            DriverDB driver);
     }
 }
