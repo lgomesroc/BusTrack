@@ -1,0 +1,208 @@
+<div class="trips-container">
+
+  <header class="trips-header">
+    <div>
+      <h1>Viagens</h1>
+      <p>Gerencie as viagens cadastradas no Bus Track.</p>
+    </div>
+
+    <div class="header-actions">
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="voltarAoDashboard()">
+        Voltar ao dashboard
+      </button>
+
+      <button
+        type="button"
+        class="primary-button"
+        (click)="iniciarCriacao()">
+        Criar viagem
+      </button>
+    </div>
+  </header>
+
+  <section
+    class="trip-form"
+    *ngIf="isCreating || editingTrip">
+
+    <div class="form-header">
+      <div>
+        <h2>
+          {{ editingTrip ? 'Editar viagem' : 'Criar viagem' }}
+        </h2>
+
+        <p>
+          {{ editingTrip
+            ? 'Altere os dados da viagem selecionada.'
+            : 'Informe os dados da nova viagem.' }}
+        </p>
+      </div>
+    </div>
+
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label for="busId">Ônibus</label>
+
+        <input
+          id="busId"
+          type="text"
+          [(ngModel)]="tripForm.busId"
+          placeholder="ID do ônibus">
+      </div>
+
+      <div class="form-group">
+        <label for="driverId">Motorista</label>
+
+        <input
+          id="driverId"
+          type="text"
+          [(ngModel)]="tripForm.driverId"
+          placeholder="ID do motorista">
+      </div>
+
+      <div class="form-group">
+        <label for="routeId">Rota</label>
+
+        <input
+          id="routeId"
+          type="text"
+          [(ngModel)]="tripForm.routeId"
+          placeholder="ID da rota">
+      </div>
+
+      <div class="form-group">
+        <label for="departureTime">Data e hora de saída</label>
+
+        <input
+          id="departureTime"
+          type="datetime-local"
+          [(ngModel)]="tripForm.departureTime">
+      </div>
+
+      <div class="form-group">
+        <label for="passengerCount">Quantidade de passageiros</label>
+
+        <input
+          id="passengerCount"
+          type="number"
+          min="0"
+          [(ngModel)]="tripForm.passengerCount">
+      </div>
+
+    </div>
+
+    <div class="form-actions">
+
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="cancelarEdicao()">
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="primary-button"
+        (click)="salvarViagem()">
+        {{ editingTrip ? 'Salvar alterações' : 'Criar viagem' }}
+      </button>
+
+    </div>
+
+  </section>
+
+  <section class="trips-list">
+
+    <div class="section-header">
+      <div>
+        <h2>Viagens cadastradas</h2>
+        <p>
+          {{ trips.length }}
+          {{ trips.length === 1 ? 'viagem encontrada' : 'viagens encontradas' }}
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="empty-state"
+      *ngIf="trips.length === 0">
+
+      <h3>Nenhuma viagem cadastrada</h3>
+
+      <p>
+        Ainda não existem viagens cadastradas.
+        Clique em "Criar viagem" para adicionar a primeira.
+      </p>
+
+      <button
+        type="button"
+        class="primary-button"
+        (click)="iniciarCriacao()">
+        Criar primeira viagem
+      </button>
+
+    </div>
+
+    <div
+      class="table-wrapper"
+      *ngIf="trips.length > 0">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Ônibus</th>
+            <th>Motorista</th>
+            <th>Rota</th>
+            <th>Saída</th>
+            <th>Passageiros</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let trip of trips">
+
+            <td>{{ trip.busId }}</td>
+
+            <td>{{ trip.driverId }}</td>
+
+            <td>{{ trip.routeId }}</td>
+
+            <td>{{ trip.departureTime }}</td>
+
+            <td>{{ trip.passengerCount }}</td>
+
+            <td class="actions-cell">
+
+              <button
+                type="button"
+                class="edit-button"
+                (click)="iniciarEdicao(trip)">
+                Editar
+              </button>
+
+              <button
+                type="button"
+                class="delete-button"
+                (click)="excluirViagem(trip)">
+                Excluir
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+</div>
