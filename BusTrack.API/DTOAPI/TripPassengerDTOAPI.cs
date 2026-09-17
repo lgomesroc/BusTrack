@@ -2,8 +2,10 @@
 {
     public class TripPassengerDTOAPI
     {
-        public int Id { get; set; }
-        public int TripId { get; set; }
-        public int PassengerId { get; set; }
+        public string? Id { get; set; }
+
+        public string? TripId { get; set; }
+
+        public string? PassengerId { get; set; }
     }
 }
