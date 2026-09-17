@@ -8,49 +8,77 @@ namespace BusTrack.BusTrack.DB.RepositoriesDB
     {
         private readonly IMongoCollection<TripDB> _tripsCollection;
 
-        public TripRepositoryDB(IMongoDatabase database)
+        public TripRepositoryDB(
+            IMongoDatabase database)
         {
-            _tripsCollection = database.GetCollection<TripDB>("Trips");
+            _tripsCollection =
+                database.GetCollection<TripDB>("Trips");
         }
 
         public async Task<IEnumerable<TripDB>> GetAllTripsAsync()
         {
-            return await _tripsCollection.Find(_ => true).ToListAsync();
+            return await _tripsCollection
+                .Find(_ => true)
+                .ToListAsync();
         }
 
-        public async Task<TripDB> GetTripByIdAsync(string id)
+        public async Task<TripDB?> GetTripByIdAsync(
+            string id)
         {
-            var filter = Builders<TripDB>.Filter.Eq(t => t.Id, id);
-            return await _tripsCollection.Find(filter).FirstOrDefaultAsync();
+            var filter =
+                Builders<TripDB>.Filter.Eq(
+                    trip => trip.Id,
+                    id);
+
+            return await _tripsCollection
+                .Find(filter)
+                .FirstOrDefaultAsync();
         }
 
-        public async Task AddTripAsync(TripDB trip)
+        public async Task<TripDB> AddTripAsync(
+            TripDB trip)
         {
-            await _tripsCollection.InsertOneAsync(trip);
+            await _tripsCollection
+                .InsertOneAsync(trip);
+
+            return trip;
         }
 
-        public async Task UpdateTripAsync(string id, TripDB trip)
+        public async Task<TripDB?> UpdateTripAsync(
+            string id,
+            TripDB trip)
         {
-            var filter = Builders<TripDB>.Filter.Eq(t => t.Id, id);
-            await _tripsCollection.ReplaceOneAsync(filter, trip);
+            var filter =
+                Builders<TripDB>.Filter.Eq(
+                    existingTrip => existingTrip.Id,
+                    id);
+
+            var result =
+                await _tripsCollection.ReplaceOneAsync(
+                    filter,
+                    trip);
+
+            if (result.MatchedCount == 0)
+            {
+                return null;
+            }
+
+            return trip;
         }
 
-        public async Task<bool> DeleteTripAsync(string id)
+        public async Task<bool> DeleteTripAsync(
+            string id)
         {
-            var filter = Builders<TripDB>.Filter.Eq(t => t.Id, id);
-            var result = await _tripsCollection.DeleteOneAsync(filter);
+            var filter =
+                Builders<TripDB>.Filter.Eq(
+                    trip => trip.Id,
+                    id);
+
+            var result =
+                await _tripsCollection.DeleteOneAsync(
+                    filter);
+
             return result.DeletedCount > 0;
-        }
-
-        public async Task<TripDB> GetTripById(int id)
-        {
-            var filter = Builders<TripDB>.Filter.Eq(t => t.Id, id.ToString());
-            return await _tripsCollection.Find(filter).FirstOrDefaultAsync();
-        }
-
-        public async Task<IEnumerable<TripDB>> GetAllTrips()
-        {
-            return await _tripsCollection.Find(_ => true).ToListAsync();
         }
     }
 }
