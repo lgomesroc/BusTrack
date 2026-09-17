@@ -10,49 +10,98 @@ namespace BusTrack.BusTrack.DB.RepositoriesDB
 
         public BusRepositoryDB(IMongoDatabase database)
         {
-            _busesCollection = database.GetCollection<BusDB>("Buses");
+            _busesCollection =
+                database.GetCollection<BusDB>("Buses");
         }
 
-        public async Task<IEnumerable<BusDB>> GetAllBusesAsync()
+        public async Task<IEnumerable<BusDB>>
+            GetAllBusesAsync()
         {
-            return await _busesCollection.Find(_ => true).ToListAsync();
+            return await _busesCollection
+                .Find(_ => true)
+                .ToListAsync();
         }
 
-        public async Task<BusDB> GetBusByIdAsync(string id)
+        public async Task<BusDB?>
+            GetBusByIdAsync(
+                string id)
         {
-            var filter = Builders<BusDB>.Filter.Eq(b => b.Id, id);
-            return await _busesCollection.Find(filter).FirstOrDefaultAsync();
+            var filter =
+                Builders<BusDB>
+                    .Filter
+                    .Eq(
+                        b => b.Id,
+                        id);
+
+            return await _busesCollection
+                .Find(filter)
+                .FirstOrDefaultAsync();
         }
 
-        public async Task AddBusAsync(BusDB bus)
+        public async Task AddBusAsync(
+            BusDB bus)
         {
-            await _busesCollection.InsertOneAsync(bus);
+            await _busesCollection
+                .InsertOneAsync(bus);
         }
 
-        public async Task UpdateBusAsync(string id, BusDB bus)
+        public async Task UpdateBusAsync(
+            string id,
+            BusDB bus)
         {
-            var filter = Builders<BusDB>.Filter.Eq(b => b.Id, id);
-            await _busesCollection.ReplaceOneAsync(filter, bus);
+            var filter =
+                Builders<BusDB>
+                    .Filter
+                    .Eq(
+                        b => b.Id,
+                        id);
+
+            await _busesCollection
+                .ReplaceOneAsync(
+                    filter,
+                    bus);
         }
 
-        public async Task DeleteBusAsync(string id)
+        public async Task DeleteBusAsync(
+            string id)
         {
-            var filter = Builders<BusDB>.Filter.Eq(b => b.Id, id);
-            await _busesCollection.DeleteOneAsync(filter);
+            var filter =
+                Builders<BusDB>
+                    .Filter
+                    .Eq(
+                        b => b.Id,
+                        id);
+
+            await _busesCollection
+                .DeleteOneAsync(filter);
         }
 
-        public async Task<bool> DeleteBus(string id)
+        public async Task<bool>
+            DeleteBus(
+                string id)
         {
-            var filter = Builders<BusDB>.Filter.Eq(b => b.Id, id);
-            var result = await _busesCollection.DeleteOneAsync(filter);
+            var filter =
+                Builders<BusDB>
+                    .Filter
+                    .Eq(
+                        b => b.Id,
+                        id);
+
+            var result =
+                await _busesCollection
+                    .DeleteOneAsync(filter);
+
             return result.DeletedCount > 0;
         }
 
-        public async Task<BusDB> CreateBus(BusDB bus)
+        public async Task<BusDB>
+            CreateBus(
+                BusDB bus)
         {
-            await _busesCollection.InsertOneAsync(bus);
+            await _busesCollection
+                .InsertOneAsync(bus);
+
             return bus;
         }
-
     }
 }
