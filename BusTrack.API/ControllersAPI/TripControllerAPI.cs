@@ -20,7 +20,8 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         public async Task<IActionResult> GetAll()
         {
             var trips =
-                await _tripService.GetAllTripsAsync();
+                await _tripService
+                    .GetAllTripDetailsAsync();
 
             return Ok(trips);
         }
@@ -30,7 +31,9 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             string id)
         {
             var trip =
-                await _tripService.GetTripByIdAsync(id);
+                await _tripService
+                    .GetTripDetailsByIdAsync(
+                        id);
 
             if (trip == null)
             {
@@ -50,8 +53,9 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             }
 
             var createdTrip =
-                await _tripService.CreateTripAsync(
-                    trip);
+                await _tripService
+                    .CreateTripAsync(
+                        trip);
 
             return CreatedAtRoute(
                 "GetTrip",
@@ -70,9 +74,10 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             }
 
             var updatedTrip =
-                await _tripService.UpdateTripAsync(
-                    id,
-                    trip);
+                await _tripService
+                    .UpdateTripAsync(
+                        id,
+                        trip);
 
             if (updatedTrip == null)
             {
@@ -87,7 +92,9 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             string id)
         {
             var deleted =
-                await _tripService.DeleteTripAsync(id);
+                await _tripService
+                    .DeleteTripAsync(
+                        id);
 
             if (!deleted)
             {
