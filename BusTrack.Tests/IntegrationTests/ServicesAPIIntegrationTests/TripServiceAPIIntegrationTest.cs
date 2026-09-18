@@ -14,6 +14,21 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         private readonly Mock<ITripRepositoryDB>
             _tripRepository;
 
+        private readonly Mock<ITripPassengerRepositoryDB>
+            _tripPassengerRepository;
+
+        private readonly Mock<IBusRepositoryDB>
+            _busRepository;
+
+        private readonly Mock<IDriverRepositoryDB>
+            _driverRepository;
+
+        private readonly Mock<IRouteRepositoryDB>
+            _routeRepository;
+
+        private readonly Mock<IPassengerRepositoryDB>
+            _passengerRepository;
+
         private readonly IMapper _mapper;
 
         private readonly TripServiceAPI
@@ -24,6 +39,21 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
             _tripRepository =
                 new Mock<ITripRepositoryDB>();
 
+            _tripPassengerRepository =
+                new Mock<ITripPassengerRepositoryDB>();
+
+            _busRepository =
+                new Mock<IBusRepositoryDB>();
+
+            _driverRepository =
+                new Mock<IDriverRepositoryDB>();
+
+            _routeRepository =
+                new Mock<IRouteRepositoryDB>();
+
+            _passengerRepository =
+                new Mock<IPassengerRepositoryDB>();
+
             var config =
                 new MapperConfiguration(
                     cfg =>
@@ -32,11 +62,17 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                     },
                     NullLoggerFactory.Instance);
 
-            _mapper = config.CreateMapper();
+            _mapper =
+                config.CreateMapper();
 
             _tripServiceAPI =
                 new TripServiceAPI(
                     _tripRepository.Object,
+                    _tripPassengerRepository.Object,
+                    _busRepository.Object,
+                    _driverRepository.Object,
+                    _routeRepository.Object,
+                    _passengerRepository.Object,
                     _mapper);
         }
 
@@ -50,10 +86,13 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                     {
                         Id =
                             "507f1f77bcf86cd799439011",
+
                         BusId =
                             "507f1f77bcf86cd799439012",
+
                         DriverId =
                             "507f1f77bcf86cd799439013",
+
                         RouteId =
                             "507f1f77bcf86cd799439014"
                     },
@@ -62,10 +101,13 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                     {
                         Id =
                             "507f1f77bcf86cd799439015",
+
                         BusId =
                             "507f1f77bcf86cd799439016",
+
                         DriverId =
                             "507f1f77bcf86cd799439017",
+
                         RouteId =
                             "507f1f77bcf86cd799439018"
                     }
@@ -81,7 +123,10 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                     .GetAllTripsAsync();
 
             Assert.NotNull(result);
-            Assert.Equal(2, result.Count());
+
+            Assert.Equal(
+                2,
+                result.Count());
 
             _tripRepository.Verify(
                 repository =>
@@ -99,10 +144,13 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                 new TripDB
                 {
                     Id = id,
+
                     BusId =
                         "507f1f77bcf86cd799439012",
+
                     DriverId =
                         "507f1f77bcf86cd799439013",
+
                     RouteId =
                         "507f1f77bcf86cd799439014"
                 };
@@ -117,7 +165,10 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                     .GetTripByIdAsync(id);
 
             Assert.NotNull(result);
-            Assert.Equal(id, result!.Id);
+
+            Assert.Equal(
+                id,
+                result!.Id);
 
             Assert.Equal(
                 trip.BusId,
@@ -198,7 +249,8 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 
                     LimitPassengers = 40,
 
-                    Passengers = new List<string>()
+                    Passengers =
+                        new List<string>()
                 };
 
             _tripRepository
@@ -219,7 +271,9 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                     .CreateTripAsync(trip);
 
             Assert.NotNull(result);
-            Assert.NotNull(result.Id);
+
+            Assert.NotNull(
+                result.Id);
 
             Assert.Equal(
                 trip.BusId,
@@ -266,10 +320,13 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                 new TripDB
                 {
                     Id = id,
+
                     BusId =
                         "507f1f77bcf86cd799439012",
+
                     DriverId =
                         "507f1f77bcf86cd799439013",
+
                     RouteId =
                         "507f1f77bcf86cd799439014"
                 };
@@ -278,6 +335,7 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                 new TripDTOAPI
                 {
                     Id = id,
+
                     BusId =
                         "507f1f77bcf86cd799439015",
 
@@ -309,7 +367,8 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 
                     LimitPassengers = 45,
 
-                    Passengers = new List<string>()
+                    Passengers =
+                        new List<string>()
                 };
 
             _tripRepository
@@ -323,7 +382,8 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                         id,
                         It.IsAny<TripDB>()))
                 .ReturnsAsync(
-                    (string _,
+                    (
+                        string _,
                         TripDB tripDB) =>
                     {
                         tripDB.Id = id;
@@ -338,7 +398,10 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                         trip);
 
             Assert.NotNull(result);
-            Assert.Equal(id, result!.Id);
+
+            Assert.Equal(
+                id,
+                result!.Id);
 
             Assert.Equal(
                 trip.BusId,
@@ -391,6 +454,7 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                 new TripDTOAPI
                 {
                     Id = id,
+
                     BusId =
                         "507f1f77bcf86cd799439012"
                 };
