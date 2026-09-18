@@ -1,4 +1,5 @@
-﻿using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
+﻿using BusTrack.BusTrack.API.DTOAPI;
+using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusTrack.BusTrack.API.ControllersAPI
@@ -9,39 +10,90 @@ namespace BusTrack.BusTrack.API.ControllersAPI
     {
         private readonly IRouteServiceAPI _routeService;
 
-        public RouteControllerAPI(IRouteServiceAPI routeService)
+        public RouteControllerAPI(
+            IRouteServiceAPI routeService)
         {
             _routeService = routeService;
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok("Get all routes");
+            var routes =
+                await _routeService.GetAllRoutes();
+
+            return Ok(routes);
         }
 
         [HttpGet("{id}", Name = "GetRoute")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(
+            string id)
         {
-            return Ok($"Get route with ID: {id}");
+            var route =
+                await _routeService.GetRouteById(id);
+
+            if (route == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(route);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] object value)
+        public async Task<IActionResult> Post(
+            [FromBody] RouteDTOAPI route)
         {
-            return Ok("Create new route");
+            if (route == null)
+            {
+                return BadRequest();
+            }
+
+            var createdRoute =
+                await _routeService.CreateRoute(route);
+
+            return CreatedAtRoute(
+                "GetRoute",
+                new { id = createdRoute.Id },
+                createdRoute);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] object value)
+        public async Task<IActionResult> Put(
+            string id,
+            [FromBody] RouteDTOAPI route)
         {
-            return Ok($"Update route with ID: {id}");
+            if (route == null)
+            {
+                return BadRequest();
+            }
+
+            var updatedRoute =
+                await _routeService.UpdateRoute(
+                    id,
+                    route);
+
+            if (updatedRoute == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(updatedRoute);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(
+            string id)
         {
-            return Ok($"Delete route with ID: {id}");
+            var deleted =
+                await _routeService.DeleteRoute(id);
+
+            if (!deleted)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
     }
 }

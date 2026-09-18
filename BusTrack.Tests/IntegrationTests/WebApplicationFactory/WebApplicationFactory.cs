@@ -1,31 +1,14 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace BusTrack.Tests.IntegrationTests.CustomWebApplicationFactory
 {
     public class WebApplicationFactory<TProgram>
+        : Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactory<TProgram>
         where TProgram : class
     {
-        protected virtual void ConfigureWebHost(
-            IWebHostBuilder builder)
+        public new HttpClient CreateClient()
         {
-            builder.UseStartup<TProgram>();
-        }
-
-        public HttpClient CreateClient()
-        {
-            var host =
-                new HostBuilder()
-                    .ConfigureWebHostDefaults(
-                        builder =>
-                        {
-                            ConfigureWebHost(builder);
-                            builder.UseTestServer();
-                        })
-                    .Start();
-
-            return host.GetTestClient();
+            return base.CreateClient();
         }
     }
 }

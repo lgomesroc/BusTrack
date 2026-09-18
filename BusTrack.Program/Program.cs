@@ -15,7 +15,12 @@ public partial class Program
         builder.Configuration.AddJsonFile(
             "appsettings.json");
 
-        builder.Services.AddControllers();
+        builder.Services
+            .AddControllers()
+            .AddApplicationPart(
+                typeof(
+                    BusTrack.BusTrack.API.ControllersAPI.BusControllerAPI)
+                    .Assembly);
 
         builder.Services.AddEndpointsApiExplorer();
 

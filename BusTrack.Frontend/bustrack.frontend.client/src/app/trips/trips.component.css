@@ -1,9 +1,12 @@
 .trips-container {
   min-height: 100vh;
+  width: 100%;
   padding: 35px;
   background: #f5f7fa;
   box-sizing: border-box;
 }
+
+/* Cabeçalho */
 
 .trips-header {
   display: flex;
@@ -32,6 +35,8 @@
   gap: 12px;
 }
 
+/* Botões */
+
 .primary-button,
 .secondary-button,
 .edit-button,
@@ -58,6 +63,12 @@
   transform: translateY(-1px);
 }
 
+.primary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .secondary-button {
   background: #ffffff;
   color: #374151;
@@ -68,8 +79,25 @@
   background: #f3f4f6;
 }
 
+/* Mensagem de erro */
+
+.error-message {
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 14px;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+/* Formulários e lista */
+
 .trip-form,
 .trips-list {
+  width: 100%;
   background: #ffffff;
   border: 1px solid #e1e5ea;
   border-radius: 12px;
@@ -95,7 +123,10 @@
   margin: 0;
   color: #6b7280;
   font-size: 14px;
+  line-height: 1.5;
 }
+
+/* Grid do formulário */
 
 .form-grid {
   display: grid;
@@ -107,6 +138,7 @@
   display: flex;
   flex-direction: column;
   gap: 7px;
+  min-width: 0;
 }
 
 .form-group label {
@@ -115,7 +147,8 @@
   font-weight: 600;
 }
 
-.form-group input {
+.form-group input,
+.form-group select {
   width: 100%;
   min-height: 42px;
   padding: 10px 12px;
@@ -131,10 +164,13 @@
     box-shadow 0.2s ease;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus {
   border-color: #6b7280;
   box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.12);
 }
+
+/* Ações do formulário */
 
 .form-actions {
   display: flex;
@@ -142,6 +178,19 @@
   gap: 12px;
   margin-top: 25px;
 }
+
+/* Loading */
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Estado vazio */
 
 .empty-state {
   display: flex;
@@ -170,14 +219,16 @@
   line-height: 1.6;
 }
 
+/* Tabela */
+
 .table-wrapper {
   width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 table {
   width: 100%;
-  min-width: 800px;
   border-collapse: collapse;
 }
 
@@ -233,14 +284,19 @@ tbody tr:hover {
   background: #fef2f2;
 }
 
-/* Tablet */
+/* =========================================================
+   TABLET
+   ========================================================= */
+
 @media screen and (max-width: 900px) {
+
   .trips-container {
     padding: 25px;
   }
 
   .trips-header {
     flex-direction: column;
+    gap: 20px;
   }
 
   .header-actions {
@@ -256,10 +312,19 @@ tbody tr:hover {
   }
 }
 
-/* Celular */
+/* =========================================================
+   CELULAR
+   ========================================================= */
+
 @media screen and (max-width: 600px) {
+
   .trips-container {
-    padding: 20px 15px;
+    padding: 15px;
+  }
+
+  .trips-header {
+    gap: 18px;
+    margin-bottom: 20px;
   }
 
   .trips-header h1 {
@@ -272,45 +337,197 @@ tbody tr:hover {
 
   .header-actions {
     flex-direction: column;
-    align-items: stretch;
+    width: 100%;
+    gap: 10px;
   }
 
   .header-actions button {
     width: 100%;
+    flex: none;
   }
 
   .trip-form,
   .trips-list {
-    padding: 20px;
+    padding: 18px;
     border-radius: 10px;
+    margin-bottom: 18px;
+  }
+
+  .form-header,
+  .section-header {
+    margin-bottom: 20px;
+  }
+
+  .form-header h2,
+  .section-header h2 {
+    font-size: 19px;
+  }
+
+  .form-header p,
+  .section-header p {
+    font-size: 13px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .form-group input,
+  .form-group select {
+    min-height: 44px;
+    font-size: 14px;
   }
 
   .form-actions {
     flex-direction: column-reverse;
+    gap: 10px;
   }
 
   .form-actions button {
     width: 100%;
   }
 
+  .error-message {
+    font-size: 13px;
+    padding: 12px 14px;
+  }
+
   .empty-state {
+    min-height: 200px;
     padding: 25px 15px;
+  }
+
+  .empty-state h3 {
+    font-size: 17px;
+  }
+
+  .empty-state p {
+    font-size: 13px;
   }
 
   .empty-state .primary-button {
     width: 100%;
   }
 
-  th,
+  /*
+   * No celular, a tabela vira uma lista de cards.
+   * Isso evita que o usuário precise rolar horizontalmente.
+   */
+
+  .table-wrapper {
+    overflow: visible;
+  }
+
+  table,
+  thead,
+  tbody,
+  tr,
   td {
-    padding: 12px;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  tbody tr {
+    padding: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background: #ffffff;
+    box-sizing: border-box;
+  }
+
+  tbody tr:hover {
+    background: #ffffff;
+  }
+
+  td {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 9px 0;
+    border-bottom: 1px solid #f0f0f0;
+    white-space: normal;
+    text-align: right;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  td::before {
+    flex: 0 0 auto;
+    color: #374151;
+    font-weight: 700;
+    text-align: left;
+  }
+
+  td:nth-child(1)::before {
+    content: "Ônibus";
+  }
+
+  td:nth-child(2)::before {
+    content: "Motorista";
+  }
+
+  td:nth-child(3)::before {
+    content: "Rota";
+  }
+
+  td:nth-child(4)::before {
+    content: "Saída";
+  }
+
+  td:nth-child(5)::before {
+    content: "Chegada";
+  }
+
+  td:nth-child(6)::before {
+    content: "Passageiros";
+  }
+
+  td:nth-child(7)::before {
+    content: "Ações";
+  }
+
+  td:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .actions-cell {
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .actions-cell button {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  .loading-state {
+    min-height: 140px;
   }
 }
 
-/* Celulares pequenos */
+/* =========================================================
+   CELULARES PEQUENOS
+   ========================================================= */
+
 @media screen and (max-width: 400px) {
+
   .trips-container {
-    padding: 15px 10px;
+    padding: 10px;
   }
 
   .trips-header h1 {
@@ -319,24 +536,31 @@ tbody tr:hover {
 
   .trip-form,
   .trips-list {
-    padding: 16px;
+    padding: 15px;
+    border-radius: 9px;
   }
-}
 
-.error-message {
-  margin-bottom: 20px;
-  padding: 12px 16px;
-  border: 1px solid #fecaca;
-  border-radius: 7px;
-  background: #fef2f2;
-  color: #b91c1c;
-  font-size: 14px;
-}
+  .form-group input,
+  .form-group select {
+    font-size: 13px;
+  }
 
-.primary-button:disabled,
-.secondary-button:disabled,
-.edit-button:disabled,
-.delete-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+  tbody tr {
+    padding: 13px;
+  }
+
+  td {
+    gap: 10px;
+    font-size: 12px;
+  }
+
+  .actions-cell {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions-cell button {
+    width: 100%;
+    min-width: 0;
+  }
 }
