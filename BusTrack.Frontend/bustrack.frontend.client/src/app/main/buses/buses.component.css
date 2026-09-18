@@ -1,0 +1,422 @@
+.buses-container {
+  min-height: 100vh;
+  padding: 35px;
+  background: #f5f7fa;
+  box-sizing: border-box;
+}
+
+.buses-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+.buses-header h1 {
+  margin: 0 0 10px;
+  font-size: 30px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.buses-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.primary-button,
+.secondary-button,
+.edit-button,
+.delete-button {
+  border-radius: 7px;
+  font-size: 14px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.primary-button {
+  padding: 10px 18px;
+  border: 1px solid #1f2937;
+  background: #1f2937;
+  color: #ffffff;
+}
+
+.primary-button:hover:not(:disabled) {
+  background: #111827;
+  border-color: #111827;
+}
+
+.secondary-button {
+  padding: 10px 18px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #374151;
+}
+
+.secondary-button:hover:not(:disabled) {
+  background: #f3f4f6;
+  border-color: #c5c9cf;
+}
+
+.primary-button:disabled,
+.secondary-button:disabled,
+.edit-button:disabled,
+.delete-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-message {
+  margin-bottom: 25px;
+  padding: 14px 16px;
+  border: 1px solid #f0caca;
+  border-radius: 8px;
+  background: #fff5f5;
+  color: #a33a3a;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.bus-form,
+.buses-list {
+  padding: 25px;
+  border: 1px solid #e1e5ea;
+  border-radius: 12px;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.bus-form {
+  margin-bottom: 25px;
+}
+
+.form-header {
+  margin-bottom: 25px;
+}
+
+.form-header h2,
+.section-header h2 {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.form-header p,
+.section-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.form-group input {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #1f2937;
+  font-family: inherit;
+  font-size: 14px;
+  box-sizing: border-box;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.form-group input::placeholder {
+  color: #9ca3af;
+}
+
+.form-group input:focus {
+  border-color: #9ca3af;
+  box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.15);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.section-header {
+  margin-bottom: 20px;
+}
+
+.empty-state {
+  padding: 45px 25px;
+  border: 1px dashed #d1d5db;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.empty-state h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.empty-state p {
+  max-width: 500px;
+  margin: 0 auto 20px;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  width: 100%;
+  min-width: 650px;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+th {
+  background: #f9fafb;
+  color: #374151;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+td {
+  color: #4b5563;
+}
+
+tbody tr:hover {
+  background: #fafbfc;
+}
+
+.actions-cell {
+  white-space: nowrap;
+}
+
+.edit-button {
+  margin-right: 8px;
+  padding: 7px 12px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #374151;
+}
+
+.edit-button:hover:not(:disabled) {
+  background: #f3f4f6;
+  border-color: #c5c9cf;
+}
+
+.delete-button {
+  padding: 7px 12px;
+  border: 1px solid #e0b4b4;
+  background: #ffffff;
+  color: #a33a3a;
+}
+
+.delete-button:hover:not(:disabled) {
+  background: #fff5f5;
+  border-color: #d6a0a0;
+}
+
+/*
+ * Tablet
+ */
+@media screen and (max-width: 1024px) {
+  .buses-container {
+    padding: 30px 25px;
+  }
+
+  .buses-header {
+    gap: 20px;
+  }
+
+  .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bus-form,
+  .buses-list {
+    padding: 22px;
+  }
+}
+
+/*
+ * Tablet menor
+ */
+@media screen and (max-width: 768px) {
+  .buses-container {
+    padding: 25px 20px;
+  }
+
+  .buses-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+  }
+
+  .buses-header h1 {
+    font-size: 28px;
+  }
+
+  .header-actions {
+    width: 100%;
+  }
+
+  .header-actions button {
+    flex: 1;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .form-actions {
+    justify-content: stretch;
+  }
+
+  .form-actions button {
+    flex: 1;
+  }
+
+  .bus-form,
+  .buses-list {
+    padding: 20px;
+  }
+
+  .empty-state {
+    padding: 35px 20px;
+  }
+}
+
+/*
+ * Celular
+ */
+@media screen and (max-width: 480px) {
+  .buses-container {
+    padding: 20px 15px;
+  }
+
+  .buses-header {
+    margin-bottom: 22px;
+  }
+
+  .buses-header h1 {
+    font-size: 24px;
+  }
+
+  .buses-header p {
+    font-size: 14px;
+  }
+
+  .header-actions {
+    flex-direction: column;
+  }
+
+  .header-actions button {
+    width: 100%;
+    flex: none;
+  }
+
+  .bus-form,
+  .buses-list {
+    padding: 18px;
+    border-radius: 10px;
+  }
+
+  .form-header {
+    margin-bottom: 20px;
+  }
+
+  .form-header h2,
+  .section-header h2 {
+    font-size: 18px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-actions button {
+    width: 100%;
+    flex: none;
+  }
+
+  .empty-state {
+    padding: 30px 15px;
+  }
+
+  .empty-state p {
+    font-size: 13px;
+  }
+
+  .table-wrapper {
+    margin: 0 -5px;
+  }
+
+  th,
+  td {
+    padding: 12px 10px;
+    font-size: 13px;
+  }
+
+  .edit-button,
+  .delete-button {
+    display: block;
+    width: 100%;
+    margin: 0 0 7px;
+  }
+
+  .delete-button {
+    margin-bottom: 0;
+  }
+}
