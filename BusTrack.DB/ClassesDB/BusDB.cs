@@ -15,6 +15,8 @@ namespace BusTrack.BusTrack.DB.Classes
 
         public string? Line { get; set; }
 
+        public int Capacity { get; set; }
+
         public List<int> Routes { get; set; } = new();
     }
 }
