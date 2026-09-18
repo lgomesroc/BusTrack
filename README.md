@@ -101,6 +101,24 @@ Já no frontend criei regras para não salvar senha, copiar informações tanto 
 
 ## Histórico de Atualizações
 
+### 2026-09-18
+
+* Implementação do BrowserNavigationGuard para controlar a navegação pelos botões Voltar e Avançar do navegador.
+* Neutralização das regras antigas de bloqueio de navegação para centralizar o controle no Angular Router.
+* Implementação do controle de sessão da aplicação utilizando sessionStorage.
+* Implementação do monitoramento da disponibilidade do frontend e da API.
+* Criação do endpoint de Health Check da API em GET /api/Health.
+* Implementação do módulo de Ônibus no frontend Angular.
+* Implementação da integração do módulo de Ônibus com a API para listagem, criação, edição e exclusão de registros.
+* Atualização do modelo BusDB e dos respectivos mapeamentos para integração entre API e banco de dados.
+* Criação do TripDetailsDTOAPI para retornar informações completas das viagens.
+* Atualização do serviço e do controller de Viagens para retornar dados relacionados ao ônibus, motorista, rota e passageiros, além dos horários, duração e limite de passageiros.
+* Atualização da infraestrutura dos testes do serviço de Viagens para acompanhar as novas dependências e responsabilidades introduzidas na implementação.
+* Atualização da tela de login para utilizar o controle de sessão da aplicação.
+* Ajustes na inicialização do frontend e na estrutura de roteamento Angular.
+* Validação da compilação do projeto com 0 erros e 0 warnings.
+* Os testes foram executados e apresentaram falhas em testes existentes após as alterações estruturais, permanecendo pendentes de correção.
+
 ### 2026-09-17
 
 * Continuação da modernização do projeto para .NET 10.
@@ -197,7 +215,8 @@ BusTrack
 │   │   ├── BusControllerAPI.cs                       
 │   │   ├── CreateAccountControllerAPI.cs             
 │   │   ├── DashboardControllerAPI.cs                
-│   │   ├── DriverControllerAPI.cs                    
+│   │   ├── DriverControllerAPI.cs
+│   │   ├── HealthController.cs                   
 │   │   ├── PassengerControllerAPI.cs                  
 │   │   ├── RouteControllerAPI.cs                     
 │   │   ├── TripControllerAPI.cs                       
@@ -208,7 +227,8 @@ BusTrack
 │   │   ├── DriverDTOAPI.cs                          
 │   │   ├── PassengerDTOAPI.cs                        
 │   │   ├── RouteDTOAPI.cs                            
-│   │   ├── TripDTOAPI.cs                             
+│   │   ├── TripDTOAPI.cs
+TripDetailsDTOAPI.cs                           
 │   │   ├── TripPassengerDTOAPI.cs                  
 │   │   └── UpdatePasswordDTOAPI.cs                     
 │   ├── InterfacesAPI                                    
@@ -315,7 +335,10 @@ BusTrack
 ├── BusTrack.Frontend                            
 │   ├── bustrack.frontend.client
 │   │   ├── src                                
-│   │   │   └── app                            
+│   │   │   └── app
+│   │   │   │   ├── guards
+│   │   │   │   │   ├── authentication.guard.ts
+│   │   │   │   │   └── browser-navigation.guard.ts                           
 │   │   │   │   ├── login                      
 │   │   │   │   │   │   ├── concluded              
 │   │   │   │   │   │   │   ├── concluded.component.css   
@@ -368,7 +391,11 @@ BusTrack
 │   │   │   │   │   │   ├── update-password.component.html        
 │   │   │   │   │   │   ├── update-password.component.spec.ts      
 │   │   │   │   │   │   └── update-password.component.ts           
-│   │   │   │   ├── main                                      
+│   │   │   │   ├── main
+│   │   │   │   │   ├──buses
+│   │   │   │   │   │   ├── buses.component.css
+│   │   │   │   │   │   ├──buses.component.html
+│   │   │   │   │   │   └──buses.component.ts                                
 │   │   │   │   │   ├── dashboard                             
 │   │   │   │   │   │   ├── dashboard.component.css             
 │   │   │   │   │   │   ├── dashboard.component.html             
@@ -392,8 +419,11 @@ BusTrack
 │   │   │   │   │   │   └── tripscomponent.ts
 │   │   │   │   ├── models                                  
 │   │   │   │   │   └── user.model.ts                        
-│   │   │   │   ├── services                               
+│   │   │   │   ├── services
+│   │   │   │   │   │   ├── application-availability.service.ts
+│   │   │   │   │   │   └── bus.service.ts                              
 │   │   │   │   │   ├── data.service.ts
+│   │   │   │   │   ├── session.service.ts
 │   │   │   │   │   ├── trip.service.ts                    
 │   │   │   │   │   ├── user.service.ts                        
 │   │   │   │   │   └── validation.service.ts                
