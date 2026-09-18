@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,6 +16,7 @@ import { ConcludedComponent } from './login/concluded/concluded.component';
 import { DashboardComponent } from './main/dashboard/dashboard.component';
 import { SidebarComponent } from './main/sidebar/sidebar.component';
 import { TripsComponent } from './main/trips/trips.component';
+import { BusesComponent } from './main/buses/buses.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 @NgModule({
@@ -22,12 +26,13 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     MainScreenComponent,
     CreateAnAccountComponent,
     EnterTheSystemComponent,
+    UpdatePasswordComponent,
     ConfirmationComponent,
     ConcludedComponent,
-    UpdatePasswordComponent,
     DashboardComponent,
     SidebarComponent,
-    TripsComponent
+    TripsComponent,
+    BusesComponent
   ],
 
   imports: [
