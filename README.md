@@ -393,7 +393,8 @@ BusTrack
 │   │   │   │   ├── models                                  
 │   │   │   │   │   └── user.model.ts                        
 │   │   │   │   ├── services                               
-│   │   │   │   │   ├── data.service.ts                      
+│   │   │   │   │   ├── data.service.ts
+│   │   │   │   │   ├── trip.service.ts                    
 │   │   │   │   │   ├── user.service.ts                        
 │   │   │   │   │   └── validation.service.ts                
 │   │   │   │   ├── app-routing.module.ts                  
