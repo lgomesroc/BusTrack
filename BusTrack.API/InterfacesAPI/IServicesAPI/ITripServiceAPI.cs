@@ -9,6 +9,13 @@ namespace BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI
         Task<TripDTOAPI?> GetTripByIdAsync(
             string? id);
 
+        Task<IEnumerable<TripDetailsDTOAPI>>
+            GetAllTripDetailsAsync();
+
+        Task<TripDetailsDTOAPI?>
+            GetTripDetailsByIdAsync(
+                string? id);
+
         Task<TripDTOAPI> CreateTripAsync(
             TripDTOAPI trip);
 
