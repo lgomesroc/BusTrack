@@ -88,6 +88,30 @@ public partial class Program
                     databaseName!));
 
         builder.Services.AddScoped<
+            IBusRepositoryDB,
+            BusRepositoryDB>();
+
+        builder.Services.AddScoped<
+            IBusServiceAPI,
+            BusServiceAPI>();
+
+        builder.Services.AddScoped<
+            IDriverRepositoryDB,
+            DriverRepositoryDB>();
+
+        builder.Services.AddScoped<
+            IDriverServiceAPI,
+            DriverServiceAPI>();
+
+        builder.Services.AddScoped<
+            IRouteRepositoryDB,
+            RouteRepositoryDB>();
+
+        builder.Services.AddScoped<
+            IRouteServiceAPI,
+            RouteServiceAPI>();
+
+        builder.Services.AddScoped<
             ITripRepositoryDB,
             TripRepositoryDB>();
 
