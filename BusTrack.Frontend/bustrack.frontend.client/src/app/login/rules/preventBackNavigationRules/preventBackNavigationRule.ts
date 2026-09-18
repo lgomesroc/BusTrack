@@ -1,8 +1,14 @@
 export function preventBackNavigationRule(): void {
-  window.addEventListener('popstate', () => {
-    history.pushState(null, document.title, location.href);
-    alert('Navegação para trás está desativada.');
-  });
-
-  history.pushState(null, document.title, location.href);
+  /*
+   * A navegação pelos botões Voltar e Avançar
+   * do navegador agora é controlada exclusivamente
+   * pelo BrowserNavigationGuard.
+   *
+   * Esta função foi mantida temporariamente para
+   * evitar alterações desnecessárias nos componentes
+   * que ainda possuem sua chamada.
+   *
+   * Não registra listeners, não altera o histórico
+   * e não exibe mensagens.
+   */
 }
