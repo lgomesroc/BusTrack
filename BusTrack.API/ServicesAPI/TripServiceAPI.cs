@@ -319,6 +319,8 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                         id =>
                             !string.IsNullOrWhiteSpace(
                                 id))
+                    .Select(
+                        id => id!)
                     .Distinct()
                     .ToList();
 
@@ -331,6 +333,8 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                             id =>
                                 !string.IsNullOrWhiteSpace(
                                     id))
+                        .Select(
+                            id => id!)
                         .Distinct()
                         .ToList();
             }
