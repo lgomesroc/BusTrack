@@ -2,18 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export interface Trip {
-  id: string;
-  busId: string;
-  driverId: string;
-  routeId: string;
-  departureTime: string;
-  arrivalTime: string;
-  duration: number;
-  limitPassengers: number;
-  passengers: string[];
-}
-
 export interface Bus {
   id: string;
   number: string;
@@ -37,6 +25,45 @@ export interface Route {
   distance: number;
 }
 
+export interface Passenger {
+  id: string;
+  name: string;
+  cpf: string;
+  email: string;
+  phone: string;
+}
+
+export interface Trip {
+  id: string;
+
+  bus: Bus | null;
+
+  driver: Driver | null;
+
+  route: Route | null;
+
+  departureTime: string;
+
+  arrivalTime: string;
+
+  duration: number;
+
+  limitPassengers: number;
+
+  passengers: Passenger[];
+}
+
+export interface TripPayload {
+  busId: string;
+  driverId: string;
+  routeId: string;
+  departureTime: string;
+  arrivalTime: string;
+  duration: number;
+  limitPassengers: number;
+  passengers: string[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -56,9 +83,9 @@ export class TripService {
   }
 
   createTrip(
-    trip: Omit<Trip, 'id'>
-  ): Observable<Trip> {
-    return this.http.post<Trip>(
+    trip: TripPayload
+  ): Observable<TripPayload> {
+    return this.http.post<TripPayload>(
       `${this.apiUrl}/api/TripControllerAPI`,
       trip
     );
@@ -66,9 +93,9 @@ export class TripService {
 
   updateTrip(
     id: string,
-    trip: Omit<Trip, 'id'>
-  ): Observable<Trip> {
-    return this.http.put<Trip>(
+    trip: TripPayload
+  ): Observable<TripPayload> {
+    return this.http.put<TripPayload>(
       `${this.apiUrl}/api/TripControllerAPI/${id}`,
       trip
     );
