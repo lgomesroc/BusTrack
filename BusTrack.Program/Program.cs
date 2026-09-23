@@ -4,6 +4,7 @@ using BusTrack.BusTrack.API.ServicesAPI;
 using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
 using BusTrack.BusTrack.DB.RepositoriesDB;
 using BusTrack.BusTrack.Program.DatabaseServicesExtensionsProgram;
+using BusTrack.BusTrack.Program.ExtensionsProgram;
 using MongoDB.Driver;
 
 public partial class Program
@@ -50,6 +51,11 @@ public partial class Program
 
         builder.Services.AddDatabaseServices(
             builder.Configuration);
+
+        BusTrack.BusTrack.Program.ExtensionsProgram
+            .ServiceExtensionProgram
+            .AddCustomServices(
+                builder.Services);
 
         var connectionString =
             builder.Configuration.GetConnectionString(
