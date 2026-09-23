@@ -115,7 +115,8 @@
   font-weight: 600;
 }
 
-.form-group input {
+.form-group input,
+.form-group select {
   width: 100%;
   min-height: 42px;
   padding: 10px 12px;
@@ -131,9 +132,16 @@
     box-shadow 0.2s ease;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus {
   border-color: #6b7280;
-  box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.12);
+  box-shadow:
+    0 0 0 3px
+    rgba(107, 114, 128, 0.12);
+}
+
+.form-group select {
+  cursor: pointer;
 }
 
 .form-actions {
@@ -177,7 +185,7 @@
 
 table {
   width: 100%;
-  min-width: 800px;
+  min-width: 1100px;
   border-collapse: collapse;
 }
 
@@ -208,6 +216,13 @@ tbody tr:hover {
   background: #f9fafb;
 }
 
+.table-secondary-text {
+  display: block;
+  margin-top: 4px;
+  color: #6b7280;
+  font-size: 12px;
+}
+
 .actions-cell {
   display: flex;
   align-items: center;
@@ -233,8 +248,28 @@ tbody tr:hover {
   background: #fef2f2;
 }
 
+.error-message {
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  border: 1px solid #fecaca;
+  border-radius: 7px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 14px;
+}
+
+.primary-button:disabled,
+.secondary-button:disabled,
+.edit-button:disabled,
+.delete-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Tablet */
+
 @media screen and (max-width: 900px) {
+
   .trips-container {
     padding: 25px;
   }
@@ -257,7 +292,9 @@ tbody tr:hover {
 }
 
 /* Celular */
+
 @media screen and (max-width: 600px) {
+
   .trips-container {
     padding: 20px 15px;
   }
@@ -308,7 +345,9 @@ tbody tr:hover {
 }
 
 /* Celulares pequenos */
+
 @media screen and (max-width: 400px) {
+
   .trips-container {
     padding: 15px 10px;
   }
@@ -321,22 +360,4 @@ tbody tr:hover {
   .trips-list {
     padding: 16px;
   }
-}
-
-.error-message {
-  margin-bottom: 20px;
-  padding: 12px 16px;
-  border: 1px solid #fecaca;
-  border-radius: 7px;
-  background: #fef2f2;
-  color: #b91c1c;
-  font-size: 14px;
-}
-
-.primary-button:disabled,
-.secondary-button:disabled,
-.edit-button:disabled,
-.delete-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
