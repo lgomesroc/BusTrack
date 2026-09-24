@@ -6,7 +6,6 @@ using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
 using BusTrack.Tests.MappingsIntegrationTests;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using MongoDB.Driver;
 
 namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 {
@@ -18,80 +17,193 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 
         public PassengerServiceAPITests()
         {
-            _passengerRepository = new Mock<IPassengerRepositoryDB>();
-            var config = new MapperConfiguration(
-                cfg => cfg.AddProfile<AutoMapperProfile>(),
-                NullLoggerFactory.Instance);
-            _mapper = config.CreateMapper();
-            _passengerServiceAPI = new PassengerServiceAPI(new MongoClient(), _passengerRepository.Object, _mapper);
+            _passengerRepository =
+                new Mock<IPassengerRepositoryDB>();
+
+            var config =
+                new MapperConfiguration(
+                    cfg =>
+                        cfg.AddProfile<AutoMapperProfile>(),
+                    NullLoggerFactory.Instance);
+
+            _mapper =
+                config.CreateMapper();
+
+            _passengerServiceAPI =
+                new PassengerServiceAPI(
+                    _passengerRepository.Object,
+                    _mapper);
         }
 
         [Fact]
         public async Task GetAllPassengers_ReturnsAllPassengers()
         {
             // Arrange
-            var passengers = new List<PassengerDB> { new PassengerDB(), new PassengerDB() };
-            _passengerRepository.Setup(x => x.GetAllPassengersAsync()).ReturnsAsync(passengers);
+            var passengers =
+                new List<PassengerDB>
+                {
+                    new PassengerDB(),
+                    new PassengerDB()
+                };
+
+            _passengerRepository
+                .Setup(x =>
+                    x.GetAllPassengersAsync())
+                .ReturnsAsync(passengers);
 
             // Act
-            var result = await _passengerServiceAPI.GetAllPassengers();
+            var result =
+                await _passengerServiceAPI
+                    .GetAllPassengers();
 
             // Assert
-            Assert.Equal(2, result.Count());
+            Assert.Equal(
+                2,
+                result.Count());
         }
 
         [Fact]
         public async Task GetPassengerById_ReturnsPassenger()
         {
-            var passengerId = "passengerId";
-            var passenger = new PassengerDB { Id = passengerId };
-            _passengerRepository.Setup(x => x.GetPassengerByIdAsync(passengerId)).ReturnsAsync(passenger);
+            var passengerId =
+                "passengerId";
 
-            var result = await _passengerServiceAPI.GetPassengerById(passengerId);
+            var passenger =
+                new PassengerDB
+                {
+                    Id = passengerId
+                };
+
+            _passengerRepository
+                .Setup(x =>
+                    x.GetPassengerByIdAsync(
+                        passengerId))
+                .ReturnsAsync(
+                    passenger);
+
+            var result =
+                await _passengerServiceAPI
+                    .GetPassengerById(
+                        passengerId);
 
             Assert.NotNull(result);
-            Assert.Equal(passengerId, result.Id);
+
+            Assert.Equal(
+                passengerId,
+                result.Id);
         }
 
         [Fact]
         public async Task AddPassenger_ReturnsAddedPassenger()
         {
-            var passengerDTO = new PassengerDTOAPI { Name = "John", Email = "john@example.com" };
-            var passenger = _mapper.Map<PassengerDB>(passengerDTO);
-            _passengerRepository.Setup(x => x.AddPassengerAsync(passenger)).Returns(Task.CompletedTask);
+            var passengerDTO =
+                new PassengerDTOAPI
+                {
+                    Name = "John",
+                    Email = "john@example.com"
+                };
 
-            var result = await _passengerServiceAPI.CreatePassenger(passengerDTO);
+            var passenger =
+                _mapper.Map<PassengerDB>(
+                    passengerDTO);
+
+            _passengerRepository
+                .Setup(x =>
+                    x.AddPassengerAsync(
+                        passenger))
+                .Returns(
+                    Task.CompletedTask);
+
+            var result =
+                await _passengerServiceAPI
+                    .CreatePassenger(
+                        passengerDTO);
 
             Assert.NotNull(result);
-            Assert.Equal(passengerDTO.Name, result.Name);
-            Assert.Equal(passengerDTO.Email, result.Email);
+
+            Assert.Equal(
+                passengerDTO.Name,
+                result.Name);
+
+            Assert.Equal(
+                passengerDTO.Email,
+                result.Email);
         }
 
         [Fact]
         public async Task UpdatePassenger_ReturnsUpdatedPassenger()
         {
-            var passengerId = "passengerId";
-            var passengerDTO = new PassengerDTOAPI { Name = "Updated Name", Email = "updated@example.com" };
-            var existingPassenger = new PassengerDB { Id = passengerId, Name = "Original Name", Email = "original@example.com" };
+            var passengerId =
+                "passengerId";
 
-            _passengerRepository.Setup(x => x.GetPassengerByIdAsync(passengerId)).ReturnsAsync(existingPassenger);
+            var passengerDTO =
+                new PassengerDTOAPI
+                {
+                    Name = "Updated Name",
+                    Email = "updated@example.com"
+                };
 
-            var result = await _passengerServiceAPI.UpdatePassenger(passengerId, passengerDTO);
+            var existingPassenger =
+                new PassengerDB
+                {
+                    Id = passengerId,
+                    Name = "Original Name",
+                    Email = "original@example.com"
+                };
+
+            _passengerRepository
+                .Setup(x =>
+                    x.GetPassengerByIdAsync(
+                        passengerId))
+                .ReturnsAsync(
+                    existingPassenger);
+
+            var result =
+                await _passengerServiceAPI
+                    .UpdatePassenger(
+                        passengerId,
+                        passengerDTO);
 
             Assert.NotNull(result);
-            Assert.Equal(passengerDTO.Name, result.Name);
-            Assert.Equal(passengerDTO.Email, result.Email);
+
+            Assert.Equal(
+                passengerDTO.Name,
+                result.Name);
+
+            Assert.Equal(
+                passengerDTO.Email,
+                result.Email);
         }
 
         [Fact]
         public async Task DeletePassenger_ReturnsTrueWhenDeleted()
         {
-            var passengerId = "passengerId";
-            var existingPassenger = new PassengerDB { Id = passengerId };
+            var passengerId =
+                "passengerId";
 
-            _passengerRepository.Setup(x => x.GetPassengerByIdAsync(passengerId)).ReturnsAsync(existingPassenger);
+            var existingPassenger =
+                new PassengerDB
+                {
+                    Id = passengerId
+                };
 
-            var result = await _passengerServiceAPI.DeletePassenger(passengerId);
+            _passengerRepository
+                .Setup(x =>
+                    x.GetPassengerByIdAsync(
+                        passengerId))
+                .ReturnsAsync(
+                    existingPassenger);
+
+            _passengerRepository
+                .Setup(x =>
+                    x.DeletePassenger(
+                        passengerId))
+                .ReturnsAsync(true);
+
+            var result =
+                await _passengerServiceAPI
+                    .DeletePassenger(
+                        passengerId);
 
             Assert.True(result);
         }

@@ -20,13 +20,17 @@ import {
   SessionService
 } from './session.service';
 
+import {
+  environment
+} from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ApplicationAvailabilityService {
 
   private readonly healthUrl =
-    'http://localhost:5066/api/Health';
+    `${environment.apiUrl}/api/Health`;
 
   private readonly checkIntervalMs =
     1000;

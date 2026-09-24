@@ -4,33 +4,20 @@ using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using BusTrack.BusTrack.API.ModelsAPI;
 using BusTrack.BusTrack.DB.Classes;
 using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
-using MongoDB.Driver;
 
 namespace BusTrack.BusTrack.API.ServicesAPI
 {
     public class PassengerServiceAPI : IPassengerServiceAPI
     {
-        private readonly IMongoCollection<PassengerDB>
-            _passengersCollection;
-
         private readonly IPassengerRepositoryDB
             _passengerRepository;
 
         private readonly IMapper _mapper;
 
         public PassengerServiceAPI(
-            IMongoClient mongoClient,
             IPassengerRepositoryDB passengerRepository,
             IMapper mapper)
         {
-            var database =
-                mongoClient.GetDatabase(
-                    "YourDatabaseName");
-
-            _passengersCollection =
-                database.GetCollection<PassengerDB>(
-                    "YourCollectionName");
-
             _passengerRepository =
                 passengerRepository;
 

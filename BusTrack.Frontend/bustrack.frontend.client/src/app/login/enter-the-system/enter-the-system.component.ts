@@ -23,6 +23,10 @@ import {
   SessionService
 } from '../../services/session.service';
 
+import {
+  environment
+} from '../../../environments/environment';
+
 @Component({
   selector: 'app-enter-the-system',
   templateUrl: './enter-the-system.component.html',
@@ -75,7 +79,7 @@ export class EnterTheSystemComponent implements OnInit {
     };
 
     this.http.post<any>(
-      'http://localhost:5066/AuthenticationControllerAPI/login',
+      `${environment.apiUrl}/AuthenticationControllerAPI/login`,
       credentials
     ).subscribe({
 

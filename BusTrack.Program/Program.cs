@@ -1,20 +1,22 @@
 using System.Reflection;
+
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using BusTrack.BusTrack.API.ServicesAPI;
+
 using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
 using BusTrack.BusTrack.DB.RepositoriesDB;
+
 using BusTrack.BusTrack.Program.DatabaseServicesExtensionsProgram;
 using BusTrack.BusTrack.Program.ExtensionsProgram;
+
 using MongoDB.Driver;
 
 public partial class Program
 {
     public static void Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
-
-        builder.Configuration.AddJsonFile(
-            "appsettings.json");
+        var builder =
+            WebApplication.CreateBuilder(args);
 
         builder.Services
             .AddControllers()
@@ -28,26 +30,30 @@ public partial class Program
         builder.Services.AddSwaggerGen();
 
         builder.Services.AddAutoMapper(
-            (serviceProvider, mapperConfiguration) =>
+            (
+                serviceProvider,
+                mapperConfiguration
+            ) =>
             {
                 mapperConfiguration.AddProfile<
                     BusTrack.BusTrack.API.MappingsAPI.MappingProfileAPI>();
             },
             Array.Empty<Assembly>());
 
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy(
-                "FrontendPolicy",
-                policy =>
-                {
-                    policy
-                        .WithOrigins(
-                            "https://127.0.0.1:4200")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                });
-        });
+        builder.Services.AddCors(
+            options =>
+            {
+                options.AddPolicy(
+                    "FrontendPolicy",
+                    policy =>
+                    {
+                        policy
+                            .WithOrigins(
+                                "https://127.0.0.1:4200")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
 
         builder.Services.AddDatabaseServices(
             builder.Configuration);
@@ -133,7 +139,8 @@ public partial class Program
             ITripsPassengerServiceAPI,
             TripsPassengerServiceAPI>();
 
-        var app = builder.Build();
+        var app =
+            builder.Build();
 
         if (app.Environment.IsDevelopment())
         {
@@ -145,14 +152,16 @@ public partial class Program
         }
         else
         {
-            app.UseExceptionHandler("/Error");
+            app.UseExceptionHandler(
+                "/Error");
 
             app.UseHsts();
         }
 
         app.UseHttpsRedirection();
 
-        app.UseCors("FrontendPolicy");
+        app.UseCors(
+            "FrontendPolicy");
 
         app.UseAuthorization();
 

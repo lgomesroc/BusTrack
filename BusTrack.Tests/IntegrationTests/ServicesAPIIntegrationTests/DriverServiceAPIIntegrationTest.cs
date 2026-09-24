@@ -33,7 +33,7 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 
             _driverServiceAPI =
                 new DriverServiceAPI(
-                    new MongoClient(),
+                    new MongoClient().GetDatabase("BusTrack"),
                     _driverRepository.Object,
                     _mapper);
         }

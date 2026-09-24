@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import { environment } from '../../environments/environment';
+
 export interface Bus {
   id: string;
   number: string;
@@ -16,7 +18,7 @@ export interface Bus {
 export class BusService {
 
   private readonly apiUrl =
-    'http://localhost:5066/api/BusControllerAPI';
+    `${environment.apiUrl}/api/BusControllerAPI`;
 
   constructor(private http: HttpClient) {}
 

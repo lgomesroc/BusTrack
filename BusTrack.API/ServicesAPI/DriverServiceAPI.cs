@@ -16,16 +16,12 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         private readonly IMapper _mapper;
 
         public DriverServiceAPI(
-            IMongoClient mongoClient,
+            IMongoDatabase database,
             IDriverRepositoryDB driverRepository,
             IMapper mapper)
         {
-            var database =
-                mongoClient.GetDatabase("YourDatabaseName");
-
             _driversCollection =
-                database.GetCollection<DriverDB>(
-                    "YourCollectionName");
+                database.GetCollection<DriverDB>("Drivers");
 
             _driverRepository = driverRepository;
             _mapper = mapper;
