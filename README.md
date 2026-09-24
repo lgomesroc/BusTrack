@@ -101,22 +101,82 @@ Já no frontend criei regras para não salvar senha, copiar informações tanto 
 
 ## Histórico de Atualizações
 
+### 2026-09-24
+
+* Atualização da configuração do projeto para suportar diferentes ambientes de execução utilizando arquivos `environment.ts` e `environment.prod.ts` no frontend Angular.
+* Configuração da substituição automática do ambiente de desenvolvimento pelo ambiente de produção durante o build do Angular.
+* Centralização da URL da API no objeto `environment`, eliminando URLs fixas da API espalhadas pelo frontend.
+* Atualização da configuração do backend para permitir que as configurações do MongoDB sejam fornecidas por variáveis de ambiente, preparando a aplicação para execução em ambientes de produção.
+* Criação e configuração do cluster MongoDB Atlas para utilização como banco de dados da aplicação em produção.
+* Validação da comunicação da aplicação com o endpoint de Health Check utilizando a configuração de ambiente.
+* Investigação da conectividade entre o ambiente local e o MongoDB Atlas, identificando bloqueio de conexão TCP na porta 27017 pela rede corporativa utilizada no ambiente de desenvolvimento.
+* Preparação da arquitetura de implantação utilizando Angular, Render, ASP.NET Core, Docker e MongoDB Atlas.
+* Definição da utilização de Dockerfile próprio para o backend no Render, mantendo o `docker-compose` destinado ao ambiente local de desenvolvimento.
+* Exclusão do `PassengerLimitValidationServiceDB`, que não possuía utilização no código atual após análise das referências existentes.
+* Correções e ajustes adicionais nos serviços de motoristas, passageiros e atualização de senha.
+* Ajustes nos testes de integração dos serviços de motoristas e passageiros para acompanhar as alterações realizadas na camada de serviços.
+* Validação da compilação da solução após as alterações, mantendo **0 erros e 0 warnings** no `dotnet build`.
+
+### 2026-09-23
+
+* Continuação da preparação do BusTrack para execução em ambiente de produção.
+* Configuração inicial do MongoDB Atlas como banco de dados externo para o ambiente de produção.
+* Configuração do acesso do MongoDB Atlas através de autenticação por usuário e senha.
+* Configuração inicial da lista de acesso de endereços IP do MongoDB Atlas para testes de conectividade.
+* Implementação da configuração do backend para receber `ConnectionStrings__BusTrackDBConnection` e `ConnectionStrings__DatabaseName` através de variáveis de ambiente.
+* Validação do funcionamento do backend utilizando o endpoint `GET /api/Health`.
+* Teste de acesso real ao MongoDB Atlas através da aplicação, identificando posteriormente a restrição de conexão da rede corporativa à porta TCP 27017.
+
+### 2026-09-22
+
+* Continuação dos ajustes de configuração do frontend Angular para separar as configurações de desenvolvimento e produção.
+* Criação da estrutura de ambientes do frontend em `src/environments`.
+* Ajustes na configuração do Angular para utilizar `environment.prod.ts` durante o build de produção.
+* Atualização dos serviços Angular para utilizar a URL da API definida no ambiente de execução.
+
+### 2026-09-21
+
+* Continuação da organização estrutural do projeto após a migração para .NET 10.
+* Ajustes na configuração da aplicação para preparar a execução local e futura implantação em ambiente externo.
+* Criação do endpoint de verificação de disponibilidade da API para utilização pelo monitoramento da aplicação.
+* Revisão das regras de disponibilidade da aplicação para impedir a continuidade de uma sessão quando a comunicação com o sistema é perdida.
+
+### 2026-09-20
+
+* Implementação e validação do controle de autenticação das rotas protegidas do frontend Angular.
+* Ajustes no gerenciamento da sessão utilizando `sessionStorage`.
+* Atualização da navegação entre as áreas autenticadas e públicas da aplicação.
+* Ajustes no módulo de Viagens e na integração com os dados relacionados a ônibus, motoristas, rotas e passageiros.
+* Correções e melhorias na interface do módulo de Viagens.
+* Ajustes nos serviços Angular responsáveis pela comunicação com a API.
+
+### 2026-09-19
+
+* Continuação da implementação do módulo de Ônibus.
+* Integração completa das operações de listagem, criação, edição e exclusão de ônibus entre frontend, API e MongoDB.
+* Ajustes de responsividade e interface do módulo de Ônibus.
+* Correções no serviço Angular responsável pelas operações de ônibus.
+* Ajustes no modelo, serviço e repositório de ônibus para manter a integração entre as camadas da aplicação.
+* Continuação dos ajustes no módulo de Viagens e na apresentação dos detalhes das viagens.
+* Atualização das informações apresentadas nas viagens para incluir os dados relacionados aos registros associados.
+* Validação das alterações realizadas no frontend e backend.
+
 ### 2026-09-18
 
-* Implementação do BrowserNavigationGuard para controlar a navegação pelos botões Voltar e Avançar do navegador.
+* Implementação do `BrowserNavigationGuard` para controlar a navegação pelos botões Voltar e Avançar do navegador.
 * Neutralização das regras antigas de bloqueio de navegação para centralizar o controle no Angular Router.
-* Implementação do controle de sessão da aplicação utilizando sessionStorage.
+* Implementação do controle de sessão da aplicação utilizando `sessionStorage`.
 * Implementação do monitoramento da disponibilidade do frontend e da API.
-* Criação do endpoint de Health Check da API em GET /api/Health.
+* Criação do endpoint de Health Check da API em `GET /api/Health`.
 * Implementação do módulo de Ônibus no frontend Angular.
 * Implementação da integração do módulo de Ônibus com a API para listagem, criação, edição e exclusão de registros.
-* Atualização do modelo BusDB e dos respectivos mapeamentos para integração entre API e banco de dados.
-* Criação do TripDetailsDTOAPI para retornar informações completas das viagens.
+* Atualização do modelo `BusDB` e dos respectivos mapeamentos para integração entre API e banco de dados.
+* Criação do `TripDetailsDTOAPI` para retornar informações completas das viagens.
 * Atualização do serviço e do controller de Viagens para retornar dados relacionados ao ônibus, motorista, rota e passageiros, além dos horários, duração e limite de passageiros.
 * Atualização da infraestrutura dos testes do serviço de Viagens para acompanhar as novas dependências e responsabilidades introduzidas na implementação.
 * Atualização da tela de login para utilizar o controle de sessão da aplicação.
 * Ajustes na inicialização do frontend e na estrutura de roteamento Angular.
-* Validação da compilação do projeto com 0 erros e 0 warnings.
+* Validação da compilação do projeto com **0 erros e 0 warnings**.
 * Os testes foram executados e apresentaram falhas em testes existentes após as alterações estruturais, permanecendo pendentes de correção.
 
 ### 2026-09-17
@@ -432,9 +492,12 @@ TripDetailsDTOAPI.cs
 │   │   │   │   ├── app.component.html                       
 │   │   │   │   ├── app.component.ts                        
 │   │   │   │   └── app.module.ts                         
-│   │   │   └── assets                                   
+│   │   │   ├── assets                                   
 │   │   │   │   └── imagem                                   
 │   │   │   │   │   └── OIG4.jpeg
+│   │   │   └── environments/
+│   │   │   │   ├── environment.ts
+│   │   │   │   └── environment.prod.ts
 │   │   ├── angular.json
 │   │   ├── bustrack.frontend.client.esproj
 │   │   ├── OIG4.jpeg
@@ -477,9 +540,18 @@ TripDetailsDTOAPI.cs
 │   │   └── DriverNameUpdater.cs                       
 │   └── PassengerUpdater                             
 │   │   └── PassengerNameUpdater.cs
-├── docs
-│   ├── architecture.md
-│   └── dotnet-10-migration.md         
+├── docs/
+│   ├── architecture/
+│   ├── database/
+│   ├── deployment/
+│   ├── api/
+│   └── project-history/
+│
+├── docker/
+│   ├── api/
+│   │   └── Dockerfile
+│   └── frontend/
+│       └── Dockerfile        
 ├── appsettings.json
 ├── appsettings.Development.json
 ├── BusTrack.csproj
