@@ -10,41 +10,87 @@ namespace BusTrack.BusTrack.DB.RepositoriesDB
 
         public DriverRepositoryDB(IMongoDatabase database)
         {
-            _driversCollection = database.GetCollection<DriverDB>("Drivers");
+            _driversCollection =
+                database.GetCollection<DriverDB>("Drivers");
         }
 
-        public async Task<IEnumerable<DriverDB>> GetAllDriversAsync()
+        public async Task<IEnumerable<DriverDB>>
+            GetAllDriversAsync()
         {
-            return await _driversCollection.Find(_ => true).ToListAsync();
+            return await _driversCollection
+                .Find(_ => true)
+                .ToListAsync();
         }
 
-        public async Task<DriverDB> GetDriverByIdAsync(string id)
+        public async Task<DriverDB?>
+            GetDriverByIdAsync(
+                string id)
         {
-            var filter = Builders<DriverDB>.Filter.Eq(d => d.Id, id);
-            return await _driversCollection.Find(filter).FirstOrDefaultAsync();
+            var filter =
+                Builders<DriverDB>
+                    .Filter
+                    .Eq(
+                        d => d.Id,
+                        id);
+
+            return await _driversCollection
+                .Find(filter)
+                .FirstOrDefaultAsync();
         }
 
-        public async Task AddDriverAsync(DriverDB driver)
+        public async Task AddDriverAsync(
+            DriverDB driver)
         {
-            await _driversCollection.InsertOneAsync(driver);
+            await _driversCollection
+                .InsertOneAsync(driver);
         }
 
-        public async Task UpdateDriverAsync(string id, DriverDB driver)
+        public async Task UpdateDriverAsync(
+            string id,
+            DriverDB driver)
         {
-            var filter = Builders<DriverDB>.Filter.Eq(d => d.Id, id);
-            await _driversCollection.ReplaceOneAsync(filter, driver);
+            var filter =
+                Builders<DriverDB>
+                    .Filter
+                    .Eq(
+                        d => d.Id,
+                        id);
+
+            await _driversCollection
+                .ReplaceOneAsync(
+                    filter,
+                    driver);
         }
 
-        public async Task DeleteDriverAsync(string id)
+        public async Task DeleteDriverAsync(
+            string id)
         {
-            var filter = Builders<DriverDB>.Filter.Eq(d => d.Id, id);
-            await _driversCollection.DeleteOneAsync(filter);
+            var filter =
+                Builders<DriverDB>
+                    .Filter
+                    .Eq(
+                        d => d.Id,
+                        id);
+
+            await _driversCollection
+                .DeleteOneAsync(filter);
         }
 
-        public async Task<bool> DeleteDriver(string id)
+        public async Task<bool>
+            DeleteDriver(
+                string id)
         {
-            var filter = Builders<DriverDB>.Filter.Eq(p => p.Id, id);
-            var deleteResult = await _driversCollection.DeleteOneAsync(filter);
+            var filter =
+                Builders<DriverDB>
+                    .Filter
+                    .Eq(
+                        p => p.Id,
+                        id);
+
+            var deleteResult =
+                await _driversCollection
+                    .DeleteOneAsync(filter);
+
             return deleteResult.DeletedCount > 0;
         }
     }

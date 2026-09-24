@@ -1,0 +1,566 @@
+.trips-container {
+  min-height: 100vh;
+  width: 100%;
+  padding: 35px;
+  background: #f5f7fa;
+  box-sizing: border-box;
+}
+
+/* Cabeçalho */
+
+.trips-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+.trips-header h1 {
+  margin: 0 0 8px;
+  color: #1f2937;
+  font-size: 30px;
+}
+
+.trips-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Botões */
+
+.primary-button,
+.secondary-button,
+.edit-button,
+.delete-button {
+  border: 0;
+  border-radius: 7px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.primary-button {
+  background: #1f2937;
+  color: #ffffff;
+}
+
+.primary-button:hover {
+  background: #111827;
+  transform: translateY(-1px);
+}
+
+.primary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.secondary-button {
+  background: #ffffff;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.secondary-button:hover {
+  background: #f3f4f6;
+}
+
+/* Mensagem de erro */
+
+.error-message {
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 14px;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+/* Formulários e lista */
+
+.trip-form,
+.trips-list {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e1e5ea;
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 25px;
+  box-sizing: border-box;
+}
+
+.form-header,
+.section-header {
+  margin-bottom: 25px;
+}
+
+.form-header h2,
+.section-header h2 {
+  margin: 0 0 7px;
+  color: #1f2937;
+  font-size: 21px;
+}
+
+.form-header p,
+.section-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Grid do formulário */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.form-group label {
+  color: #374151;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #1f2937;
+  font-size: 14px;
+  box-sizing: border-box;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #6b7280;
+  box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.12);
+}
+
+/* Ações do formulário */
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+/* Loading */
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Estado vazio */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 230px;
+  padding: 30px;
+  border: 1px dashed #d1d5db;
+  border-radius: 10px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.empty-state h3 {
+  margin: 0 0 8px;
+  color: #374151;
+  font-size: 18px;
+}
+
+.empty-state p {
+  max-width: 500px;
+  margin: 0 0 20px;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Tabela */
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #f9fafb;
+}
+
+th,
+td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+  white-space: nowrap;
+}
+
+th {
+  color: #374151;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+td {
+  color: #4b5563;
+  font-size: 14px;
+}
+
+tbody tr:hover {
+  background: #f9fafb;
+}
+
+.actions-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.edit-button {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.edit-button:hover {
+  background: #e5e7eb;
+}
+
+.delete-button {
+  background: #ffffff;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.delete-button:hover {
+  background: #fef2f2;
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media screen and (max-width: 900px) {
+
+  .trips-container {
+    padding: 25px;
+  }
+
+  .trips-header {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .header-actions {
+    width: 100%;
+  }
+
+  .header-actions button {
+    flex: 1;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   CELULAR
+   ========================================================= */
+
+@media screen and (max-width: 600px) {
+
+  .trips-container {
+    padding: 15px;
+  }
+
+  .trips-header {
+    gap: 18px;
+    margin-bottom: 20px;
+  }
+
+  .trips-header h1 {
+    font-size: 25px;
+  }
+
+  .trips-header p {
+    font-size: 14px;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .header-actions button {
+    width: 100%;
+    flex: none;
+  }
+
+  .trip-form,
+  .trips-list {
+    padding: 18px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+  }
+
+  .form-header,
+  .section-header {
+    margin-bottom: 20px;
+  }
+
+  .form-header h2,
+  .section-header h2 {
+    font-size: 19px;
+  }
+
+  .form-header p,
+  .section-header p {
+    font-size: 13px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .form-group input,
+  .form-group select {
+    min-height: 44px;
+    font-size: 14px;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+
+  .error-message {
+    font-size: 13px;
+    padding: 12px 14px;
+  }
+
+  .empty-state {
+    min-height: 200px;
+    padding: 25px 15px;
+  }
+
+  .empty-state h3 {
+    font-size: 17px;
+  }
+
+  .empty-state p {
+    font-size: 13px;
+  }
+
+  .empty-state .primary-button {
+    width: 100%;
+  }
+
+  /*
+   * No celular, a tabela vira uma lista de cards.
+   * Isso evita que o usuário precise rolar horizontalmente.
+   */
+
+  .table-wrapper {
+    overflow: visible;
+  }
+
+  table,
+  thead,
+  tbody,
+  tr,
+  td {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  tbody tr {
+    padding: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background: #ffffff;
+    box-sizing: border-box;
+  }
+
+  tbody tr:hover {
+    background: #ffffff;
+  }
+
+  td {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 9px 0;
+    border-bottom: 1px solid #f0f0f0;
+    white-space: normal;
+    text-align: right;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  td::before {
+    flex: 0 0 auto;
+    color: #374151;
+    font-weight: 700;
+    text-align: left;
+  }
+
+  td:nth-child(1)::before {
+    content: "Ônibus";
+  }
+
+  td:nth-child(2)::before {
+    content: "Motorista";
+  }
+
+  td:nth-child(3)::before {
+    content: "Rota";
+  }
+
+  td:nth-child(4)::before {
+    content: "Saída";
+  }
+
+  td:nth-child(5)::before {
+    content: "Chegada";
+  }
+
+  td:nth-child(6)::before {
+    content: "Passageiros";
+  }
+
+  td:nth-child(7)::before {
+    content: "Ações";
+  }
+
+  td:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .actions-cell {
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .actions-cell button {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  .loading-state {
+    min-height: 140px;
+  }
+}
+
+/* =========================================================
+   CELULARES PEQUENOS
+   ========================================================= */
+
+@media screen and (max-width: 400px) {
+
+  .trips-container {
+    padding: 10px;
+  }
+
+  .trips-header h1 {
+    font-size: 23px;
+  }
+
+  .trip-form,
+  .trips-list {
+    padding: 15px;
+    border-radius: 9px;
+  }
+
+  .form-group input,
+  .form-group select {
+    font-size: 13px;
+  }
+
+  tbody tr {
+    padding: 13px;
+  }
+
+  td {
+    gap: 10px;
+    font-size: 12px;
+  }
+
+  .actions-cell {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions-cell button {
+    width: 100%;
+    min-width: 0;
+  }
+}

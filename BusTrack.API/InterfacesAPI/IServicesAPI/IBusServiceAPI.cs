@@ -7,15 +7,19 @@ namespace BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI
     {
         Task<IEnumerable<BusDTOAPI>> GetAllBuses();
 
-        Task<BusDTOAPI> GetBusById(string id);
+        Task<BusDTOAPI?> GetBusById(
+            string? id);
 
-        Task<BusDTOAPI> CreateBus(BusDTOAPI bus);
+        Task<BusDTOAPI> CreateBus(
+            BusDTOAPI busDto);
 
-        Task<BusDTOAPI> UpdateBus(string id, BusDTOAPI bus);
+        Task<BusDTOAPI?> UpdateBus(
+            string? id,
+            BusDTOAPI bus);
 
-        Task<bool> DeleteBus(string id);
+        Task<bool> DeleteBus(
+            string? id);
 
-        List<BusDB> GetBuses(); 
-
+        List<BusDB> GetBuses();
     }
 }

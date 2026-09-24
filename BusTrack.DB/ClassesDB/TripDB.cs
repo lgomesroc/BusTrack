@@ -9,7 +9,14 @@ namespace BusTrack.BusTrack.DB.Classes
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
+        [BsonRepresentation(BsonType.ObjectId)]
         public string? BusId { get; set; }
+
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string? DriverId { get; set; }
+
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string? RouteId { get; set; }
 
         public DateTime DepartureTime { get; set; }
 
@@ -20,8 +27,5 @@ namespace BusTrack.BusTrack.DB.Classes
         public int LimitPassengers { get; set; }
 
         public List<string>? Passengers { get; set; }
-
-        public string? DriverId { get; set; }
-
     }
 }

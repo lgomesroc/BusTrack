@@ -1,88 +1,187 @@
 ﻿using AutoMapper;
 using BusTrack.BusTrack.API.DTOAPI;
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
-using BusTrack.BusTrack.API.ModelsAPI;
 using BusTrack.BusTrack.DB.Classes;
 using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
 
 namespace BusTrack.BusTrack.API.ServicesAPI
 {
-    public class TripsPassengerServiceAPI : ITripsPassengerServiceAPI
+    public class TripsPassengerServiceAPI
+        : ITripsPassengerServiceAPI
     {
-        private readonly ITripPassengerRepositoryDB _tripsPassengerRepository;
+        private readonly ITripPassengerRepositoryDB
+            _tripsPassengerRepository;
+
         private readonly IMapper _mapper;
 
-        public TripsPassengerServiceAPI(ITripPassengerRepositoryDB tripsPassengerRepository, IMapper mapper)
+        public TripsPassengerServiceAPI(
+            ITripPassengerRepositoryDB
+                tripsPassengerRepository,
+            IMapper mapper)
         {
-            _tripsPassengerRepository = tripsPassengerRepository;
+            _tripsPassengerRepository =
+                tripsPassengerRepository;
+
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<TripPassengerDTOAPI>> GetAllTripsPassengers()
+        public async Task<
+            IEnumerable<TripPassengerDTOAPI>>
+            GetAllAsync()
         {
-            var tripsPassengers = await _tripsPassengerRepository.GetAllTripsPassengers();
-            return _mapper.Map<IEnumerable<TripPassengerDTOAPI>>(tripsPassengers);
+            var tripPassengers =
+                await _tripsPassengerRepository
+                    .GetAllAsync();
+
+            return _mapper.Map<
+                IEnumerable<TripPassengerDTOAPI>>(
+                    tripPassengers);
         }
 
-        public async Task<TripPassengerDTOAPI> GetTripsPassengerById(int id)
+        public async Task<
+            TripPassengerDTOAPI?>
+            GetByIdAsync(
+                string? id)
         {
-            var tripPassenger = await _tripsPassengerRepository.GetTripsPassengerById(id);
-            return _mapper.Map<TripPassengerDTOAPI>(tripPassenger);
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return null;
+            }
+
+            var tripPassenger =
+                await _tripsPassengerRepository
+                    .GetByIdAsync(id);
+
+            if (tripPassenger == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<
+                TripPassengerDTOAPI>(
+                    tripPassenger);
         }
 
-        public async Task<TripPassengerDTOAPI> CreateTripsPassenger(TripPassengerDTOAPI tripsPassenger)
+        public async Task<
+            IEnumerable<TripPassengerDTOAPI>>
+            GetByTripIdAsync(
+                string? tripId)
         {
-            var tripPassengerModelAPI = _mapper.Map<TripsPassengerModelAPI>(tripsPassenger);
+            if (string.IsNullOrWhiteSpace(tripId))
+            {
+                return Enumerable.Empty<
+                    TripPassengerDTOAPI>();
+            }
 
-            var tripPassengerDB = ConvertToDBModel(tripPassengerModelAPI);
+            var tripPassengers =
+                await _tripsPassengerRepository
+                    .GetByTripIdAsync(tripId);
 
-            var createdTripPassenger = await _tripsPassengerRepository.CreateTripsPassenger(tripPassengerDB);
-            return _mapper.Map<TripPassengerDTOAPI>(createdTripPassenger);
+            return _mapper.Map<
+                IEnumerable<TripPassengerDTOAPI>>(
+                    tripPassengers);
         }
 
-        private TripPassengerDB ConvertToDBModel(TripsPassengerModelAPI modelAPI)
+        public async Task<
+            IEnumerable<TripPassengerDTOAPI>>
+            GetByPassengerIdAsync(
+                string? passengerId)
         {
-            var dbModel = new TripPassengerDB();
+            if (string.IsNullOrWhiteSpace(
+                passengerId))
+            {
+                return Enumerable.Empty<
+                    TripPassengerDTOAPI>();
+            }
 
-            dbModel.TripId = modelAPI.TripId;
-            dbModel.PassengerId = modelAPI.PassengerId;
+            var tripPassengers =
+                await _tripsPassengerRepository
+                    .GetByPassengerIdAsync(
+                        passengerId);
 
-            return dbModel;
+            return _mapper.Map<
+                IEnumerable<TripPassengerDTOAPI>>(
+                    tripPassengers);
         }
 
-        public async Task<TripPassengerDTOAPI> UpdateTripsPassenger(int id, TripPassengerDTOAPI tripsPassenger)
+        public async Task<
+            TripPassengerDTOAPI>
+            CreateAsync(
+                TripPassengerDTOAPI tripPassenger)
         {
-            var tripPassengerModelAPI = _mapper.Map<TripsPassengerModelAPI>(tripsPassenger);
+            var tripPassengerDB =
+                _mapper.Map<TripPassengerDB>(
+                    tripPassenger);
 
-            var tripPassengerDB = ConvertToDBModel1(tripPassengerModelAPI);
+            var createdTripPassenger =
+                await _tripsPassengerRepository
+                    .CreateAsync(
+                        tripPassengerDB);
 
-            var updatedTripPassenger = await _tripsPassengerRepository.UpdateTripsPassenger(id, tripPassengerDB);
-            return _mapper.Map<TripPassengerDTOAPI>(updatedTripPassenger);
+            return _mapper.Map<
+                TripPassengerDTOAPI>(
+                    createdTripPassenger);
         }
 
-        private TripPassengerDB ConvertToDBModel1(TripsPassengerModelAPI modelAPI)
+        public async Task<
+            TripPassengerDTOAPI?>
+            UpdateAsync(
+                string? id,
+                TripPassengerDTOAPI tripPassenger)
         {
-            var dbModel = new TripPassengerDB();
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return null;
+            }
 
-            dbModel.TripId = modelAPI.TripId;
-            dbModel.PassengerId = modelAPI.PassengerId;
+            var tripPassengerDB =
+                _mapper.Map<TripPassengerDB>(
+                    tripPassenger);
 
-            return dbModel;
+            var updatedTripPassenger =
+                await _tripsPassengerRepository
+                    .UpdateAsync(
+                        id,
+                        tripPassengerDB);
+
+            if (updatedTripPassenger == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<
+                TripPassengerDTOAPI>(
+                    updatedTripPassenger);
         }
 
-        public async Task<bool> DeleteTripsPassenger(int id)
+        public async Task<bool> DeleteAsync(
+            string? id)
         {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return false;
+            }
 
-            var tripPassengerDeleted = await _tripsPassengerRepository.DeleteTripsPassenger(id);
-
-            return tripPassengerDeleted;
+            return await _tripsPassengerRepository
+                .DeleteAsync(id);
         }
 
-        public async Task<List<TripPassengerDB>> GetTripsPassengers()
+        public async Task<bool>
+            DeleteByTripAndPassengerAsync(
+                string? tripId,
+                string? passengerId)
         {
-            var tripsPassengers = (await _tripsPassengerRepository.GetAllTripsPassengers()).ToList();
-            var mappedTripsPassengers = _mapper.Map<List<TripPassengerDB>>(tripsPassengers);
-            return mappedTripsPassengers;
+            if (string.IsNullOrWhiteSpace(tripId)
+                || string.IsNullOrWhiteSpace(
+                    passengerId))
+            {
+                return false;
+            }
+
+            return await _tripsPassengerRepository
+                .DeleteByTripAndPassengerAsync(
+                    tripId,
+                    passengerId);
         }
     }
 }

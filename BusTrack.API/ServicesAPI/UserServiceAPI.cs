@@ -9,42 +9,68 @@ namespace BusTrack.BusTrack.API.ServicesAPI
     {
         private readonly IMongoCollection<UserModelDB> _userCollection;
 
-        public UserServiceAPI(IMongoDatabase database)
+        public UserServiceAPI(
+            IMongoDatabase database)
         {
-            _userCollection = database.GetCollection<UserModelDB>("Users");
+            _userCollection =
+                database.GetCollection<UserModelDB>(
+                    "Users");
         }
 
-        public async Task<UserModelDB> Authenticate(string email, string password)
+        public async Task<UserModelDB?> Authenticate(
+            string email,
+            string password)
         {
             return null;
         }
 
-        public async Task CreateUser(UserModelDB user)
+        public async Task CreateUser(
+            UserModelDB user)
         {
             await _userCollection.InsertOneAsync(user);
         }
 
         public async Task<List<UserModelDB>> GetAll()
         {
-            return await _userCollection.Find(_ => true).ToListAsync();
+            return await _userCollection
+                .Find(_ => true)
+                .ToListAsync();
         }
 
-        public async Task<UserModelDB> GetById(string id)
+        public async Task<UserModelDB> GetById(
+            string id)
         {
-            var objectId = new ObjectId(id);
-            return await _userCollection.Find<UserModelDB>(user => user.Id == objectId).FirstOrDefaultAsync();
+            var objectId =
+                new ObjectId(id);
+
+            return await _userCollection
+                .Find<UserModelDB>(
+                    user => user.Id == objectId)
+                .FirstOrDefaultAsync();
         }
 
-        public async Task Update(string id, UserModelDB user)
+        public async Task Update(
+            string id,
+            UserModelDB user)
         {
-            var objectId = new ObjectId(id);
-            await _userCollection.ReplaceOneAsync(u => u.Id == objectId, user);
+            var objectId =
+                new ObjectId(id);
+
+            await _userCollection
+                .ReplaceOneAsync(
+                    u => u.Id == objectId,
+                    user);
         }
 
-        public async Task Delete(string id)
+        public async Task Delete(
+            string id)
         {
-            var objectId = new ObjectId(id);
-            await _userCollection.DeleteOneAsync(u => u.Id == objectId);
+            var objectId =
+                new ObjectId(id);
+
+            await _userCollection
+                .DeleteOneAsync(
+                    u => u.Id == objectId);
         }
     }
 }

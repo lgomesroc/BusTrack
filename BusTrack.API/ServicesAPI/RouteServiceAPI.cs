@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using BusTrack.BusTrack.API.DTOAPI;
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
-using BusTrack.BusTrack.API.ModelsAPI;
 using BusTrack.BusTrack.DB.Classes;
 using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
-
 
 namespace BusTrack.BusTrack.API.ServicesAPI
 {
@@ -13,7 +11,9 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         private readonly IRouteRepositoryDB _routeRepository;
         private readonly IMapper _mapper;
 
-        public RouteServiceAPI(IRouteRepositoryDB routeRepository, IMapper mapper)
+        public RouteServiceAPI(
+            IRouteRepositoryDB routeRepository,
+            IMapper mapper)
         {
             _routeRepository = routeRepository;
             _mapper = mapper;
@@ -21,66 +21,111 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
         public async Task<IEnumerable<RouteDTOAPI>> GetAllRoutes()
         {
-            var routes = await _routeRepository.GetAllRoutesAsync();
-            return _mapper.Map<IEnumerable<RouteDTOAPI>>(routes);
+            var routes =
+                await _routeRepository.GetAllRoutesAsync();
+
+            return _mapper.Map<IEnumerable<RouteDTOAPI>>(
+                routes);
         }
 
-        public async Task<RouteDTOAPI> GetRouteById(string id)
+        public async Task<RouteDTOAPI?> GetRouteById(
+            string? id)
         {
-            var route = await _routeRepository.GetRouteByIdAsync(id.ToString());
-            return _mapper.Map<RouteDTOAPI>(route);
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return null;
+            }
+
+            var route =
+                await _routeRepository.GetRouteByIdAsync(id);
+
+            if (route == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<RouteDTOAPI>(
+                route);
         }
 
-        public async Task<RouteDTOAPI> CreateRoute(RouteDTOAPI route)
+        public async Task<RouteDTOAPI> CreateRoute(
+            RouteDTOAPI route)
         {
-            var routeModel = _mapper.Map<RouteModelAPI>(route);
-            var routeDB = _mapper.Map<RouteDB>(routeModel);
-            var createdRouteDB = await _routeRepository.CreateRoute(routeDB);
-            return _mapper.Map<RouteDTOAPI>(createdRouteDB);
+            var routeDB =
+                _mapper.Map<RouteDB>(route);
+
+            var createdRoute =
+                await _routeRepository.CreateRoute(
+                    routeDB);
+
+            return _mapper.Map<RouteDTOAPI>(
+                createdRoute);
         }
 
-        public async Task<RouteDTOAPI> UpdateRoute(string id, RouteDTOAPI route)
+        public async Task<RouteDTOAPI?> UpdateRoute(
+            string? id,
+            RouteDTOAPI route)
         {
-            var routeModel = _mapper.Map<RouteModelAPI>(route);
-            var routeDB = _mapper.Map<RouteDB>(routeModel);
-            var updatedRoute = await _routeRepository.UpdateRouteAsync(id, routeDB);
-            return _mapper.Map<RouteDTOAPI>(updatedRoute);
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return null;
+            }
+
+            var existingRoute =
+                await _routeRepository.GetRouteByIdAsync(id);
+
+            if (existingRoute == null)
+            {
+                return null;
+            }
+
+            _mapper.Map(
+                route,
+                existingRoute);
+
+            existingRoute.Id = id;
+
+            var updatedRoute =
+                await _routeRepository.UpdateRouteAsync(
+                    id,
+                    existingRoute);
+
+            if (updatedRoute == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<RouteDTOAPI>(
+                updatedRoute);
         }
 
-        public async Task<RouteDTOAPI> UpdateRouteAsync(string id, RouteModelAPI routeModel)
+        public async Task<bool> DeleteRoute(
+            string? id)
         {
-            var routeDB = _mapper.Map<RouteDB>(routeModel);
-            var updatedRouteDB = await _routeRepository.UpdateRouteAsync(id, routeDB);
-            return _mapper.Map<RouteDTOAPI>(updatedRouteDB);
-        }
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return false;
+            }
 
-        public async Task<bool> DeleteRoute(int id)
-        {
-            return await _routeRepository.DeleteRoute(id);
+            var existingRoute =
+                await _routeRepository.GetRouteByIdAsync(id);
+
+            if (existingRoute == null)
+            {
+                return false;
+            }
+
+            await _routeRepository.DeleteRouteAsync(id);
+
+            return true;
         }
 
         public async Task<List<RouteDB>> GetRoutes()
         {
-            var route = (await _routeRepository.GetAllRoutesAsync()).ToList();
-            return route;
-        }
+            var routes =
+                await _routeRepository.GetAllRoutesAsync();
 
-        public async Task<RouteDTOAPI> GetRouteAsync(int routeId)
-        {
-            var route = await _routeRepository.GetRouteByIdAsync(routeId.ToString());
-            return _mapper.Map<RouteDTOAPI>(route);
-        }
-
-        public async Task AddRouteAsync(RouteDTOAPI routeDto)
-        {
-            var routeModel = _mapper.Map<RouteModelAPI>(routeDto);
-            var routeDB = _mapper.Map<RouteDB>(routeModel);
-            await _routeRepository.CreateRoute(routeDB);
-        }
-
-        public async Task DeleteRouteAsync(int routeId)
-        {
-            await _routeRepository.DeleteRoute(routeId);
+            return routes.ToList();
         }
     }
 }

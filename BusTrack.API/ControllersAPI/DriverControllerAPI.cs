@@ -1,4 +1,5 @@
-﻿using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
+﻿using BusTrack.BusTrack.API.DTOAPI;
+using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusTrack.BusTrack.API.ControllersAPI
@@ -7,40 +8,92 @@ namespace BusTrack.BusTrack.API.ControllersAPI
     [ApiController]
     public class DriverControllerAPI : ControllerBase
     {
-        private readonly IDriverServiceAPI _driveService;
+        private readonly IDriverServiceAPI _driverService;
 
-        public DriverControllerAPI(IDriverServiceAPI driveService)
+        public DriverControllerAPI(
+            IDriverServiceAPI driverService)
         {
-            _driveService = driveService;
+            _driverService = driverService;
         }
+
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok("Get all drivers");
+            var drivers =
+                await _driverService.GetAllDrivers();
+
+            return Ok(drivers);
         }
 
         [HttpGet("{id}", Name = "GetDriver")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(
+            string id)
         {
-            return Ok($"Get driver with ID: {id}");
+            var driver =
+                await _driverService.GetDriverById(id);
+
+            if (driver == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(driver);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] object value)
+        public async Task<IActionResult> Post(
+            [FromBody] DriverDTOAPI driver)
         {
-            return Ok("Create new driver");
+            if (driver == null)
+            {
+                return BadRequest();
+            }
+
+            var createdDriver =
+                await _driverService.CreateDriver(driver);
+
+            return CreatedAtRoute(
+                "GetDriver",
+                new { id = createdDriver.Id },
+                createdDriver);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] object value)
+        public async Task<IActionResult> Put(
+            string id,
+            [FromBody] DriverDTOAPI driver)
         {
-            return Ok($"Update driver with ID: {id}");
+            if (driver == null)
+            {
+                return BadRequest();
+            }
+
+            var updatedDriver =
+                await _driverService.UpdateDriver(
+                    id,
+                    driver);
+
+            if (updatedDriver == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(updatedDriver);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(
+            string id)
         {
-            return Ok($"Delete driver with ID: {id}");
+            var deleted =
+                await _driverService.DeleteDriver(id);
+
+            if (!deleted)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
     }
 }

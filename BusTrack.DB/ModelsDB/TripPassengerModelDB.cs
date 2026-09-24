@@ -4,7 +4,8 @@ namespace BusTrack.BusTrack.DB.ModelsDB
 {
     public class TripPassengerModelDB : ITripPassengerModelDB
     {
-        public int TripId { get; set; }
-        public List<int> PassengerIds { get; set; }
+        public string? TripId { get; set; }
+
+        public List<string>? PassengerIds { get; set; }
     }
 }

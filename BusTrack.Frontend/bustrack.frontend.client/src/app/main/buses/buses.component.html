@@ -1,0 +1,282 @@
+<div class="buses-container">
+
+  <header class="buses-header">
+
+    <div>
+      <h1>Ônibus</h1>
+
+      <p>
+        Gerencie os ônibus cadastrados no Bus Track.
+      </p>
+    </div>
+
+    <div class="header-actions">
+
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="voltarAoDashboard()"
+      >
+        Voltar ao dashboard
+      </button>
+
+      <button
+        type="button"
+        class="primary-button"
+        (click)="iniciarCriacao()"
+        [disabled]="isLoading"
+      >
+        Criar ônibus
+      </button>
+
+    </div>
+
+  </header>
+
+  <div
+    class="error-message"
+    *ngIf="errorMessage"
+  >
+    {{ errorMessage }}
+  </div>
+
+  <section
+    class="bus-form"
+    *ngIf="isCreating || editingBus"
+  >
+
+    <div class="form-header">
+
+      <div>
+
+        <h2>
+          {{ editingBus ? 'Editar ônibus' : 'Criar ônibus' }}
+        </h2>
+
+        <p>
+          {{ editingBus
+            ? 'Altere os dados do ônibus selecionado.'
+            : 'Informe os dados do novo ônibus.' }}
+        </p>
+
+      </div>
+
+    </div>
+
+    <div class="form-grid">
+
+      <div class="form-group">
+
+        <label for="number">
+          Número do ônibus
+        </label>
+
+        <input
+          id="number"
+          type="text"
+          [(ngModel)]="busForm.number"
+          placeholder="Ex.: 101"
+        >
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="licensePlate">
+          Placa
+        </label>
+
+        <input
+          id="licensePlate"
+          type="text"
+          [(ngModel)]="busForm.licensePlate"
+          placeholder="Ex.: ABC1D23"
+        >
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="model">
+          Linha / modelo
+        </label>
+
+        <input
+          id="model"
+          type="text"
+          [(ngModel)]="busForm.model"
+          placeholder="Ex.: 123 - Centro"
+        >
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="capacity">
+          Capacidade
+        </label>
+
+        <input
+          id="capacity"
+          type="number"
+          min="1"
+          [(ngModel)]="busForm.capacity"
+          placeholder="Ex.: 40"
+        >
+
+      </div>
+
+    </div>
+
+    <div class="form-actions">
+
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="cancelarEdicao()"
+        [disabled]="isLoading"
+      >
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="primary-button"
+        (click)="salvarOnibus()"
+        [disabled]="isLoading"
+      >
+        {{ isLoading
+          ? 'Salvando...'
+          : (editingBus
+            ? 'Salvar alterações'
+            : 'Criar ônibus') }}
+      </button>
+
+    </div>
+
+  </section>
+
+  <section class="buses-list">
+
+    <div class="section-header">
+
+      <div>
+
+        <h2>
+          Ônibus cadastrados
+        </h2>
+
+        <p *ngIf="!isLoading">
+
+          {{ buses.length }}
+
+          {{ buses.length === 1
+            ? 'ônibus encontrado'
+            : 'ônibus encontrados' }}
+
+        </p>
+
+        <p *ngIf="isLoading">
+          Carregando ônibus...
+        </p>
+
+      </div>
+
+    </div>
+
+    <div
+      class="empty-state"
+      *ngIf="!isLoading && buses.length === 0"
+    >
+
+      <h3>
+        Nenhum ônibus cadastrado
+      </h3>
+
+      <p>
+        Ainda não existem ônibus cadastrados.
+        Clique em "Criar ônibus" para adicionar o primeiro.
+      </p>
+
+      <button
+        type="button"
+        class="primary-button"
+        (click)="iniciarCriacao()"
+      >
+        Criar primeiro ônibus
+      </button>
+
+    </div>
+
+    <div
+      class="table-wrapper"
+      *ngIf="buses.length > 0"
+    >
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>Número</th>
+            <th>Placa</th>
+            <th>Linha / modelo</th>
+            <th>Capacidade</th>
+            <th>Ações</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let bus of buses">
+
+            <td>
+              {{ bus.number || '—' }}
+            </td>
+
+            <td>
+              {{ bus.licensePlate || '—' }}
+            </td>
+
+            <td>
+              {{ bus.model || '—' }}
+            </td>
+
+            <td>
+              {{ bus.capacity }}
+            </td>
+
+            <td class="actions-cell">
+
+              <button
+                type="button"
+                class="edit-button"
+                (click)="iniciarEdicao(bus)"
+                [disabled]="isLoading"
+              >
+                Editar
+              </button>
+
+              <button
+                type="button"
+                class="delete-button"
+                (click)="excluirOnibus(bus)"
+                [disabled]="isLoading"
+              >
+                Excluir
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+</div>

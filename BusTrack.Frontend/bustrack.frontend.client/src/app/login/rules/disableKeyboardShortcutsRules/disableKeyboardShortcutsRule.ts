@@ -1,33 +1,68 @@
+let ruleInitialized = false;
+
+function handleCut(event: ClipboardEvent): void {
+  event.preventDefault();
+
+  alert(
+    'Cortar conteúdo desta página está desativado.'
+  );
+}
+
+function handlePaste(event: ClipboardEvent): void {
+  event.preventDefault();
+
+  alert(
+    'Colar conteúdo nesta página está desativado.'
+  );
+}
+
+function handleSelectStart(event: Event): void {
+  event.preventDefault();
+
+  alert(
+    'Selecionar texto nesta página está desativado.'
+  );
+}
+
+function handleKeyDown(event: KeyboardEvent): void {
+  if (
+    event.ctrlKey &&
+    ['c', 'v', 'x', 'p'].includes(
+      event.key.toLowerCase()
+    )
+  ) {
+    event.preventDefault();
+
+    alert(
+      'Atalhos de teclado estão desativados.'
+    );
+  }
+}
+
 export function disableKeyboardShortcutsRule(): void {
-  document.addEventListener('copy', (event: ClipboardEvent) => {
-    event.preventDefault();
-    alert('Copiar conteúdo desta página está desativado.');
-  });
+  if (ruleInitialized) {
+    return;
+  }
 
-  document.addEventListener('cut', (event: ClipboardEvent) => {
-    event.preventDefault();
-    alert('Cortar conteúdo desta página está desativado.');
-  });
+  document.addEventListener(
+    'cut',
+    handleCut
+  );
 
-  document.addEventListener('paste', (event: ClipboardEvent) => {
-    event.preventDefault();
-    alert('Colar conteúdo nesta página está desativado.');
-  });
+  document.addEventListener(
+    'paste',
+    handlePaste
+  );
 
-  document.addEventListener('contextmenu', (event: MouseEvent) => {
-    event.preventDefault();
-    alert('O menu de contexto está desativado.');
-  });
+  document.addEventListener(
+    'selectstart',
+    handleSelectStart
+  );
 
-  document.addEventListener('selectstart', (event: Event) => {
-    event.preventDefault();
-    alert('Selecionar texto nesta página está desativado.');
-  });
+  document.addEventListener(
+    'keydown',
+    handleKeyDown
+  );
 
-  document.addEventListener('keydown', (event: KeyboardEvent) => {
-    if (event.ctrlKey && ['c', 'v', 'x', 'p'].includes(event.key)) {
-      event.preventDefault();
-      alert('Atalhos de teclado estão desativados.');
-    }
-  });
+  ruleInitialized = true;
 }

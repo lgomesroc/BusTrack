@@ -1,0 +1,382 @@
+<div class="trips-container">
+
+  <header class="trips-header">
+
+    <div>
+      <h1>Viagens</h1>
+
+      <p>
+        Gerencie as viagens cadastradas no Bus Track.
+      </p>
+    </div>
+
+    <div class="header-actions">
+
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="voltarAoDashboard()">
+        Voltar ao dashboard
+      </button>
+
+      <button
+        type="button"
+        class="primary-button"
+        (click)="iniciarCriacao()">
+        Criar viagem
+      </button>
+
+    </div>
+
+  </header>
+
+  <div
+    class="error-message"
+    *ngIf="errorMessage">
+
+    {{ errorMessage }}
+
+  </div>
+
+  <section
+    class="trip-form"
+    *ngIf="isCreating || editingTrip">
+
+    <div class="form-header">
+
+      <div>
+
+        <h2>
+          {{ editingTrip
+            ? 'Editar viagem'
+            : 'Criar viagem' }}
+        </h2>
+
+        <p>
+          {{
+            editingTrip
+              ? 'Altere os dados da viagem selecionada.'
+              : 'Informe os dados da nova viagem.'
+          }}
+        </p>
+
+      </div>
+
+    </div>
+
+    <div class="form-grid">
+
+      <div class="form-group">
+
+        <label for="busId">
+          Ônibus
+        </label>
+
+        <select
+          id="busId"
+          [(ngModel)]="tripForm.busId">
+
+          <option value="">
+            Selecione o ônibus
+          </option>
+
+          <option
+            *ngFor="let bus of buses"
+            [value]="bus.id">
+
+            {{ bus.number || bus.licensePlate || bus.model }}
+
+          </option>
+
+        </select>
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="driverId">
+          Motorista
+        </label>
+
+        <select
+          id="driverId"
+          [(ngModel)]="tripForm.driverId">
+
+          <option value="">
+            Selecione o motorista
+          </option>
+
+          <option
+            *ngFor="let driver of drivers"
+            [value]="driver.id">
+
+            {{ driver.name }}
+
+          </option>
+
+        </select>
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="routeId">
+          Rota
+        </label>
+
+        <select
+          id="routeId"
+          [(ngModel)]="tripForm.routeId">
+
+          <option value="">
+            Selecione a rota
+          </option>
+
+          <option
+            *ngFor="let route of routes"
+            [value]="route.id">
+
+            {{ route.name }}
+            —
+            {{ route.origin }}
+            →
+            {{ route.destination }}
+
+          </option>
+
+        </select>
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="departureTime">
+          Data e hora de saída
+        </label>
+
+        <input
+          id="departureTime"
+          type="datetime-local"
+          [(ngModel)]="tripForm.departureTime">
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="arrivalTime">
+          Data e hora de chegada
+        </label>
+
+        <input
+          id="arrivalTime"
+          type="datetime-local"
+          [(ngModel)]="tripForm.arrivalTime">
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="duration">
+          Duração em minutos
+        </label>
+
+        <input
+          id="duration"
+          type="number"
+          min="0"
+          [(ngModel)]="tripForm.duration">
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="limitPassengers">
+          Limite de passageiros
+        </label>
+
+        <input
+          id="limitPassengers"
+          type="number"
+          min="0"
+          [(ngModel)]="tripForm.limitPassengers">
+
+      </div>
+
+    </div>
+
+    <div class="form-actions">
+
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="cancelarEdicao()">
+
+        Cancelar
+
+      </button>
+
+      <button
+        type="button"
+        class="primary-button"
+        [disabled]="isLoading"
+        (click)="salvarViagem()">
+
+        {{
+          editingTrip
+            ? 'Salvar alterações'
+            : 'Criar viagem'
+        }}
+
+      </button>
+
+    </div>
+
+  </section>
+
+  <section class="trips-list">
+
+    <div class="section-header">
+
+      <div>
+
+        <h2>
+          Viagens cadastradas
+        </h2>
+
+        <p>
+          {{ trips.length }}
+          {{
+            trips.length === 1
+              ? 'viagem encontrada'
+              : 'viagens encontradas'
+          }}
+        </p>
+
+      </div>
+
+    </div>
+
+    <div
+      class="empty-state"
+      *ngIf="!isLoading && trips.length === 0">
+
+      <h3>
+        Nenhuma viagem cadastrada
+      </h3>
+
+      <p>
+        Ainda não existem viagens cadastradas.
+        Clique em "Criar viagem" para adicionar a primeira.
+      </p>
+
+      <button
+        type="button"
+        class="primary-button"
+        (click)="iniciarCriacao()">
+
+        Criar primeira viagem
+
+      </button>
+
+    </div>
+
+    <div
+      class="loading-state"
+      *ngIf="isLoading">
+
+      Carregando...
+
+    </div>
+
+    <div
+      class="table-wrapper"
+      *ngIf="!isLoading && trips.length > 0">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Ônibus</th>
+
+            <th>Motorista</th>
+
+            <th>Rota</th>
+
+            <th>Saída</th>
+
+            <th>Chegada</th>
+
+            <th>Passageiros</th>
+
+            <th>Ações</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr
+            *ngFor="let trip of trips">
+
+            <td>
+              {{ obterOnibus(trip) }}
+            </td>
+
+            <td>
+              {{ obterMotorista(trip) }}
+            </td>
+
+            <td>
+              {{ obterRota(trip) }}
+            </td>
+
+            <td>
+              {{ trip.departureTime | date:'dd/MM/yyyy HH:mm' }}
+            </td>
+
+            <td>
+              {{ trip.arrivalTime | date:'dd/MM/yyyy HH:mm' }}
+            </td>
+
+            <td>
+              {{ trip.passengers.length }}
+              /
+              {{ trip.limitPassengers }}
+            </td>
+
+            <td class="actions-cell">
+
+              <button
+                type="button"
+                class="edit-button"
+                (click)="iniciarEdicao(trip)">
+
+                Editar
+
+              </button>
+
+              <button
+                type="button"
+                class="delete-button"
+                (click)="excluirViagem(trip)">
+
+                Excluir
+
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+</div>

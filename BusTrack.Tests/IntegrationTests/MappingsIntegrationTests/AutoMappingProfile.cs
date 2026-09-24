@@ -8,11 +8,23 @@ namespace BusTrack.Tests.MappingsIntegrationTests
     {
         public AutoMapperProfile()
         {
-            CreateMap<BusDB, BusDTOAPI>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.LicensePlate, opt => opt.MapFrom(src => src.Plate));
+            CreateMap<BusDB, BusDTOAPI>();
+            CreateMap<BusDTOAPI, BusDB>();
 
+            CreateMap<DriverDB, DriverDTOAPI>();
+            CreateMap<DriverDTOAPI, DriverDB>();
 
-       }
+            CreateMap<PassengerDB, PassengerDTOAPI>();
+            CreateMap<PassengerDTOAPI, PassengerDB>();
+
+            CreateMap<RouteDB, RouteDTOAPI>();
+            CreateMap<RouteDTOAPI, RouteDB>();
+
+            CreateMap<TripDB, TripDTOAPI>();
+            CreateMap<TripDTOAPI, TripDB>();
+
+            CreateMap<TripPassengerDB, TripPassengerDTOAPI>();
+            CreateMap<TripPassengerDTOAPI, TripPassengerDB>();
+        }
     }
 }
