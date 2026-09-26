@@ -1,0 +1,44 @@
+name: Deploy
+
+on:
+  workflow_call:
+    secrets:
+      RENDER_BACKEND_DEPLOY_HOOK_URL:
+        required: true
+
+      RENDER_FRONTEND_DEPLOY_HOOK_URL:
+        required: true
+
+jobs:
+
+  deploy-backend:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Trigger backend deployment
+        run: |
+          curl --fail --silent --show-error \
+            -X POST \
+            "${{ secrets.RENDER_BACKEND_DEPLOY_HOOK_URL }}"
+
+      - name: Backend deployment triggered
+        run: |
+          echo "Deploy do backend solicitado ao Render."
+
+  deploy-frontend:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Trigger frontend deployment
+        run: |
+          curl --fail --silent --show-error \
+            -X POST \
+            "${{ secrets.RENDER_FRONTEND_DEPLOY_HOOK_URL }}"
+
+      - name: Frontend deployment triggered
+        run: |
+          echo "Deploy do frontend solicitado ao Render."

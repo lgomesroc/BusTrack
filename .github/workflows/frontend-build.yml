@@ -1,0 +1,30 @@
+name: Frontend Build
+
+on:
+  workflow_call:
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: BusTrack.Frontend/bustrack.frontend.client/package-lock.json
+
+      - name: Install dependencies
+        working-directory: BusTrack.Frontend/bustrack.frontend.client
+        run: npm ci
+
+      - name: Build Angular application
+        working-directory: BusTrack.Frontend/bustrack.frontend.client
+        run: npm run build -- --configuration production

@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://BUSTRACK-API-URL'
+  apiUrl: 'https://bustrack-8yuy.onrender.com'
 };
+

@@ -1,0 +1,29 @@
+name: Backend Tests
+
+on:
+  workflow_call:
+
+jobs:
+
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore backend
+        run: dotnet restore BusTrack.csproj
+
+      - name: Restore tests
+        run: dotnet restore BusTrack.Tests/BusTrack.Tests.csproj
+
+      - name: Run backend tests
+        run: dotnet test BusTrack.Tests/BusTrack.Tests.csproj --configuration Release --no-restore

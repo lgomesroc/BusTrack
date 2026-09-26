@@ -817,7 +817,7 @@ BusTrack
 │   │   ├── PassengerDTOAPI.cs                        
 │   │   ├── RouteDTOAPI.cs                            
 │   │   ├── TripDTOAPI.cs
-TripDetailsDTOAPI.cs                           
+│   │   ├── TripDetailsDTOAPI.cs                           
 │   │   ├── TripPassengerDTOAPI.cs                  
 │   │   └── UpdatePasswordDTOAPI.cs                     
 │   ├── InterfacesAPI                                    
@@ -867,9 +867,9 @@ TripDetailsDTOAPI.cs
 │   │   ├── PasswordRecordDB.cs                   
 │   │   ├── RouteDB.cs                             
 │   │   ├── TripDB.cs                                 
-│   │   └── TripsPassengerDB.cs                       
-│   │   └── UserDB.cs                               
-│   │   └── UserPasswordHistoryDB.cs                
+│   │   ├── TripsPassengerDB.cs                       
+│   │   ├── UserDB.cs                               
+│   │   ├── UserPasswordHistoryDB.cs                
 │   │   └── UserRegistrationDB.cs                 
 │   ├── ConnectionsDB                              
 │   │   └── ConnectionDB.cs                         
@@ -1105,6 +1105,7 @@ TripDetailsDTOAPI.cs
 ├── appsettings.Development.json
 ├── BusTrack.csproj
 ├── BusTrack.sln
+├── Dockerfile
 ├── firebase.firebaserc
 ├── fiberase.json
 ├── LICENSE.md

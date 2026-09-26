@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - upgrade-dotnet-10
+
+  pull_request:
+    branches:
+      - main
+      - upgrade-dotnet-10
+
+jobs:
+
+  backend-build:
+    uses: ./.github/workflows/backend-build.yml
+
+  backend-tests:
+    uses: ./.github/workflows/backend-tests.yml
+
+  frontend-build:
+    uses: ./.github/workflows/frontend-build.yml
+
+  docker-build:
+    needs:
+      - backend-build
+      - backend-tests
+      - frontend-build
+
+    uses: ./.github/workflows/docker-build.yml
