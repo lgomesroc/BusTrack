@@ -149,6 +149,8 @@ public partial class Program
             app.UseSwaggerUI();
 
             app.UseDeveloperExceptionPage();
+
+            app.UseHttpsRedirection();
         }
         else
         {
@@ -157,8 +159,6 @@ public partial class Program
 
             app.UseHsts();
         }
-
-        app.UseHttpsRedirection();
 
         app.UseCors(
             "FrontendPolicy");

@@ -6,7 +6,8 @@ using BCryptNet = BCrypt.Net.BCrypt;
 
 namespace BusTrack.BusTrack.API.ServicesAPI
 {
-    public class UserAuthenticationServiceAPI : IUserAuthenticationServiceAPI
+    public class UserAuthenticationServiceAPI :
+        IUserAuthenticationServiceAPI
     {
         private readonly IUserRepositoryDB _userRepository;
 
@@ -16,16 +17,25 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             _userRepository = userRepository;
         }
 
-        public UserDB? Authenticate(string email, string password)
+        public UserDB? Authenticate(
+            string email,
+            string password)
         {
-            var user = _userRepository.GetByEmail(email);
+            var user =
+                _userRepository.GetByEmail(email);
 
-            if (user == null || string.IsNullOrWhiteSpace(user.Password))
+            if (
+                user == null ||
+                string.IsNullOrWhiteSpace(
+                    user.Password))
             {
                 return null;
             }
 
-            if (BCryptNet.Verify(password, user.Password))
+            if (
+                BCryptNet.Verify(
+                    password,
+                    user.Password))
             {
                 return user;
             }
@@ -33,28 +43,63 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             return null;
         }
 
-        public IActionResult Create(UserDB user)
+        public IActionResult Create(
+            UserDB user)
         {
+            if (
+                string.IsNullOrWhiteSpace(
+                    user.Password))
+            {
+                throw new ArgumentException(
+                    "A senha é obrigatória.",
+                    nameof(user));
+            }
+
+            user.Password =
+                BCryptNet.HashPassword(
+                    user.Password);
+
             _userRepository.Create(user);
 
             return new OkResult();
         }
 
-        public UserDB? Read(string id) =>
+        public UserDB? Read(
+            string id) =>
             _userRepository.Read(id);
 
-        public IActionResult Update(string id, UserDB user)
+        public IActionResult Update(
+            string id,
+            UserDB user)
         {
-            var result = _userRepository.Update(id, user);
+            if (
+                string.IsNullOrWhiteSpace(
+                    user.Password))
+            {
+                throw new ArgumentException(
+                    "A senha é obrigatória.",
+                    nameof(user));
+            }
+
+            user.Password =
+                BCryptNet.HashPassword(
+                    user.Password);
+
+            var result =
+                _userRepository.Update(
+                    id,
+                    user);
 
             return result
                 ? new OkResult()
                 : new NotFoundResult();
         }
 
-        public IActionResult Delete(string id)
+        public IActionResult Delete(
+            string id)
         {
-            var result = _userRepository.Delete(id);
+            var result =
+                _userRepository.Delete(id);
 
             return result
                 ? new OkResult()
