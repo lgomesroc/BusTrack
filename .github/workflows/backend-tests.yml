@@ -18,7 +18,7 @@ jobs:
 
       - name: Start BusTrack environment
         run: |
-          docker-compose up -d --build
+          docker compose up -d --build
 
       - name: Wait for backend
         run: |
@@ -34,7 +34,7 @@ jobs:
           done
 
           echo "Backend não ficou disponível."
-          docker-compose logs backend
+          docker compose logs backend
           exit 1
 
       - name: Wait for frontend
@@ -70,8 +70,8 @@ jobs:
 
       - name: Show Docker logs on failure
         if: failure()
-        run: docker-compose logs
+        run: docker compose logs
 
       - name: Stop BusTrack environment
         if: always()
-        run: docker-compose down -v
+        run: docker compose down -v
