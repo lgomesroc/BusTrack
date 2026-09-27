@@ -51,7 +51,7 @@ jobs:
           done
 
           echo "Frontend não ficou disponível."
-          docker-compose logs frontend
+          docker compose logs frontend
           exit 1
 
       - name: Restore backend
