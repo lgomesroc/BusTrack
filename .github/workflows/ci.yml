@@ -18,6 +18,7 @@ jobs:
 
   backend-tests:
     uses: ./.github/workflows/backend-tests.yml
+    secrets: inherit
 
   frontend-build:
     uses: ./.github/workflows/frontend-build.yml
