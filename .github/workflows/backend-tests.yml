@@ -7,17 +7,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    services:
-      mongodb:
-        image: mongo:7.0
-        ports:
-          - 27017:27017
-        options: >-
-          --health-cmd "mongosh --eval 'db.adminCommand({ ping: 1 })'"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -26,6 +15,44 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
+
+      - name: Start BusTrack environment
+        run: |
+          docker-compose up -d --build
+
+      - name: Wait for backend
+        run: |
+          for i in {1..30}; do
+            if curl --fail --silent http://localhost:5066/api/Health; then
+              echo
+              echo "Backend disponível."
+              exit 0
+            fi
+
+            echo "Aguardando backend..."
+            sleep 2
+          done
+
+          echo "Backend não ficou disponível."
+          docker-compose logs backend
+          exit 1
+
+      - name: Wait for frontend
+        run: |
+          for i in {1..30}; do
+            if curl --fail --silent http://localhost:4200; then
+              echo
+              echo "Frontend disponível."
+              exit 0
+            fi
+
+            echo "Aguardando frontend..."
+            sleep 2
+          done
+
+          echo "Frontend não ficou disponível."
+          docker-compose logs frontend
+          exit 1
 
       - name: Restore backend
         run: dotnet restore BusTrack.csproj
@@ -37,4 +64,14 @@ jobs:
         env:
           ConnectionStrings__BusTrackDBConnection: mongodb://localhost:27017
           ConnectionStrings__DatabaseName: BusTrackDB
+          BUSTRACK_TEST_EMAIL: ${{ secrets.BUSTRACK_TEST_EMAIL }}
+          BUSTRACK_TEST_PASSWORD: ${{ secrets.BUSTRACK_TEST_PASSWORD }}
         run: dotnet test BusTrack.Tests/BusTrack.Tests.csproj --configuration Release --no-restore
+
+      - name: Show Docker logs on failure
+        if: failure()
+        run: docker-compose logs
+
+      - name: Stop BusTrack environment
+        if: always()
+        run: docker-compose down -v
