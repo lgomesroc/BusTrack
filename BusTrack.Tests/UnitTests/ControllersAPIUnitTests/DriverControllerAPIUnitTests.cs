@@ -18,13 +18,18 @@ namespace BusTrack.Tests.UnitTests.ControllersAPIUnitTests.DriverControllerAPIUn
         }
 
         [Fact]
-        public void Get_ReturnsOkResult()
+        public async Task Get_ReturnsOkResult()
         {
-            _driverService.Setup(service => service.GetDrivers()).Returns(new List<DriverDB>() { /* lista de motoristas */ });
-            var result = _controller.Get();
+            _driverService
+                .Setup(service => service.GetDrivers())
+                .Returns(new List<DriverDB>());
 
-            var okResult = Assert.IsType<OkObjectResult>(result);
+            var result = await _controller.Get();
+
+            var okResult =
+                Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(okResult.Value);
         }
-
     }
 }

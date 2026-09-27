@@ -1,15 +1,17 @@
-﻿using System.Text;
-using System.Net;
-using Newtonsoft.Json;
+﻿using System.Net;
+using System.Text;
 using BusTrack.Tests.IntegrationTests.CustomWebApplicationFactory;
+using Newtonsoft.Json;
 
 namespace BusTrack.Tests.IntegrationTests.ControllersAPIIntegrationTests
 {
-    public class RouteControllerAPIIntegrationTest : IClassFixture<CustomWebApplicationFactory<Program>>
+    public class RouteControllerAPIIntegrationTest
+        : IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly HttpClient _client;
 
-        public RouteControllerAPIIntegrationTest(CustomWebApplicationFactory<Program> factory)
+        public RouteControllerAPIIntegrationTest(
+            CustomWebApplicationFactory<Program> factory)
         {
             _client = factory.CreateClient();
         }
@@ -17,60 +19,144 @@ namespace BusTrack.Tests.IntegrationTests.ControllersAPIIntegrationTests
         [Fact]
         public async Task Get_ReturnsSuccessStatusCode()
         {
+            var response =
+                await _client.GetAsync("/api/Route");
 
-            var response = await _client.GetAsync("/api/Route");
-
-            response.EnsureSuccessStatusCode(); 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(
+                HttpStatusCode.OK,
+                response.StatusCode);
         }
 
         [Fact]
         public async Task GetById_ReturnsSuccessStatusCode()
         {
-            var id = 1;
+            var id = await CreateRouteAsync();
 
-            var response = await _client.GetAsync($"/api/Route/{id}");
+            var response =
+                await _client.GetAsync(
+                    $"/api/Route/{id}");
 
-            // Assert
-            response.EnsureSuccessStatusCode(); 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(
+                HttpStatusCode.OK,
+                response.StatusCode);
         }
 
         [Fact]
-        public async Task Post_ReturnsSuccessStatusCode()
+        public async Task Post_ReturnsCreatedStatusCode()
         {
-            
-            var route = new { Name = "Test Route", Distance = 100 };
-            var content = new StringContent(JsonConvert.SerializeObject(route), Encoding.UTF8, "application/json");
+            var route = new
+            {
+                Name = $"Test Route {Guid.NewGuid()}",
+                Description = "Integration test route",
+                Origin = "Origin",
+                Destination = "Destination",
+                Distance = 100
+            };
 
-            var response = await _client.PostAsync("/api/Route", content);
+            var content =
+                new StringContent(
+                    JsonConvert.SerializeObject(route),
+                    Encoding.UTF8,
+                    "application/json");
 
-            response.EnsureSuccessStatusCode(); 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var response =
+                await _client.PostAsync(
+                    "/api/Route",
+                    content);
+
+            Assert.Equal(
+                HttpStatusCode.Created,
+                response.StatusCode);
         }
 
         [Fact]
         public async Task Put_ReturnsSuccessStatusCode()
         {
-            var id = 1;
-            var route = new { Name = "Updated Test Route", Distance = 120 };
-            var content = new StringContent(JsonConvert.SerializeObject(route), Encoding.UTF8, "application/json");
+            var id = await CreateRouteAsync();
 
-            var response = await _client.PutAsync($"/api/Route/{id}", content);
+            var route = new
+            {
+                Name = $"Updated Route {Guid.NewGuid()}",
+                Description = "Updated integration test route",
+                Origin = "Updated Origin",
+                Destination = "Updated Destination",
+                Distance = 120
+            };
 
-            response.EnsureSuccessStatusCode(); 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var content =
+                new StringContent(
+                    JsonConvert.SerializeObject(route),
+                    Encoding.UTF8,
+                    "application/json");
+
+            var response =
+                await _client.PutAsync(
+                    $"/api/Route/{id}",
+                    content);
+
+            Assert.Equal(
+                HttpStatusCode.OK,
+                response.StatusCode);
         }
 
         [Fact]
-        public async Task Delete_ReturnsSuccessStatusCode()
+        public async Task Delete_ReturnsNoContentStatusCode()
         {
-            var id = 1;
+            var id = await CreateRouteAsync();
 
-            var response = await _client.DeleteAsync($"/api/Route/{id}");
+            var response =
+                await _client.DeleteAsync(
+                    $"/api/Route/{id}");
 
-            response.EnsureSuccessStatusCode(); 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(
+                HttpStatusCode.NoContent,
+                response.StatusCode);
+        }
+
+        private async Task<string> CreateRouteAsync()
+        {
+            var route = new
+            {
+                Name = $"Integration Route {Guid.NewGuid()}",
+                Description = "Integration test route",
+                Origin = "Origin",
+                Destination = "Destination",
+                Distance = 100
+            };
+
+            var content =
+                new StringContent(
+                    JsonConvert.SerializeObject(route),
+                    Encoding.UTF8,
+                    "application/json");
+
+            var response =
+                await _client.PostAsync(
+                    "/api/Route",
+                    content);
+
+            Assert.Equal(
+                HttpStatusCode.Created,
+                response.StatusCode);
+
+            var responseBody =
+                await response.Content.ReadAsStringAsync();
+
+            var createdRoute =
+                JsonConvert.DeserializeObject<RouteResponse>(
+                    responseBody);
+
+            Assert.NotNull(createdRoute);
+            Assert.False(
+                string.IsNullOrWhiteSpace(
+                    createdRoute!.Id));
+
+            return createdRoute.Id!;
+        }
+
+        private sealed class RouteResponse
+        {
+            public string? Id { get; set; }
         }
     }
 }

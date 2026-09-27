@@ -84,19 +84,28 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             string id,
             DriverDTOAPI driver)
         {
-            var driverDB =
-                _mapper.Map<DriverDB>(driver);
+            var existingDriver =
+                await _driverRepository
+                    .GetDriverByIdAsync(id);
 
-            await _driverRepository.UpdateDriverAsync(
-                id,
-                driverDB);
+            if (existingDriver == null)
+            {
+                return null!;
+            }
 
-            var updatedDriver =
-                await _driverRepository.GetDriverByIdAsync(
-                    id);
+            _mapper.Map(
+                driver,
+                existingDriver);
+
+            existingDriver.Id = id;
+
+            await _driverRepository
+                .UpdateDriverAsync(
+                    id,
+                    existingDriver);
 
             return _mapper.Map<DriverDTOAPI>(
-                updatedDriver);
+                existingDriver);
         }
 
         public async Task UpdateDriverAsync(
@@ -134,6 +143,15 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         public async Task<bool> DeleteDriver(
             string id)
         {
+            var existingDriver =
+                await _driverRepository
+                    .GetDriverByIdAsync(id);
+
+            if (existingDriver == null)
+            {
+                return false;
+            }
+
             return await _driverRepository
                 .DeleteDriver(id);
         }

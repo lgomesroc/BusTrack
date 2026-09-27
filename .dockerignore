@@ -1,0 +1,33 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# .NET
+**/bin/
+**/obj/
+
+# Angular / Node
+**/node_modules/
+**/.angular/
+**/dist/
+**/coverage/
+
+# IDE
+.vscode/
+.idea/
+.vs/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Docker
+docker-compose.override.yml
+
+# Documentação e arquivos que não são necessários para o build da API
+docs/
+README.md

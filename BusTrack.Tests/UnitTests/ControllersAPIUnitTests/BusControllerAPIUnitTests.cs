@@ -18,14 +18,18 @@ namespace BusTrack.Tests.UnitTests.ControllersAPIUnitTests.BusControllerAPIUnitT
         }
 
         [Fact]
-        public void Get_ReturnsOkResult()
+        public async Task Get_ReturnsOkResult()
         {
-            _busService.Setup(service => service.GetBuses()).Returns(new List<BusDB>());
+            _busService
+                .Setup(service => service.GetBuses())
+                .Returns(new List<BusDB>());
 
-            var result = _controller.Get();
+            var result = await _controller.Get();
 
-            var okResult = Assert.IsType<OkObjectResult>(result);
+            var okResult =
+                Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(okResult.Value);
         }
-
     }
 }

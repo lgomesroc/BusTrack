@@ -1,0 +1,83 @@
+services:
+
+  mongodb:
+    image: mongo:7.0
+    container_name: bustrack-mongodb
+    restart: unless-stopped
+
+    ports:
+      - "27017:27017"
+
+    volumes:
+      - bustrack-mongodb-data:/data/db
+
+    networks:
+      - bustrack-network
+
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: bustrack-backend
+    restart: unless-stopped
+
+    depends_on:
+      - mongodb
+
+    ports:
+      - "5066:10000"
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:10000
+
+      ConnectionStrings__BusTrackDBConnection: mongodb://mongodb:27017
+      ConnectionStrings__DatabaseName: BusTrackDB
+
+      JwtSettings__SecretKey: your_secret_key_here
+      JwtSettings__Issuer: your_issuer_here
+      JwtSettings__Audience: your_audience_here
+      JwtSettings__ExpirationInMinutes: 1440
+
+      BackendUrl: http://localhost:4200
+
+    networks:
+      - bustrack-network
+
+
+  frontend:
+    image: node:24
+    container_name: bustrack-frontend
+    restart: unless-stopped
+
+    working_dir: /app
+
+    volumes:
+      - ./BusTrack.Frontend/bustrack.frontend.client:/app
+      - bustrack-frontend-node-modules:/app/node_modules
+
+    ports:
+      - "4200:4200"
+
+    depends_on:
+      - backend
+
+    command: >
+      sh -c "npm ci &&
+      npx ng serve --host 0.0.0.0 --port 4200"
+
+    networks:
+      - bustrack-network
+
+
+networks:
+  bustrack-network:
+    driver: bridge
+
+
+volumes:
+  bustrack-mongodb-data:
+  bustrack-frontend-node-modules:
+  

@@ -59,7 +59,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
             return _mapper.Map<
                 TripPassengerDTOAPI>(
-                    tripPassenger);
+                tripPassenger);
         }
 
         public async Task<
@@ -120,7 +120,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
             return _mapper.Map<
                 TripPassengerDTOAPI>(
-                    createdTripPassenger);
+                createdTripPassenger);
         }
 
         public async Task<
@@ -138,6 +138,15 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 _mapper.Map<TripPassengerDB>(
                     tripPassenger);
 
+            /*
+             * O ID da URL deve ser preservado no documento
+             * que será substituído no MongoDB.
+             *
+             * O campo _id é imutável no MongoDB e não pode
+             * ser substituído por null durante um ReplaceOne.
+             */
+            tripPassengerDB.Id = id;
+
             var updatedTripPassenger =
                 await _tripsPassengerRepository
                     .UpdateAsync(
@@ -151,7 +160,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
             return _mapper.Map<
                 TripPassengerDTOAPI>(
-                    updatedTripPassenger);
+                updatedTripPassenger);
         }
 
         public async Task<bool> DeleteAsync(

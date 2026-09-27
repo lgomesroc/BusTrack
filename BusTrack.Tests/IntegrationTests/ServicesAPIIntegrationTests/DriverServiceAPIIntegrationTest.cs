@@ -12,9 +12,13 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 {
     public class DriverServiceAPIIntegrationTest
     {
-        private readonly Mock<IDriverRepositoryDB> _driverRepository;
+        private readonly Mock<IDriverRepositoryDB>
+            _driverRepository;
+
         private readonly IMapper _mapper;
-        private readonly DriverServiceAPI _driverServiceAPI;
+
+        private readonly DriverServiceAPI
+            _driverServiceAPI;
 
         public DriverServiceAPIIntegrationTest()
         {
@@ -33,7 +37,8 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 
             _driverServiceAPI =
                 new DriverServiceAPI(
-                    new MongoClient().GetDatabase("BusTrack"),
+                    new MongoClient()
+                        .GetDatabase("BusTrack"),
                     _driverRepository.Object,
                     _mapper);
         }
@@ -66,7 +71,8 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         [Fact]
         public async Task GetDriverById_ReturnsDriverWhenFound()
         {
-            var existingDriverId = "123";
+            var existingDriverId =
+                "123";
 
             var existingDriver =
                 new DriverDB
@@ -106,7 +112,8 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         [Fact]
         public async Task GetDriverById_ReturnsNullWhenNotFound()
         {
-            var nonExistingDriverId = "999";
+            var nonExistingDriverId =
+                "999";
 
             _driverRepository
                 .Setup(x =>
@@ -140,15 +147,14 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                 .Setup(x =>
                     x.AddDriverAsync(
                         It.IsAny<DriverDB>()))
-                .Returns(
+                .Callback(
                     (DriverDB driver) =>
                     {
                         driver.Id =
                             expectedDriverId;
-
-                        return Task.FromResult(
-                            driver);
-                    });
+                    })
+                .Returns(
+                    Task.CompletedTask);
 
             var addedDriverDto =
                 await _driverServiceAPI
@@ -180,7 +186,8 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         [Fact]
         public async Task UpdateDriver_UpdatesAndMapsDriver()
         {
-            var existingDriverId = "123";
+            var existingDriverId =
+                "123";
 
             var existingDriver =
                 new DriverDB
@@ -209,8 +216,17 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                     x.UpdateDriverAsync(
                         existingDriverId,
                         It.IsAny<DriverDB>()))
+                .Callback(
+                    (string id, DriverDB driver) =>
+                    {
+                        existingDriver.Name =
+                            driver.Name;
+
+                        existingDriver.Cpf =
+                            driver.Cpf;
+                    })
                 .Returns(
-                    Task.FromResult(true));
+                    Task.CompletedTask);
 
             var updatedDriverDto =
                 await _driverServiceAPI
@@ -250,7 +266,8 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         [Fact]
         public async Task DeleteDriver_DeletesDriverAndReturnsTrueWhenFound()
         {
-            var existingDriverId = "123";
+            var existingDriverId =
+                "123";
 
             _driverRepository
                 .Setup(x =>
@@ -281,7 +298,7 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 
             _driverRepository.Verify(
                 x =>
-                    x.DeleteDriverAsync(
+                    x.DeleteDriver(
                         existingDriverId),
                 Times.Once);
 
@@ -291,7 +308,8 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         [Fact]
         public async Task DeleteDriver_ReturnsFalseWhenNotFound()
         {
-            var nonExistingDriverId = "999";
+            var nonExistingDriverId =
+                "999";
 
             _driverRepository
                 .Setup(x =>
@@ -313,7 +331,7 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 
             _driverRepository.Verify(
                 x =>
-                    x.DeleteDriverAsync(
+                    x.DeleteDriver(
                         nonExistingDriverId),
                 Times.Never);
 

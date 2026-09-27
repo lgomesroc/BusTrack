@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -9,123 +10,165 @@
 <body>
   <div class="container">
 
-    <h1 class="centered-title">
-      Seja bem-vindo à página de Criar Conta do Sistema Bus Track
-    </h1>
+<h1 class="centered-title">
+  Seja bem-vindo à página de Criar Conta do Sistema Bus Track
+</h1>
 
-    <img
-      class="img-responsive centralized-image"
-      src="assets/imagem/OIG4.jpeg"
-      alt="Sistema Bus Track Logo"
-      style="width: 200px; height: auto;"
+<img
+  class="img-responsive centralized-image"
+  src="assets/imagem/OIG4.jpeg"
+  alt="Sistema Bus Track Logo"
+  style="width: 200px; height: auto;"
+>
+
+<form
+  #f="ngForm"
+  (ngSubmit)="criarConta()"
+  autocomplete="off"
+>
+
+  <div class="form-group">
+    <label for="nomeCompleto">
+      Nome Completo:
+    </label>
+
+    <input
+      type="text"
+      id="nomeCompleto"
+      name="nomeCompleto"
+      [(ngModel)]="fullName"
+      placeholder="Ex.: João da Silva"
+      required
+      autocomplete="name"
+      (blur)="validarNome()"
     >
 
-    <form #f="ngForm" (ngSubmit)="criarConta()">
+    <div
+      class="error-message"
+      *ngIf="nomeInvalido"
+    >
+      Informe seu nome completo.
+    </div>
+  </div>
 
-      <div class="form-group">
-        <label for="nomeCompleto">Nome Completo:</label>
 
-        <input
-          type="text"
-          id="nomeCompleto"
-          name="nomeCompleto"
-          [(ngModel)]="fullName"
-          required
-          autocomplete="name"
-        >
-      </div>
+  <div class="form-group">
+    <label for="cpf">
+      CPF:
+    </label>
 
-      <div class="form-group">
-        <label for="cpf">CPF:</label>
+    <input
+      type="text"
+      id="cpf"
+      name="cpf"
+      [ngModel]="cpf"
+      (ngModelChange)="formatarCPF($event)"
+      maxlength="14"
+      inputmode="numeric"
+      placeholder="000.000.000-00"
+      required
+      autocomplete="off"
+    >
+  </div>
 
-        <input
-          type="text"
-          id="cpf"
-          name="cpf"
-          [ngModel]="cpf"
-          (ngModelChange)="formatarCPF($event)"
-          maxlength="14"
-          inputmode="numeric"
-          placeholder="000.000.000-00"
-          required
-        >
-      </div>
 
-      <div class="form-group">
-        <label for="email">E-mail:</label>
+  <div class="form-group">
+    <label for="email">
+      E-mail:
+    </label>
 
-        <input
-          type="email"
-          id="email"
-          name="email"
-          [(ngModel)]="email"
-          required
-          autocomplete="email"
-        >
-      </div>
+    <input
+      type="email"
+      id="email"
+      name="email"
+      [(ngModel)]="email"
+      placeholder="Ex.: joao@gmail.com"
+      required
+      autocomplete="off"
+      (blur)="validarEmailCampo()"
+    >
 
-      <div class="form-group">
-        <label for="password">Senha:</label>
+    <div
+      class="error-message"
+      *ngIf="emailInvalido"
+    >
+      Informe um e-mail válido. Ex.: joao&#64;gmail.com
+    </div>
+  </div>
 
-        <input
-          type="password"
-          id="password"
-          name="password"
-          [(ngModel)]="password"
-          required
-          autocomplete="new-password"
-        >
-      </div>
 
-      <div class="form-group">
-        <label for="passwordConfirmation">Confirmar Senha:</label>
+  <div class="form-group">
+    <label for="password">
+      Senha:
+    </label>
 
-        <input
-          type="password"
-          id="passwordConfirmation"
-          name="passwordConfirmation"
-          [(ngModel)]="confirmPassword"
-          required
-          autocomplete="new-password"
-        >
-      </div>
+    <input
+      type="password"
+      id="password"
+      name="password"
+      [(ngModel)]="password"
+      required
+      autocomplete="off"
+    >
+  </div>
 
-      <div
-        class="error-message"
-        *ngIf="errorMessage"
-      >
-        {{ errorMessage }}
-      </div>
 
-      <div class="button-container">
+  <div class="form-group">
+    <label for="passwordConfirmation">
+      Confirmar Senha:
+    </label>
 
-        <button
-          type="submit"
-          class="blue-button"
-          [disabled]="!f.valid"
-        >
-          Criar Conta
-        </button>
+    <input
+      type="password"
+      id="passwordConfirmation"
+      name="passwordConfirmation"
+      [(ngModel)]="confirmPassword"
+      required
+      autocomplete="off"
+    >
+  </div>
 
-        <button
-          type="button"
-          class="blue-button"
-          (click)="cancelar()"
-        >
-          Cancelar
-        </button>
 
-        <button
-          type="button"
-          class="blue-button"
-          (click)="realizarLogin()"
-        >
-          Realizar Login
-        </button>
+  <div
+    class="error-message"
+    *ngIf="errorMessage"
+  >
+    {{ errorMessage }}
+  </div>
 
-      </div>
 
-    </form>
+  <div class="button-container">
+
+    <button
+      type="submit"
+      class="blue-button"
+      [disabled]="!f.valid || nomeInvalido || emailInvalido"
+    >
+      Criar Conta
+    </button>
+
+
+    <button
+      type="button"
+      class="blue-button"
+      (click)="cancelar()"
+    >
+      Cancelar
+    </button>
+
+
+    <button
+      type="button"
+      class="blue-button"
+      (click)="realizarLogin()"
+    >
+      Realizar Login
+    </button>
+
+  </div>
+
+</form>
+
   </div>
 </body>
 </html>

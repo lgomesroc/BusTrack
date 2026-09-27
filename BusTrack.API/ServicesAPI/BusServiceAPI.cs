@@ -102,6 +102,16 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 busDto,
                 existingBus);
 
+            /*
+             * O AutoMapper pode mapear o Id do DTO como null
+             * quando o cliente não envia esse campo.
+             *
+             * O Id recebido pela rota é a fonte de verdade
+             * durante a atualização e precisa ser preservado,
+             * pois o campo _id do MongoDB é imutável.
+             */
+            existingBus.Id = id;
+
             await _busRepository
                 .UpdateBusAsync(
                     id,

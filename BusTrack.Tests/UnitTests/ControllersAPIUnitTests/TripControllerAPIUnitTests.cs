@@ -25,20 +25,57 @@ namespace BusTrack.Tests.UnitTests.ControllersAPIUnitTests.TripControllerAPIUnit
         public async Task GetAll_ReturnsOkResult()
         {
             var trips =
-                new List<TripDTOAPI>
+                new List<TripDetailsDTOAPI>
                 {
-                    new TripDTOAPI
+                    new TripDetailsDTOAPI
                     {
                         Id = "507f1f77bcf86cd799439011",
-                        BusId = "507f1f77bcf86cd799439012",
-                        DriverId = "507f1f77bcf86cd799439013",
-                        RouteId = "507f1f77bcf86cd799439014"
+                        Bus = new BusDetailsDTOAPI
+                        {
+                            Id = "507f1f77bcf86cd799439012",
+                            Number = "001",
+                            LicensePlate = "ABC1234",
+                            Model = "Mercedes-Benz",
+                            Capacity = 40
+                        },
+                        Driver = new DriverDetailsDTOAPI
+                        {
+                            Id = "507f1f77bcf86cd799439013",
+                            Name = "John Doe",
+                            LicenseNumber = "CNH123456"
+                        },
+                        Route = new RouteDetailsDTOAPI
+                        {
+                            Id = "507f1f77bcf86cd799439014",
+                            Name = "Centro - Zona Sul",
+                            Origin = "Centro",
+                            Destination = "Zona Sul"
+                        },
+                        DepartureTime =
+                            new DateTime(
+                                2026,
+                                9,
+                                16,
+                                16,
+                                0,
+                                0),
+                        ArrivalTime =
+                            new DateTime(
+                                2026,
+                                9,
+                                16,
+                                17,
+                                0,
+                                0),
+                        Duration = 60,
+                        LimitPassengers = 40,
+                        Passengers = new List<PassengerDetailsDTOAPI>()
                     }
                 };
 
             _tripService
                 .Setup(service =>
-                    service.GetAllTripsAsync())
+                    service.GetAllTripDetailsAsync())
                 .ReturnsAsync(trips);
 
             var result =
@@ -59,17 +96,54 @@ namespace BusTrack.Tests.UnitTests.ControllersAPIUnitTests.TripControllerAPIUnit
                 "507f1f77bcf86cd799439011";
 
             var trip =
-                new TripDTOAPI
+                new TripDetailsDTOAPI
                 {
                     Id = id,
-                    BusId = "507f1f77bcf86cd799439012",
-                    DriverId = "507f1f77bcf86cd799439013",
-                    RouteId = "507f1f77bcf86cd799439014"
+                    Bus = new BusDetailsDTOAPI
+                    {
+                        Id = "507f1f77bcf86cd799439012",
+                        Number = "001",
+                        LicensePlate = "ABC1234",
+                        Model = "Mercedes-Benz",
+                        Capacity = 40
+                    },
+                    Driver = new DriverDetailsDTOAPI
+                    {
+                        Id = "507f1f77bcf86cd799439013",
+                        Name = "John Doe",
+                        LicenseNumber = "CNH123456"
+                    },
+                    Route = new RouteDetailsDTOAPI
+                    {
+                        Id = "507f1f77bcf86cd799439014",
+                        Name = "Centro - Zona Sul",
+                        Origin = "Centro",
+                        Destination = "Zona Sul"
+                    },
+                    DepartureTime =
+                        new DateTime(
+                            2026,
+                            9,
+                            16,
+                            16,
+                            0,
+                            0),
+                    ArrivalTime =
+                        new DateTime(
+                            2026,
+                            9,
+                            16,
+                            17,
+                            0,
+                            0),
+                    Duration = 60,
+                    LimitPassengers = 40,
+                    Passengers = new List<PassengerDetailsDTOAPI>()
                 };
 
             _tripService
                 .Setup(service =>
-                    service.GetTripByIdAsync(id))
+                    service.GetTripDetailsByIdAsync(id))
                 .ReturnsAsync(trip);
 
             var result =
@@ -91,9 +165,9 @@ namespace BusTrack.Tests.UnitTests.ControllersAPIUnitTests.TripControllerAPIUnit
 
             _tripService
                 .Setup(service =>
-                    service.GetTripByIdAsync(id))
+                    service.GetTripDetailsByIdAsync(id))
                 .ReturnsAsync(
-                    (TripDTOAPI?)null);
+                    (TripDetailsDTOAPI?)null);
 
             var result =
                 await _controller.GetById(id);

@@ -65,6 +65,9 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 _mapper.Map<PassengerDB>(
                     passengerModel);
 
+            passengerDB.Email =
+                passenger.Email;
+
             await _passengerRepository
                 .AddPassengerAsync(
                     passengerDB);
@@ -73,31 +76,33 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 passengerDB);
         }
 
-        public async Task<PassengerDTOAPI>
+        public async Task<PassengerDTOAPI?>
             UpdatePassenger(
                 string id,
                 PassengerDTOAPI passenger)
         {
-            var passengerDB =
-                _mapper.Map<PassengerDB>(
-                    passenger);
+            var existingPassenger =
+                await _passengerRepository
+                    .GetPassengerByIdAsync(id);
+
+            if (existingPassenger == null)
+            {
+                return null;
+            }
+
+            _mapper.Map(
+                passenger,
+                existingPassenger);
+
+            existingPassenger.Id = id;
 
             await _passengerRepository
                 .UpdatePassengerAsync(
                     id,
-                    passengerDB);
-
-            var updatedPassenger =
-                await _passengerRepository
-                    .GetPassengerByIdAsync(id);
-
-            if (updatedPassenger == null)
-            {
-                return null!;
-            }
+                    existingPassenger);
 
             return _mapper.Map<PassengerDTOAPI>(
-                updatedPassenger);
+                existingPassenger);
         }
 
         public async Task<bool> DeletePassenger(

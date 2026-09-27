@@ -11,9 +11,13 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 {
     public class BusServiceAPIIntegrationTest
     {
-        private Mock<IBusRepositoryDB> _busRepository;
-        private IMapper _mapper;
-        private BusServiceAPI _busServiceAPI;
+        private readonly Mock<IBusRepositoryDB>
+            _busRepository;
+
+        private readonly IMapper _mapper;
+
+        private readonly BusServiceAPI
+            _busServiceAPI;
 
         public BusServiceAPIIntegrationTest()
         {
@@ -27,7 +31,8 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                             AutoMapperProfile>(),
                     NullLoggerFactory.Instance);
 
-            _mapper = config.CreateMapper();
+            _mapper =
+                config.CreateMapper();
 
             _busServiceAPI =
                 new BusServiceAPI(
@@ -48,7 +53,8 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
             _busRepository
                 .Setup(x =>
                     x.GetAllBusesAsync())
-                .ReturnsAsync(buses);
+                .ReturnsAsync(
+                    buses);
 
             var result =
                 await _busServiceAPI
@@ -72,7 +78,8 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
             _busRepository
                 .Setup(x =>
                     x.GetAllBusesAsync())
-                .ReturnsAsync(buses);
+                .ReturnsAsync(
+                    buses);
 
             await _busServiceAPI
                 .GetAllBuses();
@@ -86,7 +93,8 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         [Fact]
         public async Task GetBusById_ReturnsBusWhenFound()
         {
-            var existingBusId = "123";
+            var existingBusId =
+                "123";
 
             var existingBus =
                 new BusDB
@@ -100,7 +108,8 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                 .Setup(x =>
                     x.GetBusByIdAsync(
                         existingBusId))
-                .ReturnsAsync(existingBus);
+                .ReturnsAsync(
+                    existingBus);
 
             var result =
                 await _busServiceAPI
@@ -112,12 +121,21 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
             Assert.Equal(
                 existingBusId,
                 result?.Id?.ToString());
+
+            Assert.Equal(
+                existingBus.Plate,
+                result?.LicensePlate);
+
+            Assert.Equal(
+                existingBus.Line,
+                result?.Model);
         }
 
         [Fact]
         public async Task GetBusById_ReturnsNullWhenNotFound()
         {
-            var nonExistingBusId = "999";
+            var nonExistingBusId =
+                "999";
 
             _busRepository
                 .Setup(x =>
@@ -152,9 +170,12 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                     x.CreateBus(
                         It.IsAny<BusDB>()))
                 .ReturnsAsync(
-                    new BusDB
+                    (BusDB bus) =>
                     {
-                        Id = expectedBusId
+                        bus.Id =
+                            expectedBusId;
+
+                        return bus;
                     });
 
             var createdBusDto =
@@ -187,7 +208,15 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         [Fact]
         public async Task DeleteBus_ReturnsFalseWhenNotFound()
         {
-            var nonExistingBusId = "999";
+            var nonExistingBusId =
+                "999";
+
+            _busRepository
+                .Setup(x =>
+                    x.GetBusByIdAsync(
+                        nonExistingBusId))
+                .ReturnsAsync(
+                    (BusDB?)null);
 
             _busRepository
                 .Setup(x =>
