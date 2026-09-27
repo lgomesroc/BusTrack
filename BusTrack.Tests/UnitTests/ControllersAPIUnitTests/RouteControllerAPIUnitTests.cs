@@ -4,7 +4,7 @@ using BusTrack.BusTrack.API.ControllersAPI;
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using BusTrack.BusTrack.DB.Classes;
 
-namespace BusTrack.Tests.UnitTests.ControllersAPIUnitTests.TripControllerAPIUnitTests
+namespace BusTrack.Tests.UnitTests.ControllersAPIUnitTests.RouteControllerAPIUnitTests
 {
     public class RouteControllerAPIUnitTests
     {
@@ -18,13 +18,19 @@ namespace BusTrack.Tests.UnitTests.ControllersAPIUnitTests.TripControllerAPIUnit
         }
 
         [Fact]
-        public void Get_ReturnsOkResult()
+        public async Task Get_ReturnsOkResult()
         {
-            _routeService.Setup(service => service.GetRoutes()).Returns(Task.FromResult(new List<RouteDB>() {/* retornar uma lista de rotas */}));
-            var result = _controller.Get();
+            _routeService
+                .Setup(service => service.GetRoutes())
+                .ReturnsAsync(
+                    new List<RouteDB>());
 
-            var okResult = Assert.IsType<OkObjectResult>(result);
+            var result = await _controller.Get();
+
+            var okResult =
+                Assert.IsType<OkObjectResult>(result);
+
+            Assert.NotNull(okResult.Value);
         }
-
     }
 }

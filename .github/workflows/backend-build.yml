@@ -1,0 +1,26 @@
+name: Backend Build
+
+on:
+  workflow_call:
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore BusTrack.csproj
+
+      - name: Build backend
+        run: dotnet build BusTrack.csproj --configuration Release --no-restore

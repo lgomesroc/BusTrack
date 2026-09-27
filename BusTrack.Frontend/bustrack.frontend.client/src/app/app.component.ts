@@ -11,6 +11,11 @@ import {
   SessionService
 } from './services/session.service';
 
+import {
+  blockSavePasswordRule
+} from './login/rules/blockSavePasswordRules/blockSavePasswordRule';
+
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -19,6 +24,7 @@ import {
 export class AppComponent implements OnInit {
 
   title = 'BustTrack.Frontend';
+
 
   constructor(
     private applicationAvailabilityService:
@@ -29,19 +35,18 @@ export class AppComponent implements OnInit {
   ) {
   }
 
+
   ngOnInit(): void {
 
-    /*
-     * Toda nova inicialização do frontend começa
-     * sem uma sessão anterior.
-     *
-     * Isso impede que uma sessão antiga seja
-     * restaurada depois que o npm start foi
-     * interrompido e iniciado novamente.
-     */
     this.sessionService.clearSession();
+
 
     this.applicationAvailabilityService
       .startMonitoring();
+
+
+    blockSavePasswordRule();
+
   }
+
 }

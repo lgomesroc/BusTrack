@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BusTrack.BusTrack.API.ControllersAPI
 {
-    [Route("api/[controller]")]
+    [Route("api/TripsPassenger")]
     [ApiController]
     public class TripsPassengerControllerAPI : ControllerBase
     {

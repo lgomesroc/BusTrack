@@ -11,9 +11,13 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 {
     public class PassengerServiceAPITests
     {
-        private Mock<IPassengerRepositoryDB> _passengerRepository;
-        private IMapper _mapper;
-        private PassengerServiceAPI _passengerServiceAPI;
+        private readonly Mock<IPassengerRepositoryDB>
+            _passengerRepository;
+
+        private readonly IMapper _mapper;
+
+        private readonly PassengerServiceAPI
+            _passengerServiceAPI;
 
         public PassengerServiceAPITests()
         {
@@ -23,7 +27,8 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
             var config =
                 new MapperConfiguration(
                     cfg =>
-                        cfg.AddProfile<AutoMapperProfile>(),
+                        cfg.AddProfile<
+                            AutoMapperProfile>(),
                     NullLoggerFactory.Instance);
 
             _mapper =
@@ -38,7 +43,6 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         [Fact]
         public async Task GetAllPassengers_ReturnsAllPassengers()
         {
-            // Arrange
             var passengers =
                 new List<PassengerDB>
                 {
@@ -49,14 +53,13 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
             _passengerRepository
                 .Setup(x =>
                     x.GetAllPassengersAsync())
-                .ReturnsAsync(passengers);
+                .ReturnsAsync(
+                    passengers);
 
-            // Act
             var result =
                 await _passengerServiceAPI
                     .GetAllPassengers();
 
-            // Assert
             Assert.Equal(
                 2,
                 result.Count());
@@ -103,14 +106,10 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                     Email = "john@example.com"
                 };
 
-            var passenger =
-                _mapper.Map<PassengerDB>(
-                    passengerDTO);
-
             _passengerRepository
                 .Setup(x =>
                     x.AddPassengerAsync(
-                        passenger))
+                        It.IsAny<PassengerDB>()))
                 .Returns(
                     Task.CompletedTask);
 
@@ -158,6 +157,23 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                 .ReturnsAsync(
                     existingPassenger);
 
+            _passengerRepository
+                .Setup(x =>
+                    x.UpdatePassengerAsync(
+                        passengerId,
+                        It.IsAny<PassengerDB>()))
+                .Callback(
+                    (string id, PassengerDB passenger) =>
+                    {
+                        existingPassenger.Name =
+                            passenger.Name;
+
+                        existingPassenger.Email =
+                            passenger.Email;
+                    })
+                .Returns(
+                    Task.CompletedTask);
+
             var result =
                 await _passengerServiceAPI
                     .UpdatePassenger(
@@ -173,6 +189,19 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
             Assert.Equal(
                 passengerDTO.Email,
                 result.Email);
+
+            _passengerRepository.Verify(
+                x =>
+                    x.GetPassengerByIdAsync(
+                        passengerId),
+                Times.Once);
+
+            _passengerRepository.Verify(
+                x =>
+                    x.UpdatePassengerAsync(
+                        passengerId,
+                        It.IsAny<PassengerDB>()),
+                Times.Once);
         }
 
         [Fact]
@@ -180,19 +209,6 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         {
             var passengerId =
                 "passengerId";
-
-            var existingPassenger =
-                new PassengerDB
-                {
-                    Id = passengerId
-                };
-
-            _passengerRepository
-                .Setup(x =>
-                    x.GetPassengerByIdAsync(
-                        passengerId))
-                .ReturnsAsync(
-                    existingPassenger);
 
             _passengerRepository
                 .Setup(x =>
@@ -206,6 +222,12 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                         passengerId);
 
             Assert.True(result);
+
+            _passengerRepository.Verify(
+                x =>
+                    x.DeletePassenger(
+                        passengerId),
+                Times.Once);
         }
     }
 }

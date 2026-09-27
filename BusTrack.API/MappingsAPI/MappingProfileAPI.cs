@@ -134,6 +134,41 @@ namespace BusTrack.BusTrack.API.MappingsAPI
                     destination => destination.Email,
                     options => options.Ignore());
 
+            CreateMap<PassengerDB, PassengerDTOAPI>();
+
+            CreateMap<PassengerDTOAPI, PassengerDB>();
+
+            CreateMap<PassengerDTOAPI, PassengerModelAPI>()
+                .ForMember(
+                    destination => destination.Id,
+                    options => options.Ignore())
+                .ForMember(
+                    destination => destination.Name,
+                    options => options.MapFrom(
+                        source => source.Name))
+                .ForMember(
+                    destination => destination.Age,
+                    options => options.MapFrom(
+                        source => source.Age));
+
+            CreateMap<PassengerModelAPI, PassengerDB>()
+                .ForMember(
+                    destination => destination.Id,
+                    options => options.Ignore())
+                .ForMember(
+                    destination => destination.Name,
+                    options => options.MapFrom(
+                        source => source.Name))
+                .ForMember(
+                    destination => destination.Cpf,
+                    options => options.Ignore())
+                .ForMember(
+                    destination => destination.Email,
+                    options => options.Ignore())
+                .ForMember(
+                    destination => destination.Phone,
+                    options => options.Ignore());
+
             CreateMap<RouteDB, RouteDTOAPI>()
                 .ForMember(
                     destination => destination.Id,

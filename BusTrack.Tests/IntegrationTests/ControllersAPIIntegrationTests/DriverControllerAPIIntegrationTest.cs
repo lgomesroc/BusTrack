@@ -1,15 +1,17 @@
-﻿using System.Text;
-using System.Net;
-using Newtonsoft.Json;
+﻿using System.Net;
+using System.Text;
 using BusTrack.Tests.IntegrationTests.CustomWebApplicationFactory;
+using Newtonsoft.Json;
 
 namespace BusTrack.Tests.IntegrationTests.ControllersAPIIntegrationTests
 {
-    public class DriverControllerAPIIntegrationTest : IClassFixture<CustomWebApplicationFactory<Program>>
+    public class DriverControllerAPIIntegrationTest
+        : IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly HttpClient _client;
 
-        public DriverControllerAPIIntegrationTest(CustomWebApplicationFactory<Program> factory)
+        public DriverControllerAPIIntegrationTest(
+            CustomWebApplicationFactory<Program> factory)
         {
             _client = factory.CreateClient();
         }
@@ -17,58 +19,135 @@ namespace BusTrack.Tests.IntegrationTests.ControllersAPIIntegrationTests
         [Fact]
         public async Task Get_ReturnsSuccessStatusCode()
         {
+            var response =
+                await _client.GetAsync("/api/Driver");
 
-            var response = await _client.GetAsync("/api/Driver");
-
-            response.EnsureSuccessStatusCode(); 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(
+                HttpStatusCode.OK,
+                response.StatusCode);
         }
 
         [Fact]
         public async Task GetById_ReturnsSuccessStatusCode()
         {
-            var id = 1;
+            var id = await CreateDriverAsync();
 
-            var response = await _client.GetAsync($"/api/Driver/{id}");
+            var response =
+                await _client.GetAsync(
+                    $"/api/Driver/{id}");
 
-            response.EnsureSuccessStatusCode(); 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(
+                HttpStatusCode.OK,
+                response.StatusCode);
         }
 
         [Fact]
-        public async Task Post_ReturnsSuccessStatusCode()
+        public async Task Post_ReturnsCreatedStatusCode()
         {
-            var driver = new { Name = "Test Driver", LicenseNumber = "ABC123" };
-            var content = new StringContent(JsonConvert.SerializeObject(driver), Encoding.UTF8, "application/json");
+            var driver = new
+            {
+                Name = $"Test Driver {Guid.NewGuid()}",
+                LicenseNumber = "ABC123"
+            };
 
-            var response = await _client.PostAsync("/api/Driver", content);
+            var content =
+                new StringContent(
+                    JsonConvert.SerializeObject(driver),
+                    Encoding.UTF8,
+                    "application/json");
 
-            response.EnsureSuccessStatusCode(); 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var response =
+                await _client.PostAsync(
+                    "/api/Driver",
+                    content);
+
+            Assert.Equal(
+                HttpStatusCode.Created,
+                response.StatusCode);
         }
 
         [Fact]
         public async Task Put_ReturnsSuccessStatusCode()
         {
-            var id = 1;
-            var driver = new { Name = "Updated Test Driver", LicenseNumber = "XYZ789" };
-            var content = new StringContent(JsonConvert.SerializeObject(driver), Encoding.UTF8, "application/json");
+            var id = await CreateDriverAsync();
 
-            var response = await _client.PutAsync($"/api/Driver/{id}", content);
+            var driver = new
+            {
+                Name = $"Updated Driver {Guid.NewGuid()}",
+                LicenseNumber = "XYZ789"
+            };
 
-            response.EnsureSuccessStatusCode(); 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var content =
+                new StringContent(
+                    JsonConvert.SerializeObject(driver),
+                    Encoding.UTF8,
+                    "application/json");
+
+            var response =
+                await _client.PutAsync(
+                    $"/api/Driver/{id}",
+                    content);
+
+            Assert.Equal(
+                HttpStatusCode.OK,
+                response.StatusCode);
         }
 
         [Fact]
-        public async Task Delete_ReturnsSuccessStatusCode()
+        public async Task Delete_ReturnsNoContentStatusCode()
         {
-            var id = 1;
+            var id = await CreateDriverAsync();
 
-            var response = await _client.DeleteAsync($"/api/Driver/{id}");
+            var response =
+                await _client.DeleteAsync(
+                    $"/api/Driver/{id}");
 
-            response.EnsureSuccessStatusCode(); 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(
+                HttpStatusCode.NoContent,
+                response.StatusCode);
+        }
+
+        private async Task<string> CreateDriverAsync()
+        {
+            var driver = new
+            {
+                Name = $"Integration Driver {Guid.NewGuid()}",
+                LicenseNumber = "ABC123"
+            };
+
+            var content =
+                new StringContent(
+                    JsonConvert.SerializeObject(driver),
+                    Encoding.UTF8,
+                    "application/json");
+
+            var response =
+                await _client.PostAsync(
+                    "/api/Driver",
+                    content);
+
+            Assert.Equal(
+                HttpStatusCode.Created,
+                response.StatusCode);
+
+            var responseBody =
+                await response.Content.ReadAsStringAsync();
+
+            var createdDriver =
+                JsonConvert.DeserializeObject<DriverResponse>(
+                    responseBody);
+
+            Assert.NotNull(createdDriver);
+            Assert.False(
+                string.IsNullOrWhiteSpace(
+                    createdDriver!.Id));
+
+            return createdDriver.Id!;
+        }
+
+        private sealed class DriverResponse
+        {
+            public string? Id { get; set; }
         }
     }
 }

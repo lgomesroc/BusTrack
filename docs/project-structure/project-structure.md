@@ -796,7 +796,17 @@ Preciso saber O QUE é o projeto?
 Abaixo todos os arquivos e pastas atualizados do projeto num todo
 
 ```text
-BusTrack                                   
+BusTrack
+│
+├── .github/
+│   └── workflows/
+│   │   ├── backend-build.yml
+│   │   ├── backend-tests.yml
+│   │   ├── cd.yml
+│   │   ├── ci.yml
+│   │   ├── deploy.yml
+│   │   ├── docker-build.yml
+│   │   └── frontend-build.yml                            
 ├── BusTrack.API                                  
 │   ├── ControllersAPI                             
 │   │   ├── AccountControllerAPI.cs                     
@@ -817,7 +827,7 @@ BusTrack
 │   │   ├── PassengerDTOAPI.cs                        
 │   │   ├── RouteDTOAPI.cs                            
 │   │   ├── TripDTOAPI.cs
-TripDetailsDTOAPI.cs                           
+│   │   ├── TripDetailsDTOAPI.cs                           
 │   │   ├── TripPassengerDTOAPI.cs                  
 │   │   └── UpdatePasswordDTOAPI.cs                     
 │   ├── InterfacesAPI                                    
@@ -867,9 +877,9 @@ TripDetailsDTOAPI.cs
 │   │   ├── PasswordRecordDB.cs                   
 │   │   ├── RouteDB.cs                             
 │   │   ├── TripDB.cs                                 
-│   │   └── TripsPassengerDB.cs                       
-│   │   └── UserDB.cs                               
-│   │   └── UserPasswordHistoryDB.cs                
+│   │   ├── TripsPassengerDB.cs                       
+│   │   ├── UserDB.cs                               
+│   │   ├── UserPasswordHistoryDB.cs                
 │   │   └── UserRegistrationDB.cs                 
 │   ├── ConnectionsDB                              
 │   │   └── ConnectionDB.cs                         
@@ -1100,11 +1110,15 @@ TripDetailsDTOAPI.cs
 │   ├── api/
 │   │   └── Dockerfile
 │   └── frontend/
-│   │   └── Dockerfile        
+│   │   └── Dockerfile
+├── .dockerignore
+├── .gitignore   
 ├── appsettings.json
 ├── appsettings.Development.json
 ├── BusTrack.csproj
 ├── BusTrack.sln
+├── docker-compose.yml
+├── Dockerfile
 ├── firebase.firebaserc
 ├── fiberase.json
 ├── LICENSE.md

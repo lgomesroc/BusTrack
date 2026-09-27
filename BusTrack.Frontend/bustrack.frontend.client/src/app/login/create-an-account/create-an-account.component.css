@@ -7,18 +7,23 @@ body {
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-}
-
-.container {
+  box-sizing: border-box;
+  }
+  
+  * {
+    box-sizing: border-box;
+    }
+  
+  .container {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
   max-width: 1200px;
   padding: 20px;
-}
-
-.centered-title {
+  }
+  
+  .centered-title {
   text-align: center;
   width: 100%;
   margin: 0;
@@ -26,64 +31,183 @@ body {
   font-size: 24px;
   font-weight: bold;
   color: #333;
-}
-
-img {
+  line-height: 1.4;
+  }
+  
+  img {
   display: block;
-  margin: 20px auto; 
+  width: 200px;
   max-width: 50%;
   height: auto;
-}
-
-.form-group {
+  margin: 20px auto;
+  }
+  
+  form {
+  width: 100%;
+  max-width: 500px;
+  }
+  
+  .form-group {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 100%; 
-  margin-bottom: 20px; 
-}
-
-.button-container {
+  align-items: stretch;
+  width: 100%;
+  margin-bottom: 20px;
+  }
+  
+  .form-group label {
+  margin-bottom: 6px;
+  font-weight: bold;
+  color: #333;
+  }
+  
+  .form-group input {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  background-color: #fff;
+  }
+  
+  .form-group input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.15);
+  }
+  
+  .form-group input::placeholder {
+  color: #888;
+  }
+  
+  .button-container {
   display: flex;
-  flex-direction: row; 
-  justify-content: space-between; 
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
-  gap: 20px;
-  margin-top: auto; 
-}
-
-.blue-button {
+  flex-wrap: wrap;
+  gap: 12px;
+  width: 100%;
+  margin-top: 10px;
+  }
+  
+  .blue-button {
   padding: 10px 20px;
+  min-height: 44px;
   background-color: #007bff;
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color .3s ease-in-out;
-  margin: 0 10px; 
-}
-
+  transition: background-color 0.3s ease-in-out;
+  margin: 0;
+  font-size: 15px;
+  }
+  
   .blue-button:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
   }
-
+  
   .blue-button:disabled {
-    background-color: #cccccc;
-    color: #808080;
-    cursor: not-allowed;
+  background-color: #cccccc;
+  color: #808080;
+  cursor: not-allowed;
   }
-
-.error-message {
-  color: red;
-}
-
-@media (max-width :768px) {
+  
+  .error-message {
+  width: 100%;
+  margin-top: 6px;
+  color: #dc3545;
+  font-size: 14px;
+  line-height: 1.4;
+  }
+  
+  /* Tablet */
+  @media (max-width: 768px) {
+  .container {
+  padding: 16px;
+  }
+  
+  .centered-title {
+  padding: 16px 8px;
+  font-size: 21px;
+  }
+  
   img {
-    max-width: 80%;
+  width: 180px;
+  max-width: 60%;
+  margin: 16px auto;
   }
-
+  
+  form {
+  max-width: 600px;
+  }
+  
   .button-container {
-    flex-direction: column; 
-    gap: 10px;
+  flex-direction: column;
+  align-items: stretch;
   }
-}
+  
+  .blue-button {
+  width: 100%;
+  }
+  }
+  
+  /* Celular */
+  @media (max-width: 480px) {
+  .container {
+  padding: 12px;
+  }
+  
+  .centered-title {
+  padding: 12px 4px;
+  font-size: 18px;
+  line-height: 1.3;
+  }
+  
+  img {
+  width: 140px;
+  max-width: 50%;
+  margin: 12px auto 20px;
+  }
+  
+  .form-group {
+  margin-bottom: 16px;
+  }
+  
+  .form-group label {
+  font-size: 15px;
+  }
+  
+  .form-group input {
+  min-height: 46px;
+  padding: 10px;
+  font-size: 16px;
+  }
+  
+  .blue-button {
+  min-height: 46px;
+  font-size: 16px;
+  }
+  
+  .error-message {
+  font-size: 13px;
+  }
+  }
+  
+  /* Celulares muito pequenos */
+  @media (max-width: 360px) {
+  .container {
+  padding: 8px;
+  }
+  
+  .centered-title {
+  font-size: 17px;
+  }
+  
+  img {
+  width: 120px;
+  }
+  }
+  
