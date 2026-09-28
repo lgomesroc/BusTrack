@@ -2,6 +2,11 @@ name: Backend Tests
 
 on:
   workflow_call:
+    secrets:
+      BUSTRACK_TEST_EMAIL:
+        required: true
+      BUSTRACK_TEST_PASSWORD:
+        required: true
 
 jobs:
   test:
@@ -90,13 +95,47 @@ jobs:
       - name: Restore tests
         run: dotnet restore BusTrack.Tests/BusTrack.Tests.csproj
 
+      - name: Create test user
+        env:
+          BUSTRACK_TEST_EMAIL: ${{ secrets.BUSTRACK_TEST_EMAIL }}
+          BUSTRACK_TEST_PASSWORD: ${{ secrets.BUSTRACK_TEST_PASSWORD }}
+        run: |
+          payload=$(jq -n \
+            --arg fullName "BusTrack CI Test User" \
+            --arg cpf "12345678909" \
+            --arg email "$BUSTRACK_TEST_EMAIL" \
+            --arg password "$BUSTRACK_TEST_PASSWORD" \
+            '{
+              fullName: $fullName,
+              cpf: $cpf,
+              email: $email,
+              password: $password
+            }')
+
+          echo "Criando usuário de teste no ambiente do CI..."
+
+          curl --fail-with-body \
+            --silent \
+            --show-error \
+            -X POST \
+            http://localhost:5066/AuthenticationControllerAPI/create \
+            -H "Content-Type: application/json" \
+            --data "$payload"
+
+          echo
+          echo "Usuário de teste criado com sucesso."
+
       - name: Run backend tests
         env:
           ConnectionStrings__BusTrackDBConnection: mongodb://localhost:27017
           ConnectionStrings__DatabaseName: BusTrackDB
           BUSTRACK_TEST_EMAIL: ${{ secrets.BUSTRACK_TEST_EMAIL }}
           BUSTRACK_TEST_PASSWORD: ${{ secrets.BUSTRACK_TEST_PASSWORD }}
-        run: dotnet test BusTrack.Tests/BusTrack.Tests.csproj --configuration Release --no-restore
+        run: |
+          dotnet test \
+            BusTrack.Tests/BusTrack.Tests.csproj \
+            --configuration Release \
+            --no-restore
 
       - name: Show Docker logs on failure
         if: failure()
