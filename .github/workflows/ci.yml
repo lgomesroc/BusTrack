@@ -30,4 +30,3 @@ jobs:
       - frontend-build
 
     uses: ./.github/workflows/docker-build.yml
-    
