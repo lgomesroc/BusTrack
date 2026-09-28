@@ -80,7 +80,7 @@ export class TripService {
 
   getTrips(): Observable<Trip[]> {
     return this.http.get<Trip[]>(
-      `${this.apiUrl}/api/TripControllerAPI`
+      `${this.apiUrl}/api/Trip`
     );
   }
 
@@ -88,7 +88,7 @@ export class TripService {
     trip: TripPayload
   ): Observable<TripPayload> {
     return this.http.post<TripPayload>(
-      `${this.apiUrl}/api/TripControllerAPI`,
+      `${this.apiUrl}/api/Trip`,
       trip
     );
   }
@@ -98,7 +98,7 @@ export class TripService {
     trip: TripPayload
   ): Observable<TripPayload> {
     return this.http.put<TripPayload>(
-      `${this.apiUrl}/api/TripControllerAPI/${id}`,
+      `${this.apiUrl}/api/Trip/${id}`,
       trip
     );
   }
@@ -107,13 +107,13 @@ export class TripService {
     id: string
   ): Observable<void> {
     return this.http.delete<void>(
-      `${this.apiUrl}/api/TripControllerAPI/${id}`
+      `${this.apiUrl}/api/Trip/${id}`
     );
   }
 
   getBuses(): Observable<Bus[]> {
     return this.http.get<Bus[]>(
-      `${this.apiUrl}/api/BusControllerAPI`
+      `${this.apiUrl}/api/Bus`
     );
   }
 

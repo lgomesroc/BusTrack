@@ -18,7 +18,7 @@ export interface Bus {
 export class BusService {
 
   private readonly apiUrl =
-    `${environment.apiUrl}/api/BusControllerAPI`;
+    `${environment.apiUrl}/api/Bus`;
 
   constructor(private http: HttpClient) {}
 
