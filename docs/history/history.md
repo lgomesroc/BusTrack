@@ -2,6 +2,28 @@
 
 Este documento registra as principais alterações, correções, implementações e evoluções realizadas no Bus Track ao longo do desenvolvimento do projeto.
 
+## 2026-09-28
+
+* Início da implantação do Bus Track em ambiente de produção utilizando Render para hospedagem do frontend Angular e da API ASP.NET Core.
+* Publicação da API do Bus Track no Render utilizando Dockerfile próprio para o backend.
+* Publicação do frontend Angular no Render utilizando o build de produção da aplicação.
+* Ajuste do diretório de publicação do frontend Angular para utilizar a saída `dist/bustrack.frontend.client/browser` gerada pelo build de produção.
+* Disponibilização do frontend e da API através de URLs públicas no ambiente de produção:
+  * **Repositório do projeto:** https://github.com/lgomesroc/BusTrack
+  * **Frontend:** https://bustrack-frontend-2cbs.onrender.com
+  * **API:** https://bustrack-8yuy.onrender.com
+  * **Health Check:** https://bustrack-8yuy.onrender.com/api/Health
+* Configuração do CORS do backend para permitir a comunicação entre a API hospedada no Render e o frontend hospedado no domínio público do Bus Track.
+* Validação da comunicação com o endpoint `GET /api/Health` em ambiente de produção, confirmando o funcionamento da API e do CORS para o domínio do frontend.
+* Identificação de inconsistências entre algumas URLs utilizadas pelo frontend e as rotas efetivamente definidas nos controllers da API.
+* Correção das URLs utilizadas pelo frontend para comunicação com os módulos de Ônibus e Viagens, adequando as chamadas aos endpoints `/api/Bus` e `/api/Trip`.
+* Criação da branch `fix/cors-render` para implementação e integração das correções relacionadas ao CORS do ambiente de produção.
+* Criação da branch `fix/frontend-api-routes` para correção das rotas utilizadas pelo frontend na comunicação com a API.
+* Execução e validação do build de produção do frontend Angular após as alterações.
+* Execução dos processos de CI/CD após as alterações, com validação da compilação e implantação da aplicação.
+* Identificação de que os módulos de Motoristas e Rotas ainda permanecem em desenvolvimento no frontend e serão implementados posteriormente.
+* Continuação da evolução do projeto com foco na conclusão dos módulos funcionais e na validação completa da aplicação em ambiente de produção.
+
 ## 2026-09-24
 
 * Atualização da configuração do projeto para suportar diferentes ambientes de execução utilizando arquivos `environment.ts` e `environment.prod.ts` no frontend Angular.

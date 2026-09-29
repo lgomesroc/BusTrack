@@ -29,6 +29,13 @@ A documentação detalhada apresenta o funcionamento de cada módulo, suas regra
 
 [Ver documentação completa das funcionalidades](docs/functionalities/functionalities.md)
 
+## Links do Projeto
+
+* **Aplicação:** https://bustrack-frontend-2cbs.onrender.com
+* **API:** https://bustrack-8yuy.onrender.com
+* **Health Check:** https://bustrack-8yuy.onrender.com/api/Health
+* **Repositório:** https://github.com/lgomesroc/BusTrack
+
 ## Tecnologias
 
 O Bus Track utiliza uma stack composta por **C# e .NET 10 com ASP.NET Core** no backend, **Angular e TypeScript** no frontend e **MongoDB** para persistência dos dados.
