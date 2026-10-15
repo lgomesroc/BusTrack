@@ -17,6 +17,7 @@ import {
   Route,
   TripService
 } from '../../services/trip.service';
+import { RouteService } from '../../services/route.service';
 
 @Component({
   selector: 'app-trips',
@@ -46,7 +47,8 @@ export class TripsComponent implements OnInit {
   constructor(
     private router: Router,
 
-    private tripService: TripService
+    private tripService: TripService,
+    private routeService: RouteService
   ) {
   }
 
@@ -72,7 +74,7 @@ export class TripsComponent implements OnInit {
         this.tripService.getDrivers(),
 
       routes:
-        this.tripService.getRoutes()
+        this.routeService.getRoutes()
     }).subscribe({
 
       next: (result) => {
