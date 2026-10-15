@@ -117,10 +117,4 @@ export class TripService {
     );
   }
 
-  getDrivers(): Observable<Driver[]> {
-    return this.http.get<Driver[]>(
-      `${this.apiUrl}/api/DriverControllerAPI`
-    );
-  }
-
 }
