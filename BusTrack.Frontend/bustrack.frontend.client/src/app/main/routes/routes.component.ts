@@ -67,7 +67,7 @@ export class RoutesComponent implements OnInit {
 
     const payload = {
       name: this.routeForm.name.trim(),
-      description: this.routeForm.description.trim(),
+      description: (this.routeForm.description ?? '').trim(),
       origin: this.routeForm.origin.trim(),
       destination: this.routeForm.destination.trim(),
       distance: Number(this.routeForm.distance)
@@ -142,7 +142,14 @@ export class RoutesComponent implements OnInit {
       return false;
     }
 
-    if (!Number.isInteger(Number(this.routeForm.distance)) || Number(this.routeForm.distance) < 0) {
+    const rawDistance = this.routeForm.distance as number | string | null | undefined;
+    if (rawDistance === null || rawDistance === undefined || String(rawDistance).trim() === '') {
+      this.errorMessage = 'Informe a distância da rota.';
+      return false;
+    }
+
+    const distance = Number(rawDistance);
+    if (!Number.isInteger(distance) || distance < 0) {
       this.errorMessage = 'A distância deve ser um número inteiro igual ou maior que zero.';
       return false;
     }
