@@ -1020,7 +1020,9 @@ BusTrack
 │   │   │   │   │   └── user.model.ts                        
 │   │   │   │   ├── services
 │   │   │   │   │   │   ├── application-availability.service.ts
-│   │   │   │   │   │   └── bus.service.ts                              
+│   │   │   │   │   │   ├── bus.service.ts
+│   │   │   │   │   ├── driver.service.ts
+│   │   │   │   │   ├── route.service.ts                              
 │   │   │   │   │   ├── data.service.ts
 │   │   │   │   │   ├── session.service.ts
 │   │   │   │   │   ├── trip.service.ts                    

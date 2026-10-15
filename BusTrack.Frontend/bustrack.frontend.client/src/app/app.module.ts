@@ -18,10 +18,10 @@ import { SidebarComponent } from './main/sidebar/sidebar.component';
 import { TripsComponent } from './main/trips/trips.component';
 import { BusesComponent } from './main/buses/buses.component';
 import { RoutesComponent } from './main/routes/routes.component';
+import { DriversComponent } from './main/drivers/drivers.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 @NgModule({
-
   declarations: [
     AppComponent,
     MainScreenComponent,
@@ -34,9 +34,9 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     SidebarComponent,
     TripsComponent,
     BusesComponent,
-    RoutesComponent
+    RoutesComponent,
+    DriversComponent
   ],
-
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -44,13 +44,9 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     ReactiveFormsModule,
     HttpClientModule
   ],
-
   providers: [
     provideAnimationsAsync()
   ],
-
   bootstrap: [AppComponent]
-
 })
-
-export class AppModule { }
+export class AppModule {}
