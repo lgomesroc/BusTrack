@@ -17,6 +17,7 @@ import { DashboardComponent } from './main/dashboard/dashboard.component';
 import { SidebarComponent } from './main/sidebar/sidebar.component';
 import { TripsComponent } from './main/trips/trips.component';
 import { BusesComponent } from './main/buses/buses.component';
+import { RoutesComponent } from './main/routes/routes.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 @NgModule({
@@ -32,7 +33,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     DashboardComponent,
     SidebarComponent,
     TripsComponent,
-    BusesComponent
+    BusesComponent,
+    RoutesComponent
   ],
 
   imports: [

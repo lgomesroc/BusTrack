@@ -1,0 +1,85 @@
+<main class="routes-container">
+  <header class="routes-header">
+    <div>
+      <h1>Rotas</h1>
+      <p>Cadastre e mantenha as rotas do Bus Track.</p>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="secondary-button" (click)="backToDashboard()">Voltar ao dashboard</button>
+      <button type="button" class="primary-button" (click)="startCreate()" [disabled]="isLoading">Criar rota</button>
+    </div>
+  </header>
+
+  <div class="error-message" *ngIf="errorMessage" role="alert">{{ errorMessage }}</div>
+
+  <section class="route-form" *ngIf="isCreating || editingRoute">
+    <div class="section-heading">
+      <h2>{{ editingRoute ? 'Editar rota' : 'Nova rota' }}</h2>
+      <p>Informe o nome, o percurso e a distância.</p>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="route-name">Nome da rota *</label>
+        <input id="route-name" name="name" type="text" required [(ngModel)]="routeForm.name" maxlength="120" placeholder="Ex.: Centro - Aeroporto">
+      </div>
+      <div class="form-group">
+        <label for="route-origin">Origem *</label>
+        <input id="route-origin" name="origin" type="text" required [(ngModel)]="routeForm.origin" maxlength="150" placeholder="Ponto de partida">
+      </div>
+      <div class="form-group">
+        <label for="route-destination">Destino *</label>
+        <input id="route-destination" name="destination" type="text" required [(ngModel)]="routeForm.destination" maxlength="150" placeholder="Ponto de chegada">
+      </div>
+      <div class="form-group">
+        <label for="route-distance">Distância (km) *</label>
+        <input id="route-distance" name="distance" type="number" min="0" step="1" required [(ngModel)]="routeForm.distance" placeholder="Ex.: 18">
+      </div>
+      <div class="form-group full-width">
+        <label for="route-description">Descrição</label>
+        <textarea id="route-description" name="description" rows="3" [(ngModel)]="routeForm.description" maxlength="1000" placeholder="Informações adicionais sobre o percurso (opcional)"></textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="button" class="secondary-button" (click)="cancelEdit()" [disabled]="isLoading">Cancelar</button>
+      <button type="button" class="primary-button" (click)="saveRoute()" [disabled]="isLoading">{{ isLoading ? 'Salvando...' : (editingRoute ? 'Salvar alterações' : 'Cadastrar rota') }}</button>
+    </div>
+  </section>
+
+  <section class="routes-list">
+    <div class="section-heading">
+      <div>
+        <h2>Rotas cadastradas</h2>
+        <p *ngIf="isLoading">Carregando...</p>
+        <p *ngIf="!isLoading">{{ routes.length }} {{ routes.length === 1 ? 'rota cadastrada' : 'rotas cadastradas' }}</p>
+      </div>
+      <button type="button" class="secondary-button refresh-button" (click)="loadRoutes()" [disabled]="isLoading">Atualizar lista</button>
+    </div>
+
+    <div class="empty-state" *ngIf="!isLoading && routes.length === 0">
+      <h3>Nenhuma rota cadastrada</h3>
+      <p>Cadastre a primeira rota para começar a organizar os percursos.</p>
+      <button type="button" class="primary-button" (click)="startCreate()">Criar primeira rota</button>
+    </div>
+
+    <div class="table-wrapper" *ngIf="routes.length > 0">
+      <table>
+        <thead>
+          <tr><th>Nome</th><th>Origem</th><th>Destino</th><th>Distância</th><th>Descrição</th><th>Ações</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let route of routes">
+            <td data-label="Nome">{{ route.name || '—' }}</td>
+            <td data-label="Origem">{{ route.origin || '—' }}</td>
+            <td data-label="Destino">{{ route.destination || '—' }}</td>
+            <td data-label="Distância">{{ route.distance }} km</td>
+            <td data-label="Descrição" class="description-cell">{{ route.description || '—' }}</td>
+            <td data-label="Ações" class="actions-cell">
+              <button type="button" class="edit-button" (click)="startEdit(route)" [disabled]="isLoading">Editar</button>
+              <button type="button" class="delete-button" (click)="deleteRoute(route)" [disabled]="isLoading">Excluir</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
