@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Route, TripService } from '../../services/trip.service';
+import { Route } from '../../services/trip.service';
+import { RouteService } from '../../services/route.service';
 
 @Component({
   selector: 'app-routes',
@@ -17,7 +18,7 @@ export class RoutesComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private tripService: TripService
+    private routeService: RouteService
   ) {}
 
   ngOnInit(): void {
@@ -27,7 +28,7 @@ export class RoutesComponent implements OnInit {
   loadRoutes(): void {
     this.isLoading = true;
     this.errorMessage = '';
-    this.tripService.getRoutes().subscribe({
+    this.routeService.getRoutes().subscribe({
       next: routes => {
         this.routes = routes ?? [];
         this.isLoading = false;
@@ -74,8 +75,8 @@ export class RoutesComponent implements OnInit {
 
     this.isLoading = true;
     const request = this.editingRoute
-      ? this.tripService.updateRoute(this.editingRoute.id, payload)
-      : this.tripService.createRoute(payload);
+      ? this.routeService.updateRoute(this.editingRoute.id, payload)
+      : this.routeService.createRoute(payload);
 
     request.subscribe({
       next: savedRoute => {
@@ -103,7 +104,7 @@ export class RoutesComponent implements OnInit {
 
     this.errorMessage = '';
     this.isLoading = true;
-    this.tripService.deleteRoute(route.id).subscribe({
+    this.routeService.deleteRoute(route.id).subscribe({
       next: () => {
         this.routes = this.routes.filter(item => item.id !== route.id);
         this.isLoading = false;

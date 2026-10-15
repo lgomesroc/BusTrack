@@ -117,25 +117,4 @@ export class TripService {
     );
   }
 
-  getDrivers(): Observable<Driver[]> {
-    return this.http.get<Driver[]>(
-      `${this.apiUrl}/api/DriverControllerAPI`
-    );
-  }
-
-  getRoutes(): Observable<Route[]> {
-    return this.http.get<Route[]>(`${this.apiUrl}/api/Route`);
-  }
-
-  createRoute(route: Omit<Route, 'id'>): Observable<Route> {
-    return this.http.post<Route>(`${this.apiUrl}/api/Route`, route);
-  }
-
-  updateRoute(id: string, route: Omit<Route, 'id'>): Observable<Route> {
-    return this.http.put<Route>(`${this.apiUrl}/api/Route/${id}`, route);
-  }
-
-  deleteRoute(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/api/Route/${id}`);
-  }
 }

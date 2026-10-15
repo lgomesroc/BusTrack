@@ -1,0 +1,80 @@
+<main class="drivers-container">
+  <header class="drivers-header">
+    <div>
+      <h1>Motoristas</h1>
+      <p>Cadastre e mantenha os motoristas do Bus Track.</p>
+    </div>
+
+    <div class="header-actions">
+      <button type="button" class="secondary-button" (click)="backToDashboard()">Voltar ao dashboard</button>
+      <button type="button" class="primary-button" (click)="startCreate()" [disabled]="isLoading">Cadastrar motorista</button>
+    </div>
+  </header>
+
+  <div class="error-message" *ngIf="errorMessage" role="alert">{{ errorMessage }}</div>
+
+  <section class="driver-form" *ngIf="isCreating || editingDriver">
+    <div class="section-heading">
+      <h2>{{ editingDriver ? 'Editar motorista' : 'Novo motorista' }}</h2>
+      <p>Informe o nome e o CPF ou número de identificação usado pelo sistema.</p>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="driver-name">Nome completo *</label>
+        <input id="driver-name" name="name" type="text" required [(ngModel)]="driverForm.name" maxlength="150" autocomplete="name" placeholder="Nome do motorista">
+      </div>
+
+      <div class="form-group">
+        <label for="driver-license">CPF / identificação *</label>
+        <input id="driver-license" name="licenseNumber" type="text" required [(ngModel)]="driverForm.licenseNumber" maxlength="30" placeholder="CPF ou número de identificação">
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="secondary-button" (click)="cancelEdit()" [disabled]="isLoading">Cancelar</button>
+      <button type="button" class="primary-button" (click)="saveDriver()" [disabled]="isLoading">
+        {{ isLoading ? 'Salvando...' : (editingDriver ? 'Salvar alterações' : 'Cadastrar motorista') }}
+      </button>
+    </div>
+  </section>
+
+  <section class="drivers-list">
+    <div class="section-heading list-heading">
+      <div>
+        <h2>Motoristas cadastrados</h2>
+        <p *ngIf="isLoading">Carregando motoristas...</p>
+        <p *ngIf="!isLoading">{{ drivers.length }} {{ drivers.length === 1 ? 'motorista cadastrado' : 'motoristas cadastrados' }}</p>
+      </div>
+      <button type="button" class="secondary-button refresh-button" (click)="loadDrivers()" [disabled]="isLoading">Atualizar lista</button>
+    </div>
+
+    <div class="empty-state" *ngIf="!isLoading && drivers.length === 0">
+      <h3>Nenhum motorista cadastrado</h3>
+      <p>Cadastre o primeiro motorista para começar a gerenciar a equipe.</p>
+      <button type="button" class="primary-button" (click)="startCreate()">Cadastrar primeiro motorista</button>
+    </div>
+
+    <div class="table-wrapper" *ngIf="drivers.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>CPF / identificação</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let driver of drivers">
+            <td data-label="Nome">{{ driver.name || '—' }}</td>
+            <td data-label="CPF / identificação">{{ driver.licenseNumber || '—' }}</td>
+            <td data-label="Ações" class="actions-cell">
+              <button type="button" class="edit-button" (click)="startEdit(driver)" [disabled]="isLoading">Editar</button>
+              <button type="button" class="delete-button" (click)="deleteDriver(driver)" [disabled]="isLoading">Excluir</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
