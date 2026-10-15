@@ -114,7 +114,7 @@ const routes: Routes = [
 
   {
     path: 'routes',
-    component: DashboardComponent,
+    component: RoutesComponent,
     canActivate: [
       AuthenticationGuard,
       BrowserNavigationGuard
