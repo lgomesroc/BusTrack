@@ -22,12 +22,12 @@
     <div class="form-grid">
       <div class="form-group">
         <label for="driver-name">Nome completo *</label>
-        <input id="driver-name" name="name" type="text" [(ngModel)]="driverForm.name" maxlength="150" autocomplete="name" placeholder="Nome do motorista">
+        <input id="driver-name" name="name" type="text" required [(ngModel)]="driverForm.name" maxlength="150" autocomplete="name" placeholder="Nome do motorista">
       </div>
 
       <div class="form-group">
         <label for="driver-license">CPF / identificação *</label>
-        <input id="driver-license" name="licenseNumber" type="text" [(ngModel)]="driverForm.licenseNumber" maxlength="30" placeholder="CPF ou número de identificação">
+        <input id="driver-license" name="licenseNumber" type="text" required [(ngModel)]="driverForm.licenseNumber" maxlength="30" placeholder="CPF ou número de identificação">
       </div>
     </div>
 
