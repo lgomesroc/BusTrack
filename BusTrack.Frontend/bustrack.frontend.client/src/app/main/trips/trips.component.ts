@@ -18,6 +18,7 @@ import {
   TripService
 } from '../../services/trip.service';
 import { RouteService } from '../../services/route.service';
+import { DriverService } from '../../services/driver.service';
 
 @Component({
   selector: 'app-trips',
@@ -48,7 +49,8 @@ export class TripsComponent implements OnInit {
     private router: Router,
 
     private tripService: TripService,
-    private routeService: RouteService
+    private routeService: RouteService,
+    private driverService: DriverService
   ) {
   }
 
@@ -71,7 +73,7 @@ export class TripsComponent implements OnInit {
         this.tripService.getBuses(),
 
       drivers:
-        this.tripService.getDrivers(),
+        this.driverService.getDrivers(),
 
       routes:
         this.routeService.getRoutes()
