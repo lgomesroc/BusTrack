@@ -141,8 +141,8 @@ export class RoutesComponent implements OnInit {
       return false;
     }
 
-    if (!Number.isFinite(Number(this.routeForm.distance)) || Number(this.routeForm.distance) < 0) {
-      this.errorMessage = 'A distância deve ser um número igual ou maior que zero.';
+    if (!Number.isInteger(Number(this.routeForm.distance)) || Number(this.routeForm.distance) < 0) {
+      this.errorMessage = 'A distância deve ser um número inteiro igual ou maior que zero.';
       return false;
     }
 
