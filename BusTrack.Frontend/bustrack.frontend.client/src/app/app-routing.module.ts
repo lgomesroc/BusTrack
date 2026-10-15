@@ -35,6 +35,9 @@ import { TripsComponent }
 import { BusesComponent }
   from './main/buses/buses.component';
 
+import { RoutesComponent }
+  from './main/routes/routes.component';
+
 import { AuthenticationGuard }
   from './guards/authentication.guard';
 
