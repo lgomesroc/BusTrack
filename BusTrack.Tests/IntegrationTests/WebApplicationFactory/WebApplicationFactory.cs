@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
-
 namespace BusTrack.Tests.IntegrationTests.CustomWebApplicationFactory
 {
     public class WebApplicationFactory<TProgram>
-        : Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactory<TProgram>
+        : CustomWebApplicationFactory<TProgram>
         where TProgram : class
     {
         public new HttpClient CreateClient()
