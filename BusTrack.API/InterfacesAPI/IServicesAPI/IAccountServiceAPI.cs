@@ -6,7 +6,7 @@ namespace BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI
     public interface IAccountServiceAPI
     {
         IActionResult Get();
-        AccountModelsAPI GetAccountById(string id);
+        AccountModelsAPI? GetAccountById(string id);
         AccountModelsAPI? GetAccountByEmail(string email);
         void CreateAccount(AccountModelsAPI account);
         IActionResult GetAllAccounts();
