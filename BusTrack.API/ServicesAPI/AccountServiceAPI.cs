@@ -1,4 +1,4 @@
-﻿using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
+using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using BusTrack.BusTrack.API.ModelsAPI;
 using BusTrack.BusTrack.DB.ConnectionsDB;
 using Microsoft.AspNetCore.Mvc;
@@ -15,12 +15,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         public AccountServiceAPI(string connectionString, string databaseName)
         {
             _connectionDB = new ConnectionDB();
-
-            var database = _connectionDB.Connect(
-                connectionString,
-                databaseName
-            );
-
+            var database = _connectionDB.Connect(connectionString, databaseName);
             _accounts = database.GetCollection<AccountModelsAPI>("Accounts");
         }
 
@@ -30,10 +25,10 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 .Find(account => true)
                 .ToList();
 
-            return new OkObjectResult(accounts);
+            return new OkObjectResult(accounts.Select(ToSafeAccount));
         }
 
-        public AccountModelsAPI GetByEmail(string email) =>
+        public AccountModelsAPI? GetAccountByEmail(string email) =>
             _accounts
                 .Find(account => account.Email == email)
                 .FirstOrDefault();
@@ -41,41 +36,36 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         public void CreateAccount(AccountModelsAPI account)
         {
             account.Password = BCryptNet.HashPassword(account.Password);
-
             _accounts.InsertOne(account);
         }
 
-        public IActionResult GetAllAccounts() =>
-            Get();
+        public IActionResult GetAllAccounts() => Get();
 
-        public AccountModelsAPI GetAccountById(string id)
-        {
-            var account = _accounts
+        public AccountModelsAPI? GetAccountById(string id) =>
+            _accounts
                 .Find(account => account.Id == id)
                 .FirstOrDefault();
 
-            return account;
-        }
-
-        public bool UpdateAccount(
-            string id,
-            AccountModelsAPI accountIn)
+        public bool UpdateAccount(string id, AccountModelsAPI accountIn)
         {
             var result = _accounts.ReplaceOne(
                 account => account.Id == id,
-                accountIn
-            );
-
+                accountIn);
             return result.ModifiedCount > 0;
         }
 
         public bool DeleteAccount(string id)
         {
-            var result = _accounts.DeleteOne(
-                account => account.Id == id
-            );
-
+            var result = _accounts.DeleteOne(account => account.Id == id);
             return result.DeletedCount > 0;
         }
+
+        private static object ToSafeAccount(AccountModelsAPI account) => new
+        {
+            account.Id,
+            account.FullName,
+            account.CPF,
+            account.Email
+        };
     }
 }
