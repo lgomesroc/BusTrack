@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using BusTrack.BusTrack.API.DTOAPI;
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using BusTrack.BusTrack.DB.ClassesDB;
@@ -65,6 +66,11 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         [HttpGet("{id}")]
         public IActionResult Read(string id)
         {
+            if (!IsCurrentUser(id))
+            {
+                return Forbid();
+            }
+
             var user = _userService.Read(id);
             if (user == null)
             {
@@ -84,29 +90,30 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         [HttpPut("{id}")]
         public IActionResult Update(string id, [FromBody] UserDB user)
         {
-            if (!string.Equals(
-                User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value,
-                id,
-                StringComparison.Ordinal))
+            if (!IsCurrentUser(id))
             {
                 return Forbid();
             }
 
+            user.Id = id;
             return _userService.Update(id, user);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
-            if (!string.Equals(
-                User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value,
-                id,
-                StringComparison.Ordinal))
+            if (!IsCurrentUser(id))
             {
                 return Forbid();
             }
 
             return _userService.Delete(id);
         }
+
+        private bool IsCurrentUser(string id) =>
+            string.Equals(
+                User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+                id,
+                StringComparison.Ordinal);
     }
 }
