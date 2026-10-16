@@ -31,7 +31,7 @@
 
   <section
     class="passenger-form"
-    *ngIf="isCreating || (sessionService.isAdmin() && editingPassenger)>
+    *ngIf="isCreating || (sessionService.isAdmin() && editingPassenger)">
     <div class="section-heading">
       <h2>{{ editingPassenger ? 'Editar passageiro' : 'Novo passageiro' }}</h2>
       <p>Informe os dados básicos do passageiro.</p>
