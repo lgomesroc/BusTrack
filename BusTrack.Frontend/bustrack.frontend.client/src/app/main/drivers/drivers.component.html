@@ -69,8 +69,8 @@
             <td data-label="Nome">{{ driver.name || '—' }}</td>
             <td data-label="CPF / identificação">{{ driver.licenseNumber || '—' }}</td>
             <td data-label="Ações" class="actions-cell">
-              <button [hidden]="!sessionService.isAdmin()" type="button" class="edit-button" (click)="startEdit(driver)" [disabled]="isLoading">Editar</button>
-              <button [hidden]="!sessionService.isAdmin()" type="button" class="delete-button" (click)="deleteDriver(driver)" [disabled]="isLoading">Excluir</button>
+              <button [hidden]="!sessionService.isAdmin()" type="button" class="edit-button" (click)="startEdit(driver)" [hidden]="!sessionService.isAdmin()" [disabled]="isLoading">Editar</button>
+              <button [hidden]="!sessionService.isAdmin()" type="button" class="delete-button" (click)="deleteDriver(driver)" [hidden]="!sessionService.isAdmin()" [disabled]="isLoading">Excluir</button>
             </td>
           </tr>
         </tbody>
