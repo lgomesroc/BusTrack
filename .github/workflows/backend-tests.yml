@@ -23,12 +23,14 @@ jobs:
 
       - name: Start BusTrack environment
         run: |
+          export BUSTRACK_JWT_SECRET="$(openssl rand -base64 48)"
+          echo "BUSTRACK_JWT_SECRET=$BUSTRACK_JWT_SECRET" >> "$GITHUB_ENV"
           docker compose up -d --build
 
       - name: Wait for backend
         run: |
           for i in {1..30}; do
-            if curl --fail --silent http://localhost:5066/api/Health; then
+            if curl --connect-timeout 2 --max-time 5 --fail --silent http://localhost:5066/api/Health; then
               echo
               echo "Backend disponível."
               exit 0
@@ -45,7 +47,7 @@ jobs:
       - name: Wait for frontend
         run: |
           for i in {1..30}; do
-            if curl --fail --silent http://localhost:4200; then
+            if curl --connect-timeout 2 --max-time 5 --fail --silent http://localhost:4200; then
               echo
               echo "Frontend disponível."
               exit 0
@@ -94,36 +96,6 @@ jobs:
 
       - name: Restore tests
         run: dotnet restore BusTrack.Tests/BusTrack.Tests.csproj
-
-      - name: Create test user
-        env:
-          BUSTRACK_TEST_EMAIL: ${{ secrets.BUSTRACK_TEST_EMAIL }}
-          BUSTRACK_TEST_PASSWORD: ${{ secrets.BUSTRACK_TEST_PASSWORD }}
-        run: |
-          payload=$(jq -n \
-            --arg fullName "BusTrack CI Test User" \
-            --arg cpf "12345678909" \
-            --arg email "$BUSTRACK_TEST_EMAIL" \
-            --arg password "$BUSTRACK_TEST_PASSWORD" \
-            '{
-              fullName: $fullName,
-              cpf: $cpf,
-              email: $email,
-              password: $password
-            }')
-
-          echo "Criando usuário de teste no ambiente do CI..."
-
-          curl --fail-with-body \
-            --silent \
-            --show-error \
-            -X POST \
-            http://localhost:5066/AuthenticationControllerAPI/create \
-            -H "Content-Type: application/json" \
-            --data "$payload"
-
-          echo
-          echo "Usuário de teste criado com sucesso."
 
       - name: Run backend tests
         env:
