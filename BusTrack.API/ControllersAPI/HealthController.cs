@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusTrack.BusTrack.Program.Controllers
@@ -6,6 +7,7 @@ namespace BusTrack.BusTrack.Program.Controllers
     [Route("api/[controller]")]
     public class HealthController : ControllerBase
     {
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Get()
         {
