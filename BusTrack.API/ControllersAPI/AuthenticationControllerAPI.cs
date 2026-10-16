@@ -1,5 +1,8 @@
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using BusTrack.BusTrack.API.DTOAPI;
+using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using BusTrack.BusTrack.DB.ClassesDB;
 using Microsoft.AspNetCore.Authorization;
@@ -13,13 +16,19 @@ namespace BusTrack.BusTrack.API.ControllersAPI
     {
         private readonly IUserAuthenticationServiceAPI _userService;
         private readonly IJwtTokenServiceAPI _jwtTokenService;
+        private readonly IUserRepositoryDB _userRepository;
+        private readonly IConfiguration _configuration;
 
         public AuthenticationControllerAPI(
             IUserAuthenticationServiceAPI userService,
-            IJwtTokenServiceAPI jwtTokenService)
+            IJwtTokenServiceAPI jwtTokenService,
+            IUserRepositoryDB userRepository,
+            IConfiguration configuration)
         {
             _userService = userService;
             _jwtTokenService = jwtTokenService;
+            _userRepository = userRepository;
+            _configuration = configuration;
         }
 
         [AllowAnonymous]
@@ -61,6 +70,70 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             {
                 success = true,
                 message = "Usuário criado com sucesso."
+            });
+        }
+
+        [AllowAnonymous]
+        [HttpPost("bootstrap-admin")]
+        public IActionResult BootstrapAdmin([FromBody] BootstrapAdminRequestDTOAPI request)
+        {
+            var configuredSecret = _configuration["BootstrapAdmin:Secret"];
+            if (string.IsNullOrWhiteSpace(configuredSecret))
+            {
+                return NotFound();
+            }
+
+            if (string.IsNullOrWhiteSpace(request.BootstrapSecret))
+            {
+                return Unauthorized();
+            }
+
+            var expected = Encoding.UTF8.GetBytes(configuredSecret);
+            var supplied = Encoding.UTF8.GetBytes(request.BootstrapSecret);
+            if (expected.Length != supplied.Length ||
+                !CryptographicOperations.FixedTimeEquals(expected, supplied))
+            {
+                return Unauthorized();
+            }
+
+            if (_userRepository.Get().Any(user =>
+                string.Equals(user.Role, "ADMIN", StringComparison.OrdinalIgnoreCase)))
+            {
+                return Conflict(new { message = "O administrador inicial já foi criado." });
+            }
+
+            if (string.IsNullOrWhiteSpace(request.FullName) ||
+                string.IsNullOrWhiteSpace(request.Email) ||
+                string.IsNullOrWhiteSpace(request.Password) ||
+                request.Password.Length < 12)
+            {
+                return BadRequest(new
+                {
+                    message = "Nome, e-mail e senha são obrigatórios. A senha deve ter pelo menos 12 caracteres."
+                });
+            }
+
+            var existingUser = _userRepository.GetByEmail(request.Email);
+            if (existingUser is not null)
+            {
+                return Conflict(new { message = "Já existe uma conta com esse e-mail." });
+            }
+
+            var admin = new UserDB
+            {
+                FullName = request.FullName.Trim(),
+                Email = request.Email.Trim(),
+                Password = request.Password,
+                CPF = request.CPF,
+                Login = string.IsNullOrWhiteSpace(request.Login) ? request.Email.Trim() : request.Login.Trim(),
+                Role = "ADMIN"
+            };
+
+            _userService.Create(admin);
+            return Created(string.Empty, new
+            {
+                success = true,
+                message = "Administrador inicial criado. Remova/desative a configuração de bootstrap no ambiente."
             });
         }
 
