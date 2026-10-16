@@ -1,7 +1,7 @@
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MainScreenComponent } from './login/main-screen/main-screen.component';
@@ -19,6 +19,7 @@ import { DriversComponent } from './main/drivers/drivers.component';
 import { PassengersComponent } from './main/passengers/passengers.component';
 import { MaintenanceComponent } from './main/maintenance/maintenance.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { JwtAuthInterceptor } from './services/jwt-auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,14 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [provideAnimationsAsync()],
+  providers: [
+    provideAnimationsAsync(),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtAuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
