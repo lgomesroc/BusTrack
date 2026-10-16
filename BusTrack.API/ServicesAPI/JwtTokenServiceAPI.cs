@@ -18,26 +18,26 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
         public (string AccessToken, DateTime ExpiresAtUtc) CreateToken(UserDB user)
         {
-            var key = _configuration["Jwt:Key"];
+            var key = _configuration["JwtSettings:SecretKey"];
             if (string.IsNullOrWhiteSpace(key) || Encoding.UTF8.GetByteCount(key) < 32)
             {
                 throw new InvalidOperationException(
-                    "A configuração Jwt:Key deve conter pelo menos 32 bytes. Configure Jwt__Key no ambiente.");
+                    "Configure JwtSettings:SecretKey com pelo menos 32 bytes usando a variável de ambiente JwtSettings__SecretKey.");
             }
 
-            var issuer = _configuration["Jwt:Issuer"];
-            var audience = _configuration["Jwt:Audience"];
+            var issuer = _configuration["JwtSettings:Issuer"];
+            var audience = _configuration["JwtSettings:Audience"];
             if (string.IsNullOrWhiteSpace(issuer) || string.IsNullOrWhiteSpace(audience))
             {
                 throw new InvalidOperationException(
-                    "As configurações Jwt:Issuer e Jwt:Audience são obrigatórias.");
+                    "As configurações JwtSettings:Issuer e JwtSettings:Audience são obrigatórias.");
             }
 
-            var lifetimeMinutes = _configuration.GetValue<int?>("Jwt:AccessTokenMinutes") ?? 30;
+            var lifetimeMinutes = _configuration.GetValue<int?>("JwtSettings:ExpirationInMinutes") ?? 30;
             if (lifetimeMinutes is < 1 or > 1440)
             {
                 throw new InvalidOperationException(
-                    "Jwt:AccessTokenMinutes deve estar entre 1 e 1440 minutos.");
+                    "JwtSettings:ExpirationInMinutes deve estar entre 1 e 1440 minutos.");
             }
 
             var now = DateTime.UtcNow;
