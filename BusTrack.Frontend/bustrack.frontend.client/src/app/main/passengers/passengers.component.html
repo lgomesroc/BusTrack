@@ -1,0 +1,183 @@
+<main class="passengers-container">
+  <header class="passengers-header">
+    <div>
+      <h1>Passageiros</h1>
+      <p>Cadastre e mantenha os passageiros do Bus Track.</p>
+    </div>
+
+    <div class="header-actions">
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="backToDashboard()">
+        Voltar ao dashboard
+      </button>
+      <button
+        type="button"
+        class="primary-button"
+        (click)="startCreate()"
+        [disabled]="isLoading">
+        Cadastrar passageiro
+      </button>
+    </div>
+  </header>
+
+  <div
+    class="error-message"
+    *ngIf="errorMessage"
+    role="alert">
+    {{ errorMessage }}
+  </div>
+
+  <section
+    class="passenger-form"
+    *ngIf="isCreating || editingPassenger">
+    <div class="section-heading">
+      <h2>{{ editingPassenger ? 'Editar passageiro' : 'Novo passageiro' }}</h2>
+      <p>Informe os dados básicos do passageiro.</p>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="passenger-name">Nome completo *</label>
+        <input
+          id="passenger-name"
+          name="name"
+          type="text"
+          required
+          [(ngModel)]="passengerForm.name"
+          maxlength="150"
+          autocomplete="name"
+          placeholder="Nome do passageiro">
+      </div>
+
+      <div class="form-group">
+        <label for="passenger-cpf">CPF *</label>
+        <input
+          id="passenger-cpf"
+          name="cpf"
+          type="text"
+          required
+          [(ngModel)]="passengerForm.cpf"
+          maxlength="14"
+          autocomplete="off"
+          placeholder="000.000.000-00">
+      </div>
+
+      <div class="form-group">
+        <label for="passenger-email">E-mail</label>
+        <input
+          id="passenger-email"
+          name="email"
+          type="email"
+          [(ngModel)]="passengerForm.email"
+          maxlength="150"
+          autocomplete="email"
+          placeholder="email@exemplo.com">
+      </div>
+
+      <div class="form-group">
+        <label for="passenger-phone">Telefone</label>
+        <input
+          id="passenger-phone"
+          name="phone"
+          type="tel"
+          [(ngModel)]="passengerForm.phone"
+          maxlength="20"
+          autocomplete="tel"
+          placeholder="(00) 00000-0000">
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="cancelEdit()"
+        [disabled]="isLoading">
+        Cancelar
+      </button>
+      <button
+        type="button"
+        class="primary-button"
+        (click)="savePassenger()"
+        [disabled]="isLoading">
+        {{ isLoading ? 'Salvando...' : (editingPassenger ? 'Salvar alterações' : 'Cadastrar passageiro') }}
+      </button>
+    </div>
+  </section>
+
+  <section class="passengers-list">
+    <div class="section-heading list-heading">
+      <div>
+        <h2>Passageiros cadastrados</h2>
+        <p *ngIf="isLoading">Carregando passageiros...</p>
+        <p *ngIf="!isLoading">
+          {{ passengers.length }}
+          {{ passengers.length === 1 ? 'passageiro cadastrado' : 'passageiros cadastrados' }}
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="secondary-button refresh-button"
+        (click)="loadPassengers()"
+        [disabled]="isLoading">
+        Atualizar lista
+      </button>
+    </div>
+
+    <div
+      class="empty-state"
+      *ngIf="!isLoading && passengers.length === 0">
+      <h3>Nenhum passageiro cadastrado</h3>
+      <p>Cadastre o primeiro passageiro para começar a gerenciar os usuários.</p>
+      <button
+        type="button"
+        class="primary-button"
+        (click)="startCreate()">
+        Cadastrar primeiro passageiro
+      </button>
+    </div>
+
+    <div
+      class="table-wrapper"
+      *ngIf="passengers.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>E-mail</th>
+            <th>Telefone</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let passenger of passengers">
+            <td data-label="Nome">{{ passenger.name || '—' }}</td>
+            <td data-label="CPF">{{ passenger.cpf || '—' }}</td>
+            <td data-label="E-mail">{{ passenger.email || '—' }}</td>
+            <td data-label="Telefone">{{ passenger.phone || '—' }}</td>
+            <td data-label="Ações" class="actions-cell">
+              <button
+                type="button"
+                class="edit-button"
+                (click)="startEdit(passenger)"
+                [disabled]="isLoading">
+                Editar
+              </button>
+              <button
+                type="button"
+                class="delete-button"
+                (click)="deletePassenger(passenger)"
+                [disabled]="isLoading">
+                Excluir
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>

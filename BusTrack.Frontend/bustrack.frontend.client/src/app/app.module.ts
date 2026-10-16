@@ -1,9 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {
-  FormsModule,
-  ReactiveFormsModule
-} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -19,6 +16,8 @@ import { TripsComponent } from './main/trips/trips.component';
 import { BusesComponent } from './main/buses/buses.component';
 import { RoutesComponent } from './main/routes/routes.component';
 import { DriversComponent } from './main/drivers/drivers.component';
+import { PassengersComponent } from './main/passengers/passengers.component';
+import { MaintenanceComponent } from './main/maintenance/maintenance.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 @NgModule({
@@ -35,7 +34,9 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     TripsComponent,
     BusesComponent,
     RoutesComponent,
-    DriversComponent
+    DriversComponent,
+    PassengersComponent,
+    MaintenanceComponent
   ],
   imports: [
     BrowserModule,
@@ -44,9 +45,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [
-    provideAnimationsAsync()
-  ],
+  providers: [provideAnimationsAsync()],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

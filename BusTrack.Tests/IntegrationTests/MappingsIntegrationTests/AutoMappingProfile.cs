@@ -96,8 +96,7 @@ namespace BusTrack.Tests.MappingsIntegrationTests
                         source => source.Name))
                 .ForMember(
                     destination => destination.Age,
-                    options => options.MapFrom(
-                        source => source.Age));
+                    options => options.Ignore());
 
             CreateMap<PassengerModelAPI, PassengerDB>()
                 .ForMember(

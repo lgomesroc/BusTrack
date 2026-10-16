@@ -26,7 +26,8 @@ namespace BusTrack.BusTrack.Tests.PerfomanceTests
             {
                 Name = "Performance Test",
                 Email = "performance.test@example.com",
-                Age = 30
+                Cpf = "12345678901",
+                Phone = "21999999999"
             };
 
             await _passengerService.AddPassengerAsync(passengerDto);
@@ -46,7 +47,8 @@ namespace BusTrack.BusTrack.Tests.PerfomanceTests
                 Id = "1", 
                 Name = "Updated Performance Test",
                 Email = "updated.performance.test@example.com",
-                Age = 31
+                Cpf = "12345678901",
+                Phone = "21988888888"
             };
 
             await _passengerService.UpdatePassengerAsync(passengerDto);

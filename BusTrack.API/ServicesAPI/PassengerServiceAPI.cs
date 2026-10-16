@@ -1,7 +1,6 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BusTrack.BusTrack.API.DTOAPI;
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
-using BusTrack.BusTrack.API.ModelsAPI;
 using BusTrack.BusTrack.DB.Classes;
 using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
 
@@ -9,18 +8,14 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 {
     public class PassengerServiceAPI : IPassengerServiceAPI
     {
-        private readonly IPassengerRepositoryDB
-            _passengerRepository;
-
+        private readonly IPassengerRepositoryDB _passengerRepository;
         private readonly IMapper _mapper;
 
         public PassengerServiceAPI(
             IPassengerRepositoryDB passengerRepository,
             IMapper mapper)
         {
-            _passengerRepository =
-                passengerRepository;
-
+            _passengerRepository = passengerRepository;
             _mapper = mapper;
         }
 
@@ -28,52 +23,31 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             GetAllPassengers()
         {
             var passengers =
-                await _passengerRepository
-                    .GetAllPassengersAsync();
+                await _passengerRepository.GetAllPassengersAsync();
 
-            return _mapper.Map<
-                IEnumerable<PassengerDTOAPI>>(
-                passengers);
+            return _mapper.Map<IEnumerable<PassengerDTOAPI>>(passengers);
         }
 
         public async Task<PassengerDTOAPI?>
-            GetPassengerById(
-                string id)
+            GetPassengerById(string id)
         {
             var passenger =
-                await _passengerRepository
-                    .GetPassengerByIdAsync(id);
+                await _passengerRepository.GetPassengerByIdAsync(id);
 
-            if (passenger == null)
-            {
-                return null;
-            }
-
-            return _mapper.Map<PassengerDTOAPI>(
-                passenger);
+            return passenger == null
+                ? null
+                : _mapper.Map<PassengerDTOAPI>(passenger);
         }
 
         public async Task<PassengerDTOAPI>
-            CreatePassenger(
-                PassengerDTOAPI passenger)
+            CreatePassenger(PassengerDTOAPI passenger)
         {
-            var passengerModel =
-                _mapper.Map<PassengerModelAPI>(
-                    passenger);
-
             var passengerDB =
-                _mapper.Map<PassengerDB>(
-                    passengerModel);
+                _mapper.Map<PassengerDB>(passenger);
 
-            passengerDB.Email =
-                passenger.Email;
+            await _passengerRepository.AddPassengerAsync(passengerDB);
 
-            await _passengerRepository
-                .AddPassengerAsync(
-                    passengerDB);
-
-            return _mapper.Map<PassengerDTOAPI>(
-                passengerDB);
+            return _mapper.Map<PassengerDTOAPI>(passengerDB);
         }
 
         public async Task<PassengerDTOAPI?>
@@ -82,113 +56,78 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 PassengerDTOAPI passenger)
         {
             var existingPassenger =
-                await _passengerRepository
-                    .GetPassengerByIdAsync(id);
+                await _passengerRepository.GetPassengerByIdAsync(id);
 
             if (existingPassenger == null)
             {
                 return null;
             }
 
-            _mapper.Map(
-                passenger,
-                existingPassenger);
-
+            _mapper.Map(passenger, existingPassenger);
             existingPassenger.Id = id;
 
-            await _passengerRepository
-                .UpdatePassengerAsync(
-                    id,
-                    existingPassenger);
-
-            return _mapper.Map<PassengerDTOAPI>(
+            await _passengerRepository.UpdatePassengerAsync(
+                id,
                 existingPassenger);
+
+            return _mapper.Map<PassengerDTOAPI>(existingPassenger);
         }
 
-        public async Task<bool> DeletePassenger(
-            string id)
+        public Task<bool> DeletePassenger(string id)
         {
-            return await _passengerRepository
-                .DeletePassenger(id);
+            return _passengerRepository.DeletePassenger(id);
         }
 
-        public async Task<List<PassengerDB>>
-            GetPassengers()
+        public async Task<List<PassengerDB>> GetPassengers()
         {
-            var passengers =
-                (
-                    await _passengerRepository
-                        .GetAllPassengersAsync()
-                ).ToList();
-
-            return passengers;
+            return (
+                await _passengerRepository.GetAllPassengersAsync()
+            ).ToList();
         }
 
         public async Task AddPassengerAsync(
             PassengerDTOAPI passengerDto)
         {
             var passengerDB =
-                _mapper.Map<PassengerDB>(
-                    passengerDto);
+                _mapper.Map<PassengerDB>(passengerDto);
 
-            await _passengerRepository
-                .AddPassengerAsync(
-                    passengerDB);
+            await _passengerRepository.AddPassengerAsync(passengerDB);
         }
 
-        public async Task<PassengerDTOAPI>
-            GetPassengerByIdAsync(
-                int id)
+        public async Task<PassengerDTOAPI> GetPassengerByIdAsync(int id)
         {
             var passenger =
-                await _passengerRepository
-                    .GetPassengerByIdAsync(
-                        id.ToString());
+                await _passengerRepository.GetPassengerByIdAsync(id.ToString());
 
-            return _mapper.Map<PassengerDTOAPI>(
-                passenger);
+            return _mapper.Map<PassengerDTOAPI>(passenger);
         }
 
         public async Task UpdatePassengerAsync(
             PassengerDTOAPI passengerDto)
         {
             var passengerDB =
-                _mapper.Map<PassengerDB>(
-                    passengerDto);
+                _mapper.Map<PassengerDB>(passengerDto);
 
-            if (string.IsNullOrWhiteSpace(
-                passengerDB.Id))
+            if (string.IsNullOrWhiteSpace(passengerDB.Id))
             {
                 throw new ArgumentException(
                     "O ID do passageiro é obrigatório.",
                     nameof(passengerDto));
             }
 
-            await _passengerRepository
-                .UpdatePassengerAsync(
-                    passengerDB.Id,
-                    passengerDB);
+            await _passengerRepository.UpdatePassengerAsync(
+                passengerDB.Id,
+                passengerDB);
         }
 
-        public async Task DeletePassengerAsync(
-            int id)
+        public Task DeletePassengerAsync(int id)
         {
-            await _passengerRepository
-                .DeletePassenger(
-                    id.ToString());
+            return _passengerRepository.DeletePassenger(id.ToString());
         }
 
-        public async Task<
-            IEnumerable<PassengerDTOAPI>>
-            GetAllPassengersAsync()
+        public Task<IEnumerable<PassengerDTOAPI>> GetAllPassengersAsync()
         {
-            var passengers =
-                await _passengerRepository
-                    .GetAllPassengersAsync();
-
-            return _mapper.Map<
-                IEnumerable<PassengerDTOAPI>>(
-                passengers);
+            return GetAllPassengers();
         }
     }
 }
