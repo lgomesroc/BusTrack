@@ -29,6 +29,8 @@ import { RoutesComponent }
   from './main/routes/routes.component';
 import { DriversComponent }
   from './main/drivers/drivers.component';
+import { PassengersComponent }
+  from './main/passengers/passengers.component';
 import { AuthenticationGuard }
   from './guards/authentication.guard';
 import { BrowserNavigationGuard }
@@ -46,7 +48,7 @@ const routes: Routes = [
   { path: 'buses', component: BusesComponent, canActivate: [AuthenticationGuard, BrowserNavigationGuard] },
   { path: 'routes', component: RoutesComponent, canActivate: [AuthenticationGuard, BrowserNavigationGuard] },
   { path: 'drivers', component: DriversComponent, canActivate: [AuthenticationGuard, BrowserNavigationGuard] },
-  { path: 'passengers', component: DashboardComponent, canActivate: [AuthenticationGuard, BrowserNavigationGuard] },
+  { path: 'passengers', component: PassengersComponent, canActivate: [AuthenticationGuard, BrowserNavigationGuard] },
   { path: 'maintenance', component: DashboardComponent, canActivate: [AuthenticationGuard, BrowserNavigationGuard] },
   { path: 'sidebar', component: SidebarComponent, canActivate: [AuthenticationGuard, BrowserNavigationGuard] },
   { path: '', redirectTo: '/main-screen', pathMatch: 'full' },
