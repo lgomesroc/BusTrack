@@ -5,3 +5,7 @@
 
 # Test execution results
 TestResults/
+
+# Local environment secrets
+.env
+!.env.example
