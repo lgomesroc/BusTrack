@@ -69,6 +69,7 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             accountIn.Id = id;
             accountIn.Email = existing.Email;
             accountIn.Password = existing.Password;
+            accountIn.Role = existing.Role;
 
             var updated = _accountService.UpdateAccount(id, accountIn);
             if (!updated)
