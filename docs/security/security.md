@@ -34,7 +34,7 @@ O backend aplica permissões por role (RBAC — Role-Based Access Control) nas o
 | Editar ou excluir esses recursos | Proibido | Permitido |
 | Consultar a própria conta | Permitido | Permitido |
 | Editar/excluir a própria conta | Proibido, salvo fluxo explicitamente aprovado | Permitido conforme endpoint administrativo |
-| Listar ou gerenciar contas de outras pessoas | Proibido | Permitido por endpoint administrativo protegido |
+| Listar ou gerenciar contas de outras pessoas | Proibido | O controller legado `UserControllerAPI` ainda tem mapeamentos incompletos e precisa ser corrigido antes de ser usado |
 | Criar/promover ADMIN pelo cadastro público ou frontend | Proibido | Proibido |
 | Bootstrap controlado do primeiro ADMIN via ferramenta de linha de comando | Não aplicável | Procedimento operacional restrito |
 
@@ -56,7 +56,7 @@ O endpoint `POST /AuthenticationControllerAPI/bootstrap-admin` foi criado e exig
 
 ## Proteção da interface
 
-O Angular deve ocultar ações de edição/exclusão e páginas administrativas de usuários sem a role apropriada, melhorando a experiência de uso. Isso é apenas apresentação; o backend deve negar a operação mesmo se alguém modificar a interface ou chamar a API diretamente.
+O Angular oculta ações de edição/exclusão nas telas de recursos operacionais para usuários sem role ADMIN. Isso melhora a experiência, mas é apenas apresentação; o backend deve negar a operação mesmo se alguém modificar a interface ou chamar a API diretamente.
 
 ## Limitações e itens para revisão
 
