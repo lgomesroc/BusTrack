@@ -12,7 +12,7 @@
 
   <div class="error-message" *ngIf="errorMessage" role="alert">{{ errorMessage }}</div>
 
-  <section class="route-form" *ngIf="isCreating || editingRoute">
+  <section class="route-form" *ngIf="isCreating || (sessionService.isAdmin() && editingRoute)>
     <div class="section-heading">
       <h2>{{ editingRoute ? 'Editar rota' : 'Nova rota' }}</h2>
       <p>Informe o nome, o percurso e a distância.</p>
@@ -74,8 +74,8 @@
             <td data-label="Distância">{{ route.distance }} km</td>
             <td data-label="Descrição" class="description-cell">{{ route.description || '—' }}</td>
             <td data-label="Ações" class="actions-cell">
-              <button type="button" class="edit-button" (click)="startEdit(route)" [disabled]="isLoading">Editar</button>
-              <button type="button" class="delete-button" (click)="deleteRoute(route)" [disabled]="isLoading">Excluir</button>
+              <button type="button" class="edit-button" (click)="startEdit(route)" [hidden]="!sessionService.isAdmin()" [disabled]="isLoading">Editar</button>
+              <button type="button" class="delete-button" (click)="deleteRoute(route)" [hidden]="!sessionService.isAdmin()" [disabled]="isLoading">Excluir</button>
             </td>
           </tr>
         </tbody>
