@@ -27,6 +27,7 @@ namespace BusTrack.Tests.IntegrationTests.CustomWebApplicationFactory
             Environment.SetEnvironmentVariable("JwtSettings__Issuer", TestIssuer);
             Environment.SetEnvironmentVariable("JwtSettings__Audience", TestAudience);
             Environment.SetEnvironmentVariable("JwtSettings__ExpirationInMinutes", "30");
+            Environment.SetEnvironmentVariable("BootstrapAdmin__Secret", null);
         }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -39,7 +40,8 @@ namespace BusTrack.Tests.IntegrationTests.CustomWebApplicationFactory
                     ["JwtSettings:SecretKey"] = TestKey,
                     ["JwtSettings:Issuer"] = TestIssuer,
                     ["JwtSettings:Audience"] = TestAudience,
-                    ["JwtSettings:ExpirationInMinutes"] = "30"
+                    ["JwtSettings:ExpirationInMinutes"] = "30",
+                    ["BootstrapAdmin:Secret"] = null
                 });
             });
         }
