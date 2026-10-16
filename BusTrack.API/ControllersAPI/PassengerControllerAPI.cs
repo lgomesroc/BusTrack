@@ -62,6 +62,10 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         [Authorize(Roles = "ADMIN")]
 
 
+        [Authorize(Roles = "ADMIN")]
+
+
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(
             string id,
@@ -86,6 +90,10 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         }
 
         [Authorize(Roles = "ADMIN")]
+
+
+        [Authorize(Roles = "ADMIN")]
+
 
 
         [HttpDelete("{id}")]
