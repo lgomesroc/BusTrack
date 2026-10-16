@@ -43,15 +43,9 @@ namespace BusTrack.BusTrack.API.ControllersAPI
 
             return CreatedAtRoute("GetMaintenance", new { id = created.Id }, created);
         }
-
         [Authorize(Roles = "ADMIN")]
 
-
-        [Authorize(Roles = "ADMIN")]
-
-
-
-        [HttpPut("{id}")]
+[HttpPut("{id}")]
         public async Task<IActionResult> Put(string id, [FromBody] MaintenanceDTOAPI maintenance)
         {
             var updated = await _service.UpdateAsync(id, maintenance);
@@ -65,15 +59,9 @@ namespace BusTrack.BusTrack.API.ControllersAPI
 
             return Ok(updated);
         }
-
         [Authorize(Roles = "ADMIN")]
 
-
-        [Authorize(Roles = "ADMIN")]
-
-
-
-        [HttpDelete("{id}")]
+[HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             return await _service.DeleteAsync(id) ? NoContent() : NotFound();
