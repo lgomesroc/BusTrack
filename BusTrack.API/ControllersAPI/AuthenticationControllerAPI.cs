@@ -134,7 +134,25 @@ namespace BusTrack.BusTrack.API.ControllersAPI
                 Role = "ADMIN"
             };
 
-            _userService.Create(admin);
+            var lockDocument = new BsonDocument("_id", "initial-admin-bootstrap");
+            try
+            {
+                _bootstrapLocks.InsertOne(lockDocument);
+            }
+            catch (MongoWriteException exception) when (exception.WriteError?.Category == ServerErrorCategory.DuplicateKey)
+            {
+                return Conflict(new { message = "O bootstrap do administrador já foi utilizado ou está em andamento." });
+            }
+
+            try
+            {
+                _userService.Create(admin);
+            }
+            catch
+            {
+                _bootstrapLocks.DeleteOne(lockDocument);
+                throw;
+            }
             return Created(string.Empty, new
             {
                 success = true,
