@@ -170,7 +170,14 @@ namespace BusTrack.BusTrack.API.ControllersAPI
                 return Forbid();
             }
 
+            var existingUser = _userService.Read(id);
+            if (existingUser is null)
+            {
+                return NotFound();
+            }
+
             user.Id = id;
+            user.Role = existingUser.Role;
             return _userService.Update(id, user);
         }
 
