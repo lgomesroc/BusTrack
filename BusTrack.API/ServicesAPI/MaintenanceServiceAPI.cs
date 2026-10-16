@@ -3,6 +3,7 @@ using BusTrack.BusTrack.API.DTOAPI;
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using BusTrack.BusTrack.DB.Classes;
 using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
+using MongoDB.Bson;
 
 namespace BusTrack.BusTrack.API.ServicesAPI
 {
@@ -86,6 +87,11 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 maintenance.ServiceDate == default ||
                 maintenance.Cost < 0 ||
                 !AllowedStatuses.Contains(maintenance.Status, StringComparer.OrdinalIgnoreCase))
+            {
+                return null;
+            }
+
+            if (!ObjectId.TryParse(maintenance.BusId, out _))
             {
                 return null;
             }
