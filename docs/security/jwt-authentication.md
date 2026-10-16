@@ -48,7 +48,7 @@ As regras devem cobrir todos os endpoints, inclusive rotas antigas/duplicadas e 
 
 ## Bootstrap do primeiro ADMIN
 
-O endpoint `POST /AuthenticationControllerAPI/bootstrap-admin` usa a configuração `BootstrapAdmin:Secret`, cria o primeiro ADMIN se nenhum existir e recusa segredo incorreto. Sem a configuração, o endpoint fica indisponível. Ele não é usado pelo Angular; a operação é feita por operador autorizado via `curl` em Linux. Configure o valor fora do código, não o versione e remova a configuração após criar o administrador. Antes de produção, ainda é necessário testar o fluxo e revisar a proteção contra duas requisições concorrentes.
+O endpoint `POST /AuthenticationControllerAPI/bootstrap-admin` usa a variável de ambiente `BootstrapAdmin__Secret`, cria o primeiro ADMIN se nenhum existir e recusa segredo incorreto. Sem a configuração, o endpoint fica indisponível. Ele não é usado pelo Angular; a operação é feita por operador autorizado via `curl` em Linux. Configure o valor fora do código, não o versione e remova a configuração após criar o administrador. Uma trava persistida no MongoDB impede dois bootstraps simultâneos; se o processo for interrompido durante a operação, revise a trava e o estado da conta antes de tentar novamente.
 
 ## Testes obrigatórios
 
