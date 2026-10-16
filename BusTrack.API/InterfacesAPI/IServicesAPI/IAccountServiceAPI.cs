@@ -1,4 +1,4 @@
-﻿using BusTrack.BusTrack.API.ModelsAPI;
+using BusTrack.BusTrack.API.ModelsAPI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI
@@ -7,6 +7,7 @@ namespace BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI
     {
         IActionResult Get();
         AccountModelsAPI GetAccountById(string id);
+        AccountModelsAPI? GetAccountByEmail(string email);
         void CreateAccount(AccountModelsAPI account);
         IActionResult GetAllAccounts();
         bool UpdateAccount(string id, AccountModelsAPI accountIn);
