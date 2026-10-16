@@ -62,7 +62,7 @@ O Bus Track possui mecanismos de segurança distribuídos entre backend e fronte
 
 O frontend também possui restrições de interação, como bloqueio de seleção e cópia de informações, desativação do botão direito e bloqueio da navegação pelos botões Voltar e Avançar do navegador.
 
-A documentação detalhada explica cada mecanismo, suas responsabilidades e limitações. A implementação de **JWT** faz parte da evolução planejada da autenticação e ainda não é considerada uma funcionalidade implementada.
+A API utiliza **JWT Bearer** para autenticar chamadas protegidas e aplica autorização por roles `USER` e `ADMIN` no backend. Usuários `USER` podem consultar e criar registros operacionais; edição e exclusão exigem `ADMIN`. O cadastro público cria apenas `USER`. O bootstrap do primeiro administrador é um procedimento operacional separado, protegido por segredo de ambiente e não disponibilizado na interface.
 
 [Ver documentação completa de segurança](docs/security/security.md)
 
