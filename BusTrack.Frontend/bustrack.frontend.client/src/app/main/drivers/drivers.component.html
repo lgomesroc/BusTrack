@@ -13,7 +13,7 @@
 
   <div class="error-message" *ngIf="errorMessage" role="alert">{{ errorMessage }}</div>
 
-  <section class="driver-form" *ngIf="isCreating || (sessionService.isAdmin() && editingDriver)>
+  <section class="driver-form" *ngIf="isCreating || (sessionService.isAdmin() && editingDriver)">
     <div class="section-heading">
       <h2>{{ editingDriver ? 'Editar motorista' : 'Novo motorista' }}</h2>
       <p>Informe o nome e o CPF ou número de identificação usado pelo sistema.</p>
@@ -69,8 +69,8 @@
             <td data-label="Nome">{{ driver.name || '—' }}</td>
             <td data-label="CPF / identificação">{{ driver.licenseNumber || '—' }}</td>
             <td data-label="Ações" class="actions-cell">
-              <button [hidden]="!sessionService.isAdmin()" type="button" class="edit-button" (click)="startEdit(driver)" [hidden]="!sessionService.isAdmin()" [disabled]="isLoading">Editar</button>
-              <button [hidden]="!sessionService.isAdmin()" type="button" class="delete-button" (click)="deleteDriver(driver)" [hidden]="!sessionService.isAdmin()" [disabled]="isLoading">Excluir</button>
+              <button type="button" class="edit-button" (click)="startEdit(driver)" [hidden]="!sessionService.isAdmin()" [disabled]="isLoading">Editar</button>
+              <button type="button" class="delete-button" (click)="deleteDriver(driver)" [hidden]="!sessionService.isAdmin()" [disabled]="isLoading">Excluir</button>
             </td>
           </tr>
         </tbody>
