@@ -1,5 +1,7 @@
-﻿using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
+using BusTrack.BusTrack.API.DTOAPI;
+using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using BusTrack.BusTrack.DB.ClassesDB;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusTrack.BusTrack.API.ControllersAPI
@@ -9,15 +11,19 @@ namespace BusTrack.BusTrack.API.ControllersAPI
     public class AuthenticationControllerAPI : ControllerBase
     {
         private readonly IUserAuthenticationServiceAPI _userService;
+        private readonly IJwtTokenServiceAPI _jwtTokenService;
 
         public AuthenticationControllerAPI(
-            IUserAuthenticationServiceAPI userService)
+            IUserAuthenticationServiceAPI userService,
+            IJwtTokenServiceAPI jwtTokenService)
         {
             _userService = userService;
+            _jwtTokenService = jwtTokenService;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
-        public IActionResult Login([FromBody] UserDB request)
+        public IActionResult Login([FromBody] LoginRequestDTOAPI request)
         {
             var user = _userService.Authenticate(
                 request.Email ?? string.Empty,
@@ -32,14 +38,18 @@ namespace BusTrack.BusTrack.API.ControllersAPI
                 });
             }
 
-            return Ok(new
+            var (accessToken, expiresAtUtc) = _jwtTokenService.CreateToken(user);
+
+            return Ok(new AuthenticationResponseDTOAPI
             {
-                success = true,
-                welcomeMessage =
-                    "Sucesso. Seja bem-vindo ao painel principal do Bus Track."
+                Success = true,
+                AccessToken = accessToken,
+                ExpiresAtUtc = expiresAtUtc,
+                WelcomeMessage = "Sucesso. Seja bem-vindo ao painel principal do Bus Track."
             });
         }
 
+        [AllowAnonymous]
         [HttpPost("create")]
         public IActionResult Create([FromBody] UserDB user)
         {
@@ -56,26 +66,46 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         public IActionResult Read(string id)
         {
             var user = _userService.Read(id);
-
             if (user == null)
             {
                 return NotFound();
             }
 
-            return Ok(user);
+            return Ok(new
+            {
+                user.Id,
+                user.FullName,
+                user.CPF,
+                user.Email,
+                user.Login
+            });
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(
-            string id,
-            [FromBody] UserDB user)
+        public IActionResult Update(string id, [FromBody] UserDB user)
         {
+            if (!string.Equals(
+                User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value,
+                id,
+                StringComparison.Ordinal))
+            {
+                return Forbid();
+            }
+
             return _userService.Update(id, user);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
+            if (!string.Equals(
+                User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value,
+                id,
+                StringComparison.Ordinal))
+            {
+                return Forbid();
+            }
+
             return _userService.Delete(id);
         }
     }
