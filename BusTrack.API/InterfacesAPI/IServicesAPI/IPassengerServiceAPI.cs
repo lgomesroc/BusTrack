@@ -16,7 +16,7 @@ namespace BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI
             CreatePassenger(
                 PassengerDTOAPI passenger);
 
-        Task<PassengerDTOAPI>
+        Task<PassengerDTOAPI?>
             UpdatePassenger(
                 string id,
                 PassengerDTOAPI passenger);
