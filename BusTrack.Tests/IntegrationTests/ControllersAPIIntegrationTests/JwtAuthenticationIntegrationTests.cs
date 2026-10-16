@@ -41,6 +41,30 @@ namespace BusTrack.Tests.IntegrationTests.ControllersAPIIntegrationTests
         }
 
         [Fact]
+        public async Task UserRole_CannotUpdateBus_ReturnsForbidden()
+        {
+            using var client = _factory.CreateUserClient();
+            using var content = new StringContent("{}", Encoding.UTF8, "application/json");
+
+            var response = await client.PutAsync(
+                "/api/Bus/000000000000000000000001",
+                content);
+
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UserRole_CannotDeleteBus_ReturnsForbidden()
+        {
+            using var client = _factory.CreateUserClient();
+
+            var response = await client.DeleteAsync(
+                "/api/Bus/000000000000000000000001");
+
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        }
+
+        [Fact]
         public async Task HealthEndpoint_WithoutToken_ReturnsSuccess()
         {
             using var client = _factory.CreateClient();
