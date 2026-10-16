@@ -9,6 +9,9 @@ namespace BusTrack.BusTrack.API.MappingsAPI
     {
         public MappingProfileAPI()
         {
+            CreateMap<MaintenanceDB, MaintenanceDTOAPI>();
+            CreateMap<MaintenanceDTOAPI, MaintenanceDB>();
+
             CreateMap<TripDB, TripDTOAPI>();
             CreateMap<TripDTOAPI, TripDB>();
             CreateMap<TripDTOAPI, TripModelAPI>();
