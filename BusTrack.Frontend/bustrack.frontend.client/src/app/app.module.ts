@@ -19,6 +19,7 @@ import { TripsComponent } from './main/trips/trips.component';
 import { BusesComponent } from './main/buses/buses.component';
 import { RoutesComponent } from './main/routes/routes.component';
 import { DriversComponent } from './main/drivers/drivers.component';
+import { PassengersComponent } from './main/passengers/passengers.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 @NgModule({
@@ -35,7 +36,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     TripsComponent,
     BusesComponent,
     RoutesComponent,
-    DriversComponent
+    DriversComponent,
+    PassengersComponent
   ],
   imports: [
     BrowserModule,
