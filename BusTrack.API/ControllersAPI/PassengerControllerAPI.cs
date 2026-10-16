@@ -1,4 +1,5 @@
-﻿using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
+using BusTrack.BusTrack.API.DTOAPI;
+using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusTrack.BusTrack.API.ControllersAPI
@@ -9,39 +10,90 @@ namespace BusTrack.BusTrack.API.ControllersAPI
     {
         private readonly IPassengerServiceAPI _passengerService;
 
-        public PassengerControllerAPI(IPassengerServiceAPI passengerService)
+        public PassengerControllerAPI(
+            IPassengerServiceAPI passengerService)
         {
             _passengerService = passengerService;
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok("Get all passengers");
+            var passengers =
+                await _passengerService.GetAllPassengers();
+
+            return Ok(passengers);
         }
 
         [HttpGet("{id}", Name = "GetPassenger")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(
+            string id)
         {
-            return Ok($"Get passenger with ID: {id}");
+            var passenger =
+                await _passengerService.GetPassengerById(id);
+
+            if (passenger == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(passenger);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] object value)
+        public async Task<IActionResult> Post(
+            [FromBody] PassengerDTOAPI passenger)
         {
-            return Ok("Create new passenger");
+            if (passenger == null)
+            {
+                return BadRequest();
+            }
+
+            var createdPassenger =
+                await _passengerService.CreatePassenger(passenger);
+
+            return CreatedAtRoute(
+                "GetPassenger",
+                new { id = createdPassenger.Id },
+                createdPassenger);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] object value)
+        public async Task<IActionResult> Put(
+            string id,
+            [FromBody] PassengerDTOAPI passenger)
         {
-            return Ok($"Update passenger with ID: {id}");
+            if (passenger == null)
+            {
+                return BadRequest();
+            }
+
+            var updatedPassenger =
+                await _passengerService.UpdatePassenger(
+                    id,
+                    passenger);
+
+            if (updatedPassenger == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(updatedPassenger);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(
+            string id)
         {
-            return Ok($"Delete passenger with ID: {id}");
+            var deleted =
+                await _passengerService.DeletePassenger(id);
+
+            if (!deleted)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
     }
 }
