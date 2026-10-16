@@ -1,5 +1,6 @@
-﻿using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
+using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using BusTrack.BusTrack.API.ModelsAPI;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusTrack.BusTrack.API.ControllersAPI
@@ -16,8 +17,7 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         }
 
         [HttpGet]
-        public IActionResult Get() =>
-            _accountService.Get();
+        public IActionResult Get() => _accountService.Get();
 
         [HttpGet("{id}")]
         public IActionResult GetAccountById(string id)
@@ -27,9 +27,11 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             {
                 return NotFound();
             }
+
             return Ok(account);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public IActionResult CreateAccount([FromBody] AccountModelsAPI account)
         {
@@ -45,6 +47,7 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             {
                 return NotFound();
             }
+
             return Ok(new { success = true, message = "Conta atualizada com sucesso." });
         }
 
@@ -56,6 +59,7 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             {
                 return NotFound();
             }
+
             return Ok(new { success = true, message = "Conta excluída com sucesso." });
         }
     }
