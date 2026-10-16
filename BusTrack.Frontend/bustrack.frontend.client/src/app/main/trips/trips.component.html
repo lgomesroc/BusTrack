@@ -46,7 +46,7 @@
 
   <section
     class="trip-form"
-    *ngIf="isCreating || editingTrip"
+    *ngIf="isCreating || (sessionService.isAdmin() && editingTrip)
   >
 
     <div class="form-header">
@@ -429,7 +429,7 @@
               <button
                 type="button"
                 class="edit-button"
-                (click)="iniciarEdicao(trip)"
+                (click)="iniciarEdicao(trip)" [hidden]="!sessionService.isAdmin()"
                 [disabled]="isLoading"
               >
                 Editar
@@ -438,7 +438,7 @@
               <button
                 type="button"
                 class="delete-button"
-                (click)="excluirViagem(trip)"
+                (click)="excluirViagem(trip)" [hidden]="!sessionService.isAdmin()"
                 [disabled]="isLoading"
               >
                 Excluir
