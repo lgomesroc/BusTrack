@@ -42,7 +42,7 @@
 
   <section
     class="bus-form"
-    *ngIf="isCreating || editingBus"
+    *ngIf="isCreating || (sessionService.isAdmin() && editingBus)
   >
 
     <div class="form-header">
@@ -252,7 +252,7 @@
               <button
                 type="button"
                 class="edit-button"
-                (click)="iniciarEdicao(bus)"
+                (click)="iniciarEdicao(bus)" [hidden]="!sessionService.isAdmin()"
                 [disabled]="isLoading"
               >
                 Editar
@@ -261,7 +261,7 @@
               <button
                 type="button"
                 class="delete-button"
-                (click)="excluirOnibus(bus)"
+                (click)="excluirOnibus(bus)" [hidden]="!sessionService.isAdmin()"
                 [disabled]="isLoading"
               >
                 Excluir
