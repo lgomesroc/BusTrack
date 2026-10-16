@@ -24,6 +24,7 @@ jobs:
       - name: Start BusTrack environment
         run: |
           export BUSTRACK_JWT_SECRET="$(openssl rand -base64 48)"
+          echo "BUSTRACK_JWT_SECRET=$BUSTRACK_JWT_SECRET" >> "$GITHUB_ENV"
           docker compose up -d --build
 
       - name: Wait for backend
