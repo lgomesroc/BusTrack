@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 
 import { Router } from '@angular/router';
+import { SessionService } from '../../services/session.service';
 
 import {
   Bus,
@@ -32,7 +33,8 @@ export class BusesComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private busService: BusService
+    private busService: BusService,
+    public sessionService: SessionService
   ) {
   }
 
