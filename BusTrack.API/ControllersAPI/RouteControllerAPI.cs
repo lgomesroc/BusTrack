@@ -1,5 +1,6 @@
 ﻿using BusTrack.BusTrack.API.DTOAPI;
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusTrack.BusTrack.API.ControllersAPI
@@ -57,8 +58,9 @@ namespace BusTrack.BusTrack.API.ControllersAPI
                 new { id = createdRoute.Id },
                 createdRoute);
         }
+        [Authorize(Roles = "ADMIN")]
 
-        [HttpPut("{id}")]
+[HttpPut("{id}")]
         public async Task<IActionResult> Put(
             string id,
             [FromBody] RouteDTOAPI route)
@@ -80,8 +82,9 @@ namespace BusTrack.BusTrack.API.ControllersAPI
 
             return Ok(updatedRoute);
         }
+        [Authorize(Roles = "ADMIN")]
 
-        [HttpDelete("{id}")]
+[HttpDelete("{id}")]
         public async Task<IActionResult> Delete(
             string id)
         {

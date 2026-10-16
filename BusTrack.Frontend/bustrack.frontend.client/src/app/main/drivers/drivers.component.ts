@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SessionService } from '../../services/session.service';
 import { Router } from '@angular/router';
 import { Driver, DriverService } from '../../services/driver.service';
 
@@ -17,7 +18,8 @@ export class DriversComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private driverService: DriverService
+    private driverService: DriverService,
+    public sessionService: SessionService
   ) {}
 
   ngOnInit(): void {

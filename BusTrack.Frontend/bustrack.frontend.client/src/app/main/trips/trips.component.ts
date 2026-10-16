@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 
 import { Router } from '@angular/router';
+import { SessionService } from '../../services/session.service';
 
 import {
   forkJoin
@@ -50,7 +51,8 @@ export class TripsComponent implements OnInit {
 
     private tripService: TripService,
     private routeService: RouteService,
-    private driverService: DriverService
+    private driverService: DriverService,
+    public sessionService: SessionService
   ) {
   }
 

@@ -34,6 +34,28 @@ export class SessionService {
     return this.getAccessToken() !== null;
   }
 
+  isAdmin(): boolean {
+    const token = this.getAccessToken();
+    if (!token) {
+      return false;
+    }
+
+    try {
+      const payloadPart = token.split('.')[1];
+      const base64 = payloadPart.replace(/-/g, '+').replace(/_/g, '/');
+      const decoded = atob(base64.padEnd(base64.length + ((4 - base64.length % 4) % 4), '='));
+      const payload = JSON.parse(decoded) as Record<string, unknown>;
+      const roleClaim = payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
+        ?? payload['role']
+        ?? payload['roles'];
+      return Array.isArray(roleClaim)
+        ? roleClaim.includes('ADMIN')
+        : roleClaim === 'ADMIN';
+    } catch {
+      return false;
+    }
+  }
+
   private isTokenValid(token: string): boolean {
     try {
       const payloadPart = token.split('.')[1];

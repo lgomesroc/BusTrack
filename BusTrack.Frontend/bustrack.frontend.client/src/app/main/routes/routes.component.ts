@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { SessionService } from '../../services/session.service';
 import { Route } from '../../services/trip.service';
 import { RouteService } from '../../services/route.service';
 
@@ -18,7 +19,8 @@ export class RoutesComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private routeService: RouteService
+    private routeService: RouteService,
+    public sessionService: SessionService
   ) {}
 
   ngOnInit(): void {

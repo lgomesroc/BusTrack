@@ -5,6 +5,7 @@ import {
   PassengerPayload,
   PassengerService
 } from '../../services/passenger.service';
+import { SessionService } from '../../services/session.service';
 
 @Component({
   selector: 'app-passengers',
@@ -21,7 +22,8 @@ export class PassengersComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private passengerService: PassengerService
+    private passengerService: PassengerService,
+    public sessionService: SessionService
   ) {}
 
   ngOnInit(): void {

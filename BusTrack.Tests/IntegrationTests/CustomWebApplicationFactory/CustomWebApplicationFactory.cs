@@ -27,6 +27,7 @@ namespace BusTrack.Tests.IntegrationTests.CustomWebApplicationFactory
             Environment.SetEnvironmentVariable("JwtSettings__Issuer", TestIssuer);
             Environment.SetEnvironmentVariable("JwtSettings__Audience", TestAudience);
             Environment.SetEnvironmentVariable("JwtSettings__ExpirationInMinutes", "30");
+            Environment.SetEnvironmentVariable("BootstrapAdmin__Secret", null);
         }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -39,7 +40,8 @@ namespace BusTrack.Tests.IntegrationTests.CustomWebApplicationFactory
                     ["JwtSettings:SecretKey"] = TestKey,
                     ["JwtSettings:Issuer"] = TestIssuer,
                     ["JwtSettings:Audience"] = TestAudience,
-                    ["JwtSettings:ExpirationInMinutes"] = "30"
+                    ["JwtSettings:ExpirationInMinutes"] = "30",
+                    ["BootstrapAdmin:Secret"] = null
                 });
             });
         }
@@ -48,11 +50,19 @@ namespace BusTrack.Tests.IntegrationTests.CustomWebApplicationFactory
         {
             var client = base.CreateClient();
             client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", CreateTestToken());
+                new AuthenticationHeaderValue("Bearer", CreateTestToken("ADMIN"));
             return client;
         }
 
-        private static string CreateTestToken()
+        public HttpClient CreateUserClient()
+        {
+            var client = base.CreateClient();
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", CreateTestToken("USER"));
+            return client;
+        }
+
+        private static string CreateTestToken(string role)
         {
             var now = DateTime.UtcNow;
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(TestKey));
@@ -63,7 +73,8 @@ namespace BusTrack.Tests.IntegrationTests.CustomWebApplicationFactory
                 claims: new[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, "000000000000000000000001"),
-                    new Claim(ClaimTypes.Name, "BusTrack Integration Test")
+                    new Claim(ClaimTypes.Name, "BusTrack Integration Test"),
+                    new Claim(ClaimTypes.Role, role)
                 },
                 notBefore: now,
                 expires: now.AddMinutes(30),

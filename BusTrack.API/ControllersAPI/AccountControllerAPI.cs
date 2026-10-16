@@ -51,10 +51,12 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         [HttpPost]
         public IActionResult CreateAccount([FromBody] AccountModelsAPI account)
         {
+            account.Role = "USER";
             _accountService.CreateAccount(account);
             return Ok(new { success = true, message = "Conta criada com sucesso." });
         }
 
+        [Authorize(Roles = "ADMIN")]
         [HttpPut("{id}")]
         public IActionResult UpdateAccount(string id, [FromBody] AccountModelsAPI accountIn)
         {
@@ -64,14 +66,10 @@ namespace BusTrack.BusTrack.API.ControllersAPI
                 return NotFound();
             }
 
-            if (!IsOwner(existing))
-            {
-                return Forbid();
-            }
-
             accountIn.Id = id;
             accountIn.Email = existing.Email;
             accountIn.Password = existing.Password;
+            accountIn.Role = existing.Role;
 
             var updated = _accountService.UpdateAccount(id, accountIn);
             if (!updated)
@@ -82,6 +80,7 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             return Ok(new { success = true, message = "Conta atualizada com sucesso." });
         }
 
+        [Authorize(Roles = "ADMIN")]
         [HttpDelete("{id}")]
         public IActionResult DeleteAccount(string id)
         {
@@ -89,11 +88,6 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             if (account is null)
             {
                 return NotFound();
-            }
-
-            if (!IsOwner(account))
-            {
-                return Forbid();
             }
 
             var deleted = _accountService.DeleteAccount(id);

@@ -42,7 +42,10 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
             var now = DateTime.UtcNow;
             var expiresAtUtc = now.AddMinutes(lifetimeMinutes);
-            var claims = new List<Claim>();
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Role, string.Equals(user.Role, "ADMIN", StringComparison.OrdinalIgnoreCase) ? "ADMIN" : "USER")
+            };
 
             if (!string.IsNullOrWhiteSpace(user.Id))
             {

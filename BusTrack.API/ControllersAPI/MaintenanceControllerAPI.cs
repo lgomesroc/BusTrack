@@ -1,5 +1,6 @@
 using BusTrack.BusTrack.API.DTOAPI;
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusTrack.BusTrack.API.ControllersAPI
@@ -42,8 +43,9 @@ namespace BusTrack.BusTrack.API.ControllersAPI
 
             return CreatedAtRoute("GetMaintenance", new { id = created.Id }, created);
         }
+        [Authorize(Roles = "ADMIN")]
 
-        [HttpPut("{id}")]
+[HttpPut("{id}")]
         public async Task<IActionResult> Put(string id, [FromBody] MaintenanceDTOAPI maintenance)
         {
             var updated = await _service.UpdateAsync(id, maintenance);
@@ -57,8 +59,9 @@ namespace BusTrack.BusTrack.API.ControllersAPI
 
             return Ok(updated);
         }
+        [Authorize(Roles = "ADMIN")]
 
-        [HttpDelete("{id}")]
+[HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             return await _service.DeleteAsync(id) ? NoContent() : NotFound();

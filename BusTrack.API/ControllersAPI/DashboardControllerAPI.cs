@@ -1,5 +1,6 @@
 ﻿using BusTrack.BusTrack.DB.Classes;
 using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusTrack.BusTrack.API.ControllersAPI
@@ -66,6 +67,9 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             }
         }
 
+        [Authorize(Roles = "ADMIN")]
+
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTrip(string id, [FromBody] TripDB trip)
         {
@@ -84,6 +88,9 @@ namespace BusTrack.BusTrack.API.ControllersAPI
                 return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
             }
         }
+
+        [Authorize(Roles = "ADMIN")]
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTrip(string id)

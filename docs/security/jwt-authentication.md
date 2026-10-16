@@ -1,40 +1,62 @@
-# JWT authentication
+# Autenticação JWT e autorização
 
-BusTrack issues signed JWT access tokens after a successful login. Tokens use the HMAC-SHA256 algorithm and expire after 30 minutes by default. Protected API endpoints require `Authorization: Bearer <token>`.
+## Autenticação
 
-## Local Docker Compose
+O BusTrack emite JWTs assinados após login válido. O algoritmo é HMAC-SHA256 e a validade padrão é de 30 minutos. Endpoints protegidos exigem `Authorization: Bearer <token>`.
 
-1. Copy `.env.example` to `.env` in the repository root.
-2. Generate a random secret of at least 32 bytes and place it in `BUSTRACK_JWT_SECRET`.
-3. Start or rebuild the environment with `docker compose up -d --build`.
+A API valida assinatura, issuer, audience e expiração. A chave é obrigatória e deve ter pelo menos 32 bytes. O token de acesso é guardado no `sessionStorage`; o logout limpa o armazenamento local, mas não revoga tokens copiados antes da expiração.
 
-PowerShell can generate a random Base64 secret with:
+## Configuração local com Docker Compose
+
+1. Copie `.env.example` para `.env` na raiz do repositório.
+2. Gere um segredo aleatório com pelo menos 32 bytes e defina `BUSTRACK_JWT_SECRET`.
+3. Inicie ou reconstrua o ambiente com `docker compose up -d --build`.
+
+No PowerShell, gere uma chave Base64 aleatória:
 
 ```powershell
 [Convert]::ToBase64String([Security.Cryptography.RandomNumberGenerator]::GetBytes(48))
 ```
 
-The local `.env` is ignored by Git. Never commit its contents.
+Não versione o arquivo `.env`.
 
-## Render / production
+## Render / produção
 
-Configure these environment variables on the backend service:
+Configure no serviço backend:
 
-- `JwtSettings__SecretKey`: a unique, randomly generated secret of at least 32 bytes.
-- `JwtSettings__Issuer`: `BusTrack` (or another stable issuer used consistently by the API).
-- `JwtSettings__Audience`: `BusTrackFrontend` (or the configured client audience).
-- `JwtSettings__ExpirationInMinutes`: `30` (optional; accepted range is 1–1440).
+- `JwtSettings__SecretKey`: segredo aleatório exclusivo com pelo menos 32 bytes.
+- `JwtSettings__Issuer`: `BusTrack` (ou outro emissor estável, igual ao validado pela API).
+- `JwtSettings__Audience`: `BusTrackFrontend` (ou a audiência configurada para o cliente).
+- `JwtSettings__ExpirationInMinutes`: `30` (opcional; intervalo aceito de 1 a 1440).
 
-The API intentionally fails to start if the signing key, issuer, or audience is missing or invalid. Do not use a sample or local-development key in production.
+A API deve falhar ao iniciar se a chave, o issuer ou a audience forem ausentes ou inválidos. Nunca reutilize uma chave de teste em produção.
 
-GitHub Actions generates an ephemeral random JWT signing key for the Docker Compose test environment. Existing `BUSTRACK_TEST_EMAIL` and `BUSTRACK_TEST_PASSWORD` secrets are still required.
+O GitHub Actions gera uma chave temporária para os testes do Docker Compose.
 
-## Authorization behavior
+## Autorização USER / ADMIN
 
-- Login and account registration are anonymous.
-- The health probe is anonymous for deployment monitoring.
-- All other API endpoints require a valid token by default.
-- Account and authentication-user detail/update/delete routes are restricted to the identity in the token; password hashes are not returned by these read endpoints.
-- The Angular app stores the access token in `sessionStorage`, sends it as a Bearer token, and clears the local session after token expiry or a protected request returning 401.
+A API emite um claim de role assinado no JWT. A política aplicada aos recursos operacionais é:
 
-Logout clears the browser's token. Because this implementation uses stateless access tokens and no refresh/revocation store, a copied token can remain usable until its expiration; keep the lifetime short and never log or share tokens.
+- `USER`: consultar e criar viagens, motoristas, passageiros, ônibus, rotas e manutenções.
+- `ADMIN`: as mesmas operações, além de editar e excluir esses recursos.
+- Consultar a própria conta é permitido a ambos.
+- USER não pode editar/excluir a própria conta nem administrar outras contas, salvo futura regra explícita aprovada.
+- O cadastro público cria somente USER; o cliente não escolhe a role.
+- Endpoints administrativos exigem role ADMIN no backend. Ocultar botões no Angular não é proteção suficiente.
+
+As regras devem cobrir todos os endpoints, inclusive rotas antigas/duplicadas e associações de passageiros a viagens. Respostas esperadas: 401 para token ausente/inválido/expirado e 403 para usuário autenticado sem permissão.
+
+## Bootstrap do primeiro ADMIN
+
+O endpoint `POST /AuthenticationControllerAPI/bootstrap-admin` usa a variável de ambiente `BootstrapAdmin__Secret`, cria o primeiro ADMIN se nenhum existir e recusa segredo incorreto. Sem a configuração, o endpoint fica indisponível. Ele não é usado pelo Angular; a operação é feita por operador autorizado via `curl` em Linux. Configure o valor fora do código, não o versione e remova a configuração após criar o administrador. Uma trava persistida no MongoDB impede dois bootstraps simultâneos; se o processo for interrompido durante a operação, revise a trava e o estado da conta antes de tentar novamente.
+
+## Testes obrigatórios
+
+- Token ausente/inválido em endpoint protegido: 401.
+- USER consultando/criando recurso permitido: sucesso.
+- USER editando/excluindo recurso operacional: 403.
+- ADMIN editando/excluindo recurso operacional: sucesso quando o recurso existe.
+- Cadastro público com `role=ADMIN`: nunca cria ADMIN.
+- Bootstrap com segredo errado ou ADMIN já existente: recusado.
+- Bootstrap válido no estado inicial: cria apenas o primeiro ADMIN.
+- Nenhum endpoint legado deve contornar essas regras.
