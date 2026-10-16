@@ -30,7 +30,7 @@ jobs:
       - name: Wait for backend
         run: |
           for i in {1..30}; do
-            if curl --fail --silent http://localhost:5066/api/Health; then
+            if curl --connect-timeout 2 --max-time 5 --fail --silent http://localhost:5066/api/Health; then
               echo
               echo "Backend disponível."
               exit 0
@@ -47,7 +47,7 @@ jobs:
       - name: Wait for frontend
         run: |
           for i in {1..30}; do
-            if curl --fail --silent http://localhost:4200; then
+            if curl --connect-timeout 2 --max-time 5 --fail --silent http://localhost:4200; then
               echo
               echo "Frontend disponível."
               exit 0
