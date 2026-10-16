@@ -35,7 +35,7 @@ O GitHub Actions gera uma chave temporária para os testes do Docker Compose.
 
 ## Autorização USER / ADMIN
 
-A política desejada para recursos operacionais é:
+A API emite um claim de role assinado no JWT. A política aplicada aos recursos operacionais é:
 
 - `USER`: consultar e criar viagens, motoristas, passageiros, ônibus, rotas e manutenções.
 - `ADMIN`: as mesmas operações, além de editar e excluir esses recursos.
@@ -48,9 +48,7 @@ As regras devem cobrir todos os endpoints, inclusive rotas antigas/duplicadas e 
 
 ## Bootstrap do primeiro ADMIN
 
-A criação inicial do ADMIN não deve estar disponível no frontend. O procedimento será executado por operador autorizado via `curl` em Linux, usando um segredo de bootstrap configurado fora do código. A operação deve falhar se já existir ADMIN e se o segredo não corresponder. Se a configuração do segredo estiver ausente, o bootstrap deve ficar desabilitado.
-
-**Não use o procedimento em produção até que o endpoint de bootstrap e seus testes estejam implementados e revisados.** Nunca inclua segredo de bootstrap no repositório ou no comando salvo no histórico de shell; prefira variável de ambiente e entrada segura.
+O endpoint `POST /AuthenticationControllerAPI/bootstrap-admin` usa a configuração `BootstrapAdmin:Secret`, cria o primeiro ADMIN se nenhum existir e recusa segredo incorreto. Sem a configuração, o endpoint fica indisponível. Ele não é usado pelo Angular; a operação é feita por operador autorizado via `curl` em Linux. Configure o valor fora do código, não o versione e remova a configuração após criar o administrador. Antes de produção, ainda é necessário testar o fluxo e revisar a proteção contra duas requisições concorrentes.
 
 ## Testes obrigatórios
 
