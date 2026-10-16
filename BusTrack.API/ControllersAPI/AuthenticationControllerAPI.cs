@@ -54,6 +54,7 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         [HttpPost("create")]
         public IActionResult Create([FromBody] UserDB user)
         {
+            user.Role = "USER";
             _userService.Create(user);
 
             return Ok(new
@@ -87,6 +88,7 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             });
         }
 
+        [Authorize(Roles = "ADMIN")]
         [HttpPut("{id}")]
         public IActionResult Update(string id, [FromBody] UserDB user)
         {
@@ -99,6 +101,7 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             return _userService.Update(id, user);
         }
 
+        [Authorize(Roles = "ADMIN")]
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
