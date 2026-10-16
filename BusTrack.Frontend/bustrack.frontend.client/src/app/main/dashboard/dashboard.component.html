@@ -10,7 +10,7 @@
       </div>
 
       <div class="user-area">
-        <span>Área administrativa</span>
+        <span>{{ isAdmin ? 'Área administrativa' : 'Área do usuário' }}</span>
 
         <button
           type="button"
@@ -27,8 +27,8 @@
         <h1>Bem-vindo ao Bus Track</h1>
 
         <p>
-          Gerencie viagens, ônibus, rotas, motoristas e passageiros
-          em um único lugar.
+          Consulte os registros e cadastre novas informações de viagens,
+          ônibus, rotas, motoristas, passageiros e manutenção.
         </p>
       </div>
 
@@ -44,7 +44,7 @@
           <div>
             <h2>Viagens</h2>
             <p>
-              Visualize, crie e gerencie as viagens cadastradas.
+              Consulte as viagens cadastradas e registre novas viagens.
             </p>
           </div>
 
@@ -60,7 +60,7 @@
           <div>
             <h2>Ônibus</h2>
             <p>
-              Consulte e gerencie os ônibus cadastrados.
+              Consulte os ônibus cadastrados e registre novos ônibus.
             </p>
           </div>
 
@@ -76,7 +76,7 @@
           <div>
             <h2>Rotas</h2>
             <p>
-              Gerencie as rotas utilizadas pelo sistema.
+              Consulte as rotas cadastradas e registre novas rotas.
             </p>
           </div>
 
@@ -92,7 +92,7 @@
           <div>
             <h2>Motoristas</h2>
             <p>
-              Consulte e gerencie os motoristas.
+              Consulte os motoristas cadastrados e registre novos motoristas.
             </p>
           </div>
 
@@ -108,7 +108,7 @@
           <div>
             <h2>Passageiros</h2>
             <p>
-              Consulte e gerencie os passageiros.
+              Consulte os passageiros cadastrados e registre novos passageiros.
             </p>
           </div>
 
@@ -124,7 +124,7 @@
           <div>
             <h2>Serviços / Manutenção</h2>
             <p>
-              Acompanhe os serviços e manutenções dos ônibus.
+              Consulte o histórico e registre novas manutenções.
             </p>
           </div>
 
