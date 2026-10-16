@@ -7,8 +7,6 @@ on:
         required: true
       BUSTRACK_TEST_PASSWORD:
         required: true
-      BUSTRACK_JWT_SECRET:
-        required: true
 
 jobs:
   test:
@@ -24,9 +22,9 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Start BusTrack environment
-        env:
-          BUSTRACK_JWT_SECRET: ${{ secrets.BUSTRACK_JWT_SECRET }}
-        run: docker compose up -d --build
+        run: |
+          export BUSTRACK_JWT_SECRET="$(openssl rand -base64 48)"
+          docker compose up -d --build
 
       - name: Wait for backend
         run: |
