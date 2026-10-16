@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { SessionService } from '../../services/session.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,7 +9,10 @@ import { Router } from '@angular/router';
 })
 export class DashboardComponent {
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private sessionService: SessionService
+  ) {}
 
   navegarParaViagens(): void {
     this.router.navigate(['/trips']);
@@ -35,6 +39,11 @@ export class DashboardComponent {
   }
 
   sair(): void {
-    this.router.navigate(['/enter-the-system']);
+    this.sessionService.clearSession();
+
+    this.router.navigate(
+      ['/enter-the-system'],
+      { replaceUrl: true }
+    );
   }
 }
