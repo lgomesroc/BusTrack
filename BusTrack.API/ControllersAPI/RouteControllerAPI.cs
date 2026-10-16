@@ -58,15 +58,9 @@ namespace BusTrack.BusTrack.API.ControllersAPI
                 new { id = createdRoute.Id },
                 createdRoute);
         }
-
         [Authorize(Roles = "ADMIN")]
 
-
-        [Authorize(Roles = "ADMIN")]
-
-
-
-        [HttpPut("{id}")]
+[HttpPut("{id}")]
         public async Task<IActionResult> Put(
             string id,
             [FromBody] RouteDTOAPI route)
@@ -88,15 +82,9 @@ namespace BusTrack.BusTrack.API.ControllersAPI
 
             return Ok(updatedRoute);
         }
-
         [Authorize(Roles = "ADMIN")]
 
-
-        [Authorize(Roles = "ADMIN")]
-
-
-
-        [HttpDelete("{id}")]
+[HttpDelete("{id}")]
         public async Task<IActionResult> Delete(
             string id)
         {
