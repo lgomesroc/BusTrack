@@ -797,7 +797,6 @@ Abaixo todos os arquivos e pastas atualizados do projeto num todo
 
 ```text
 BusTrack
-│
 ├── .github/
 │   └── workflows/
 │   │   ├── backend-build.yml
@@ -815,7 +814,8 @@ BusTrack
 │   │   ├── CreateAccountControllerAPI.cs             
 │   │   ├── DashboardControllerAPI.cs                
 │   │   ├── DriverControllerAPI.cs
-│   │   ├── HealthController.cs                   
+│   │   ├── HealthController.cs
+│   │   ├── MaintenanceControllerAPI.cs                  
 │   │   ├── PassengerControllerAPI.cs                  
 │   │   ├── RouteControllerAPI.cs                     
 │   │   ├── TripControllerAPI.cs                       
@@ -823,7 +823,8 @@ BusTrack
 │   │   └── UserControllerAPI.cs                      
 │   ├── DTOAPI                                      
 │   │   ├── BusDTOAPI.cs                            
-│   │   ├── DriverDTOAPI.cs                          
+│   │   ├── DriverDTOAPI.cs
+│   │   ├── MaintenanceDTOAPI.cs                   
 │   │   ├── PassengerDTOAPI.cs                        
 │   │   ├── RouteDTOAPI.cs                            
 │   │   ├── TripDTOAPI.cs
@@ -835,7 +836,8 @@ BusTrack
 │   │   │   ├── IAccountServiceAPI.cs              
 │   │   │   ├── IBusServiceAPI.cs                      
 │   │   │   ├── IDriverServiceAPI.cs                   
-│   │   │   ├── IEmailConfirmationServiceAPI.cs          
+│   │   │   ├── IEmailConfirmationServiceAPI.cs
+│   │   │   ├── IMaintenanceServiceAPI.cs         
 │   │   │   ├── IPassengerServiceAPI.cs                  
 │   │   │   ├── IRouteServiceAPI.cs                       
 │   │   │   ├── ITripServiceAPI.cs                      
@@ -857,7 +859,8 @@ BusTrack
 │   └── ServicesAPI                                 
 │   │   ├── AccountServiceAPI.cs                     
 │   │   ├── BusServiceAPI.cs                       
-│   │   ├── DriverServiceAPI.cs                      
+│   │   ├── DriverServiceAPI.cs
+│   │   ├── MaintenanceServiceAPI.cs                     
 │   │   ├── PassengerServiceAPI.cs                  
 │   │   ├── RouteServiceAPI.cs                 
 │   │   ├── TripServiceAPI.cs                        
@@ -867,11 +870,12 @@ BusTrack
 │   │   └── UserServiceAPI.cs                       
 ├── BusTrack.DB                                       
 │   ├── ClassesDB                                   
-│   │   ├── BusDB.cs                                   
+│   │   ├── BusDB.cs
 │   │   ├── DriverDB.cs                               
 │   │   ├── EmailConfirmationDB                      
 │   │   ├── InspectorDB                               
 │   │   ├── LoginDB                                    
+│   │   ├── MaintenanceDB.cs
 │   │   ├── PassengerDB.cs                             
 │   │   ├── PasswordHistoryDB.cs                       
 │   │   ├── PasswordRecordDB.cs                   
@@ -895,7 +899,8 @@ BusTrack
 │   │   │   └── ITripsPassengerModelDB.cs                 
 │   │   └── IRepositoriesDB                         
 │   │   │   ├── IBusRepositoryDB.cs                      
-│   │   │   ├── IDriverRepositoryDB.cs                   
+│   │   │   ├── IDriverRepositoryDB.cs
+│   │   │   ├── IMaintenanceRepositoryDB.cs
 │   │   │   ├── IPassengerRepositoryDB.cs                
 │   │   │   ├── IRouteRepositoryDB.cs                    
 │   │   │   ├── ITripRepositoryDB.cs                    
@@ -912,7 +917,8 @@ BusTrack
 │   ├── RepositoriesDB                             
 │   │   ├── BusRepositoryDB.cs                       
 │   │   ├── DriverRepositoryDB.cs                     
-│   │   ├── InspectorRepositoryDB.cs                
+│   │   ├── InspectorRepositoryDB.cs
+│   │   ├── MaintenanceRepositoryDB.cs
 │   │   ├── PassengerRepositoryDB.cs                  
 │   │   ├── RouteRepositoryDB.cs                      
 │   │   ├── TripRepositoryDB.cs                        
@@ -939,11 +945,11 @@ BusTrack
 │   │   │   │   │   ├── authentication.guard.ts
 │   │   │   │   │   └── browser-navigation.guard.ts                           
 │   │   │   │   ├── login                      
-│   │   │   │   │   │   ├── concluded              
-│   │   │   │   │   │   │   ├── concluded.component.css   
-│   │   │   │   │   │   │   ├── concluded.component.html   
-│   │   │   │   │   │   │   ├── concluded.component.spec.ts   
-│   │   │   │   │   │   │   └── concluded.component.ts   
+│   │   │   │   │   ├── concluded              
+│   │   │   │   │   │   ├── concluded.component.css   
+│   │   │   │   │   │   ├── concluded.component.html   
+│   │   │   │   │   │   ├── concluded.component.spec.ts   
+│   │   │   │   │   │   └── concluded.component.ts   
 │   │   │   │   │   ├── confirmation            
 │   │   │   │   │   │   ├── confirmation.component.css   
 │   │   │   │   │   │   ├── confirmation.component.html  
@@ -999,7 +1005,11 @@ BusTrack
 │   │   │   │   │   │   ├── dashboard.component.css             
 │   │   │   │   │   │   ├── dashboard.component.html             
 │   │   │   │   │   │   ├── dashboard.component.spec.ts         
-│   │   │   │   │   │   └── dashboard.component.ts            
+│   │   │   │   │   │   └── dashboard.component.ts
+│   │   │   │   │   ├──  maintenance/
+│   │   │   │   │   │   ├── maintenance.component.ts
+│   │   │   │   │   │   ├── maintenance.component.html
+│   │   │   │   │   │   └── maintenance.component.css            
 │   │   │   │   │   ├── rules-main                             
 │   │   │   │   │   │   ├── limitCharactersRules                   
 │   │   │   │   │   │   │   └── limitCharactersRule.ts               
@@ -1019,9 +1029,10 @@ BusTrack
 │   │   │   │   ├── models                                  
 │   │   │   │   │   └── user.model.ts                        
 │   │   │   │   ├── services
-│   │   │   │   │   │   ├── application-availability.service.ts
-│   │   │   │   │   │   ├── bus.service.ts
+│   │   │   │   │   ├── application-availability.service.ts
+│   │   │   │   │   ├── bus.service.ts
 │   │   │   │   │   ├── driver.service.ts
+│   │   │   │   │   ├── maintenance.service.ts
 │   │   │   │   │   ├── route.service.ts                              
 │   │   │   │   │   ├── data.service.ts
 │   │   │   │   │   ├── session.service.ts
