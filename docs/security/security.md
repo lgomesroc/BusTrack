@@ -25,7 +25,7 @@ Consulte [JWT authentication](jwt-authentication.md) para configuração local e
 
 ## Regras de autorização de negócio
 
-O sistema deve aplicar as permissões no backend com roles (RBAC — Role-Based Access Control):
+O backend aplica permissões por role (RBAC — Role-Based Access Control) nas operações de edição/exclusão dos recursos operacionais:
 
 | Operação | USER | ADMIN |
 |---|---:|---:|
@@ -38,7 +38,7 @@ O sistema deve aplicar as permissões no backend com roles (RBAC — Role-Based 
 | Criar/promover ADMIN pelo cadastro público ou frontend | Proibido | Proibido |
 | Bootstrap controlado do primeiro ADMIN via ferramenta de linha de comando | Não aplicável | Procedimento operacional restrito |
 
-As mesmas regras devem abranger endpoints duplicados/legados e relações como passageiros associados a viagens. Uma rota alternativa não pode permitir uma operação que a rota principal proíbe.
+As mesmas restrições foram aplicadas às rotas operacionais duplicadas/legadas e às relações entre passageiros e viagens. Uma rota alternativa não pode permitir uma operação que a rota principal proíbe.
 
 O cadastro público deve sempre criar uma conta com role `USER`, ignorando qualquer role enviada pelo cliente. A role deve vir de uma fonte confiável do backend e ser incluída como claim assinada no JWT. Nunca aceite uma role enviada pelo frontend como prova de autorização.
 
@@ -46,15 +46,7 @@ O cadastro público deve sempre criar uma conta com role `USER`, ignorando qualq
 
 A criação do primeiro administrador não deve ser disponibilizada como botão ou formulário do frontend. O procedimento deve ser executado manualmente por um operador autorizado via `curl` no ambiente Linux, usando um segredo de bootstrap fornecido por variável de ambiente, nunca codificado no repositório.
 
-O endpoint de bootstrap, quando habilitado, deve:
-- recusar a operação se já existir um ADMIN;
-- exigir segredo de bootstrap forte e configurado fora do código;
-- não aceitar role ou identidade privilegiada escolhida livremente no cadastro público;
-- não retornar nem registrar segredos ou hashes;
-- falhar fechado se a configuração necessária estiver ausente;
-- ser coberto por testes de primeira execução, repetição e segredo inválido.
-
-O procedimento deve ser documentado e testado antes de ser usado em produção. Não execute bootstrap em produção até que essa proteção esteja implementada e validada.
+O endpoint `POST /AuthenticationControllerAPI/bootstrap-admin` foi criado e exige `BootstrapAdmin:Secret` configurado fora do código. Ele recusa segredo incorreto e solicita conflito se já houver ADMIN. Sem configuração, responde `404`. O endpoint não é usado pelo frontend; a operação planejada é via `curl` em Linux. Ainda falta validar os testes de integração e revisar concorrência entre chamadas simultâneas. Não execute o bootstrap em produção até concluir essas verificações.
 
 ## Respostas HTTP esperadas
 
