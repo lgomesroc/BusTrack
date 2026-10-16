@@ -1,5 +1,7 @@
+
 using BusTrack.BusTrack.DB.Classes;
 using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace BusTrack.BusTrack.DB.RepositoriesDB
@@ -45,7 +47,11 @@ namespace BusTrack.BusTrack.DB.RepositoriesDB
             }
 
             maintenance.Id = id;
-            var result = await _collection.ReplaceOneAsync(item => item.Id == id, maintenance);
+
+            var result = await _collection.ReplaceOneAsync(
+                item => item.Id == id,
+                maintenance);
+
             return result.MatchedCount > 0;
         }
 
@@ -56,7 +62,9 @@ namespace BusTrack.BusTrack.DB.RepositoriesDB
                 return false;
             }
 
-            var result = await _collection.DeleteOneAsync(item => item.Id == id);
+            var result = await _collection.DeleteOneAsync(
+                item => item.Id == id);
+
             return result.DeletedCount > 0;
         }
     }
