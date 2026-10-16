@@ -1,6 +1,7 @@
 ﻿using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using BusTrack.BusTrack.API.ModelsAPI;
 using BusTrack.BusTrack.DB.ModelsDB;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 
@@ -9,6 +10,7 @@ namespace BusTrack.BusTrack.API.ControllersAPI
 
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "ADMIN")]
     public class UserControllerAPI : ControllerBase
     {
         private readonly IUserServiceAPI _userService;
