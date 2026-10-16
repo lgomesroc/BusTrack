@@ -14,6 +14,10 @@ export class DashboardComponent {
     private sessionService: SessionService
   ) {}
 
+  get isAdmin(): boolean {
+    return this.sessionService.isAdmin();
+  }
+
   navegarParaViagens(): void {
     this.router.navigate(['/trips']);
   }
