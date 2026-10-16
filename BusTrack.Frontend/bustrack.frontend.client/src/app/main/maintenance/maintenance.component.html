@@ -2,7 +2,7 @@
   <header class="page-header"><div><h1>Serviços / Manutenção</h1><p>Registre serviços, custos e o histórico de manutenção dos ônibus.</p></div><div class="header-actions"><button type="button" class="secondary-button" (click)="backToDashboard()">Voltar ao dashboard</button><button type="button" class="primary-button" (click)="startCreate()" [disabled]="isLoading || buses.length === 0">Nova manutenção</button></div></header>
   <div class="error-message" *ngIf="errorMessage" role="alert">{{errorMessage}}</div>
   <div class="notice" *ngIf="buses.length === 0">Cadastre um ônibus antes de registrar uma manutenção.</div>
-  <section class="maintenance-form" *ngIf="isCreating || (sessionService.isAdmin() && editing)>
+  <section class="maintenance-form" *ngIf="isCreating || (sessionService.isAdmin() && editing)">
     <div class="section-heading"><h2>{{editing?'Editar manutenção':'Registrar manutenção'}}</h2><p>Campos marcados com * são obrigatórios.</p></div>
     <div class="form-grid">
       <div class="form-group"><label for="maintenance-bus">Ônibus *</label><select id="maintenance-bus" name="busId" [(ngModel)]="form.busId" required><option value="">Selecione um ônibus</option><option *ngFor="let bus of buses" [value]="bus.id">{{bus.number || bus.licensePlate || bus.id}} — {{bus.model || 'Modelo não informado'}}</option></select></div>
