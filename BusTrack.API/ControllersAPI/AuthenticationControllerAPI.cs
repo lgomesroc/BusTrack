@@ -7,6 +7,8 @@ using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using BusTrack.BusTrack.DB.ClassesDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace BusTrack.BusTrack.API.ControllersAPI
 {
@@ -18,17 +20,20 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         private readonly IJwtTokenServiceAPI _jwtTokenService;
         private readonly IUserRepositoryDB _userRepository;
         private readonly IConfiguration _configuration;
+        private readonly IMongoCollection<BsonDocument> _bootstrapLocks;
 
         public AuthenticationControllerAPI(
             IUserAuthenticationServiceAPI userService,
             IJwtTokenServiceAPI jwtTokenService,
             IUserRepositoryDB userRepository,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IMongoDatabase database)
         {
             _userService = userService;
             _jwtTokenService = jwtTokenService;
             _userRepository = userRepository;
             _configuration = configuration;
+            _bootstrapLocks = database.GetCollection<BsonDocument>("BusTrackSecurityLocks");
         }
 
         [AllowAnonymous]
