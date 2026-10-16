@@ -27,7 +27,7 @@ Configure these environment variables on the backend service:
 
 The API intentionally fails to start if the signing key, issuer, or audience is missing or invalid. Do not use a sample or local-development key in production.
 
-For GitHub Actions, add a repository Actions secret named `BUSTRACK_JWT_SECRET`. The backend integration workflow passes it to Docker Compose. Existing `BUSTRACK_TEST_EMAIL` and `BUSTRACK_TEST_PASSWORD` secrets are still required.
+GitHub Actions generates an ephemeral random JWT signing key for the Docker Compose test environment. Existing `BUSTRACK_TEST_EMAIL` and `BUSTRACK_TEST_PASSWORD` secrets are still required.
 
 ## Authorization behavior
 
