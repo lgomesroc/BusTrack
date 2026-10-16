@@ -48,11 +48,19 @@ namespace BusTrack.Tests.IntegrationTests.CustomWebApplicationFactory
         {
             var client = base.CreateClient();
             client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", CreateTestToken());
+                new AuthenticationHeaderValue("Bearer", CreateTestToken("ADMIN"));
             return client;
         }
 
-        private static string CreateTestToken()
+        public HttpClient CreateUserClient()
+        {
+            var client = base.CreateClient();
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", CreateTestToken("USER"));
+            return client;
+        }
+
+        private static string CreateTestToken(string role)
         {
             var now = DateTime.UtcNow;
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(TestKey));
@@ -63,7 +71,8 @@ namespace BusTrack.Tests.IntegrationTests.CustomWebApplicationFactory
                 claims: new[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, "000000000000000000000001"),
-                    new Claim(ClaimTypes.Name, "BusTrack Integration Test")
+                    new Claim(ClaimTypes.Name, "BusTrack Integration Test"),
+                    new Claim(ClaimTypes.Role, role)
                 },
                 notBefore: now,
                 expires: now.AddMinutes(30),
