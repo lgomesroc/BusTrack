@@ -76,6 +76,18 @@ namespace BusTrack.Tests.IntegrationTests.ControllersAPIIntegrationTests
         }
 
         [Fact]
+        public async Task AdminBootstrap_WithoutConfiguredSecret_ReturnsNotFound()
+        {
+            using var client = _factory.CreateClient();
+
+            var response = await client.PostAsync(
+                "/AuthenticationControllerAPI/bootstrap-admin",
+                new StringContent("{}", Encoding.UTF8, "application/json"));
+
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
         public async Task Login_WithInvalidCredentials_ReturnsUnauthorized()
         {
             using var client = _factory.CreateClient();
