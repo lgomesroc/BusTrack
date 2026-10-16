@@ -31,7 +31,7 @@
 
   <section
     class="passenger-form"
-    *ngIf="isCreating || editingPassenger">
+    *ngIf="isCreating || (sessionService.isAdmin() && editingPassenger)>
     <div class="section-heading">
       <h2>{{ editingPassenger ? 'Editar passageiro' : 'Novo passageiro' }}</h2>
       <p>Informe os dados básicos do passageiro.</p>
@@ -163,14 +163,14 @@
               <button
                 type="button"
                 class="edit-button"
-                (click)="startEdit(passenger)"
+                (click)="startEdit(passenger)" [hidden]="!sessionService.isAdmin()"
                 [disabled]="isLoading">
                 Editar
               </button>
               <button
                 type="button"
                 class="delete-button"
-                (click)="deletePassenger(passenger)"
+                (click)="deletePassenger(passenger)" [hidden]="!sessionService.isAdmin()"
                 [disabled]="isLoading">
                 Excluir
               </button>
