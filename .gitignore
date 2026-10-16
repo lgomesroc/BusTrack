@@ -2,3 +2,8 @@
 **/bin/
 **/obj/
 *.csproj.user
+
+# Test execution results
+TestResults/
+# Test execution results
+TestResults/
