@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { SessionService } from '../../services/session.service';
 import { Bus, BusService } from '../../services/bus.service';
 import { Maintenance, MaintenancePayload, MaintenanceService, MaintenanceStatus } from '../../services/maintenance.service';
 
@@ -14,7 +15,7 @@ export class MaintenanceComponent implements OnInit {
   errorMessage='';
   readonly statuses:MaintenanceStatus[]=['Agendada','Em andamento','Concluída','Cancelada'];
 
-  constructor(private router:Router,private maintenanceService:MaintenanceService,private busService:BusService) {}
+  constructor(private router:Router,private maintenanceService:MaintenanceService,private busService:BusService,public sessionService:SessionService) {}
   ngOnInit():void { this.loadBuses(); this.loadMaintenances(); }
   loadBuses():void {
     this.busService.getBuses().subscribe({
