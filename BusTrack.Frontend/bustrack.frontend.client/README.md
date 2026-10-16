@@ -21,7 +21,7 @@ O projeto BusTrack.API utiliza as seguintes ferramentas e tecnologias:
 
 Projeto BusTrack Backend (BusTrack.csproj)
 Autenticação e Autorização:
-Implementação do Auth0 para gerenciamento de autenticação e autorização utilizando o pacote Auth0.ManagementApi.
+Autenticação da API com JWT Bearer, validação de assinatura/expiração e autorização por roles `USER` e `ADMIN` no backend.
 
 Mapeamento de Objetos:
 Uso do AutoMapper para mapeamento entre objetos de domínio e DTOs.
