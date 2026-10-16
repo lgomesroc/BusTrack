@@ -10,7 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace BusTrack.Tests.IntegrationTests.CustomWebApplicationFactory
 {
     public class CustomWebApplicationFactory<TProgram>
-        : WebApplicationFactory<TProgram>
+        : Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactory<TProgram>
         where TProgram : class
     {
         private const string TestKey =
