@@ -19,6 +19,16 @@ namespace BusTrack.Tests.IntegrationTests.CustomWebApplicationFactory
         private const string TestIssuer = "BusTrack.Tests";
         private const string TestAudience = "BusTrack.Tests.Client";
 
+        public CustomWebApplicationFactory()
+        {
+            // Program.Main validates JWT configuration before ConfigureWebHost runs.
+            // Seed process-level test settings before WebApplicationFactory starts the host.
+            Environment.SetEnvironmentVariable("JwtSettings__SecretKey", TestKey);
+            Environment.SetEnvironmentVariable("JwtSettings__Issuer", TestIssuer);
+            Environment.SetEnvironmentVariable("JwtSettings__Audience", TestAudience);
+            Environment.SetEnvironmentVariable("JwtSettings__ExpirationInMinutes", "30");
+        }
+
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseEnvironment("Testing");
