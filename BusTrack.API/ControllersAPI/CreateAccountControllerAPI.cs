@@ -2,12 +2,14 @@ using System.Net;
 using System.Net.Mail;
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using BusTrack.BusTrack.DB.ClassesDB;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusTrack.BusTrack.API.ControllersAPI
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize(Roles = "ADMIN")]
     public class CreateAccountControllerAPI : ControllerBase
     {
         private readonly IEmailConfirmationServiceAPI _emailConfirmationService;
