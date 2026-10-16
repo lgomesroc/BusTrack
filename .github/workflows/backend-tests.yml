@@ -7,6 +7,8 @@ on:
         required: true
       BUSTRACK_TEST_PASSWORD:
         required: true
+      BUSTRACK_JWT_SECRET:
+        required: true
 
 jobs:
   test:
@@ -22,8 +24,9 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Start BusTrack environment
-        run: |
-          docker compose up -d --build
+        env:
+          BUSTRACK_JWT_SECRET: ${{ secrets.BUSTRACK_JWT_SECRET }}
+        run: docker compose up -d --build
 
       - name: Wait for backend
         run: |
@@ -94,36 +97,6 @@ jobs:
 
       - name: Restore tests
         run: dotnet restore BusTrack.Tests/BusTrack.Tests.csproj
-
-      - name: Create test user
-        env:
-          BUSTRACK_TEST_EMAIL: ${{ secrets.BUSTRACK_TEST_EMAIL }}
-          BUSTRACK_TEST_PASSWORD: ${{ secrets.BUSTRACK_TEST_PASSWORD }}
-        run: |
-          payload=$(jq -n \
-            --arg fullName "BusTrack CI Test User" \
-            --arg cpf "12345678909" \
-            --arg email "$BUSTRACK_TEST_EMAIL" \
-            --arg password "$BUSTRACK_TEST_PASSWORD" \
-            '{
-              fullName: $fullName,
-              cpf: $cpf,
-              email: $email,
-              password: $password
-            }')
-
-          echo "Criando usuário de teste no ambiente do CI..."
-
-          curl --fail-with-body \
-            --silent \
-            --show-error \
-            -X POST \
-            http://localhost:5066/AuthenticationControllerAPI/create \
-            -H "Content-Type: application/json" \
-            --data "$payload"
-
-          echo
-          echo "Usuário de teste criado com sucesso."
 
       - name: Run backend tests
         env:
