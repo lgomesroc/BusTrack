@@ -83,7 +83,7 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         public IActionResult BootstrapAdmin([FromBody] BootstrapAdminRequestDTOAPI request)
         {
             var configuredSecret = _configuration["BootstrapAdmin:Secret"];
-            if (string.IsNullOrWhiteSpace(configuredSecret))
+            if (string.IsNullOrWhiteSpace(configuredSecret) || Encoding.UTF8.GetByteCount(configuredSecret) < 32)
             {
                 return NotFound();
             }
