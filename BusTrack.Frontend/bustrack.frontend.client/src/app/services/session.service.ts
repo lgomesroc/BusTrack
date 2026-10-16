@@ -46,8 +46,8 @@ export class SessionService {
       const decoded = atob(base64.padEnd(base64.length + ((4 - base64.length % 4) % 4), '='));
       const payload = JSON.parse(decoded) as Record<string, unknown>;
       const roleClaim = payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
-        ?? payload.role
-        ?? payload.roles;
+        ?? payload['role']
+        ?? payload['roles'];
       return Array.isArray(roleClaim)
         ? roleClaim.includes('ADMIN')
         : roleClaim === 'ADMIN';
