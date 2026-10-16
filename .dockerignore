@@ -3,6 +3,11 @@
 .gitignore
 .gitattributes
 
+# Local environment secrets
+.env
+.env.*
+!.env.example
+
 # .NET
 **/bin/
 **/obj/
