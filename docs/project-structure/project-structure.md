@@ -837,6 +837,7 @@ BusTrack
 │   │   │   ├── IBusServiceAPI.cs                      
 │   │   │   ├── IDriverServiceAPI.cs                   
 │   │   │   ├── IEmailConfirmationServiceAPI.cs
+│   │   │   ├── IJwtTokenServiceAPI.cs
 │   │   │   ├── IMaintenanceServiceAPI.cs         
 │   │   │   ├── IPassengerServiceAPI.cs                  
 │   │   │   ├── IRouteServiceAPI.cs                       
@@ -844,7 +845,7 @@ BusTrack
 │   │   │   ├── ITripsPassengerServiceAPI.cs            
 │   │   │   ├── IUpdatePasswordServiceAPI.cs                
 │   │   │   ├── IUserAuthenticationServiceAPI.cs          
-│   │   │   └── IUserServiceAPI.cs                        
+│   │   │   └── IUserServiceAPI.cs
 │   ├── MappingsAPI                                   
 │   │   └── MappingProfileAPI.cs                       
 │   ├── ModelsAPI                                     
@@ -860,6 +861,7 @@ BusTrack
 │   │   ├── AccountServiceAPI.cs                     
 │   │   ├── BusServiceAPI.cs                       
 │   │   ├── DriverServiceAPI.cs
+│   │   ├── JwtTokenServiceAPI.cs
 │   │   ├── MaintenanceServiceAPI.cs                     
 │   │   ├── PassengerServiceAPI.cs                  
 │   │   ├── RouteServiceAPI.cs                 
@@ -1032,6 +1034,7 @@ BusTrack
 │   │   │   │   │   ├── application-availability.service.ts
 │   │   │   │   │   ├── bus.service.ts
 │   │   │   │   │   ├── driver.service.ts
+│   │   │   │   │   ├── jwt-auth.interceptor.ts
 │   │   │   │   │   ├── maintenance.service.ts
 │   │   │   │   │   ├── route.service.ts                              
 │   │   │   │   │   ├── data.service.ts
@@ -1071,9 +1074,11 @@ BusTrack
 │   │   └── ErrorHandlingMiddleware.cs                
 │   └── Program.cs                                 
 ├── BusTrack.Tests                              
-│   ├── IntegrationTests                          
+│   ├── IntegrationTests
+│   │   ├── ControllersAPIIntegrationTests
+│   │   │   └── JwtAuthenticationIntegrationTests.cs
 │   │   └── CustomWebApplicationFactory                
-│   │       └── CustomWebApplicationFactory.cs          
+│   │   │   └── CustomWebApplicationFactory.cs          
 │   ├── PerformanceTests                            
 │   │   ├── PassengerServiceAPIPerformanceTests.cs     
 │   │   └── RouteServiceAPIPerformanceTests.cs         
@@ -1084,9 +1089,11 @@ BusTrack
 │   │   │   ├── PassengerControllerAPIUnitTests.cs       
 │   │   │   ├── RouteControllerAPIUnitTests.cs            
 │   │   │   ├── TripControllerAPIUnitTests.cs             
-│   │   │   └── TripsPassengerControllerAPIUnitTests.cs   
-│   └── UsabilityTests                               
-│   │   └── UsabilityTests.cs           
+│   │   │   └── TripsPassengerControllerAPIUnitTests.cs
+│   │   ├── ServicesAPI
+│   │   │   └── JwtTokenServiceAPITests.cs
+│   └── UsabilityTests
+│   │   └── UsabilityTests.cs
 ├── BusTrack.Updater                           
 │   ├── DriversUpdater                               
 │   │   └── DriverNameUpdater.cs                       
@@ -1114,9 +1121,10 @@ BusTrack
 │   │   │   ├── 1717028557786.jpeg
 │   │   │   ├── 1717028557844.jpeg
 │   │   │   └── 1717028558230.jpeg
-│   │   └──screens.md
-│   ├──security
-│   │   └──security.md
+│   │   └── screens.md
+│   ├── security
+│   │   ├── jwt-authentication.md
+│   │   └── security.md
 │   └── technologies
 │   │   └── technologies.md
 ├── docker/
@@ -1125,6 +1133,7 @@ BusTrack
 │   └── frontend/
 │   │   └── Dockerfile
 ├── .dockerignore
+├── .env.example
 ├── .gitignore   
 ├── appsettings.json
 ├── appsettings.Development.json
