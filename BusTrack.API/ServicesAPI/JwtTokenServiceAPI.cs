@@ -47,12 +47,12 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             if (!string.IsNullOrWhiteSpace(user.Id))
             {
                 claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
+                claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
             }
 
             if (!string.IsNullOrWhiteSpace(user.Email))
             {
                 claims.Add(new Claim(ClaimTypes.Email, user.Email));
-                claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Email));
             }
 
             if (!string.IsNullOrWhiteSpace(user.FullName))
