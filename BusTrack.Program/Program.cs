@@ -26,7 +26,6 @@ public partial class Program
                     .Assembly);
 
         builder.Services.AddEndpointsApiExplorer();
-
         builder.Services.AddSwaggerGen();
 
         builder.Services.AddAutoMapper(
@@ -84,98 +83,49 @@ public partial class Program
                     serviceProvider
                         .GetRequiredService<IMongoClient>();
 
-                return client.GetDatabase(
-                    databaseName);
+                return client.GetDatabase(databaseName);
             });
 
-        builder.Services.AddScoped<
-            IUserRepositoryDB,
-            UserRepositoryDB>();
+        builder.Services.AddScoped<IUserRepositoryDB, UserRepositoryDB>();
+        builder.Services.AddScoped<IUserAuthenticationServiceAPI, UserAuthenticationServiceAPI>();
+        builder.Services.AddScoped<IAccountServiceAPI>(
+            serviceProvider => new AccountServiceAPI(connectionString!, databaseName!));
 
-        builder.Services.AddScoped<
-            IUserAuthenticationServiceAPI,
-            UserAuthenticationServiceAPI>();
+        builder.Services.AddScoped<IBusRepositoryDB, BusRepositoryDB>();
+        builder.Services.AddScoped<IBusServiceAPI, BusServiceAPI>();
+        builder.Services.AddScoped<IDriverRepositoryDB, DriverRepositoryDB>();
+        builder.Services.AddScoped<IDriverServiceAPI, DriverServiceAPI>();
+        builder.Services.AddScoped<IRouteRepositoryDB, RouteRepositoryDB>();
+        builder.Services.AddScoped<IRouteServiceAPI, RouteServiceAPI>();
+        builder.Services.AddScoped<ITripRepositoryDB, TripRepositoryDB>();
+        builder.Services.AddScoped<ITripServiceAPI, TripServiceAPI>();
+        builder.Services.AddScoped<ITripPassengerRepositoryDB, TripPassengerRepositoryDB>();
+        builder.Services.AddScoped<ITripsPassengerServiceAPI, TripsPassengerServiceAPI>();
 
-        builder.Services.AddScoped<
-            IAccountServiceAPI>(
-            serviceProvider =>
-                new AccountServiceAPI(
-                    connectionString!,
-                    databaseName!));
+        builder.Services.AddScoped<IMaintenanceRepositoryDB, MaintenanceRepositoryDB>();
+        builder.Services.AddScoped<IMaintenanceServiceAPI, MaintenanceServiceAPI>();
 
-        builder.Services.AddScoped<
-            IBusRepositoryDB,
-            BusRepositoryDB>();
-
-        builder.Services.AddScoped<
-            IBusServiceAPI,
-            BusServiceAPI>();
-
-        builder.Services.AddScoped<
-            IDriverRepositoryDB,
-            DriverRepositoryDB>();
-
-        builder.Services.AddScoped<
-            IDriverServiceAPI,
-            DriverServiceAPI>();
-
-        builder.Services.AddScoped<
-            IRouteRepositoryDB,
-            RouteRepositoryDB>();
-
-        builder.Services.AddScoped<
-            IRouteServiceAPI,
-            RouteServiceAPI>();
-
-        builder.Services.AddScoped<
-            ITripRepositoryDB,
-            TripRepositoryDB>();
-
-        builder.Services.AddScoped<
-            ITripServiceAPI,
-            TripServiceAPI>();
-
-        builder.Services.AddScoped<
-            ITripPassengerRepositoryDB,
-            TripPassengerRepositoryDB>();
-
-        builder.Services.AddScoped<
-            ITripsPassengerServiceAPI,
-            TripsPassengerServiceAPI>();
-
-        var app =
-            builder.Build();
+        var app = builder.Build();
 
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-
             app.UseSwaggerUI();
-
             app.UseDeveloperExceptionPage();
-
             app.UseHttpsRedirection();
         }
         else
         {
-            app.UseExceptionHandler(
-                "/Error");
-
+            app.UseExceptionHandler("/Error");
             app.UseHsts();
         }
 
-        app.UseCors(
-            "FrontendPolicy");
-
+        app.UseCors("FrontendPolicy");
         app.UseAuthorization();
-
         app.MapControllers();
-
         app.MapControllerRoute(
             name: "default",
-            pattern:
-                "{controller=Home}/{action=Index}/{id?}");
-
+            pattern: "{controller=Home}/{action=Index}/{id?}");
         app.Run();
     }
 }
