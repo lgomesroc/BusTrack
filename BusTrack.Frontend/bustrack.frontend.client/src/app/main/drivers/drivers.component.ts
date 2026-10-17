@@ -53,7 +53,7 @@ export class DriversComponent implements OnInit {
   startEdit(driver: Driver): void {
     this.isCreating = false;
     this.editingDriver = driver;
-    this.driverForm = { ...driver };
+    this.driverForm = { ...driver, licenseNumber: this.formatCpf(driver.licenseNumber) };
     this.errorMessage = '';
   }
 
@@ -68,7 +68,7 @@ export class DriversComponent implements OnInit {
     this.errorMessage = '';
 
     const name = this.driverForm.name.trim();
-    const licenseNumber = this.driverForm.licenseNumber.trim();
+    const licenseNumber = this.formatCpf(this.driverForm.licenseNumber).replace(/\D/g, '');
 
     if (!name || !licenseNumber) {
       this.errorMessage = 'Preencha o nome e o CPF/número de identificação do motorista.';
@@ -127,6 +127,18 @@ export class DriversComponent implements OnInit {
 
   backToDashboard(): void {
     this.router.navigate(['/dashboard']);
+  }
+
+  onCpfChange(value: string): void {
+    this.driverForm.licenseNumber = this.formatCpf(value);
+  }
+
+  formatCpf(value: string | null | undefined): string {
+    const digits = (value ?? '').replace(/\\D/g, '').slice(0, 11);
+    return digits
+      .replace(/^(\\d{3})(\\d)/, '$1.$2')
+      .replace(/^(\\d{3})\\.(\\d{3})(\\d)/, '$1.$2.$3')
+      .replace(/^(\\d{3})\\.(\\d{3})\\.(\\d{3})(\\d{1,2})$/, '$1.$2.$3-$4');
   }
 
   private emptyDriver(): Driver {
