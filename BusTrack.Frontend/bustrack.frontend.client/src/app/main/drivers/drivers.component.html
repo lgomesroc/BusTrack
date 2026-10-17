@@ -16,7 +16,7 @@
   <section class="driver-form" *ngIf="isCreating || (sessionService.isAdmin() && editingDriver)">
     <div class="section-heading">
       <h2>{{ editingDriver ? 'Editar motorista' : 'Novo motorista' }}</h2>
-      <p>Informe o nome e o CPF ou número de identificação usado pelo sistema.</p>
+      <p>Informe o nome completo e o CPF do motorista.</p>
     </div>
 
     <div class="form-grid">
@@ -26,8 +26,8 @@
       </div>
 
       <div class="form-group">
-        <label for="driver-license">CPF / identificação *</label>
-        <input id="driver-license" name="licenseNumber" type="text" required [(ngModel)]="driverForm.licenseNumber" maxlength="30" placeholder="CPF ou número de identificação">
+        <label for="driver-license">CPF *</label>
+        <input id="driver-license" name="licenseNumber" type="text" required [ngModel]="driverForm.licenseNumber" (ngModelChange)="onCpfChange($event)" maxlength="14" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00">
       </div>
     </div>
 
@@ -60,14 +60,14 @@
         <thead>
           <tr>
             <th>Nome</th>
-            <th>CPF / identificação</th>
+            <th>CPF</th>
             <th>Ações</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let driver of drivers">
             <td data-label="Nome">{{ driver.name || '—' }}</td>
-            <td data-label="CPF / identificação">{{ driver.licenseNumber || '—' }}</td>
+            <td data-label="CPF">{{ formatCpf(driver.licenseNumber) || '—' }}</td>
             <td data-label="Ações" class="actions-cell">
               <button type="button" class="edit-button" (click)="startEdit(driver)" [hidden]="!sessionService.isAdmin()" [disabled]="isLoading">Editar</button>
               <button type="button" class="delete-button" (click)="deleteDriver(driver)" [hidden]="!sessionService.isAdmin()" [disabled]="isLoading">Excluir</button>
