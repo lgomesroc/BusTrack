@@ -58,8 +58,10 @@
           name="cpf"
           type="text"
           required
-          [(ngModel)]="passengerForm.cpf"
+          [ngModel]="passengerForm.cpf"
+          (ngModelChange)="onCpfChange($event)"
           maxlength="14"
+          inputmode="numeric"
           autocomplete="off"
           placeholder="000.000.000-00">
       </div>
@@ -156,7 +158,7 @@
         <tbody>
           <tr *ngFor="let passenger of passengers">
             <td data-label="Nome">{{ passenger.name || '—' }}</td>
-            <td data-label="CPF">{{ passenger.cpf || '—' }}</td>
+            <td data-label="CPF">{{ formatCpf(passenger.cpf) || '—' }}</td>
             <td data-label="E-mail">{{ passenger.email || '—' }}</td>
             <td data-label="Telefone">{{ passenger.phone || '—' }}</td>
             <td data-label="Ações" class="actions-cell">

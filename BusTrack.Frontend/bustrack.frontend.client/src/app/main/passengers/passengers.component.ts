@@ -61,7 +61,7 @@ export class PassengersComponent implements OnInit {
     this.passengerForm = {
       name: passenger.name,
       email: passenger.email,
-      cpf: passenger.cpf,
+      cpf: this.formatCpf(passenger.cpf),
       phone: passenger.phone
     };
     this.errorMessage = '';
@@ -80,7 +80,7 @@ export class PassengersComponent implements OnInit {
     const payload: PassengerPayload = {
       name: this.passengerForm.name.trim(),
       email: this.passengerForm.email.trim(),
-      cpf: this.passengerForm.cpf.trim(),
+      cpf: this.formatCpf(this.passengerForm.cpf).replace(/\D/g, ''),
       phone: this.passengerForm.phone.trim()
     };
 
@@ -149,6 +149,18 @@ export class PassengersComponent implements OnInit {
 
   backToDashboard(): void {
     this.router.navigate(['/dashboard']);
+  }
+
+  onCpfChange(value: string): void {
+    this.passengerForm.cpf = this.formatCpf(value);
+  }
+
+  formatCpf(value: string | null | undefined): string {
+    const digits = (value ?? '').replace(/\D/g, '').slice(0, 11);
+    return digits
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
   }
 
   private emptyPassenger(): PassengerPayload {
