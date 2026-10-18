@@ -1,33 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BusTrack - Dashboard</title>
-  <link rel="stylesheet" href="sidebar.component.css">
-</head>
-<body>
-  <div class="sidebar">
-
-    <div class="user-info">
-      <h2>Nome Completo do Usuário</h2>
-      <p>CPF do Usuário</p>
-    </div>
-    <div class="usability-rules">
-      <h3>Regras de Usabilidade</h3>
-      <ul>
-        <li>Temporizador de Inatividade: 20 minutos</li>
-        <li>Bloqueio de cópia de dados</li>
-        <li>Bloqueio de atalhos do teclado</li>
-        <li>Navegação no navegador bloqueada</li>
-      </ul>
-    </div>
+<aside class="sidebar">
+  <div class="user-info">
+    <h2>{{ nomeUsuario }}</h2>
+    <p *ngIf="emailUsuario">{{ emailUsuario }}</p>
+    <p>Perfil: {{ perfilUsuario }}</p>
   </div>
-  <div class="content">
-    <div class="main-screen">
-      <h1>Bem-vindo ao BusTrack</h1>
-    </div>
+  <div class="usability-rules">
+    <h3>Regras de Usabilidade</h3>
+    <ul>
+      <li>Temporizador de inatividade: 20 minutos</li>
+      <li>Bloqueio de cópia de dados</li>
+      <li>Bloqueio de atalhos do teclado</li>
+      <li>Navegação no navegador bloqueada</li>
+    </ul>
   </div>
-</body>
-</html>
+</aside>
