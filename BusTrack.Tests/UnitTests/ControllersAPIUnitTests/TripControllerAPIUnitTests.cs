@@ -1,6 +1,9 @@
-﻿using BusTrack.BusTrack.API.ControllersAPI;
+﻿using System.Security.Claims;
+using BusTrack.BusTrack.API.ControllersAPI;
 using BusTrack.BusTrack.API.DTOAPI;
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
+using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -9,6 +12,8 @@ namespace BusTrack.Tests.UnitTests.ControllersAPIUnitTests.TripControllerAPIUnit
     public class TripControllerAPIUnitTests
     {
         private readonly Mock<ITripServiceAPI> _tripService;
+        private readonly Mock<IUserRepositoryDB> _userRepository;
+        private readonly Mock<IPassengerRepositoryDB> _passengerRepository;
         private readonly TripControllerAPI _controller;
 
         public TripControllerAPIUnitTests()
@@ -16,9 +21,30 @@ namespace BusTrack.Tests.UnitTests.ControllersAPIUnitTests.TripControllerAPIUnit
             _tripService =
                 new Mock<ITripServiceAPI>();
 
+            _userRepository = new Mock<IUserRepositoryDB>();
+            _passengerRepository = new Mock<IPassengerRepositoryDB>();
+
             _controller =
                 new TripControllerAPI(
-                    _tripService.Object);
+                    _tripService.Object,
+                    _userRepository.Object,
+                    _passengerRepository.Object);
+
+            _controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(
+                        new ClaimsIdentity(
+                            new[]
+                            {
+                                new Claim(ClaimTypes.NameIdentifier, "507f1f77bcf86cd799439099"),
+                                new Claim(ClaimTypes.Email, "teste@bustrack.local"),
+                                new Claim(ClaimTypes.Role, "USER")
+                            },
+                            authenticationType: "UnitTest"))
+                }
+            };
         }
 
         [Fact]
