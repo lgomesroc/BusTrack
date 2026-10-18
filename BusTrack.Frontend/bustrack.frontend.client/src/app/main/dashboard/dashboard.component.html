@@ -11,26 +11,51 @@
 
     <section class="dashboard-body">
       <div class="welcome-section">
-        <h1>Bem-vindo ao Bus Track</h1>
-        <p>Acesse as informações operacionais disponíveis no sistema.</p>
+        <h1>Meu painel</h1>
+        <p>Acompanhe as viagens vinculadas à sua conta e consulte a operação disponível.</p>
       </div>
+
+      <section class="summary-grid" aria-label="Resumo das minhas viagens">
+        <article class="summary-card"><span>Próximas viagens</span><strong>{{ upcomingTrips.length }}</strong></article>
+        <article class="summary-card"><span>Viagens anteriores</span><strong>{{ pastTrips.length }}</strong></article>
+        <article class="summary-card"><span>Total vinculado à conta</span><strong>{{ trips.length }}</strong></article>
+      </section>
+
+      <section class="information-panel">
+        <h2>Próximas viagens</h2>
+        <p *ngIf="loadingTrips">Carregando suas viagens...</p>
+        <p *ngIf="!loadingTrips && tripsError">{{ tripsError }}</p>
+        <p *ngIf="!loadingTrips && !tripsError && upcomingTrips.length === 0">Não há próximas viagens vinculadas à sua conta.</p>
+        <div class="trip-list" *ngIf="!loadingTrips && upcomingTrips.length > 0">
+          <article class="trip-item" *ngFor="let trip of upcomingTrips">
+            <div><strong>{{ trip.route?.name || 'Rota não informada' }}</strong><span>{{ trip.route?.origin || 'Origem não informada' }} → {{ trip.route?.destination || 'Destino não informado' }}</span></div>
+            <time>{{ trip.departureTime | date:'dd/MM/yyyy HH:mm' }}</time>
+          </article>
+        </div>
+      </section>
+
+      <section class="information-panel">
+        <h2>Histórico de viagens</h2>
+        <p *ngIf="!loadingTrips && !tripsError && pastTrips.length === 0">Ainda não há viagens anteriores vinculadas à sua conta.</p>
+        <div class="trip-list" *ngIf="!loadingTrips && pastTrips.length > 0">
+          <article class="trip-item" *ngFor="let trip of pastTrips">
+            <div><strong>{{ trip.route?.name || 'Rota não informada' }}</strong><span>{{ trip.route?.origin || 'Origem não informada' }} → {{ trip.route?.destination || 'Destino não informado' }}</span></div>
+            <time>{{ trip.departureTime | date:'dd/MM/yyyy HH:mm' }}</time>
+          </article>
+        </div>
+      </section>
 
       <section class="dashboard-cards">
         <button type="button" class="dashboard-card" (click)="navegarParaViagens()">
           <span class="card-icon">Viagens</span>
-          <div><h2>Consultar viagens</h2><p>Visualizar os registros de viagens disponíveis no sistema.</p></div>
+          <div><h2>Consultar viagens</h2><p>Acessar os registros de viagens disponíveis.</p></div>
         </button>
         <button type="button" class="dashboard-card" (click)="navegarParaRotas()">
           <span class="card-icon">Rotas</span>
           <div><h2>Consultar rotas</h2><p>Ver origens, destinos e rotas cadastradas.</p></div>
         </button>
       </section>
-
-      <section class="information-panel">
-        <h2>Sobre seus dados</h2>
-        <p>As viagens e rotas disponíveis atualmente são registros operacionais compartilhados do sistema. O modelo atual ainda não relaciona uma viagem à conta que a criou ou que deve acompanhá-la; por isso, o painel não apresenta viagens globais como se fossem pessoais.</p>
-        <p>Para exibir próximas viagens, histórico e reservas exclusivamente desta conta, será necessário implementar a associação entre usuário e viagem na API e no banco de dados.</p>
-      </section>
+      <p class="data-note">O painel mostra como pessoais somente as viagens que tenham UserId correspondente à sua conta. Viagens antigas sem essa associação não são atribuídas automaticamente.</p>
     </section>
   </main>
 </div>
