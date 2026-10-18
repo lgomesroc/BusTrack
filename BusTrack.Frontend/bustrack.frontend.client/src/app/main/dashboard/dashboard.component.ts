@@ -5,6 +5,13 @@ import { catchError, interval, of, Subscription } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { SessionService } from '../../services/session.service';
 
+interface ActiveUser {
+  userId: string;
+  fullName: string;
+  email: string;
+  role: string;
+  lastSeenUtc: string;
+}
 interface AdminDashboardData {
   generatedAtUtc: string;
   users: { total: number; administrators: number; normalUsers: number };
@@ -13,6 +20,7 @@ interface AdminDashboardData {
   passengers: { total: number };
   routes: { total: number };
   trips: { total: number; upcoming: number };
+  activeUsers: ActiveUser[];
 }
 
 @Component({
@@ -25,23 +33,31 @@ export class DashboardComponent implements OnInit, OnDestroy {
   isLoading = false;
   errorMessage = '';
   private refreshSubscription?: Subscription;
+  private presenceSubscription?: Subscription;
 
-  constructor(
-    private router: Router,
-    private http: HttpClient,
-    private sessionService: SessionService
-  ) {}
+  constructor(private router: Router, private http: HttpClient, private sessionService: SessionService) {}
 
   get isAdmin(): boolean { return this.sessionService.isAdmin(); }
 
   ngOnInit(): void {
-    if (this.isAdmin) {
-      this.carregarDashboard();
-      this.refreshSubscription = interval(30000).subscribe(() => this.carregarDashboard());
-    }
+    this.registrarPresenca();
+    this.refreshSubscription = interval(30000).subscribe(() => {
+      this.registrarPresenca();
+      if (this.isAdmin) this.carregarDashboard();
+    });
+    if (this.isAdmin) this.carregarDashboard();
   }
 
-  ngOnDestroy(): void { this.refreshSubscription?.unsubscribe(); }
+  ngOnDestroy(): void {
+    this.refreshSubscription?.unsubscribe();
+    this.presenceSubscription?.unsubscribe();
+  }
+
+  private registrarPresenca(): void {
+    this.presenceSubscription?.unsubscribe();
+    this.presenceSubscription = this.http.post(`${environment.apiUrl}/api/UserPresence/presence`, {})
+      .pipe(catchError(() => of(null))).subscribe();
+  }
 
   carregarDashboard(): void {
     if (!this.isAdmin) return;
@@ -60,7 +76,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   navegarParaManutencao(): void { this.router.navigate(['/maintenance']); }
 
   sair(): void {
-    this.sessionService.clearSession();
-    this.router.navigate(['/enter-the-system'], { replaceUrl: true });
+    this.http.delete(`${environment.apiUrl}/api/UserPresence/presence`).pipe(catchError(() => of(null))).subscribe({
+      complete: () => {
+        this.sessionService.clearSession();
+        this.router.navigate(['/enter-the-system'], { replaceUrl: true });
+      }
+    });
   }
 }
