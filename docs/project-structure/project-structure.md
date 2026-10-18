@@ -820,9 +820,11 @@ BusTrack/
 │   │   ├── RouteControllerAPI.cs
 │   │   ├── TripControllerAPI.cs
 │   │   ├── TripsPassengerControllerAPI.cs
-│   │   └── UserControllerAPI.cs
+│   │   ├── UserControllerAPI.cs
+│   │   └── UserPresenceController.cs
 │   ├── DTOAPI/
 │   │   ├── AuthenticationResponseDTOAPI.cs
+│   │   ├── AdminDashboardDTOAPI.cs
 │   │   ├── BootstrapAdminRequestDTOAPI.cs
 │   │   ├── BusDTOAPI.cs
 │   │   ├── DriverDTOAPI.cs
@@ -997,7 +999,11 @@ BusTrack/
 │   │   │   │   │   │   ├── update-password.component.spec.ts
 │   │   │   │   │   │   └── update-password.component.ts
 │   │   │   │   ├── main/
-│   │   │   │   │   ├──buses/
+│   │   │   │   │   ├── admin-dashboard/
+│   │   │   │   │   │   ├── admin-dashboard.component.ts
+│   │   │   │   │   │   ├── admin-dashboard.component.html
+│   │   │   │   │   │   └── admin-dashboard.component.css
+│   │   │   │   │   ├── buses/
 │   │   │   │   │   │   ├── buses.component.css
 │   │   │   │   │   │   ├── buses.component.html
 │   │   │   │   │   │   └── buses.component.ts
@@ -1038,11 +1044,16 @@ BusTrack/
 │   │   │   │   │   │   ├── trips.component.css
 │   │   │   │   │   │   ├── trips.component.html
 │   │   │   │   │   │   └── trips.component.ts
+│   │   │   │   │   └── user-dashboard/
+│   │   │   │   │   │   ├── user-dashboard.component.ts
+│   │   │   │   │   │   ├── user-dashboard.component.html
+│   │   │   │   │   │   └── user-dashboard.component.css
 │   │   │   │   ├── models/
 │   │   │   │   │   └── user.model.ts
 │   │   │   │   ├── services/
 │   │   │   │   │   ├── application-availability.service.ts
 │   │   │   │   │   ├── bus.service.ts
+│   │   │   │   │   ├── dashboard.service.ts 
 │   │   │   │   │   ├── data.service.ts
 │   │   │   │   │   ├── driver.service.ts
 │   │   │   │   │   ├── jwt-auth.interceptor.ts
