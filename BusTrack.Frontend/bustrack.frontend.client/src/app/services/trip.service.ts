@@ -79,9 +79,11 @@ export class TripService {
   ) {}
 
   getTrips(): Observable<Trip[]> {
-    return this.http.get<Trip[]>(
-      `${this.apiUrl}/api/Trip`
-    );
+    return this.http.get<Trip[]>(`${this.apiUrl}/api/Trip`);
+  }
+
+  getMyTrips(): Observable<Trip[]> {
+    return this.http.get<Trip[]>(`${this.apiUrl}/api/Trip/mine`);
   }
 
   createTrip(
