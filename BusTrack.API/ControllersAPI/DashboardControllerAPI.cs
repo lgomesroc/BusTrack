@@ -6,7 +6,7 @@ using MongoDB.Driver;
 namespace BusTrack.BusTrack.API.ControllersAPI;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/Dashboard")]
 [Authorize(Roles = "ADMIN")]
 public sealed class DashboardControllerAPI(IMongoDatabase database) : ControllerBase
 {
