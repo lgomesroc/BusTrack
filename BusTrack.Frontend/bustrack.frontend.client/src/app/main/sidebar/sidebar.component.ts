@@ -32,9 +32,9 @@ export class SidebarComponent implements OnInit {
     try {
       const part = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
       const payload = JSON.parse(atob(part.padEnd(part.length + ((4 - part.length % 4) % 4), '='))) as Record<string, unknown>;
-      const name = payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] ?? payload.name;
-      const email = payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'] ?? payload.email;
-      const role = payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ?? payload.role;
+      const name = payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] ?? payload['name'];
+      const email = payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'] ?? payload['email'];
+      const role = payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ?? payload['role'];
       if (typeof name === 'string' && name.trim()) this.nomeUsuario = name;
       else if (typeof email === 'string' && email.trim()) this.nomeUsuario = email;
       if (typeof email === 'string') this.emailUsuario = email;
