@@ -41,7 +41,7 @@ public sealed class DashboardControllerAPI(IMongoDatabase database) : Controller
             fullName = x.GetValue("fullName", "").ToString(),
             email = x.GetValue("email", "").ToString(),
             role = x.GetValue("role", "USER").ToString(),
-            lastSeenUtc = x.GetValue("lastSeenUtc", BsonNull.Value).ToUniversalTime()
+            lastSeenUtc = x.GetValue("lastSeenUtc", BsonNull.Value).AsBsonDateTime.ToUniversalTime()
         });
 
         return Ok(new
