@@ -62,7 +62,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   carregarDashboard(): void {
     if (!this.isAdmin) return;
     this.isLoading = true;
-    this.http.get<AdminDashboardData>(`${environment.apiUrl}/api/DashboardAPI/admin`).subscribe({
+    this.http.get<AdminDashboardData>(`${environment.apiUrl}/api/Dashboard/admin`).subscribe({
       next: data => { this.dashboard = data; this.isLoading = false; this.errorMessage = ''; },
       error: () => { this.errorMessage = 'Não foi possível carregar os indicadores reais da API. Verifique se a API está atualizada.'; this.isLoading = false; }
     });
