@@ -4,6 +4,8 @@ namespace BusTrack.BusTrack.API.DTOAPI
     {
         public string? Id { get; set; }
 
+        public string? UserId { get; set; }
+
         public BusDetailsDTOAPI? Bus { get; set; }
 
         public DriverDetailsDTOAPI? Driver { get; set; }
