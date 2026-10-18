@@ -29,7 +29,6 @@ services:
       JwtSettings__Issuer: BusTrack
       JwtSettings__Audience: BusTrackFrontend
       JwtSettings__ExpirationInMinutes: 30
-      BootstrapAdmin__Secret: ${BUSTRACK_BOOTSTRAP_SECRET:?Configure BUSTRACK_BOOTSTRAP_SECRET in your local .env file}
       BackendUrl: http://localhost:4200
     networks:
       - bustrack-network
