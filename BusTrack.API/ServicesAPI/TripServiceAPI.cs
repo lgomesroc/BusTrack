@@ -212,6 +212,8 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 {
                     Id = trip.Id,
 
+                    UserId = trip.UserId,
+
                     DepartureTime =
                         trip.DepartureTime,
 
