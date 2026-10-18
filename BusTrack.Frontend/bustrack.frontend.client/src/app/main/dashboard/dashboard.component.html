@@ -30,6 +30,16 @@
       </section>
       <p class="updated-at" *ngIf="dashboard">Consulta realizada em {{ dashboard.generatedAtUtc | date:'dd/MM/yyyy HH:mm:ss':'UTC' }} UTC.</p>
     </section>
-    <ng-template #accessDenied><section class="dashboard-body"><h1>Acesso restrito</h1><p>Este painel está disponível somente para administradores.</p></section></ng-template>
+    <ng-template #accessDenied>
+      <section class="dashboard-body">
+        <h1>Painel do usuário</h1>
+        <p>Os indicadores administrativos são restritos. Você ainda pode acessar os módulos permitidos à sua conta.</p>
+        <section class="dashboard-cards">
+          <button type="button" class="dashboard-card" (click)="navegarParaViagens()"><h2>Viagens</h2><p>Consultar viagens disponíveis.</p></button>
+          <button type="button" class="dashboard-card" (click)="navegarParaRotas()"><h2>Rotas</h2><p>Consultar rotas cadastradas.</p></button>
+          <button type="button" class="dashboard-card" (click)="navegarParaPassageiros()"><h2>Passageiros</h2><p>Acessar o módulo de passageiros.</p></button>
+        </section>
+      </section>
+    </ng-template>
   </main>
 </div>
