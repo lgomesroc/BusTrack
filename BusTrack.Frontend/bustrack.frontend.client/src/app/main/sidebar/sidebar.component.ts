@@ -11,11 +11,9 @@ import { startInactivityTimerRule, clearInactivityTimerRule } from '../../login/
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
-  nomeUsuario: string = "João Silva";
-  cpfUsuario: string = "123.456.789-00";
-  INACTIVITY_TIMEOUT_MS = 1200000; 
-
-  constructor() { }
+  nomeUsuario = 'Usuário autenticado';
+  cpfUsuario = '';
+  readonly INACTIVITY_TIMEOUT_MS = 1200000;
 
   ngOnInit(): void {
     BlockCopyRule();
