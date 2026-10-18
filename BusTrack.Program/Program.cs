@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Security.Claims;
 using System.Text;
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using BusTrack.BusTrack.API.ServicesAPI;
@@ -9,6 +10,7 @@ using BusTrack.BusTrack.Program.ExtensionsProgram;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 using MongoDB.Driver;
 
 public partial class Program
@@ -23,7 +25,25 @@ public partial class Program
                 typeof(BusTrack.BusTrack.API.ControllersAPI.BusControllerAPI).Assembly);
 
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Description = "Informe o token JWT no formato: Bearer {seu_token}",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT"
+            });
+
+            options.AddSecurityRequirement(document =>
+                new OpenApiSecurityRequirement
+                {
+                    [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+                });
+        });
 
         builder.Services.AddAutoMapper(
             (serviceProvider, mapperConfiguration) =>
@@ -53,13 +73,15 @@ public partial class Program
         var jwtIssuer = builder.Configuration["JwtSettings:Issuer"];
         var jwtAudience = builder.Configuration["JwtSettings:Audience"];
 
-        if (string.IsNullOrWhiteSpace(jwtKey) || Encoding.UTF8.GetByteCount(jwtKey) < 32)
+        if (string.IsNullOrWhiteSpace(jwtKey) ||
+            Encoding.UTF8.GetByteCount(jwtKey) < 32)
         {
             throw new InvalidOperationException(
                 "Configure JwtSettings__SecretKey com pelo menos 32 bytes. Não use uma chave pública ou de exemplo em produção.");
         }
 
-        if (string.IsNullOrWhiteSpace(jwtIssuer) || string.IsNullOrWhiteSpace(jwtAudience))
+        if (string.IsNullOrWhiteSpace(jwtIssuer) ||
+            string.IsNullOrWhiteSpace(jwtAudience))
         {
             throw new InvalidOperationException(
                 "Configure JwtSettings__Issuer e JwtSettings__Audience.");
@@ -76,7 +98,8 @@ public partial class Program
                     ValidateAudience = true,
                     ValidAudience = jwtAudience,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+                    IssuerSigningKey =
+                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.FromSeconds(30)
                 };
@@ -129,8 +152,34 @@ public partial class Program
 
         var app = builder.Build();
 
+        app.UseAuthentication();
+
         if (app.Environment.IsDevelopment())
         {
+            app.UseWhen(
+                context => context.Request.Path.StartsWithSegments("/swagger"),
+                swaggerApp =>
+                {
+                    swaggerApp.Use(async (context, next) =>
+                    {
+                        if (context.User.Identity?.IsAuthenticated != true)
+                        {
+                            context.Response.StatusCode =
+                                StatusCodes.Status401Unauthorized;
+                            return;
+                        }
+
+                        if (!context.User.IsInRole("ADMIN"))
+                        {
+                            context.Response.StatusCode =
+                                StatusCodes.Status403Forbidden;
+                            return;
+                        }
+
+                        await next();
+                    });
+                });
+
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseDeveloperExceptionPage();
@@ -143,12 +192,14 @@ public partial class Program
         }
 
         app.UseCors("FrontendPolicy");
-        app.UseAuthentication();
         app.UseAuthorization();
+
         app.MapControllers();
+
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
+
         app.Run();
     }
 }
