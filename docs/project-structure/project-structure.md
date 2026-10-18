@@ -796,7 +796,7 @@ Preciso saber O QUE é o projeto?
 Abaixo todos os arquivos e pastas atualizados do projeto num todo
 
 ```text
-BusTrack
+BusTrack/
 ├── .github/
 │   └── workflows/
 │   │   ├── backend-build.yml
@@ -805,315 +805,347 @@ BusTrack
 │   │   ├── ci.yml
 │   │   ├── deploy.yml
 │   │   ├── docker-build.yml
-│   │   └── frontend-build.yml                            
-├── BusTrack.API                                  
-│   ├── ControllersAPI                             
-│   │   ├── AccountControllerAPI.cs                     
-│   │   ├── AuthenticationControllerAPI.cs            
-│   │   ├── BusControllerAPI.cs                       
-│   │   ├── CreateAccountControllerAPI.cs             
-│   │   ├── DashboardControllerAPI.cs                
+│   │   └── frontend-build.yml
+├── BusTrack.API/
+│   ├── ControllersAPI/
+│   │   ├── AccountControllerAPI.cs
+│   │   ├── AuthenticationControllerAPI.cs
+│   │   ├── BusControllerAPI.cs
+│   │   ├── CreateAccountControllerAPI.cs
+│   │   ├── DashboardControllerAPI.cs
 │   │   ├── DriverControllerAPI.cs
 │   │   ├── HealthController.cs
-│   │   ├── MaintenanceControllerAPI.cs                  
-│   │   ├── PassengerControllerAPI.cs                  
-│   │   ├── RouteControllerAPI.cs                     
-│   │   ├── TripControllerAPI.cs                       
-│   │   ├── TripsPassengerControllerAPI.cs             
-│   │   └── UserControllerAPI.cs                      
-│   ├── DTOAPI                                      
-│   │   ├── BusDTOAPI.cs                            
+│   │   ├── MaintenanceControllerAPI.cs
+│   │   ├── PassengerControllerAPI.cs
+│   │   ├── RouteControllerAPI.cs
+│   │   ├── TripControllerAPI.cs
+│   │   ├── TripsPassengerControllerAPI.cs
+│   │   └── UserControllerAPI.cs
+│   ├── DTOAPI/
+│   │   ├── AuthenticationResponseDTOAPI.cs
+│   │   ├── BootstrapAdminRequestDTOAPI.cs
+│   │   ├── BusDTOAPI.cs
 │   │   ├── DriverDTOAPI.cs
-│   │   ├── MaintenanceDTOAPI.cs                   
-│   │   ├── PassengerDTOAPI.cs                        
-│   │   ├── RouteDTOAPI.cs                            
+│   │   ├── LoginRequestDTOAPI.cs
+│   │   ├── MaintenanceDTOAPI.cs
+│   │   ├── PassengerDTOAPI.cs
+│   │   ├── RouteDTOAPI.cs
 │   │   ├── TripDTOAPI.cs
-│   │   ├── TripDetailsDTOAPI.cs                           
-│   │   ├── TripPassengerDTOAPI.cs                  
-│   │   └── UpdatePasswordDTOAPI.cs                     
-│   ├── InterfacesAPI                                    
-│   │   ├── ServicesAPI                                
-│   │   │   ├── IAccountServiceAPI.cs              
-│   │   │   ├── IBusServiceAPI.cs                      
-│   │   │   ├── IDriverServiceAPI.cs                   
+│   │   ├── TripDetailsDTOAPI.cs
+│   │   ├── TripPassengerDTOAPI.cs
+│   │   └── UpdatePasswordDTOAPI.cs
+│   ├── InterfacesAPI/
+│   │   ├── ServicesAPI/
+│   │   │   ├── IAccountServiceAPI.cs
+│   │   │   ├── IBusServiceAPI.cs
+│   │   │   ├── IDriverServiceAPI.cs
 │   │   │   ├── IEmailConfirmationServiceAPI.cs
 │   │   │   ├── IJwtTokenServiceAPI.cs
-│   │   │   ├── IMaintenanceServiceAPI.cs         
-│   │   │   ├── IPassengerServiceAPI.cs                  
-│   │   │   ├── IRouteServiceAPI.cs                       
-│   │   │   ├── ITripServiceAPI.cs                      
-│   │   │   ├── ITripsPassengerServiceAPI.cs            
-│   │   │   ├── IUpdatePasswordServiceAPI.cs                
-│   │   │   ├── IUserAuthenticationServiceAPI.cs          
+│   │   │   ├── IMaintenanceServiceAPI.cs
+│   │   │   ├── IPassengerServiceAPI.cs
+│   │   │   ├── IRouteServiceAPI.cs
+│   │   │   ├── ITripServiceAPI.cs
+│   │   │   ├── ITripsPassengerServiceAPI.cs
+│   │   │   ├── IUpdatePasswordServiceAPI.cs
+│   │   │   ├── IUserAuthenticationServiceAPI.cs
 │   │   │   └── IUserServiceAPI.cs
-│   ├── MappingsAPI                                   
-│   │   └── MappingProfileAPI.cs                       
-│   ├── ModelsAPI                                     
-│   │   ├── AccountModelAPI.cs                         
-│   │   ├── BusModelAPI.cs                            
-│   │   ├── DriverModelAPI.cs                         
-│   │   ├── PassengerModelAPI.cs                      
-│   │   ├── RouteModelAPI.cs                           
-│   │   ├── TripModelAPI.cs                             
-│   │   ├── TripsPassengerModelAPI.cs                  
-│   │   └── UserModelAPI.cs                           
-│   └── ServicesAPI                                 
-│   │   ├── AccountServiceAPI.cs                     
-│   │   ├── BusServiceAPI.cs                       
+│   ├── MappingsAPI/
+│   │   └── MappingProfileAPI.cs
+│   ├── ModelsAPI/
+│   │   ├── AccountModelAPI.cs
+│   │   ├── BusModelAPI.cs
+│   │   ├── DriverModelAPI.cs
+│   │   ├── PassengerModelAPI.cs
+│   │   ├── RouteModelAPI.cs
+│   │   ├── TripModelAPI.cs
+│   │   ├── TripsPassengerModelAPI.cs
+│   │   └── UserModelAPI.cs
+│   └── ServicesAPI/
+│   │   ├── AccountServiceAPI.cs
+│   │   ├── BusServiceAPI.cs
 │   │   ├── DriverServiceAPI.cs
 │   │   ├── JwtTokenServiceAPI.cs
-│   │   ├── MaintenanceServiceAPI.cs                     
-│   │   ├── PassengerServiceAPI.cs                  
-│   │   ├── RouteServiceAPI.cs                 
-│   │   ├── TripServiceAPI.cs                        
-│   │   ├── TripsPassengerServiceAPI.cs         
-│   │   ├── UpdatePasswordServiceAPI.cs               
-│   │   ├── UserAuthenticationServiceAPI.cs         
-│   │   └── UserServiceAPI.cs                       
-├── BusTrack.DB                                       
-│   ├── ClassesDB                                   
+│   │   ├── MaintenanceServiceAPI.cs
+│   │   ├── PassengerServiceAPI.cs
+│   │   ├── RouteServiceAPI.cs
+│   │   ├── TripServiceAPI.cs
+│   │   ├── TripsPassengerServiceAPI.cs
+│   │   ├── UpdatePasswordServiceAPI.cs
+│   │   ├── UserAuthenticationServiceAPI.cs
+│   │   └── UserServiceAPI.cs
+├── BusTrack.DB/
+│   ├── ClassesDB/
 │   │   ├── BusDB.cs
-│   │   ├── DriverDB.cs                               
-│   │   ├── EmailConfirmationDB                      
-│   │   ├── InspectorDB                               
-│   │   ├── LoginDB                                    
+│   │   ├── DriverDB.cs
+│   │   ├── EmailConfirmationDB.cs
+│   │   ├── InspectorDB.cs
+│   │   ├── LoginDB.cs
 │   │   ├── MaintenanceDB.cs
-│   │   ├── PassengerDB.cs                             
-│   │   ├── PasswordHistoryDB.cs                       
-│   │   ├── PasswordRecordDB.cs                   
-│   │   ├── RouteDB.cs                             
-│   │   ├── TripDB.cs                                 
-│   │   ├── TripsPassengerDB.cs                       
-│   │   ├── UserDB.cs                               
-│   │   ├── UserPasswordHistoryDB.cs                
-│   │   └── UserRegistrationDB.cs                 
-│   ├── ConnectionsDB                              
-│   │   └── ConnectionDB.cs                         
-│   ├── DataBaseDB                                  
-│   │   └── database.json                            
-│   ├── InterfacesDB                               
-│   │   ├── IModelsDB                                
-│   │   │   ├── IBusModelDB.cs                            
-│   │   │   ├── IDriverModelDB.cs                          
-│   │   │   ├── IPassengerModelDB.cs                    
-│   │   │   ├── IRouteModelDB.cs                        
-│   │   │   ├── ITripModelDB.cs                         
-│   │   │   └── ITripsPassengerModelDB.cs                 
-│   │   └── IRepositoriesDB                         
-│   │   │   ├── IBusRepositoryDB.cs                      
+│   │   ├── PassengerDB.cs
+│   │   ├── PasswordHistoryDB.cs
+│   │   ├── PasswordRecordDB.cs
+│   │   ├── RouteDB.cs
+│   │   ├── TripDB.cs
+│   │   ├── TripsPassengerDB.cs
+│   │   ├── UserDB.cs
+│   │   ├── UserPasswordHistoryDB.cs
+│   │   └── UserRegistrationDB.cs
+│   ├── ConnectionsDB/
+│   │   └── ConnectionDB.cs
+│   ├── DataBaseDB/
+│   │   └── database.json
+│   ├── InterfacesDB/
+│   │   ├── IModelsDB/
+│   │   │   ├── IBusModelDB.cs
+│   │   │   ├── IDriverModelDB.cs
+│   │   │   ├── IPassengerModelDB.cs
+│   │   │   ├── IRouteModelDB.cs
+│   │   │   ├── ITripModelDB.cs
+│   │   │   └── ITripsPassengerModelDB.cs
+│   │   └── IRepositoriesDB/
+│   │   │   ├── IBusRepositoryDB.cs
 │   │   │   ├── IDriverRepositoryDB.cs
 │   │   │   ├── IMaintenanceRepositoryDB.cs
-│   │   │   ├── IPassengerRepositoryDB.cs                
-│   │   │   ├── IRouteRepositoryDB.cs                    
-│   │   │   ├── ITripRepositoryDB.cs                    
-│   │   │   ├── ITripsPassengerRepositoryDB.cs         
-│   │   │   └── IUserRepositoryDB.cs                      
-│   ├── ModelsDB                                     
-│   │   ├── AccountModelDB.cs                           
-│   │   ├── BusModelDB.cs                          
-│   │   ├── DriverModelDB.cs                        
-│   │   ├── PassengerModelDB.cs                     
-│   │   ├── RouteModelDB.cs                            
-│   │   ├── TripModelDB.cs                             
-│   │   └── TripsPassengerModelDB.cs                  
-│   ├── RepositoriesDB                             
-│   │   ├── BusRepositoryDB.cs                       
-│   │   ├── DriverRepositoryDB.cs                     
+│   │   │   ├── IPassengerRepositoryDB.cs
+│   │   │   ├── IRouteRepositoryDB.cs
+│   │   │   ├── ITripRepositoryDB.cs
+│   │   │   ├── ITripsPassengerRepositoryDB.cs
+│   │   │   └── IUserRepositoryDB.cs
+│   ├── ModelsDB/
+│   │   ├── AccountModelDB.cs
+│   │   ├── BusModelDB.cs
+│   │   ├── DriverModelDB.cs
+│   │   ├── PassengerModelDB.cs
+│   │   ├── RouteModelDB.cs
+│   │   ├── TripModelDB.cs
+│   │   ├── TripsPassengerModelDB.cs
+│   │   └── UserModelDB.cs
+│   ├── RepositoriesDB/
+│   │   ├── BusRepositoryDB.cs
+│   │   ├── DriverRepositoryDB.cs
 │   │   ├── InspectorRepositoryDB.cs
 │   │   ├── MaintenanceRepositoryDB.cs
-│   │   ├── PassengerRepositoryDB.cs                  
-│   │   ├── RouteRepositoryDB.cs                      
-│   │   ├── TripRepositoryDB.cs                        
-│   │   ├── TripsPassengerRepositoryDB.cs            
-│   │   └── UserRepositoryDB.cs                       
-│   ├── ServicesDB                                 
-│   │   ├── BusSingleTripConstraintServiceDB.cs        
-│   │   ├── DepartureTimeValidationServiceDB.cs        
-│   │   ├── MinTripDurationContraintServiceDB.cs       
-│   │   ├── PassengerLimitValidationServiceDB.cs      
-│   │   ├── PasswordHistoryValidationServiceDB.cs     
-│   │   ├── RouteConflictServiceDB.cs                  
-│   │   ├── RouteSchedulerServiceDB.cs                
-│   │   ├── TripMappingServiceDB.cs                   
-│   │   ├── TripServiceDB.cs                            
-│   │   ├── TripStatusUpdateServiceDB.cs               
-│   │   ├── UserEmailValidationServiceDB.cs          
-│   │   └── UserRoleValidationServiceDB.cs             
-├── BusTrack.Frontend                            
-│   ├── bustrack.frontend.client
-│   │   ├── src                                
-│   │   │   └── app
-│   │   │   │   ├── guards
+│   │   ├── PassengerRepositoryDB.cs
+│   │   ├── RouteRepositoryDB.cs
+│   │   ├── TripPassengerRepositoryDB.cs
+│   │   ├── TripRepositoryDB.cs
+│   │   └── UserRepositoryDB.cs
+│   ├── ServicesDB/
+│   │   ├── BusSingleTripConstraintServiceDB.cs
+│   │   ├── DepartureTimeValidationServiceDB.cs
+│   │   ├── MinTripDurationContraintServiceDB.cs
+│   │   ├── TripMappingServiceDB.cs
+│   │   ├── TripServiceDB.cs
+│   │   ├── TripStatusUpdateServiceDB.cs
+├── BusTrack.Frontend/
+│   ├── bustrack.frontend.client/
+│   │   ├── src/
+│   │   │   └── app/
+│   │   │   │   ├── guards/
 │   │   │   │   │   ├── authentication.guard.ts
-│   │   │   │   │   └── browser-navigation.guard.ts                           
-│   │   │   │   ├── login                      
-│   │   │   │   │   ├── concluded              
-│   │   │   │   │   │   ├── concluded.component.css   
-│   │   │   │   │   │   ├── concluded.component.html   
-│   │   │   │   │   │   ├── concluded.component.spec.ts   
-│   │   │   │   │   │   └── concluded.component.ts   
-│   │   │   │   │   ├── confirmation            
-│   │   │   │   │   │   ├── confirmation.component.css   
-│   │   │   │   │   │   ├── confirmation.component.html  
-│   │   │   │   │   │   ├── confirmation.component.spec.ts  
-│   │   │   │   │   │   └── confirmation.component.ts   
-│   │   │   │   │   ├── create-an-account       
-│   │   │   │   │   │   ├── create-an-account.component.css   
-│   │   │   │   │   │   ├── create-an-account.component.html  
-│   │   │   │   │   │   ├── create-an-account.component.spec.ts  
-│   │   │   │   │   │   └── create-an-account.component.ts   
-│   │   │   │   │   ├── enter-the-system        
-│   │   │   │   │   │   ├── enter-the-system.component.css  
-│   │   │   │   │   │   ├── enter-the-system.component.html  
-│   │   │   │   │   │   ├── enter-the-system.component.spec.ts    
-│   │   │   │   │   │   └── enter-the-system.component.ts   
-│   │   │   │   │   ├── main-screen             
-│   │   │   │   │   │   ├── main-screen.component.css   
-│   │   │   │   │   │   ├── main-screen.component.html   
-│   │   │   │   │   │   ├── main-screen.component.spec.ts   
-│   │   │   │   │   │   └── main-screen.component.ts   
-│   │   │   │   │   ├── rules               
-│   │   │   │   │   │   ├── blockCopyRules       
-│   │   │   │   │   │   │   └── blockCopyRule.ts   
-│   │   │   │   │   │   ├── blockSavePasswordRules   
-│   │   │   │   │   │   │   └── blockSavePasswordRule.ts   
-│   │   │   │   │   │   ├── checkPasswordStrengthpasswordRules  
-│   │   │   │   │   │   │   └── checkPasswordStrengthpasswordRule.ts   
-│   │   │   │   │   │   ├── disableInteractionsRules    
-│   │   │   │   │   │   │   └── disableInteractionsRule.ts  
-│   │   │   │   │   │   ├── disableKeyboardShortcutsRules   
-│   │   │   │   │   │   │   └── disableKeyboardShortcutsRule.ts  
-│   │   │   │   │   │   ├── hasRepeatedOrSequentialNumbersRules    
-│   │   │   │   │   │   │   └── hasRepeatedOrSequentialNumbersRule.ts  
-│   │   │   │   │   │   ├── inactivityTimerRules                  
-│   │   │   │   │   │   │   └── inactivityTimerRule.ts               
-│   │   │   │   │   │   ├── preventBackNavigationRules           
-│   │   │   │   │   │   │   └── preventBackNavigationRule.ts       
-│   │   │   │   │   │   ├── preventForwardNavigationRules         
-│   │   │   │   │   │   │   └── preventForwardNavigationRule.ts      
-│   │   │   │   │   │   ├── sessionTimeoutRules                    
-│   │   │   │   │   │   │   └── sessionTimeoutRule.ts               
-│   │   │   │   │   ├── update-password                      
-│   │   │   │   │   │   ├── update-password.component.css         
-│   │   │   │   │   │   ├── update-password.component.html        
-│   │   │   │   │   │   ├── update-password.component.spec.ts      
-│   │   │   │   │   │   └── update-password.component.ts           
-│   │   │   │   ├── main
-│   │   │   │   │   ├──buses
+│   │   │   │   │   └── browser-navigation.guard.ts
+│   │   │   │   ├── login/
+│   │   │   │   │   ├── concluded/
+│   │   │   │   │   │   ├── concluded.component.css
+│   │   │   │   │   │   ├── concluded.component.html
+│   │   │   │   │   │   ├── concluded.component.spec.ts
+│   │   │   │   │   │   └── concluded.component.ts
+│   │   │   │   │   ├── confirmation/
+│   │   │   │   │   │   ├── confirmation.component.css
+│   │   │   │   │   │   ├── confirmation.component.html
+│   │   │   │   │   │   ├── confirmation.component.spec.ts
+│   │   │   │   │   │   └── confirmation.component.ts
+│   │   │   │   │   ├── create-an-account/
+│   │   │   │   │   │   ├── create-an-account.component.css
+│   │   │   │   │   │   ├── create-an-account.component.html
+│   │   │   │   │   │   ├── create-an-account.component.spec.ts
+│   │   │   │   │   │   └── create-an-account.component.ts
+│   │   │   │   │   ├── enter-the-system/
+│   │   │   │   │   │   ├── enter-the-system.component.css
+│   │   │   │   │   │   ├── enter-the-system.component.html
+│   │   │   │   │   │   ├── enter-the-system.component.spec.ts
+│   │   │   │   │   │   └── enter-the-system.component.ts
+│   │   │   │   │   ├── main-screen/
+│   │   │   │   │   │   ├── main-screen.component.css
+│   │   │   │   │   │   ├── main-screen.component.html
+│   │   │   │   │   │   ├── main-screen.component.spec.ts
+│   │   │   │   │   │   └── main-screen.component.ts
+│   │   │   │   │   ├── rules/
+│   │   │   │   │   │   ├── blockCopyRules/
+│   │   │   │   │   │   │   └── blockCopyRule.ts
+│   │   │   │   │   │   ├── blockSavePasswordRules/
+│   │   │   │   │   │   │   └── blockSavePasswordRule.ts
+│   │   │   │   │   │   ├── checkPasswordStrengthpasswordRules/
+│   │   │   │   │   │   │   └── checkPasswordStrengthpasswordRule.ts
+│   │   │   │   │   │   ├── disableInteractionsRules/
+│   │   │   │   │   │   │   └── disableInteractionsRule.ts
+│   │   │   │   │   │   ├── disableKeyboardShortcutsRules/
+│   │   │   │   │   │   │   └── disableKeyboardShortcutsRule.ts
+│   │   │   │   │   │   ├── hasRepeatedOrSequentialNumbersRules/
+│   │   │   │   │   │   │   └── hasRepeatedOrSequentialNumbersRule.ts
+│   │   │   │   │   │   ├── inactivityTimerRules/
+│   │   │   │   │   │   │   └── inactivityTimerRule.ts
+│   │   │   │   │   │   ├── preventBackNavigationRules/
+│   │   │   │   │   │   │   └── preventBackNavigationRule.ts
+│   │   │   │   │   │   ├── preventForwardNavigationRules/
+│   │   │   │   │   │   │   └── preventForwardNavigationRule.ts
+│   │   │   │   │   │   ├── sessionTimeoutRules/
+│   │   │   │   │   │   │   └── sessionTimeoutRule.ts
+│   │   │   │   │   ├── update-password/
+│   │   │   │   │   │   ├── update-password.component.css
+│   │   │   │   │   │   ├── update-password.component.html
+│   │   │   │   │   │   ├── update-password.component.spec.ts
+│   │   │   │   │   │   └── update-password.component.ts
+│   │   │   │   ├── main/
+│   │   │   │   │   ├──buses/
 │   │   │   │   │   │   ├── buses.component.css
-│   │   │   │   │   │   ├──buses.component.html
-│   │   │   │   │   │   └──buses.component.ts                                
-│   │   │   │   │   ├── dashboard                             
-│   │   │   │   │   │   ├── dashboard.component.css             
-│   │   │   │   │   │   ├── dashboard.component.html             
-│   │   │   │   │   │   ├── dashboard.component.spec.ts         
+│   │   │   │   │   │   ├── buses.component.html
+│   │   │   │   │   │   └── buses.component.ts
+│   │   │   │   │   ├── dashboard/
+│   │   │   │   │   │   ├── dashboard.component.css
+│   │   │   │   │   │   ├── dashboard.component.html
+│   │   │   │   │   │   ├── dashboard.component.spec.ts
 │   │   │   │   │   │   └── dashboard.component.ts
+│   │   │   │   │   ├──  drivers/
+│   │   │   │   │   │   ├── drivers.component.css
+│   │   │   │   │   │   ├── drivers.component.html
+│   │   │   │   │   │   └── drivers.component.ts
 │   │   │   │   │   ├──  maintenance/
-│   │   │   │   │   │   ├── maintenance.component.ts
+│   │   │   │   │   │   ├── maintenance.component.css
 │   │   │   │   │   │   ├── maintenance.component.html
-│   │   │   │   │   │   └── maintenance.component.css            
-│   │   │   │   │   ├── rules-main                             
-│   │   │   │   │   │   ├── limitCharactersRules                   
-│   │   │   │   │   │   │   └── limitCharactersRule.ts               
-│   │   │   │   │   │   ├── validateEmailFormatRules             
-│   │   │   │   │   │   │   └── validateEmailFormatRule.ts             
-│   │   │   │   │   │   ├── validateFieldsRequiredRules            
-│   │   │   │   │   │   │   └── validateFieldsRequiredRule.ts       
-│   │   │   │   │   ├── sidebar                               
-│   │   │   │   │   │   ├── sidebar.component.css                
-│   │   │   │   │   │   ├── sidebar.component.html                
-│   │   │   │   │   │   ├── sidebar.component.spec.ts           
-│   │   │   │   │   │   └── sidebar.component.ts 
-│   │   │   │   │   └── trips
-│   │   │   │   │   │   ├── tripscomponent.css
-│   │   │   │   │   │   ├── tripscomponent.html
-│   │   │   │   │   │   └── tripscomponent.ts
-│   │   │   │   ├── models                                  
-│   │   │   │   │   └── user.model.ts                        
-│   │   │   │   ├── services
+│   │   │   │   │   │   └── maintenance.component.ts
+│   │   │   │   │   ├──  passengers/
+│   │   │   │   │   │   ├── passengers.component.css
+│   │   │   │   │   │   ├── passengers.component.html
+│   │   │   │   │   │   └── passengers.component.ts
+│   │   │   │   │   ├──  routes/
+│   │   │   │   │   │   ├── routes.component.css
+│   │   │   │   │   │   ├── routes.component.html
+│   │   │   │   │   │   └── routes.component.ts
+│   │   │   │   │   ├── rules-main/
+│   │   │   │   │   │   ├── limitCharactersRules/
+│   │   │   │   │   │   │   └── limitCharactersRule.ts
+│   │   │   │   │   │   ├── validateEmailFormatRules/
+│   │   │   │   │   │   │   └── validateEmailFormatRule.ts
+│   │   │   │   │   │   ├── validateFieldsRequiredRules/
+│   │   │   │   │   │   │   └── validateFieldsRequiredRule.ts
+│   │   │   │   │   ├── sidebar/
+│   │   │   │   │   │   ├── sidebar.component.css
+│   │   │   │   │   │   ├── sidebar.component.html
+│   │   │   │   │   │   ├── sidebar.component.spec.ts
+│   │   │   │   │   │   └── sidebar.component.ts
+│   │   │   │   │   └── trips/
+│   │   │   │   │   │   ├── trips.component.css
+│   │   │   │   │   │   ├── trips.component.html
+│   │   │   │   │   │   └── trips.component.ts
+│   │   │   │   ├── models/
+│   │   │   │   │   └── user.model.ts
+│   │   │   │   ├── services/
 │   │   │   │   │   ├── application-availability.service.ts
 │   │   │   │   │   ├── bus.service.ts
+│   │   │   │   │   ├── data.service.ts
 │   │   │   │   │   ├── driver.service.ts
 │   │   │   │   │   ├── jwt-auth.interceptor.ts
 │   │   │   │   │   ├── maintenance.service.ts
-│   │   │   │   │   ├── route.service.ts                              
-│   │   │   │   │   ├── data.service.ts
+│   │   │   │   │   ├── passenger.service.ts
+│   │   │   │   │   ├── route.service.ts
 │   │   │   │   │   ├── session.service.ts
-│   │   │   │   │   ├── trip.service.ts                    
-│   │   │   │   │   ├── user.service.ts                        
-│   │   │   │   │   └── validation.service.ts                
-│   │   │   │   ├── app-routing.module.ts                  
-│   │   │   │   ├── app.component.css                       
-│   │   │   │   ├── app.component.html                       
-│   │   │   │   ├── app.component.ts                        
-│   │   │   │   └── app.module.ts                         
-│   │   │   ├── assets                                   
-│   │   │   │   └── imagem                                   
+│   │   │   │   │   ├── trip.service.ts
+│   │   │   │   │   ├── user.service.ts
+│   │   │   │   │   └── validation.service.ts
+│   │   │   │   ├── trips/
+│   │   │   │   │   ├── trips.component.css
+│   │   │   │   │   ├── trips.component.html
+│   │   │   │   │   └── trips.component.ts
+│   │   │   │   ├── app-routing.module.ts
+│   │   │   │   ├── app.component.css
+│   │   │   │   ├── app.component.html
+│   │   │   │   ├── app.component.ts
+│   │   │   │   └── app.module.ts
+│   │   │   ├── assets/
+│   │   │   │   └── imagem/
 │   │   │   │   │   └── OIG4.jpeg
 │   │   │   └── environments/
-│   │   │   │   ├── environment.ts
-│   │   │   │   └── environment.prod.ts
+│   │   │   │   ├── environment.prod.ts
+│   │   │   │   └── environment.ts
 │   │   ├── angular.json
 │   │   ├── bustrack.frontend.client.esproj
 │   │   ├── OIG4.jpeg
 │   │   ├── package-lock.json
 │   │   ├── package.json
 │   │   ├── tsconfig.app.json
-│   │   └── tsconfig.json                      
-│   └── BusTrack.Frontend.Server
+│   │   └── tsconfig.json
+│   └── BusTrack.Frontend.Server/
 │   │   ├── Properties/
 │   │   ├── BusTrack.Frontend.Server.csproj
-│   │   └── Program.cs            
-├── BusTrack.Program                             
-│   ├── DataBaseServicesExtensionsProgram           
-│   │   └── DataBaseServicesExtensionsProgram.cs        
-│   ├── ExtensionsProgram                            
-│   │   ├── ExtensionsProgram.cs                        
-│   │   └── ServiceExtensionProgram.cs                  
-│   ├── MiddlewareProgram                          
-│   │   └── ErrorHandlingMiddleware.cs                
-│   └── Program.cs                                 
-├── BusTrack.Tests                              
-│   ├── IntegrationTests
-│   │   ├── ControllersAPIIntegrationTests
-│   │   │   └── JwtAuthenticationIntegrationTests.cs
-│   │   └── CustomWebApplicationFactory                
-│   │   │   └── CustomWebApplicationFactory.cs          
-│   ├── PerformanceTests                            
-│   │   ├── PassengerServiceAPIPerformanceTests.cs     
-│   │   └── RouteServiceAPIPerformanceTests.cs         
-│   ├── UnitTests                                    
-│   │   ├── ControllersAPIUnitTests                    
-│   │   │   ├── BusControllerAPIUnitTests.cs             
-│   │   │   ├── DriverControllerAPIUnitTests.cs            
-│   │   │   ├── PassengerControllerAPIUnitTests.cs       
-│   │   │   ├── RouteControllerAPIUnitTests.cs            
-│   │   │   ├── TripControllerAPIUnitTests.cs             
+│   │   └── Program.cs
+├── BusTrack.Program/
+│   ├── DataBaseServicesExtensionsProgram/
+│   │   └── DataBaseServicesExtensionsProgram.cs
+│   ├── ExtensionsProgram/
+│   │   ├── ExtensionsProgram.cs
+│   │   └── ServiceExtensionProgram.cs
+│   ├── MiddlewareProgram/
+│   │   └── ErrorHandlingMiddleware.cs
+│   └── Program.cs
+├── BusTrack.Tests/
+│   ├── IntegrationTests/
+│   │   ├── ControllersAPIIntegrationTests/
+│   │   │   ├── BusControllerAPIIntegrationTest.cs
+│   │   │   ├── DriverControllerAPIIntegrationTest.cs
+│   │   │   ├── JwtAuthenticationIntegrationTests.cs
+│   │   │   ├── PassengerControllerAPIIntegrationTest.cs
+│   │   │   ├── RouteControllerAPIIntegrationTest.cs
+│   │   │   └── TripControllerAPIIntegrationTest.cs
+│   │   ├── CustomWebApplicationFactory/
+│   │   │   └── CustomWebApplicationFactory.cs
+│   │   ├── MappingsIntegrationTests/
+│   │   │   └── AutoMappingProfile.cs
+│   │   ├── ServicesAPIIntegrationTests/
+│   │   │   ├── BusServiceAPIIntegrationTest.cs
+│   │   │   ├── DriverServiceAPIIntegrationTest.cs
+│   │   │   ├── PassengerServiceAPIIntegrationTest.cs
+│   │   │   ├── RouteServiceAPIIntegrationTest.cs
+│   │   │   ├── TripServiceAPIIntegrationTest.cs
+│   │   │   └── TripsPassengerServiceAPIIntegrationTest.cs
+│   │   └── WebApplicationFactory/
+│   │   │   └── WebApplicationFactory.cs
+│   ├── PerformanceTests/
+│   │   ├── PassengerServiceAPIPerformanceTests.cs
+│   │   └── RouteServiceAPIPerformanceTests.cs
+│   ├── UnitTests/
+│   │   ├── ControllersAPIUnitTests/
+│   │   │   ├── BusControllerAPIUnitTests.cs
+│   │   │   ├── DriverControllerAPIUnitTests.cs
+│   │   │   ├── PassengerControllerAPIUnitTests.cs
+│   │   │   ├── RouteControllerAPIUnitTests.cs
+│   │   │   ├── TripControllerAPIUnitTests.cs
 │   │   │   └── TripsPassengerControllerAPIUnitTests.cs
 │   │   ├── ServicesAPI
 │   │   │   └── JwtTokenServiceAPITests.cs
-│   └── UsabilityTests
+│   ├── UsabilityTests/
 │   │   └── UsabilityTests.cs
-├── BusTrack.Updater                           
-│   ├── DriversUpdater                               
-│   │   └── DriverNameUpdater.cs                       
-│   └── PassengerUpdater                             
+│   └── BusTrack.Tests.csproj
+├── BusTrack.Updater/
+│   ├── DriversUpdater/
+│   │   └── DriverNameUpdater.cs
+│   └── PassengerUpdater/
 │   │   └── PassengerNameUpdater.cs
 ├── docs/
 │   ├── architecture/
 │   │   └── architecture.md
-│   ├──configuration
+│   ├──configuration/
 │   │   └──configuration.md
 │   ├── dotnet-10-migration/
 │   │   └── dotnet-10-migration.md
-│   ├── functionalities
+│   ├── functionalities/
 │   │   └── functionalities.md
-│   ├── history
+│   ├── history/
 │   │   └── history.md
 │   ├── project-structure/
 │   │   └── project-structure.md
-│   ├── screens
-│   │   ├── images
+│   ├── screens/
+│   │   ├── images/
 │   │   │   ├── 1717028557715.jpeg
 │   │   │   ├── 1717028557758.jpeg
 │   │   │   ├── 1717028557775.jpeg
@@ -1122,19 +1154,14 @@ BusTrack
 │   │   │   ├── 1717028557844.jpeg
 │   │   │   └── 1717028558230.jpeg
 │   │   └── screens.md
-│   ├── security
+│   ├── security/
 │   │   ├── jwt-authentication.md
 │   │   └── security.md
-│   └── technologies
+│   └── technologies/
 │   │   └── technologies.md
-├── docker/
-│   ├── api/
-│   │   └── Dockerfile
-│   └── frontend/
-│   │   └── Dockerfile
 ├── .dockerignore
 ├── .env.example
-├── .gitignore   
+├── .gitignore
 ├── appsettings.json
 ├── appsettings.Development.json
 ├── BusTrack.csproj
