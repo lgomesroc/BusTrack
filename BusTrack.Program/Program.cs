@@ -1,5 +1,4 @@
 using System.Reflection;
-using System.Security.Claims;
 using System.Text;
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using BusTrack.BusTrack.API.ServicesAPI;
@@ -156,8 +155,12 @@ public partial class Program
 
         if (app.Environment.IsDevelopment())
         {
+            // A interface e seus arquivos estáticos precisam carregar
+            // para que o usuário consiga utilizar o botão Authorize.
+            // O documento OpenAPI continua protegido por JWT + ADMIN.
             app.UseWhen(
-                context => context.Request.Path.StartsWithSegments("/swagger"),
+                context => context.Request.Path.StartsWithSegments(
+                    "/swagger/v1/swagger.json"),
                 swaggerApp =>
                 {
                     swaggerApp.Use(async (context, next) =>
