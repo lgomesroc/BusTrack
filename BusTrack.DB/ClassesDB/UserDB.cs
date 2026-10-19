@@ -1,5 +1,5 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace BusTrack.BusTrack.DB.ClassesDB
 {
@@ -20,5 +20,7 @@ namespace BusTrack.BusTrack.DB.ClassesDB
         public string? Login { get; set; }
 
         public string Role { get; set; } = "USER";
+
+        public DateTime? CreatedAtUtc { get; set; }
     }
 }

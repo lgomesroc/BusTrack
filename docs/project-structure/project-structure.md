@@ -1126,14 +1126,18 @@ BusTrack/
 │   │   └── RouteServiceAPIPerformanceTests.cs
 │   ├── UnitTests/
 │   │   ├── ControllersAPIUnitTests/
+│   │   │   ├── AuthenticationControllerAPIUnitTests.cs
 │   │   │   ├── BusControllerAPIUnitTests.cs
+│   │   │   ├── DashboardControllerAPIUnitTests.cs
 │   │   │   ├── DriverControllerAPIUnitTests.cs
 │   │   │   ├── PassengerControllerAPIUnitTests.cs
 │   │   │   ├── RouteControllerAPIUnitTests.cs
 │   │   │   ├── TripControllerAPIUnitTests.cs
-│   │   │   └── TripsPassengerControllerAPIUnitTests.cs
+│   │   │   ├── TripsPassengerControllerAPIUnitTests.cs
+│   │   │   └── UserPresenceControllerAPIUnitTests.cs
 │   │   ├── ServicesAPI
-│   │   │   └── JwtTokenServiceAPITests.cs
+│   │   │   ├── JwtTokenServiceAPITests.cs
+│   │   │   └── UserAuthenticationServiceAPITests.cs
 │   ├── UsabilityTests/
 │   │   └── UsabilityTests.cs
 │   └── BusTrack.Tests.csproj
