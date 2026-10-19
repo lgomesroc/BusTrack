@@ -1,11 +1,15 @@
+
 <div class="dashboard-container">
   <app-sidebar></app-sidebar>
+
   <main class="main-content">
     <header class="top-bar">
       <span class="system-name">Bus Track</span>
       <div class="user-area">
         <span>{{ isAdmin ? 'Área administrativa' : 'Área do usuário' }}</span>
-        <button type="button" class="logout-button" (click)="sair()">Sair</button>
+        <button type="button" class="logout-button" (click)="sair()">
+          Sair
+        </button>
       </div>
     </header>
 
@@ -13,40 +17,277 @@
       <section class="dashboard-body">
         <div class="welcome-section">
           <h1>Painel administrativo</h1>
-          <p>Indicadores consultados diretamente no banco de dados, sem números demonstrativos.</p>
+          <p>Indicadores consultados diretamente no banco de dados.</p>
         </div>
-        <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+        <div class="error-message" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+
         <p *ngIf="isLoading">Carregando dados reais...</p>
+
         <section class="dashboard-cards" *ngIf="dashboard as data">
-          <article class="dashboard-card"><h2>Usuários cadastrados</h2><p class="metric">{{ data.users.total }}</p><p>{{ data.users.administrators }} administradores · {{ data.users.normalUsers }} usuários comuns</p></article>
-          <article class="dashboard-card"><h2>Ônibus</h2><p class="metric">{{ data.buses.total }}</p><p>Total cadastrado</p></article>
-          <article class="dashboard-card"><h2>Motoristas</h2><p class="metric">{{ data.drivers.total }}</p><p>Total cadastrado</p></article>
-          <article class="dashboard-card"><h2>Passageiros</h2><p class="metric">{{ data.passengers.total }}</p><p>Total cadastrado</p></article>
-          <article class="dashboard-card"><h2>Rotas</h2><p class="metric">{{ data.routes.total }}</p><p>Total cadastrado</p></article>
-          <article class="dashboard-card"><h2>Viagens</h2><p class="metric">{{ data.trips.total }}</p><p>{{ data.trips.upcoming }} com saída futura</p></article>
+          <article class="dashboard-card">
+            <h2>Usuários cadastrados</h2>
+            <p class="metric">{{ data.users.total }}</p>
+            <p>
+              {{ data.users.administrators }} administradores ·
+              {{ data.users.normalUsers }} usuários comuns
+            </p>
+          </article>
+
+          <article class="dashboard-card">
+            <h2>Ônibus</h2>
+            <p class="metric">{{ data.buses.total }}</p>
+            <p>Total cadastrado</p>
+          </article>
+
+          <article class="dashboard-card">
+            <h2>Motoristas</h2>
+            <p class="metric">{{ data.drivers.total }}</p>
+            <p>Total cadastrado</p>
+          </article>
+
+          <article class="dashboard-card">
+            <h2>Passageiros</h2>
+            <p class="metric">{{ data.passengers.total }}</p>
+            <p>Total cadastrado</p>
+          </article>
+
+          <article class="dashboard-card">
+            <h2>Rotas</h2>
+            <p class="metric">{{ data.routes.total }}</p>
+            <p>Total cadastrado</p>
+          </article>
+
+          <article class="dashboard-card">
+            <h2>Viagens</h2>
+            <p class="metric">{{ data.trips.total }}</p>
+            <p>{{ data.trips.upcoming }} com saída futura</p>
+          </article>
         </section>
+
         <section class="users-panel">
           <div class="panel-heading">
-            <div><h2>Usuários logados recentemente</h2><p>Considerados ativos quando enviaram atividade nos últimos 2 minutos. A lista atualiza a cada 30 segundos.</p></div>
-            <button type="button" class="logout-button" (click)="carregarDashboard()">Atualizar</button>
+            <div>
+              <h2>Usuários online</h2>
+              <p>
+                Online quando a última atividade ocorreu nos últimos
+                90 segundos. Atualização a cada 30 segundos.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              class="logout-button"
+              (click)="carregarDashboard()">
+              Atualizar
+            </button>
           </div>
-          <p *ngIf="dashboard && dashboard.activeUsers.length === 0">Nenhum usuário ativo registrado. Usuários logados verão sua presença registrada ao acessar o dashboard.</p>
-          <div class="table-wrapper" *ngIf="dashboard?.activeUsers?.length">
-            <table><thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Última atividade (UTC)</th></tr></thead>
-              <tbody><tr *ngFor="let user of dashboard?.activeUsers"><td>{{ user.fullName || '—' }}</td><td>{{ user.email || '—' }}</td><td>{{ user.role }}</td><td>{{ user.lastSeenUtc | date:'dd/MM/yyyy HH:mm:ss':'UTC' }}</td></tr></tbody>
+
+          <p *ngIf="dashboard && dashboard.activeUsers.length === 0">
+            Nenhum usuário online identificado neste momento.
+          </p>
+
+          <div
+            class="table-wrapper"
+            *ngIf="dashboard?.activeUsers?.length">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>E-mail</th>
+                  <th>Perfil</th>
+                  <th>Última atividade (UTC)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let user of dashboard?.activeUsers">
+                  <td>{{ user.fullName || 'Não informado' }}</td>
+                  <td>{{ user.email || 'Não informado' }}</td>
+                  <td>{{ user.role }}</td>
+                  <td>
+                    {{
+                      user.lastSeenUtc
+                        ? (user.lastSeenUtc | date:'dd/MM/yyyy HH:mm:ss':'UTC')
+                        : 'Não disponível'
+                    }}
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </section>
-        <h2 class="section-title">Módulos do sistema</h2>
-        <section class="dashboard-cards">
-          <button type="button" class="dashboard-card" (click)="navegarParaViagens()"><h2>Viagens</h2><p>Consultar e administrar viagens.</p></button>
-          <button type="button" class="dashboard-card" (click)="navegarParaOnibus()"><h2>Ônibus</h2><p>Consultar a frota cadastrada.</p></button>
-          <button type="button" class="dashboard-card" (click)="navegarParaRotas()"><h2>Rotas</h2><p>Consultar rotas cadastradas.</p></button>
-          <button type="button" class="dashboard-card" (click)="navegarParaMotoristas()"><h2>Motoristas</h2><p>Consultar motoristas cadastrados.</p></button>
-          <button type="button" class="dashboard-card" (click)="navegarParaPassageiros()"><h2>Passageiros</h2><p>Consultar passageiros cadastrados.</p></button>
-          <button type="button" class="dashboard-card" (click)="navegarParaManutencao()"><h2>Serviços / manutenção</h2><p>Consultar serviços de manutenção.</p></button>
+
+        <section class="users-panel">
+          <div class="panel-heading">
+            <div>
+              <h2>Todos os usuários cadastrados</h2>
+              <p>
+                {{ usersTotal }} conta(s) encontrada(s).
+                A pesquisa considera nome, e-mail e perfil.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              class="logout-button"
+              (click)="carregarUsuarios()">
+              Atualizar lista
+            </button>
+          </div>
+
+          <form class="search-form" (submit)="$event.preventDefault(); pesquisarUsuarios()">
+            <label class="search-label" for="userSearch">
+              Pesquisar usuários
+            </label>
+
+            <div class="search-controls">
+              <input
+                id="userSearch"
+                type="search"
+                [value]="userSearch"
+                (input)="userSearch = $any($event.target).value"
+                placeholder="Nome, e-mail ou perfil"
+                autocomplete="off">
+
+              <button type="submit" class="action-button">
+                Pesquisar
+              </button>
+
+              <button
+                type="button"
+                class="logout-button"
+                (click)="limparPesquisa()">
+                Limpar
+              </button>
+            </div>
+          </form>
+
+          <p *ngIf="usersLoading">Carregando usuários...</p>
+
+          <div class="error-message" *ngIf="usersError">
+            {{ usersError }}
+          </div>
+
+          <div
+            class="table-wrapper"
+            *ngIf="!usersLoading && registeredUsers.length > 0">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>E-mail</th>
+                  <th>Perfil</th>
+                  <th>Cadastro (UTC)</th>
+                  <th>Última atividade (UTC)</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let user of registeredUsers">
+                  <td>{{ user.fullName || 'Não informado' }}</td>
+                  <td>{{ user.email || 'Não informado' }}</td>
+                  <td>{{ user.role }}</td>
+                  <td>
+                    {{
+                      user.createdAtUtc
+                        ? (user.createdAtUtc | date:'dd/MM/yyyy HH:mm':'UTC')
+                        : 'Não disponível'
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      user.lastSeenUtc
+                        ? (user.lastSeenUtc | date:'dd/MM/yyyy HH:mm:ss':'UTC')
+                        : 'Não disponível'
+                    }}
+                  </td>
+                  <td>
+                    <span
+                      class="status-pill"
+                      [class.status-online]="user.isOnline"
+                      [class.status-offline]="!user.isOnline">
+                      {{ user.isOnline ? 'Online' : 'Offline' }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p
+            *ngIf="!usersLoading && !usersError && registeredUsers.length === 0">
+            Nenhuma conta encontrada para essa pesquisa.
+          </p>
+
+          <div class="pagination" *ngIf="usersTotalPages > 0">
+            <span>
+              Exibindo {{ usersStart }}–{{ usersEnd }} de {{ usersTotal }}
+            </span>
+
+            <div class="pagination-controls">
+              <button
+                type="button"
+                class="logout-button"
+                [disabled]="usersPage <= 1 || usersLoading"
+                (click)="paginaAnterior()">
+                Anterior
+              </button>
+
+              <span>
+                Página {{ usersPage }} de {{ usersTotalPages }}
+              </span>
+
+              <button
+                type="button"
+                class="logout-button"
+                [disabled]="usersPage >= usersTotalPages || usersLoading"
+                (click)="proximaPagina()">
+                Próxima
+              </button>
+            </div>
+          </div>
         </section>
-        <p class="updated-at" *ngIf="dashboard">Consulta realizada em {{ dashboard.generatedAtUtc | date:'dd/MM/yyyy HH:mm:ss':'UTC' }} UTC.</p>
+
+        <h2 class="section-title">Módulos do sistema</h2>
+
+        <section class="dashboard-cards">
+          <button type="button" class="dashboard-card" (click)="navegarParaViagens()">
+            <h2>Viagens</h2>
+            <p>Consultar e administrar viagens.</p>
+          </button>
+
+          <button type="button" class="dashboard-card" (click)="navegarParaOnibus()">
+            <h2>Ônibus</h2>
+            <p>Consultar a frota cadastrada.</p>
+          </button>
+
+          <button type="button" class="dashboard-card" (click)="navegarParaRotas()">
+            <h2>Rotas</h2>
+            <p>Consultar rotas cadastradas.</p>
+          </button>
+
+          <button type="button" class="dashboard-card" (click)="navegarParaMotoristas()">
+            <h2>Motoristas</h2>
+            <p>Consultar motoristas cadastrados.</p>
+          </button>
+
+          <button type="button" class="dashboard-card" (click)="navegarParaPassageiros()">
+            <h2>Passageiros</h2>
+            <p>Consultar passageiros cadastrados.</p>
+          </button>
+
+          <button type="button" class="dashboard-card" (click)="navegarParaManutencao()">
+            <h2>Serviços / manutenção</h2>
+            <p>Consultar serviços de manutenção.</p>
+          </button>
+        </section>
+
+        <p class="updated-at" *ngIf="dashboard">
+          Consulta realizada em
+          {{ dashboard.generatedAtUtc | date:'dd/MM/yyyy HH:mm:ss':'UTC' }} UTC.
+        </p>
       </section>
     </ng-container>
 
@@ -54,41 +295,104 @@
       <section class="dashboard-body">
         <div class="welcome-section">
           <h1>Meu painel</h1>
-          <p>Acompanhe as viagens vinculadas à sua conta e consulte a operação disponível.</p>
+          <p>
+            Acompanhe as viagens vinculadas à sua conta e consulte
+            a operação disponível.
+          </p>
         </div>
+
         <section class="summary-grid" aria-label="Resumo das minhas viagens">
-          <article class="summary-card"><span>Próximas viagens</span><strong>{{ upcomingTrips.length }}</strong></article>
-          <article class="summary-card"><span>Viagens anteriores</span><strong>{{ pastTrips.length }}</strong></article>
-          <article class="summary-card"><span>Total vinculado à conta</span><strong>{{ trips.length }}</strong></article>
+          <article class="summary-card">
+            <span>Próximas viagens</span>
+            <strong>{{ upcomingTrips.length }}</strong>
+          </article>
+
+          <article class="summary-card">
+            <span>Viagens anteriores</span>
+            <strong>{{ pastTrips.length }}</strong>
+          </article>
+
+          <article class="summary-card">
+            <span>Total vinculado à conta</span>
+            <strong>{{ trips.length }}</strong>
+          </article>
         </section>
+
         <section class="information-panel">
           <h2>Próximas viagens</h2>
           <p *ngIf="loadingTrips">Carregando suas viagens...</p>
           <p *ngIf="!loadingTrips && tripsError">{{ tripsError }}</p>
-          <p *ngIf="!loadingTrips && !tripsError && upcomingTrips.length === 0">Não há próximas viagens vinculadas à sua conta.</p>
+          <p *ngIf="!loadingTrips && !tripsError && upcomingTrips.length === 0">
+            Não há próximas viagens vinculadas à sua conta.
+          </p>
+
           <div class="trip-list" *ngIf="!loadingTrips && upcomingTrips.length > 0">
             <article class="trip-item" *ngFor="let trip of upcomingTrips">
-              <div><strong>{{ trip.route?.name || 'Rota não informada' }}</strong><span>{{ trip.route?.origin || 'Origem não informada' }} → {{ trip.route?.destination || 'Destino não informado' }}</span></div>
+              <div>
+                <strong>{{ trip.route?.name || 'Rota não informada' }}</strong>
+                <span>
+                  {{ trip.route?.origin || 'Origem não informada' }}
+                  →
+                  {{ trip.route?.destination || 'Destino não informado' }}
+                </span>
+              </div>
               <time>{{ trip.departureTime | date:'dd/MM/yyyy HH:mm' }}</time>
             </article>
           </div>
         </section>
+
         <section class="information-panel">
           <h2>Histórico de viagens</h2>
-          <p *ngIf="!loadingTrips && !tripsError && pastTrips.length === 0">Ainda não há viagens anteriores vinculadas à sua conta.</p>
+          <p *ngIf="!loadingTrips && !tripsError && pastTrips.length === 0">
+            Ainda não há viagens anteriores vinculadas à sua conta.
+          </p>
+
           <div class="trip-list" *ngIf="!loadingTrips && pastTrips.length > 0">
             <article class="trip-item" *ngFor="let trip of pastTrips">
-              <div><strong>{{ trip.route?.name || 'Rota não informada' }}</strong><span>{{ trip.route?.origin || 'Origem não informada' }} → {{ trip.route?.destination || 'Destino não informado' }}</span></div>
+              <div>
+                <strong>{{ trip.route?.name || 'Rota não informada' }}</strong>
+                <span>
+                  {{ trip.route?.origin || 'Origem não informada' }}
+                  →
+                  {{ trip.route?.destination || 'Destino não informado' }}
+                </span>
+              </div>
               <time>{{ trip.departureTime | date:'dd/MM/yyyy HH:mm' }}</time>
             </article>
           </div>
         </section>
+
         <section class="dashboard-cards">
-          <button type="button" class="dashboard-card" (click)="navegarParaViagens()"><span class="card-icon">Viagens</span><div><h2>Consultar viagens</h2><p>Acessar os registros de viagens disponíveis.</p></div></button>
-          <button type="button" class="dashboard-card" (click)="navegarParaRotas()"><span class="card-icon">Rotas</span><div><h2>Consultar rotas</h2><p>Ver origens, destinos e rotas cadastradas.</p></div></button>
-          <button type="button" class="dashboard-card" (click)="navegarParaPassageiros()"><span class="card-icon">Passageiros</span><div><h2>Passageiros</h2><p>Acessar o módulo de passageiros permitido à sua conta.</p></div></button>
+          <button type="button" class="dashboard-card" (click)="navegarParaViagens()">
+            <span class="card-icon">Viagens</span>
+            <div>
+              <h2>Consultar viagens</h2>
+              <p>Acessar os registros de viagens disponíveis.</p>
+            </div>
+          </button>
+
+          <button type="button" class="dashboard-card" (click)="navegarParaRotas()">
+            <span class="card-icon">Rotas</span>
+            <div>
+              <h2>Consultar rotas</h2>
+              <p>Ver origens, destinos e rotas cadastradas.</p>
+            </div>
+          </button>
+
+          <button type="button" class="dashboard-card" (click)="navegarParaPassageiros()">
+            <span class="card-icon">Passageiros</span>
+            <div>
+              <h2>Passageiros</h2>
+              <p>Acessar o módulo de passageiros permitido à sua conta.</p>
+            </div>
+          </button>
         </section>
-        <p class="data-note">O painel mostra como pessoais somente as viagens associadas à sua conta ou ao passageiro correspondente. Viagens antigas sem associação válida não são atribuídas automaticamente.</p>
+
+        <p class="data-note">
+          O painel mostra como pessoais somente as viagens associadas
+          à sua conta ou ao passageiro correspondente. Viagens antigas
+          sem associação válida não são atribuídas automaticamente.
+        </p>
       </section>
     </ng-template>
   </main>

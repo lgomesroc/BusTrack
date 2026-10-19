@@ -1,10 +1,11 @@
+
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using BusTrack.BusTrack.API.DTOAPI;
-using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using BusTrack.BusTrack.DB.ClassesDB;
+using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -33,12 +34,14 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             _jwtTokenService = jwtTokenService;
             _userRepository = userRepository;
             _configuration = configuration;
-            _bootstrapLocks = database.GetCollection<BsonDocument>("BusTrackSecurityLocks");
+            _bootstrapLocks = database.GetCollection<BsonDocument>(
+                "BusTrackSecurityLocks");
         }
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginRequestDTOAPI request)
+        public IActionResult Login(
+            [FromBody] LoginRequestDTOAPI request)
         {
             var user = _userService.Authenticate(
                 request.Email ?? string.Empty,
@@ -53,14 +56,16 @@ namespace BusTrack.BusTrack.API.ControllersAPI
                 });
             }
 
-            var (accessToken, expiresAtUtc) = _jwtTokenService.CreateToken(user);
+            var (accessToken, expiresAtUtc) =
+                _jwtTokenService.CreateToken(user);
 
             return Ok(new AuthenticationResponseDTOAPI
             {
                 Success = true,
                 AccessToken = accessToken,
                 ExpiresAtUtc = expiresAtUtc,
-                WelcomeMessage = "Sucesso. Seja bem-vindo ao painel principal do Bus Track."
+                WelcomeMessage =
+                    "Sucesso. Seja bem-vindo ao painel principal do Bus Track."
             });
         }
 
@@ -69,6 +74,8 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         public IActionResult Create([FromBody] UserDB user)
         {
             user.Role = "USER";
+            user.CreatedAtUtc = DateTime.UtcNow;
+
             _userService.Create(user);
 
             return Ok(new
@@ -80,10 +87,14 @@ namespace BusTrack.BusTrack.API.ControllersAPI
 
         [AllowAnonymous]
         [HttpPost("bootstrap-admin")]
-        public IActionResult BootstrapAdmin([FromBody] BootstrapAdminRequestDTOAPI request)
+        public IActionResult BootstrapAdmin(
+            [FromBody] BootstrapAdminRequestDTOAPI request)
         {
-            var configuredSecret = _configuration["BootstrapAdmin:Secret"];
-            if (string.IsNullOrWhiteSpace(configuredSecret) || Encoding.UTF8.GetByteCount(configuredSecret) < 32)
+            var configuredSecret =
+                _configuration["BootstrapAdmin:Secret"];
+
+            if (string.IsNullOrWhiteSpace(configuredSecret) ||
+                Encoding.UTF8.GetByteCount(configuredSecret) < 32)
             {
                 return NotFound();
             }
@@ -95,16 +106,25 @@ namespace BusTrack.BusTrack.API.ControllersAPI
 
             var expected = Encoding.UTF8.GetBytes(configuredSecret);
             var supplied = Encoding.UTF8.GetBytes(request.BootstrapSecret);
+
             if (expected.Length != supplied.Length ||
-                !CryptographicOperations.FixedTimeEquals(expected, supplied))
+                !CryptographicOperations.FixedTimeEquals(
+                    expected,
+                    supplied))
             {
                 return Unauthorized();
             }
 
             if (_userRepository.Get().Any(user =>
-                string.Equals(user.Role, "ADMIN", StringComparison.OrdinalIgnoreCase)))
+                string.Equals(
+                    user.Role,
+                    "ADMIN",
+                    StringComparison.OrdinalIgnoreCase)))
             {
-                return Conflict(new { message = "O administrador inicial já foi criado." });
+                return Conflict(new
+                {
+                    message = "O administrador inicial já foi criado."
+                });
             }
 
             if (string.IsNullOrWhiteSpace(request.FullName) ||
@@ -114,14 +134,21 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             {
                 return BadRequest(new
                 {
-                    message = "Nome, e-mail e senha são obrigatórios. A senha deve ter pelo menos 12 caracteres."
+                    message =
+                        "Nome, e-mail e senha são obrigatórios. " +
+                        "A senha deve ter pelo menos 12 caracteres."
                 });
             }
 
-            var existingUser = _userRepository.GetByEmail(request.Email);
+            var existingUser =
+                _userRepository.GetByEmail(request.Email);
+
             if (existingUser is not null)
             {
-                return Conflict(new { message = "Já existe uma conta com esse e-mail." });
+                return Conflict(new
+                {
+                    message = "Já existe uma conta com esse e-mail."
+                });
             }
 
             var admin = new UserDB
@@ -130,18 +157,31 @@ namespace BusTrack.BusTrack.API.ControllersAPI
                 Email = request.Email.Trim(),
                 Password = request.Password,
                 CPF = request.CPF,
-                Login = string.IsNullOrWhiteSpace(request.Login) ? request.Email.Trim() : request.Login.Trim(),
-                Role = "ADMIN"
+                Login = string.IsNullOrWhiteSpace(request.Login)
+                    ? request.Email.Trim()
+                    : request.Login.Trim(),
+                Role = "ADMIN",
+                CreatedAtUtc = DateTime.UtcNow
             };
 
-            var lockDocument = new BsonDocument("_id", "initial-admin-bootstrap");
+            var lockDocument = new BsonDocument(
+                "_id",
+                "initial-admin-bootstrap");
+
             try
             {
                 _bootstrapLocks.InsertOne(lockDocument);
             }
-            catch (MongoWriteException exception) when (exception.WriteError?.Category == ServerErrorCategory.DuplicateKey)
+            catch (MongoWriteException exception)
+                when (exception.WriteError?.Category ==
+                      ServerErrorCategory.DuplicateKey)
             {
-                return Conflict(new { message = "O bootstrap do administrador já foi utilizado ou está em andamento." });
+                return Conflict(new
+                {
+                    message =
+                        "O bootstrap do administrador já foi utilizado " +
+                        "ou está em andamento."
+                });
             }
 
             try
@@ -153,13 +193,17 @@ namespace BusTrack.BusTrack.API.ControllersAPI
                 _bootstrapLocks.DeleteOne(lockDocument);
                 throw;
             }
+
             return Created(string.Empty, new
             {
                 success = true,
-                message = "Administrador inicial criado. Remova/desative a configuração de bootstrap no ambiente."
+                message =
+                    "Administrador inicial criado. " +
+                    "Remova/desative a configuração de bootstrap no ambiente."
             });
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public IActionResult Read(string id)
         {
@@ -169,6 +213,7 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             }
 
             var user = _userService.Read(id);
+
             if (user == null)
             {
                 return NotFound();
@@ -186,7 +231,9 @@ namespace BusTrack.BusTrack.API.ControllersAPI
 
         [Authorize(Roles = "ADMIN")]
         [HttpPut("{id}")]
-        public IActionResult Update(string id, [FromBody] UserDB user)
+        public IActionResult Update(
+            string id,
+            [FromBody] UserDB user)
         {
             if (!IsCurrentUser(id))
             {
@@ -194,6 +241,7 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             }
 
             var existingUser = _userService.Read(id);
+
             if (existingUser is null)
             {
                 return NotFound();
@@ -201,6 +249,8 @@ namespace BusTrack.BusTrack.API.ControllersAPI
 
             user.Id = id;
             user.Role = existingUser.Role;
+            user.CreatedAtUtc = existingUser.CreatedAtUtc;
+
             return _userService.Update(id, user);
         }
 
