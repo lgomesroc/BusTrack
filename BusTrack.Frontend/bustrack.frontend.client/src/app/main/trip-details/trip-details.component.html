@@ -1,0 +1,211 @@
+
+<div class="details-container">
+  <header class="details-header">
+    <div class="header-text">
+      <p class="eyebrow">GERENCIAMENTO DE VIAGENS</p>
+      <h1>Trip Details</h1>
+      <p class="subtitle">
+        Consulte as informações completas da viagem selecionada.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="secondary-button"
+      (click)="voltarParaViagens()"
+    >
+      Voltar para viagens
+    </button>
+  </header>
+
+  <section
+    class="feedback-card loading-state"
+    *ngIf="isLoading"
+    role="status"
+    aria-live="polite"
+  >
+    <span class="loading-spinner" aria-hidden="true"></span>
+    <p>Carregando detalhes da viagem...</p>
+  </section>
+
+  <section
+    class="feedback-card error-state"
+    *ngIf="!isLoading && errorMessage"
+    role="alert"
+  >
+    <h2>{{ notFound ? 'Viagem não encontrada' : 'Não foi possível carregar' }}</h2>
+    <p>{{ errorMessage }}</p>
+
+    <div class="feedback-actions">
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="voltarParaViagens()"
+      >
+        Voltar para a lista
+      </button>
+    </div>
+  </section>
+
+  <ng-container *ngIf="!isLoading && trip">
+    <section class="trip-summary">
+      <div class="summary-heading">
+        <div>
+          <span class="section-label">VIAGEM</span>
+          <h2>{{ trip.route?.name || 'Detalhes da viagem' }}</h2>
+          <p class="route-description">
+            {{ trip.route?.origin || 'Origem não informada' }}
+            <span aria-hidden="true">→</span>
+            {{ trip.route?.destination || 'Destino não informado' }}
+          </p>
+        </div>
+
+        <span class="trip-id">
+          ID: {{ trip.id }}
+        </span>
+      </div>
+
+      <div class="schedule-grid">
+        <article class="schedule-item">
+          <span class="detail-label">Saída</span>
+          <strong>{{ trip.departureTime | date:'dd/MM/yyyy' }}</strong>
+          <span>{{ trip.departureTime | date:'HH:mm' }}</span>
+        </article>
+
+        <article class="schedule-item">
+          <span class="detail-label">Chegada</span>
+          <strong>{{ trip.arrivalTime | date:'dd/MM/yyyy' }}</strong>
+          <span>{{ trip.arrivalTime | date:'HH:mm' }}</span>
+        </article>
+
+        <article class="schedule-item">
+          <span class="detail-label">Duração</span>
+          <strong>{{ trip.duration }} minutos</strong>
+          <span>
+            {{ (trip.duration / 60) | number:'1.0-1' }} horas
+          </span>
+        </article>
+
+        <article class="schedule-item">
+          <span class="detail-label">Passageiros</span>
+          <strong>{{ quantidadePassageiros() }}</strong>
+          <span>
+            Limite: {{ trip.limitPassengers }}
+          </span>
+        </article>
+      </div>
+    </section>
+
+    <div class="details-grid">
+      <section class="details-card">
+        <div class="card-heading">
+          <div class="heading-icon bus-icon" aria-hidden="true">B</div>
+          <div>
+            <h2>Ônibus</h2>
+            <p>Veículo utilizado na viagem</p>
+          </div>
+        </div>
+
+        <dl class="detail-list">
+          <div>
+            <dt>Identificação</dt>
+            <dd>{{ trip.bus?.number || 'Não informado' }}</dd>
+          </div>
+          <div>
+            <dt>Placa</dt>
+            <dd>{{ trip.bus?.licensePlate || 'Não informada' }}</dd>
+          </div>
+          <div>
+            <dt>Modelo</dt>
+            <dd>{{ trip.bus?.model || 'Não informado' }}</dd>
+          </div>
+          <div>
+            <dt>Capacidade do veículo</dt>
+            <dd>
+              {{ trip.bus?.capacity ?? 'Não informada' }}
+              <span *ngIf="trip.bus?.capacity != null">lugares</span>
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="details-card">
+        <div class="card-heading">
+          <div class="heading-icon driver-icon" aria-hidden="true">M</div>
+          <div>
+            <h2>Motorista</h2>
+            <p>Responsável pela condução</p>
+          </div>
+        </div>
+
+        <dl class="detail-list">
+          <div>
+            <dt>Nome</dt>
+            <dd>{{ trip.driver?.name || 'Não informado' }}</dd>
+          </div>
+          <div>
+            <dt>Número da habilitação</dt>
+            <dd>{{ trip.driver?.licenseNumber || 'Não informado' }}</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="details-card route-card">
+        <div class="card-heading">
+          <div class="heading-icon route-icon" aria-hidden="true">R</div>
+          <div>
+            <h2>Rota</h2>
+            <p>Trajeto definido para a viagem</p>
+          </div>
+        </div>
+
+        <dl class="detail-list">
+          <div>
+            <dt>Nome da rota</dt>
+            <dd>{{ trip.route?.name || 'Não informada' }}</dd>
+          </div>
+          <div>
+            <dt>Origem</dt>
+            <dd>{{ trip.route?.origin || 'Não informada' }}</dd>
+          </div>
+          <div>
+            <dt>Destino</dt>
+            <dd>{{ trip.route?.destination || 'Não informado' }}</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="details-card passengers-card">
+        <div class="card-heading">
+          <div class="heading-icon passenger-icon" aria-hidden="true">P</div>
+          <div>
+            <h2>Passageiros</h2>
+            <p>
+              {{ quantidadePassageiros() }}
+              {{ quantidadePassageiros() === 1 ? 'passageiro cadastrado' : 'passageiros cadastrados' }}
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="empty-passengers"
+          *ngIf="quantidadePassageiros() === 0"
+        >
+          Nenhum passageiro associado a esta viagem.
+        </div>
+
+        <ul
+          class="passenger-list"
+          *ngIf="quantidadePassageiros() > 0"
+        >
+          <li *ngFor="let passenger of trip.passengers; let index = index">
+            <span class="passenger-number">{{ index + 1 }}</span>
+            <span class="passenger-name">
+              {{ passenger.name || 'Nome não informado' }}
+            </span>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </ng-container>
+</div>
