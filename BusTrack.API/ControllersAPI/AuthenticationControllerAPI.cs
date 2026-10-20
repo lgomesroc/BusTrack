@@ -1,4 +1,3 @@
-
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -22,6 +21,7 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         private readonly IUserRepositoryDB _userRepository;
         private readonly IConfiguration _configuration;
         private readonly IMongoCollection<BsonDocument> _bootstrapLocks;
+        private readonly IMongoCollection<BsonDocument> _sessions;
 
         public AuthenticationControllerAPI(
             IUserAuthenticationServiceAPI userService,
@@ -34,20 +34,25 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             _jwtTokenService = jwtTokenService;
             _userRepository = userRepository;
             _configuration = configuration;
+
             _bootstrapLocks = database.GetCollection<BsonDocument>(
                 "BusTrackSecurityLocks");
+
+            _sessions = database.GetCollection<BsonDocument>(
+                "BusTrackActiveSessions");
         }
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public IActionResult Login(
-            [FromBody] LoginRequestDTOAPI request)
+        public async Task<IActionResult> Login(
+            [FromBody] LoginRequestDTOAPI request,
+            CancellationToken cancellationToken)
         {
             var user = _userService.Authenticate(
                 request.Email ?? string.Empty,
                 request.Password ?? string.Empty);
 
-            if (user == null)
+            if (user is null)
             {
                 return Unauthorized(new
                 {
@@ -56,8 +61,45 @@ namespace BusTrack.BusTrack.API.ControllersAPI
                 });
             }
 
+            var browserId = Request.Headers["X-Browser-Id"].ToString();
+
+            if (!Guid.TryParse(browserId, out var parsedBrowserId))
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Identificador do navegador inválido."
+                });
+            }
+
+            browserId = parsedBrowserId.ToString("N");
+            var sessionId = Guid.NewGuid().ToString("N");
+
             var (accessToken, expiresAtUtc) =
-                _jwtTokenService.CreateToken(user);
+                _jwtTokenService.CreateToken(user, browserId, sessionId);
+
+            var session = new BsonDocument
+            {
+                ["_id"] = browserId,
+                ["sessionId"] = sessionId,
+                ["userId"] = user.Id,
+                ["email"] = user.Email ?? string.Empty,
+                ["fullName"] = user.FullName ?? string.Empty,
+                ["role"] = string.Equals(
+                    user.Role,
+                    "ADMIN",
+                    StringComparison.OrdinalIgnoreCase)
+                        ? "ADMIN"
+                        : "USER",
+                ["lastSeenUtc"] = new BsonDateTime(DateTime.UtcNow),
+                ["expiresAtUtc"] = new BsonDateTime(expiresAtUtc)
+            };
+
+            await _sessions.ReplaceOneAsync(
+                Builders<BsonDocument>.Filter.Eq("_id", browserId),
+                session,
+                new ReplaceOptions { IsUpsert = true },
+                cancellationToken);
 
             return Ok(new AuthenticationResponseDTOAPI
             {
@@ -214,7 +256,7 @@ namespace BusTrack.BusTrack.API.ControllersAPI
 
             var user = _userService.Read(id);
 
-            if (user == null)
+            if (user is null)
             {
                 return NotFound();
             }

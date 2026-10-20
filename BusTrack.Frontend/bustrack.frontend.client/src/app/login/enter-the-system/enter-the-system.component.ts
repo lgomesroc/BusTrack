@@ -15,6 +15,7 @@ import {
 import {
   blockSavePasswordRule
 } from '../rules/blockSavePasswordRules/blockSavePasswordRule';
+
 import { SessionService } from '../../services/session.service';
 import { environment } from '../../../environments/environment';
 
@@ -38,9 +39,9 @@ export class EnterTheSystemComponent implements OnInit {
   totalLoginAttempts = 5;
 
   constructor(
-    private router: Router,
-    private http: HttpClient,
-    private sessionService: SessionService
+    private readonly router: Router,
+    private readonly http: HttpClient,
+    private readonly sessionService: SessionService
   ) {}
 
   ngOnInit(): void {
@@ -48,6 +49,8 @@ export class EnterTheSystemComponent implements OnInit {
     preventBackNavigationRule();
     preventForwardNavigationRule();
     blockSavePasswordRule();
+
+    this.sessionService.getBrowserId();
   }
 
   login(form: NgForm): void {
@@ -56,7 +59,10 @@ export class EnterTheSystemComponent implements OnInit {
       return;
     }
 
-    const credentials = { email: this.email, password: this.password };
+    const credentials = {
+      email: this.email,
+      password: this.password
+    };
 
     this.http.post<LoginResponse>(
       `${environment.apiUrl}/AuthenticationControllerAPI/login`,
@@ -76,7 +82,10 @@ export class EnterTheSystemComponent implements OnInit {
         }
 
         this.sessionService.clearSession();
-        alert('O servidor não retornou um token de acesso válido. Tente novamente.');
+
+        alert(
+          'O servidor não retornou um token de acesso válido. Tente novamente.'
+        );
       },
       error: (err) => {
         this.sessionService.clearSession();
@@ -86,14 +95,19 @@ export class EnterTheSystemComponent implements OnInit {
             err?.error?.message ??
             'E-mail, senha ou ambos não encontrados. Por favor, tente novamente.';
 
-          alert(`${message}\n\nTentativas restantes: ${this.loginAttempts}`);
+          alert(
+            `${message}\n\nTentativas restantes: ${this.loginAttempts}`
+          );
+
           this.loginAttempts--;
           return;
         }
 
         alert(
-          'Você excedeu o número máximo de tentativas de login. Redirecionando para a tela de criar conta.'
+          'Você excedeu o número máximo de tentativas de login. ' +
+          'Redirecionando para a tela de criar conta.'
         );
+
         void this.router.navigate(['/create-an-account']);
       }
     });
@@ -103,12 +117,15 @@ export class EnterTheSystemComponent implements OnInit {
     this.email = '';
     this.password = '';
     this.sessionService.clearSession();
+
     alert('Operação de login cancelada.');
+
     void this.router.navigate(['/main-screen']);
   }
 
   voltar(): void {
     this.sessionService.clearSession();
+
     void this.router.navigate(['/create-an-account']);
   }
 

@@ -16,42 +16,71 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             _configuration = configuration;
         }
 
-        public (string AccessToken, DateTime ExpiresAtUtc) CreateToken(UserDB user)
+        public (string AccessToken, DateTime ExpiresAtUtc) CreateToken(
+            UserDB user,
+            string browserId,
+            string sessionId)
         {
+            if (string.IsNullOrWhiteSpace(browserId) ||
+                string.IsNullOrWhiteSpace(sessionId))
+            {
+                throw new ArgumentException(
+                    "O identificador do navegador e da sessão é obrigatório.");
+            }
+
             var key = _configuration["JwtSettings:SecretKey"];
-            if (string.IsNullOrWhiteSpace(key) || Encoding.UTF8.GetByteCount(key) < 32)
+
+            if (string.IsNullOrWhiteSpace(key) ||
+                Encoding.UTF8.GetByteCount(key) < 32)
             {
                 throw new InvalidOperationException(
-                    "Configure JwtSettings:SecretKey com pelo menos 32 bytes usando a variável de ambiente JwtSettings__SecretKey.");
+                    "Configure JwtSettings__SecretKey com pelo menos 32 bytes.");
             }
 
             var issuer = _configuration["JwtSettings:Issuer"];
             var audience = _configuration["JwtSettings:Audience"];
-            if (string.IsNullOrWhiteSpace(issuer) || string.IsNullOrWhiteSpace(audience))
+
+            if (string.IsNullOrWhiteSpace(issuer) ||
+                string.IsNullOrWhiteSpace(audience))
             {
                 throw new InvalidOperationException(
-                    "As configurações JwtSettings:Issuer e JwtSettings:Audience são obrigatórias.");
+                    "JwtSettings:Issuer e JwtSettings:Audience são obrigatórios.");
             }
 
-            var lifetimeMinutes = _configuration.GetValue<int?>("JwtSettings:ExpirationInMinutes") ?? 30;
+            var lifetimeMinutes =
+                _configuration.GetValue<int?>(
+                    "JwtSettings:ExpirationInMinutes") ?? 30;
+
             if (lifetimeMinutes is < 1 or > 1440)
             {
                 throw new InvalidOperationException(
-                    "JwtSettings:ExpirationInMinutes deve estar entre 1 e 1440 minutos.");
+                    "JwtSettings:ExpirationInMinutes deve estar entre 1 e 1440.");
+            }
+
+            if (string.IsNullOrWhiteSpace(user.Id))
+            {
+                throw new InvalidOperationException(
+                    "O usuário precisa possuir um identificador.");
             }
 
             var now = DateTime.UtcNow;
             var expiresAtUtc = now.AddMinutes(lifetimeMinutes);
+
+            var role = string.Equals(
+                user.Role,
+                "ADMIN",
+                StringComparison.OrdinalIgnoreCase)
+                    ? "ADMIN"
+                    : "USER";
+
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Role, string.Equals(user.Role, "ADMIN", StringComparison.OrdinalIgnoreCase) ? "ADMIN" : "USER")
+                new(ClaimTypes.NameIdentifier, user.Id),
+                new(JwtRegisteredClaimNames.Sub, user.Id),
+                new(ClaimTypes.Role, role),
+                new("browser_id", browserId),
+                new("sid", sessionId)
             };
-
-            if (!string.IsNullOrWhiteSpace(user.Id))
-            {
-                claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
-                claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
-            }
 
             if (!string.IsNullOrWhiteSpace(user.Email))
             {
@@ -63,8 +92,13 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 claims.Add(new Claim(ClaimTypes.Name, user.FullName));
             }
 
-            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
-            var credentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
+            var signingKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(key));
+
+            var credentials = new SigningCredentials(
+                signingKey,
+                SecurityAlgorithms.HmacSha256);
+
             var token = new JwtSecurityToken(
                 issuer: issuer,
                 audience: audience,
@@ -73,7 +107,9 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 expires: expiresAtUtc,
                 signingCredentials: credentials);
 
-            return (new JwtSecurityTokenHandler().WriteToken(token), expiresAtUtc);
+            return (
+                new JwtSecurityTokenHandler().WriteToken(token),
+                expiresAtUtc);
         }
     }
 }
