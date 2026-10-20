@@ -6,8 +6,10 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -19,7 +21,7 @@ public sealed class DashboardControllerAPIIntegrationTests
     : IClassFixture<DashboardTestFactory>, IAsyncLifetime
 {
     private const string TestKey =
-        "BusTrack-dashboard-integration-tests-only-key-2026";
+        "BusTrack-test-only-signing-key-not-for-production-2026";
     private const string TestIssuer = "BusTrack.Tests";
     private const string TestAudience = "BusTrack.Tests.Client";
 
@@ -291,7 +293,7 @@ public sealed class DashboardTestFactory : WebApplicationFactory<Program>
     public const string TestDatabaseName = "BusTrackDB_DashboardIntegrationTests";
 
     private const string TestKey =
-        "BusTrack-dashboard-integration-tests-only-key-2026";
+        "BusTrack-test-only-signing-key-not-for-production-2026";
     private const string TestIssuer = "BusTrack.Tests";
     private const string TestAudience = "BusTrack.Tests.Client";
 
@@ -330,6 +332,18 @@ public sealed class DashboardTestFactory : WebApplicationFactory<Program>
                 ["BootstrapAdmin:Secret"] = null,
                 ["ConnectionStrings:BusTrackDBConnection"] = mongoUri,
                 ["ConnectionStrings:DatabaseName"] = TestDatabaseName
+            });
+        });
+
+        // Pin the database instance used by the app to the dedicated test database.
+        // This prevents appsettings/environment configuration from selecting BusTrackDB.
+        builder.ConfigureTestServices(services =>
+        {
+            services.RemoveAll<IMongoDatabase>();
+            services.AddSingleton<IMongoDatabase>(serviceProvider =>
+            {
+                var client = serviceProvider.GetRequiredService<IMongoClient>();
+                return client.GetDatabase(TestDatabaseName);
             });
         });
     }
