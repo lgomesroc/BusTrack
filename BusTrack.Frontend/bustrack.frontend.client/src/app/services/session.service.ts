@@ -5,6 +5,18 @@ import { Injectable } from '@angular/core';
 })
 export class SessionService {
   private readonly tokenKey = 'busTrackAccessToken';
+  private readonly browserIdKey = 'busTrackBrowserId';
+
+  getBrowserId(): string {
+    let browserId = localStorage.getItem(this.browserIdKey);
+
+    if (!browserId) {
+      browserId = crypto.randomUUID().replace(/-/g, '');
+      localStorage.setItem(this.browserIdKey, browserId);
+    }
+
+    return browserId;
+  }
 
   startSession(accessToken: string): void {
     if (!accessToken) {
@@ -12,15 +24,15 @@ export class SessionService {
       return;
     }
 
-    sessionStorage.setItem(this.tokenKey, accessToken);
+    localStorage.setItem(this.tokenKey, accessToken);
   }
 
   clearSession(): void {
-    sessionStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.tokenKey);
   }
 
   getAccessToken(): string | null {
-    const token = sessionStorage.getItem(this.tokenKey);
+    const token = localStorage.getItem(this.tokenKey);
 
     if (!token || !this.isTokenValid(token)) {
       this.clearSession();
@@ -36,18 +48,18 @@ export class SessionService {
 
   isAdmin(): boolean {
     const token = this.getAccessToken();
+
     if (!token) {
       return false;
     }
 
     try {
-      const payloadPart = token.split('.')[1];
-      const base64 = payloadPart.replace(/-/g, '+').replace(/_/g, '/');
-      const decoded = atob(base64.padEnd(base64.length + ((4 - base64.length % 4) % 4), '='));
-      const payload = JSON.parse(decoded) as Record<string, unknown>;
-      const roleClaim = payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
-        ?? payload['role']
-        ?? payload['roles'];
+      const payload = this.readPayload(token);
+      const roleClaim =
+        payload[
+          'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+        ] ?? payload['role'] ?? payload['roles'];
+
       return Array.isArray(roleClaim)
         ? roleClaim.includes('ADMIN')
         : roleClaim === 'ADMIN';
@@ -58,21 +70,33 @@ export class SessionService {
 
   private isTokenValid(token: string): boolean {
     try {
-      const payloadPart = token.split('.')[1];
-      if (!payloadPart) {
-        return false;
-      }
+      const payload = this.readPayload(token);
 
-      const base64 = payloadPart
-        .replace(/-/g, '+')
-        .replace(/_/g, '/');
-      const decoded = atob(base64.padEnd(base64.length + ((4 - base64.length % 4) % 4), '='));
-      const payload = JSON.parse(decoded) as { exp?: number };
-
-      return typeof payload.exp === 'number' &&
-        payload.exp * 1000 > Date.now();
+      return typeof payload['exp'] === 'number'
+        && (payload['exp'] as number) * 1000 > Date.now();
     } catch {
       return false;
     }
+  }
+
+  private readPayload(token: string): Record<string, unknown> {
+    const payloadPart = token.split('.')[1];
+
+    if (!payloadPart) {
+      throw new Error('Token JWT inválido.');
+    }
+
+    const base64 = payloadPart
+      .replace(/-/g, '+')
+      .replace(/_/g, '/');
+
+    const decoded = atob(
+      base64.padEnd(
+        base64.length + ((4 - base64.length % 4) % 4),
+        '='
+      )
+    );
+
+    return JSON.parse(decoded) as Record<string, unknown>;
   }
 }

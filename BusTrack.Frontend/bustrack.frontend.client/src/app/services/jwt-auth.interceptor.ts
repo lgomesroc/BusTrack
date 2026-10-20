@@ -7,7 +7,12 @@ import {
   HttpRequest
 } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, catchError, throwError } from 'rxjs';
+import {
+  Observable,
+  catchError,
+  throwError
+} from 'rxjs';
+
 import { environment } from '../../environments/environment';
 import { SessionService } from './session.service';
 
@@ -22,28 +27,41 @@ export class JwtAuthInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    const isApiRequest = request.url.startsWith(environment.apiUrl);
-    const token = isApiRequest
-      ? this.sessionService.getAccessToken()
-      : null;
+    const isApiRequest =
+      request.url.startsWith(environment.apiUrl);
 
-    const authorizedRequest = token
-      ? request.clone({
-          setHeaders: { Authorization: `Bearer ${token}` }
-        })
-      : request;
+    if (!isApiRequest) {
+      return next.handle(request);
+    }
 
-    return next.handle(authorizedRequest).pipe(
+    const browserId = this.sessionService.getBrowserId();
+    const token = this.sessionService.getAccessToken();
+
+    const headers: Record<string, string> = {
+      'X-Browser-Id': browserId
+    };
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const apiRequest = request.clone({
+      setHeaders: headers
+    });
+
+    return next.handle(apiRequest).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (
-          isApiRequest &&
-          error.status === 401 &&
-          !request.url.includes('/AuthenticationControllerAPI/login')
-        ) {
+        const isLoginRequest =
+          request.url.includes('/AuthenticationControllerAPI/login');
+
+        if (error.status === 401 && !isLoginRequest) {
           this.sessionService.clearSession();
 
           if (this.router.url !== '/enter-the-system') {
-            void this.router.navigate(['/enter-the-system'], { replaceUrl: true });
+            void this.router.navigate(
+              ['/enter-the-system'],
+              { replaceUrl: true }
+            );
           }
         }
 
