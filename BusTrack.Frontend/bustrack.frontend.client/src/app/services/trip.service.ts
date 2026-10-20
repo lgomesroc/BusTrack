@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -37,21 +38,13 @@ export interface Passenger {
 
 export interface Trip {
   id: string;
-
   bus: Bus | null;
-
   driver: Driver | null;
-
   route: Route | null;
-
   departureTime: string;
-
   arrivalTime: string;
-
   duration: number;
-
   limitPassengers: number;
-
   passengers: Passenger[];
 }
 
@@ -70,53 +63,45 @@ export interface TripPayload {
   providedIn: 'root'
 })
 export class TripService {
+  private readonly apiUrl = environment.apiUrl;
 
-  private readonly apiUrl =
-    environment.apiUrl;
-
-  constructor(
-    private http: HttpClient
-  ) {}
+  constructor(private http: HttpClient) {}
 
   getTrips(): Observable<Trip[]> {
     return this.http.get<Trip[]>(`${this.apiUrl}/api/Trip`);
+  }
+
+  getTripById(id: string): Observable<Trip> {
+    return this.http.get<Trip>(
+      `${this.apiUrl}/api/Trip/${encodeURIComponent(id)}`
+    );
   }
 
   getMyTrips(): Observable<Trip[]> {
     return this.http.get<Trip[]>(`${this.apiUrl}/api/Trip/mine`);
   }
 
-  createTrip(
-    trip: TripPayload
-  ): Observable<TripPayload> {
+  createTrip(trip: TripPayload): Observable<TripPayload> {
     return this.http.post<TripPayload>(
       `${this.apiUrl}/api/Trip`,
       trip
     );
   }
 
-  updateTrip(
-    id: string,
-    trip: TripPayload
-  ): Observable<TripPayload> {
+  updateTrip(id: string, trip: TripPayload): Observable<TripPayload> {
     return this.http.put<TripPayload>(
       `${this.apiUrl}/api/Trip/${id}`,
       trip
     );
   }
 
-  deleteTrip(
-    id: string
-  ): Observable<void> {
+  deleteTrip(id: string): Observable<void> {
     return this.http.delete<void>(
       `${this.apiUrl}/api/Trip/${id}`
     );
   }
 
   getBuses(): Observable<Bus[]> {
-    return this.http.get<Bus[]>(
-      `${this.apiUrl}/api/Bus`
-    );
+    return this.http.get<Bus[]>(`${this.apiUrl}/api/Bus`);
   }
-
 }

@@ -1040,6 +1040,10 @@ BusTrack/
 │   │   │   │   │   │   ├── sidebar.component.html
 │   │   │   │   │   │   ├── sidebar.component.spec.ts
 │   │   │   │   │   │   └── sidebar.component.ts
+│   │   │   │   │   ├── trip-details/
+│   │   │   │   │   │   ├── trip-details.component.css
+│   │   │   │   │   │   ├── trip-details.component.html
+│   │   │   │   │   │   └── trip-details.component.ts
 │   │   │   │   │   └── trips/
 │   │   │   │   │   │   ├── trips.component.css
 │   │   │   │   │   │   ├── trips.component.html
@@ -1103,6 +1107,7 @@ BusTrack/
 │   ├── IntegrationTests/
 │   │   ├── ControllersAPIIntegrationTests/
 │   │   │   ├── BusControllerAPIIntegrationTest.cs
+│   │   │   ├── DashboardControllerAPIIntegrationTests.cs
 │   │   │   ├── DriverControllerAPIIntegrationTest.cs
 │   │   │   ├── JwtAuthenticationIntegrationTests.cs
 │   │   │   ├── PassengerControllerAPIIntegrationTest.cs
@@ -1137,6 +1142,7 @@ BusTrack/
 │   │   │   └── UserPresenceControllerAPIUnitTests.cs
 │   │   ├── ServicesAPI
 │   │   │   ├── JwtTokenServiceAPITests.cs
+│   │   │   ├── TripServiceAPIUnitTests.cs
 │   │   │   └── UserAuthenticationServiceAPITests.cs
 │   ├── UsabilityTests/
 │   │   └── UsabilityTests.cs
