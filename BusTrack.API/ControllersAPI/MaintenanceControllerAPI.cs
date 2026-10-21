@@ -1,3 +1,4 @@
+
 using BusTrack.BusTrack.API.DTOAPI;
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +8,7 @@ namespace BusTrack.BusTrack.API.ControllersAPI
 {
     [Route("api/Maintenance")]
     [ApiController]
+    [Authorize]
     public class MaintenanceControllerAPI : ControllerBase
     {
         private readonly IMaintenanceServiceAPI _service;
@@ -19,52 +21,73 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return Ok(await _service.GetAllAsync());
+            var items = await _service.GetAllAsync();
+            return Ok(items);
         }
 
         [HttpGet("{id}", Name = "GetMaintenance")]
         public async Task<IActionResult> GetById(string id)
         {
             var item = await _service.GetByIdAsync(id);
-            return item is null ? NotFound() : Ok(item);
+
+            return item is null
+                ? NotFound()
+                : Ok(item);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] MaintenanceDTOAPI maintenance)
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Post(
+            [FromBody] MaintenanceDTOAPI maintenance)
         {
             var created = await _service.CreateAsync(maintenance);
+
             if (created is null)
             {
                 return BadRequest(new
                 {
-                    message = "Confira o ônibus informado, os campos obrigatórios, a data, o custo e o status."
+                    message = "Confira o ônibus informado, os campos obrigatórios, as datas, o custo e o status."
                 });
             }
 
-            return CreatedAtRoute("GetMaintenance", new { id = created.Id }, created);
+            return CreatedAtRoute(
+                "GetMaintenance",
+                new { id = created.Id },
+                created);
         }
-        [Authorize(Roles = "ADMIN")]
 
-[HttpPut("{id}")]
-        public async Task<IActionResult> Put(string id, [FromBody] MaintenanceDTOAPI maintenance)
+        [HttpPut("{id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Put(
+            string id,
+            [FromBody] MaintenanceDTOAPI maintenance)
         {
             var updated = await _service.UpdateAsync(id, maintenance);
-            if (updated is null)
+
+            if (updated is not null)
             {
-                var existing = await _service.GetByIdAsync(id);
-                return existing is null
-                    ? NotFound()
-                    : BadRequest(new { message = "Dados de manutenção inválidos." });
+                return Ok(updated);
             }
 
-            return Ok(updated);
-        }
-        [Authorize(Roles = "ADMIN")]
+            var existing = await _service.GetByIdAsync(id);
 
-[HttpDelete("{id}")]
+            return existing is null
+                ? NotFound()
+                : BadRequest(new
+                {
+                    message = "Não foi possível atualizar. Confira os campos, as datas, o custo e se a manutenção permite alteração."
+                });
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Delete(string id)
         {
-            return await _service.DeleteAsync(id) ? NoContent() : NotFound();
+            var deleted = await _service.DeleteAsync(id);
+
+            return deleted
+                ? NoContent()
+                : NotFound();
         }
     }
 }

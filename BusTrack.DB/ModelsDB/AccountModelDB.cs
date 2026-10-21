@@ -1,9 +1,10 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using BusTrack.BusTrack.DB.InterfacesDB.IModelsDB;
 
 namespace BusTrack.BusTrack.DB.ModelsDB
 {
-    public class AccountModelDB
+    public class AccountModelDB : IAccountModelDB
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

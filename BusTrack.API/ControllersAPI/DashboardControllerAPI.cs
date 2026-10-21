@@ -206,7 +206,7 @@ public sealed class DashboardControllerAPI(IMongoDatabase database) : Controller
             return defaultValue;
         }
 
-        return value.ToString();
+        return value.ToString() ?? defaultValue;
     }
 
     private static DateTime? GetDate(

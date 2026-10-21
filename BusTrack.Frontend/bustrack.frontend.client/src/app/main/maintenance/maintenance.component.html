@@ -1,25 +1,253 @@
 <main class="maintenance-container">
-  <header class="page-header"><div><h1>Serviços / Manutenção</h1><p>Registre serviços, custos e o histórico de manutenção dos ônibus.</p></div><div class="header-actions"><button type="button" class="secondary-button" (click)="backToDashboard()">Voltar ao dashboard</button><button type="button" class="primary-button" (click)="startCreate()" [disabled]="isLoading || buses.length === 0">Nova manutenção</button></div></header>
-  <div class="error-message" *ngIf="errorMessage" role="alert">{{errorMessage}}</div>
-  <div class="notice" *ngIf="buses.length === 0">Cadastre um ônibus antes de registrar uma manutenção.</div>
-  <section class="maintenance-form" *ngIf="isCreating || (sessionService.isAdmin() && editing)">
-    <div class="section-heading"><h2>{{editing?'Editar manutenção':'Registrar manutenção'}}</h2><p>Campos marcados com * são obrigatórios.</p></div>
-    <div class="form-grid">
-      <div class="form-group"><label for="maintenance-bus">Ônibus *</label><select id="maintenance-bus" name="busId" [(ngModel)]="form.busId" required><option value="">Selecione um ônibus</option><option *ngFor="let bus of buses" [value]="bus.id">{{bus.number || bus.licensePlate || bus.id}} — {{bus.model || 'Modelo não informado'}}</option></select></div>
-      <div class="form-group"><label for="maintenance-type">Tipo de serviço *</label><input id="maintenance-type" name="serviceType" [(ngModel)]="form.serviceType" maxlength="80" required placeholder="Ex.: troca de óleo"></div>
-      <div class="form-group"><label for="maintenance-date">Data prevista / realizada *</label><input id="maintenance-date" name="serviceDate" type="date" [(ngModel)]="form.serviceDate" required></div>
-      <div class="form-group"><label for="maintenance-cost">Custo (R$)</label><input id="maintenance-cost" name="cost" type="number" min="0" step="0.01" [(ngModel)]="form.cost"></div>
-      <div class="form-group"><label for="maintenance-status">Status *</label><select id="maintenance-status" name="status" [(ngModel)]="form.status" required><option *ngFor="let status of statuses" [value]="status">{{status}}</option></select></div>
-      <div class="form-group full-width"><label for="maintenance-description">Descrição *</label><textarea id="maintenance-description" name="description" [(ngModel)]="form.description" maxlength="1000" rows="3" required placeholder="Detalhes do serviço, peças e observações"></textarea></div>
+  <header class="page-header">
+    <div>
+      <h1>Serviços / Manutenção</h1>
+      <p>Registre serviços, custos e o histórico de manutenção dos ônibus.</p>
     </div>
-    <div class="form-actions"><button type="button" class="secondary-button" (click)="cancelEdit()" [disabled]="isLoading">Cancelar</button><button type="button" class="primary-button" (click)="save()" [disabled]="isLoading">{{isLoading?'Salvando...':(editing?'Salvar alterações':'Registrar manutenção')}}</button></div>
+
+    <div class="header-actions">
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="backToDashboard()">
+        Voltar ao dashboard
+      </button>
+
+      <button
+        type="button"
+        class="primary-button"
+        (click)="startCreate()"
+        [disabled]="isLoading || buses.length === 0">
+        Nova manutenção
+      </button>
+    </div>
+  </header>
+
+  <div class="error-message" *ngIf="errorMessage" role="alert">
+    {{ errorMessage }}
+  </div>
+
+  <div class="notice" *ngIf="buses.length === 0">
+    Cadastre um ônibus antes de registrar uma manutenção.
+  </div>
+
+  <section
+    class="maintenance-form"
+    *ngIf="isCreating || (sessionService.isAdmin() && editing)">
+
+    <div class="section-heading">
+      <h2>
+        {{ isReadOnly
+          ? 'Visualizar manutenção'
+          : (editing ? 'Editar manutenção' : 'Registrar manutenção') }}
+      </h2>
+      <p *ngIf="!isReadOnly">Campos marcados com * são obrigatórios.</p>
+      <p *ngIf="isReadOnly">Manutenções concluídas ou canceladas são imutáveis.</p>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="maintenance-bus">Ônibus *</label>
+        <select
+          id="maintenance-bus"
+          name="busId"
+          [(ngModel)]="form.busId"
+          [disabled]="isReadOnly"
+          required>
+          <option value="">Selecione um ônibus</option>
+          <option *ngFor="let bus of buses" [value]="bus.id">
+            {{ bus.number || bus.licensePlate || bus.id }} —
+            {{ bus.model || 'Modelo não informado' }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="maintenance-type">Tipo de serviço *</label>
+        <input
+          id="maintenance-type"
+          name="serviceType"
+          [(ngModel)]="form.serviceType"
+          [disabled]="isReadOnly"
+          maxlength="80"
+          required
+          placeholder="Ex.: troca de óleo">
+      </div>
+
+      <div class="form-group">
+        <label for="maintenance-date">Data da manutenção *</label>
+        <input
+          id="maintenance-date"
+          name="serviceDate"
+          type="date"
+          [(ngModel)]="form.serviceDate"
+          [disabled]="!isCreating || isReadOnly"
+          required>
+
+        <small *ngIf="editing">
+          A data não pode ser alterada depois do cadastro.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="maintenance-cost">Custo (R$)</label>
+        <input
+          id="maintenance-cost"
+          name="cost"
+          type="number"
+          min="0"
+          step="0.01"
+          [(ngModel)]="form.cost"
+          [disabled]="isReadOnly">
+      </div>
+
+      <div class="form-group">
+        <label for="maintenance-status">Status *</label>
+        <select
+          id="maintenance-status"
+          name="status"
+          [(ngModel)]="form.status"
+          [disabled]="isReadOnly"
+          required>
+          <option *ngFor="let status of statuses" [value]="status">
+            {{ status }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="maintenance-description">Descrição *</label>
+        <textarea
+          id="maintenance-description"
+          name="description"
+          [(ngModel)]="form.description"
+          [disabled]="isReadOnly"
+          maxlength="1000"
+          rows="3"
+          required
+          placeholder="Detalhes do serviço, peças e observações">
+        </textarea>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="cancelEdit()"
+        [disabled]="isLoading">
+        {{ isReadOnly ? 'Fechar' : 'Cancelar' }}
+      </button>
+
+      <button
+        *ngIf="!isReadOnly"
+        type="button"
+        class="primary-button"
+        (click)="save()"
+        [disabled]="isLoading">
+        {{ isLoading
+          ? 'Salvando...'
+          : (editing ? 'Salvar alterações' : 'Registrar manutenção') }}
+      </button>
+    </div>
   </section>
+
   <section class="maintenance-list">
-    <div class="section-heading list-heading"><div><h2>Histórico de serviços</h2><p>{{maintenances.length}} {{maintenances.length===1?'registro':'registros'}}</p></div><button type="button" class="secondary-button" (click)="loadMaintenances()" [disabled]="isLoading">Atualizar lista</button></div>
-    <div class="loading-state" *ngIf="isLoading">Carregando...</div>
-    <div class="empty-state" *ngIf="!isLoading && maintenances.length===0"><h3>Nenhuma manutenção registrada</h3><p>Use “Nova manutenção” para adicionar o primeiro serviço.</p></div>
-    <div class="table-wrapper" *ngIf="maintenances.length>0"><table><thead><tr><th>Ônibus</th><th>Serviço</th><th>Data</th><th>Custo</th><th>Status</th><th>Ações</th></tr></thead><tbody>
-      <tr *ngFor="let item of maintenances"><td data-label="Ônibus">{{item.busNumber || item.busId}}</td><td data-label="Serviço"><strong>{{item.serviceType}}</strong><small>{{item.description}}</small></td><td data-label="Data">{{item.serviceDate | date:'dd/MM/yyyy'}}</td><td data-label="Custo">{{item.cost | currency:'BRL':'symbol':'1.2-2':'pt-BR'}}</td><td data-label="Status"><span class="status" [ngClass]="{'status-done':item.status==='Concluída','status-progress':item.status==='Em andamento','status-cancelled':item.status==='Cancelada'}">{{item.status}}</span></td><td data-label="Ações" class="actions-cell"><button type="button" class="edit-button" (click)="startEdit(item)" [hidden]="!sessionService.isAdmin()" [disabled]="isLoading">Editar</button><button type="button" class="delete-button" (click)="delete(item)" [hidden]="!sessionService.isAdmin()" [disabled]="isLoading">Excluir</button></td></tr>
-    </tbody></table></div>
+    <div class="section-heading list-heading">
+      <div>
+        <h2>Histórico de serviços</h2>
+        <p>
+          {{ maintenances.length }}
+          {{ maintenances.length === 1 ? 'registro' : 'registros' }}
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="secondary-button"
+        (click)="loadMaintenances()"
+        [disabled]="isLoading">
+        Atualizar lista
+      </button>
+    </div>
+
+    <div class="loading-state" *ngIf="isLoading">
+      Carregando...
+    </div>
+
+    <div
+      class="empty-state"
+      *ngIf="!isLoading && maintenances.length === 0">
+      <h3>Nenhuma manutenção registrada</h3>
+      <p>Use “Nova manutenção” para adicionar o primeiro serviço.</p>
+    </div>
+
+    <div class="table-wrapper" *ngIf="maintenances.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>Ônibus</th>
+            <th>Serviço</th>
+            <th>Data</th>
+            <th>Custo</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of maintenances">
+            <td data-label="Ônibus">
+              {{ item.busNumber || item.busId }}
+            </td>
+
+            <td data-label="Serviço">
+              <strong>{{ item.serviceType }}</strong>
+              <small>{{ item.description }}</small>
+            </td>
+
+            <td data-label="Data">
+              {{ item.serviceDate | date:'dd/MM/yyyy' }}
+            </td>
+
+            <td data-label="Custo">
+              {{ item.cost | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+            </td>
+
+            <td data-label="Status">
+              <span
+                class="status"
+                [ngClass]="{
+                  'status-done': item.status === 'Concluída',
+                  'status-progress': item.status === 'Em andamento',
+                  'status-cancelled': item.status === 'Cancelada'
+                }">
+                {{ item.status }}
+              </span>
+            </td>
+
+            <td data-label="Ações" class="actions-cell">
+              <button
+                type="button"
+                class="edit-button"
+                (click)="startEdit(item)"
+                [hidden]="!sessionService.isAdmin()"
+                [disabled]="isLoading">
+                Editar
+              </button>
+
+              <button
+                type="button"
+                class="delete-button"
+                (click)="delete(item)"
+                [hidden]="!sessionService.isAdmin()"
+                [disabled]="isLoading">
+                Excluir
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 </main>
