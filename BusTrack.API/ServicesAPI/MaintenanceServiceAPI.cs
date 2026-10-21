@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using BusTrack.BusTrack.API.DTOAPI;
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using BusTrack.BusTrack.DB.Classes;
@@ -10,7 +10,16 @@ namespace BusTrack.BusTrack.API.ServicesAPI
     public class MaintenanceServiceAPI : IMaintenanceServiceAPI
     {
         private static readonly string[] AllowedStatuses =
-            ["Agendada", "Em andamento", "Concluída", "Cancelada"];
+        [
+            "Agendada",
+            "Em andamento",
+            "Concluída",
+            "Cancelada"
+        ];
+
+        private const int MaxServiceTypeLength = 80;
+        private const int MaxDescriptionLength = 1000;
+        private const decimal MaxCost = 999999999m;
 
         private readonly IMaintenanceRepositoryDB _repository;
         private readonly IBusRepositoryDB _busRepository;
@@ -34,13 +43,23 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
         public async Task<MaintenanceDTOAPI?> GetByIdAsync(string id)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                return null;
+            }
+
             var item = await _repository.GetByIdAsync(id);
-            return item is null ? null : _mapper.Map<MaintenanceDTOAPI>(item);
+
+            return item is null
+                ? null
+                : _mapper.Map<MaintenanceDTOAPI>(item);
         }
 
-        public async Task<MaintenanceDTOAPI?> CreateAsync(MaintenanceDTOAPI maintenance)
+        public async Task<MaintenanceDTOAPI?> CreateAsync(
+            MaintenanceDTOAPI maintenance)
         {
             var normalized = await NormalizeAndValidateAsync(maintenance);
+
             if (normalized is null)
             {
                 return null;
@@ -48,19 +67,30 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
             var entity = _mapper.Map<MaintenanceDB>(normalized);
             var created = await _repository.CreateAsync(entity);
+
             return _mapper.Map<MaintenanceDTOAPI>(created);
         }
 
-        public async Task<MaintenanceDTOAPI?> UpdateAsync(string id, MaintenanceDTOAPI maintenance)
+        public async Task<MaintenanceDTOAPI?> UpdateAsync(
+            string id,
+            MaintenanceDTOAPI maintenance)
         {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                return null;
+            }
+
             var existing = await _repository.GetByIdAsync(id);
-            if (existing is null)
+
+            if (existing is null || IsTerminalStatus(existing.Status))
             {
                 return null;
             }
 
             var normalized = await NormalizeAndValidateAsync(maintenance);
-            if (normalized is null)
+
+            if (normalized is null ||
+                !IsAllowedTransition(existing.Status, normalized.Status))
             {
                 return null;
             }
@@ -68,7 +98,9 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             _mapper.Map(normalized, existing);
             existing.Id = id;
 
-            if (!await _repository.UpdateAsync(id, existing))
+            var updated = await _repository.UpdateAsync(id, existing);
+
+            if (!updated)
             {
                 return null;
             }
@@ -76,50 +108,225 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             return _mapper.Map<MaintenanceDTOAPI>(existing);
         }
 
-        public Task<bool> DeleteAsync(string id) => _repository.DeleteAsync(id);
+        public Task<bool> DeleteAsync(string id)
+        {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                return Task.FromResult(false);
+            }
+
+            return _repository.DeleteAsync(id);
+        }
 
         private async Task<MaintenanceDTOAPI?> NormalizeAndValidateAsync(
             MaintenanceDTOAPI maintenance)
         {
-            if (string.IsNullOrWhiteSpace(maintenance.BusId) ||
-                string.IsNullOrWhiteSpace(maintenance.ServiceType) ||
-                string.IsNullOrWhiteSpace(maintenance.Description) ||
-                maintenance.ServiceDate == default ||
-                maintenance.Cost < 0 ||
-                !AllowedStatuses.Contains(maintenance.Status, StringComparer.OrdinalIgnoreCase))
+            if (maintenance is null)
             {
                 return null;
             }
 
-            if (!ObjectId.TryParse(maintenance.BusId, out _))
+            var busId = maintenance.BusId?.Trim();
+            var serviceType = maintenance.ServiceType?.Trim();
+            var description = maintenance.Description?.Trim();
+            var statusInput = maintenance.Status?.Trim();
+
+            if (string.IsNullOrWhiteSpace(busId) ||
+                string.IsNullOrWhiteSpace(serviceType) ||
+                string.IsNullOrWhiteSpace(description) ||
+                string.IsNullOrWhiteSpace(statusInput))
             {
                 return null;
             }
 
-            var bus = await _busRepository.GetBusByIdAsync(maintenance.BusId);
-            if (bus is null)
+            if (serviceType.Length > MaxServiceTypeLength ||
+                description.Length > MaxDescriptionLength)
             {
                 return null;
             }
 
-            maintenance.BusId = bus.Id!;
-            maintenance.BusNumber = bus.Number ?? bus.Plate ?? bus.Id!;
-            maintenance.ServiceType = maintenance.ServiceType.Trim();
-            maintenance.Description = maintenance.Description.Trim();
-            maintenance.Status = AllowedStatuses.First(
-                status => status.Equals(maintenance.Status.Trim(), StringComparison.OrdinalIgnoreCase));
-
-            if (maintenance.Status == "Concluída" && maintenance.CompletedDate is null)
+            if (maintenance.ServiceDate == default ||
+                maintenance.ServiceDate == DateTime.MinValue ||
+                maintenance.ServiceDate == DateTime.MaxValue)
             {
-                maintenance.CompletedDate = DateTime.UtcNow;
+                return null;
             }
 
-            if (maintenance.Status != "Concluída")
+            if (maintenance.Cost < 0 ||
+                maintenance.Cost > MaxCost ||
+                decimal.Round(maintenance.Cost, 2) != maintenance.Cost)
             {
-                maintenance.CompletedDate = null;
+                return null;
             }
+
+            var normalizedStatus = AllowedStatuses.FirstOrDefault(
+                status => status.Equals(
+                    statusInput,
+                    StringComparison.OrdinalIgnoreCase));
+
+            if (normalizedStatus is null)
+            {
+                return null;
+            }
+
+            var serviceDate = GetBrazilDate(maintenance.ServiceDate);
+            var today = GetBrazilToday();
+
+            // Uma manutenção agendada não pode ter data passada.
+            if (normalizedStatus == "Agendada" && serviceDate < today)
+            {
+                return null;
+            }
+
+            // Não se pode iniciar ou concluir um serviço com data futura.
+            if (normalizedStatus is "Em andamento" or "Concluída" &&
+                serviceDate > today)
+            {
+                return null;
+            }
+
+            if (!ObjectId.TryParse(busId, out _))
+            {
+                return null;
+            }
+
+            var bus = await _busRepository.GetBusByIdAsync(busId);
+
+            if (bus is null || string.IsNullOrWhiteSpace(bus.Id))
+            {
+                return null;
+            }
+
+            var completedDate = maintenance.CompletedDate;
+
+            if (completedDate.HasValue)
+            {
+                var completed = completedDate.Value;
+
+                if (completed == DateTime.MinValue ||
+                    completed == DateTime.MaxValue)
+                {
+                    return null;
+                }
+
+                var completedUtc = AsUtc(completed);
+
+                // A conclusão não pode ocorrer no futuro.
+                if (completedUtc > DateTime.UtcNow)
+                {
+                    return null;
+                }
+
+                // A conclusão não pode anteceder o dia do serviço.
+                if (GetBrazilDate(completed) < serviceDate)
+                {
+                    return null;
+                }
+            }
+
+            if (normalizedStatus == "Concluída")
+            {
+                completedDate ??= DateTime.UtcNow;
+
+                if (AsUtc(completedDate.Value) > DateTime.UtcNow ||
+                    GetBrazilDate(completedDate.Value) < serviceDate)
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                // Somente manutenções concluídas mantêm data de conclusão.
+                completedDate = null;
+            }
+
+            maintenance.BusId = bus.Id;
+            maintenance.BusNumber = !string.IsNullOrWhiteSpace(bus.Number)
+                ? bus.Number.Trim()
+                : !string.IsNullOrWhiteSpace(bus.Plate)
+                    ? bus.Plate.Trim()
+                    : bus.Id;
+
+            maintenance.ServiceType = serviceType;
+            maintenance.Description = description;
+            maintenance.Status = normalizedStatus;
+            maintenance.ServiceDate = AsUtc(maintenance.ServiceDate);
+            maintenance.CompletedDate = completedDate.HasValue
+                ? AsUtc(completedDate.Value)
+                : null;
 
             return maintenance;
+        }
+
+        private static bool IsTerminalStatus(string? status)
+        {
+            return string.Equals(
+                       status?.Trim(),
+                       "Concluída",
+                       StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(
+                       status?.Trim(),
+                       "Cancelada",
+                       StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool IsAllowedTransition(
+            string? currentStatus,
+            string? newStatus)
+        {
+            if (string.IsNullOrWhiteSpace(currentStatus) ||
+                string.IsNullOrWhiteSpace(newStatus))
+            {
+                return false;
+            }
+
+            return currentStatus.Trim() switch
+            {
+                "Agendada" =>
+                    newStatus is "Agendada" or "Em andamento" or "Cancelada",
+
+                "Em andamento" =>
+                    newStatus is "Em andamento" or "Concluída" or "Cancelada",
+
+                _ => false
+            };
+        }
+
+        private static DateTime AsUtc(DateTime value)
+        {
+            return value.Kind switch
+            {
+                DateTimeKind.Utc => value,
+                DateTimeKind.Local => value.ToUniversalTime(),
+                _ => DateTime.SpecifyKind(value, DateTimeKind.Utc)
+            };
+        }
+
+        private static DateTime GetBrazilToday()
+        {
+            return TimeZoneInfo.ConvertTimeFromUtc(
+                DateTime.UtcNow,
+                GetBrazilTimeZone()).Date;
+        }
+
+        private static DateTime GetBrazilDate(DateTime value)
+        {
+            return TimeZoneInfo.ConvertTimeFromUtc(
+                AsUtc(value),
+                GetBrazilTimeZone()).Date;
+        }
+
+        private static TimeZoneInfo GetBrazilTimeZone()
+        {
+            try
+            {
+                return TimeZoneInfo.FindSystemTimeZoneById("America/Sao_Paulo");
+            }
+            catch (TimeZoneNotFoundException)
+            {
+                return TimeZoneInfo.FindSystemTimeZoneById(
+                    "E. South America Standard Time");
+            }
         }
     }
 }

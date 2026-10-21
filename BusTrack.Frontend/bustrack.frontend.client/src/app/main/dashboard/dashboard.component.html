@@ -98,7 +98,7 @@
                   <th>Nome</th>
                   <th>E-mail</th>
                   <th>Perfil</th>
-                  <th>Última atividade (UTC)</th>
+                  <th>Última atividade</th>
                 </tr>
               </thead>
               <tbody>
@@ -109,7 +109,7 @@
                   <td>
                     {{
                       user.lastSeenUtc
-                        ? (user.lastSeenUtc | date:'dd/MM/yyyy HH:mm:ss':'UTC')
+                        ? (user.lastSeenUtc | date:'dd/MM/yyyy HH:mm:ss':'-0300')
                         : 'Não disponível'
                     }}
                   </td>
@@ -137,7 +137,9 @@
             </button>
           </div>
 
-          <form class="search-form" (submit)="$event.preventDefault(); pesquisarUsuarios()">
+          <form
+            class="search-form"
+            (submit)="$event.preventDefault(); pesquisarUsuarios()">
             <label class="search-label" for="userSearch">
               Pesquisar usuários
             </label>
@@ -179,8 +181,8 @@
                   <th>Nome</th>
                   <th>E-mail</th>
                   <th>Perfil</th>
-                  <th>Cadastro (UTC)</th>
-                  <th>Última atividade (UTC)</th>
+                  <th>Cadastro</th>
+                  <th>Última atividade</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -192,14 +194,14 @@
                   <td>
                     {{
                       user.createdAtUtc
-                        ? (user.createdAtUtc | date:'dd/MM/yyyy HH:mm':'UTC')
+                        ? (user.createdAtUtc | date:'dd/MM/yyyy HH:mm':'-0300')
                         : 'Não disponível'
                     }}
                   </td>
                   <td>
                     {{
                       user.lastSeenUtc
-                        ? (user.lastSeenUtc | date:'dd/MM/yyyy HH:mm:ss':'UTC')
+                        ? (user.lastSeenUtc | date:'dd/MM/yyyy HH:mm:ss':'-0300')
                         : 'Não disponível'
                     }}
                   </td>
@@ -253,32 +255,50 @@
         <h2 class="section-title">Módulos do sistema</h2>
 
         <section class="dashboard-cards">
-          <button type="button" class="dashboard-card" (click)="navegarParaViagens()">
+          <button
+            type="button"
+            class="dashboard-card"
+            (click)="navegarParaViagens()">
             <h2>Viagens</h2>
             <p>Consultar e administrar viagens.</p>
           </button>
 
-          <button type="button" class="dashboard-card" (click)="navegarParaOnibus()">
+          <button
+            type="button"
+            class="dashboard-card"
+            (click)="navegarParaOnibus()">
             <h2>Ônibus</h2>
             <p>Consultar a frota cadastrada.</p>
           </button>
 
-          <button type="button" class="dashboard-card" (click)="navegarParaRotas()">
+          <button
+            type="button"
+            class="dashboard-card"
+            (click)="navegarParaRotas()">
             <h2>Rotas</h2>
             <p>Consultar rotas cadastradas.</p>
           </button>
 
-          <button type="button" class="dashboard-card" (click)="navegarParaMotoristas()">
+          <button
+            type="button"
+            class="dashboard-card"
+            (click)="navegarParaMotoristas()">
             <h2>Motoristas</h2>
             <p>Consultar motoristas cadastrados.</p>
           </button>
 
-          <button type="button" class="dashboard-card" (click)="navegarParaPassageiros()">
+          <button
+            type="button"
+            class="dashboard-card"
+            (click)="navegarParaPassageiros()">
             <h2>Passageiros</h2>
             <p>Consultar passageiros cadastrados.</p>
           </button>
 
-          <button type="button" class="dashboard-card" (click)="navegarParaManutencao()">
+          <button
+            type="button"
+            class="dashboard-card"
+            (click)="navegarParaManutencao()">
             <h2>Serviços / manutenção</h2>
             <p>Consultar serviços de manutenção.</p>
           </button>
@@ -286,7 +306,7 @@
 
         <p class="updated-at" *ngIf="dashboard">
           Consulta realizada em
-          {{ dashboard.generatedAtUtc | date:'dd/MM/yyyy HH:mm:ss':'UTC' }} UTC.
+          {{ dashboard.generatedAtUtc | date:'dd/MM/yyyy HH:mm:ss':'-0300' }}.
         </p>
       </section>
     </ng-container>
@@ -326,7 +346,9 @@
             Não há próximas viagens vinculadas à sua conta.
           </p>
 
-          <div class="trip-list" *ngIf="!loadingTrips && upcomingTrips.length > 0">
+          <div
+            class="trip-list"
+            *ngIf="!loadingTrips && upcomingTrips.length > 0">
             <article class="trip-item" *ngFor="let trip of upcomingTrips">
               <div>
                 <strong>{{ trip.route?.name || 'Rota não informada' }}</strong>
@@ -336,7 +358,7 @@
                   {{ trip.route?.destination || 'Destino não informado' }}
                 </span>
               </div>
-              <time>{{ trip.departureTime | date:'dd/MM/yyyy HH:mm' }}</time>
+              <time>{{ trip.departureTime | date:'dd/MM/yyyy HH:mm':'-0300' }}</time>
             </article>
           </div>
         </section>
@@ -347,7 +369,9 @@
             Ainda não há viagens anteriores vinculadas à sua conta.
           </p>
 
-          <div class="trip-list" *ngIf="!loadingTrips && pastTrips.length > 0">
+          <div
+            class="trip-list"
+            *ngIf="!loadingTrips && pastTrips.length > 0">
             <article class="trip-item" *ngFor="let trip of pastTrips">
               <div>
                 <strong>{{ trip.route?.name || 'Rota não informada' }}</strong>
@@ -357,13 +381,16 @@
                   {{ trip.route?.destination || 'Destino não informado' }}
                 </span>
               </div>
-              <time>{{ trip.departureTime | date:'dd/MM/yyyy HH:mm' }}</time>
+              <time>{{ trip.departureTime | date:'dd/MM/yyyy HH:mm':'-0300' }}</time>
             </article>
           </div>
         </section>
 
         <section class="dashboard-cards">
-          <button type="button" class="dashboard-card" (click)="navegarParaViagens()">
+          <button
+            type="button"
+            class="dashboard-card"
+            (click)="navegarParaViagens()">
             <span class="card-icon">Viagens</span>
             <div>
               <h2>Consultar viagens</h2>
@@ -371,7 +398,10 @@
             </div>
           </button>
 
-          <button type="button" class="dashboard-card" (click)="navegarParaRotas()">
+          <button
+            type="button"
+            class="dashboard-card"
+            (click)="navegarParaRotas()">
             <span class="card-icon">Rotas</span>
             <div>
               <h2>Consultar rotas</h2>
@@ -379,7 +409,10 @@
             </div>
           </button>
 
-          <button type="button" class="dashboard-card" (click)="navegarParaPassageiros()">
+          <button
+            type="button"
+            class="dashboard-card"
+            (click)="navegarParaPassageiros()">
             <span class="card-icon">Passageiros</span>
             <div>
               <h2>Passageiros</h2>

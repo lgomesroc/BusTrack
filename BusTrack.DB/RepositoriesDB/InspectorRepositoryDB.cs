@@ -1,9 +1,10 @@
 ﻿using BusTrack.BusTrack.DB.ClassesDB;
+using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
 using MongoDB.Driver;
 
 namespace BusTrack.BusTrack.DB.RepositoriesDB
 {
-    public class InspectorRepositoryDB
+    public class InspectorRepositoryDB : IInspectorRepositoryDB
     {
         private readonly IMongoCollection<InspectorDB> _inspectors;
 
@@ -13,14 +14,20 @@ namespace BusTrack.BusTrack.DB.RepositoriesDB
         }
 
         public List<InspectorDB> Get() =>
-            _inspectors.Find(inspector => true).ToList();
+            _inspectors
+                .Find(inspector => true)
+                .ToList();
 
         public InspectorDB GetByCPF(string cpf) =>
-            _inspectors.Find<InspectorDB>(inspector => inspector.CPF == cpf).FirstOrDefault();
+            _inspectors
+                .Find<InspectorDB>(
+                    inspector => inspector.CPF == cpf)
+                .FirstOrDefault();
 
         public InspectorDB Create(InspectorDB inspector)
         {
             _inspectors.InsertOne(inspector);
+
             return inspector;
         }
     }

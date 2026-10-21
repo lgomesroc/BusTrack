@@ -898,13 +898,17 @@ BusTrack/
 │   │   └── database.json
 │   ├── InterfacesDB/
 │   │   ├── IModelsDB/
+│   │   │   ├── IAccountModelDB.cs
 │   │   │   ├── IBusModelDB.cs
 │   │   │   ├── IDriverModelDB.cs
+│   │   │   ├── IInspectorModelDB.cs
 │   │   │   ├── IPassengerModelDB.cs
 │   │   │   ├── IRouteModelDB.cs
 │   │   │   ├── ITripModelDB.cs
-│   │   │   └── ITripsPassengerModelDB.cs
+│   │   │   ├── ITripsPassengerModelDB.cs
+│   │   │   └── IUserModelDB.cs
 │   │   └── IRepositoriesDB/
+│   │   │   ├── IAccountRepositoryDB.cs
 │   │   │   ├── IBusRepositoryDB.cs
 │   │   │   ├── IDriverRepositoryDB.cs
 │   │   │   ├── IMaintenanceRepositoryDB.cs
