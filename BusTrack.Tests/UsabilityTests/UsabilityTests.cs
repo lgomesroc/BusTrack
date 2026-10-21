@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿
+using System.Runtime.InteropServices;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
@@ -139,13 +140,20 @@ namespace BusTrack.BusTrack.Tests.UsabilityTests
             {
                 var executableNames = OperatingSystem.IsWindows()
                     ? new[] { "chrome.exe", "chromium.exe" }
-                    : new[] { "google-chrome", "google-chrome-stable",
-                              "chromium", "chromium-browser" };
+                    : new[]
+                    {
+                        "google-chrome",
+                        "google-chrome-stable",
+                        "chromium",
+                        "chromium-browser"
+                    };
 
                 var pathExtensions = OperatingSystem.IsWindows()
                     ? (Environment.GetEnvironmentVariable("PATHEXT")
                        ?? ".EXE;.BAT;.CMD")
-                        .Split(';', StringSplitOptions.RemoveEmptyEntries)
+                        .Split(
+                            ';',
+                            StringSplitOptions.RemoveEmptyEntries)
                     : new[] { string.Empty };
 
                 foreach (var directory in pathEnvironment.Split(
@@ -227,20 +235,113 @@ namespace BusTrack.BusTrack.Tests.UsabilityTests
             WaitForUrl("/dashboard");
 
             var passengersCard =
-                _driver.FindElement(
+                WaitForElementClickable(
                     By.XPath(
                         "//button[contains(@class,'dashboard-card')]" +
-                        "[.//h2[normalize-space()='Passageiros']]"));
+                        "[.//h2[normalize-space()='Passageiros']]"),
+                    TimeSpan.FromSeconds(10));
 
             Assert.NotNull(passengersCard);
 
-            passengersCard.Click();
+            ScrollElementToCenter(passengersCard);
+
+            ClickWithRetry(
+                By.XPath(
+                    "//button[contains(@class,'dashboard-card')]" +
+                    "[.//h2[normalize-space()='Passageiros']]"),
+                TimeSpan.FromSeconds(5));
 
             WaitForUrl("/passengers");
 
             Assert.EndsWith(
                 "/passengers",
                 _driver.Url);
+        }
+
+        private IWebElement WaitForElementClickable(
+            By locator,
+            TimeSpan timeout)
+        {
+            var deadline = DateTime.UtcNow.Add(timeout);
+            Exception? lastException = null;
+
+            while (DateTime.UtcNow < deadline)
+            {
+                try
+                {
+                    var element = _driver.FindElement(locator);
+
+                    if (element.Displayed && element.Enabled)
+                    {
+                        return element;
+                    }
+                }
+                catch (NoSuchElementException exception)
+                {
+                    lastException = exception;
+                }
+                catch (StaleElementReferenceException exception)
+                {
+                    lastException = exception;
+                }
+
+                Thread.Sleep(200);
+            }
+
+            throw new WebDriverTimeoutException(
+                $"O elemento '{locator}' não ficou disponível para clique.",
+                lastException);
+        }
+
+        private void ScrollElementToCenter(IWebElement element)
+        {
+            ((IJavaScriptExecutor)_driver).ExecuteScript(
+                "arguments[0].scrollIntoView({" +
+                "behavior: 'instant'," +
+                "block: 'center'," +
+                "inline: 'center'" +
+                "});",
+                element);
+
+            Thread.Sleep(200);
+        }
+
+        private void ClickWithRetry(
+            By locator,
+            TimeSpan timeout)
+        {
+            var deadline = DateTime.UtcNow.Add(timeout);
+            Exception? lastException = null;
+
+            while (DateTime.UtcNow < deadline)
+            {
+                try
+                {
+                    var element = WaitForElementClickable(
+                        locator,
+                        TimeSpan.FromSeconds(2));
+
+                    ScrollElementToCenter(element);
+                    element.Click();
+
+                    return;
+                }
+                catch (ElementClickInterceptedException exception)
+                {
+                    lastException = exception;
+                }
+                catch (StaleElementReferenceException exception)
+                {
+                    lastException = exception;
+                }
+
+                Thread.Sleep(300);
+            }
+
+            throw new WebDriverTimeoutException(
+                $"Não foi possível clicar no elemento '{locator}' " +
+                "dentro do tempo limite.",
+                lastException);
         }
 
         private void AcceptAlertIfPresent()

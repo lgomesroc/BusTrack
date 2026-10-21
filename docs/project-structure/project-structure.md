@@ -1114,6 +1114,7 @@ BusTrack/
 │   │   │   ├── DashboardControllerAPIIntegrationTests.cs
 │   │   │   ├── DriverControllerAPIIntegrationTest.cs
 │   │   │   ├── JwtAuthenticationIntegrationTests.cs
+│   │   │   ├── MaintenanceControllerAPIIntegrationTests.cs
 │   │   │   ├── PassengerControllerAPIIntegrationTest.cs
 │   │   │   ├── RouteControllerAPIIntegrationTest.cs
 │   │   │   └── TripControllerAPIIntegrationTest.cs
@@ -1146,6 +1147,7 @@ BusTrack/
 │   │   │   └── UserPresenceControllerAPIUnitTests.cs
 │   │   ├── ServicesAPI
 │   │   │   ├── JwtTokenServiceAPITests.cs
+│   │   │   ├── MaintenanceServiceAPIUnitTests.cs
 │   │   │   ├── TripServiceAPIUnitTests.cs
 │   │   │   └── UserAuthenticationServiceAPITests.cs
 │   ├── UsabilityTests/
