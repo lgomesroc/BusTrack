@@ -1,3 +1,4 @@
+
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -13,11 +14,18 @@ namespace BusTrack.Tests.UnitTests.ServicesAPI
         private const string TestKey =
             "BusTrack-unit-test-signing-key-not-for-production-2026";
 
+        private const string TestBrowserId =
+            "11111111111111111111111111111111";
+
+        private const string TestSessionId =
+            "22222222222222222222222222222222";
+
         [Fact]
         public void CreateToken_ReturnsSignedTokenWithExpectedClaims()
         {
             var configuration = CreateConfiguration(TestKey);
             var service = new JwtTokenServiceAPI(configuration);
+
             var user = new UserDB
             {
                 Id = "000000000000000000000001",
@@ -25,29 +33,43 @@ namespace BusTrack.Tests.UnitTests.ServicesAPI
                 FullName = "Test User"
             };
 
-            var (accessToken, expiresAtUtc) = service.CreateToken(user);
+            var (accessToken, expiresAtUtc) =
+                service.CreateToken(
+                    user,
+                    TestBrowserId,
+                    TestSessionId);
 
-            var validationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidIssuer = "BusTrack.Tests",
-                ValidateAudience = true,
-                ValidAudience = "BusTrack.Tests.Client",
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(TestKey)),
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero
-            };
+            var validationParameters =
+                new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = "BusTrack.Tests",
+                    ValidateAudience = true,
+                    ValidAudience = "BusTrack.Tests.Client",
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey =
+                        new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(TestKey)),
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                };
 
-            var principal = new JwtSecurityTokenHandler().ValidateToken(
-                accessToken,
-                validationParameters,
-                out var validatedToken);
+            var principal =
+                new JwtSecurityTokenHandler().ValidateToken(
+                    accessToken,
+                    validationParameters,
+                    out var validatedToken);
 
             Assert.IsType<JwtSecurityToken>(validatedToken);
-            Assert.Equal("user@example.com", principal.FindFirst(ClaimTypes.Email)?.Value);
-            Assert.Equal("000000000000000000000001",
+
+            Assert.Equal(
+                "user@example.com",
+                principal.FindFirst(ClaimTypes.Email)?.Value);
+
+            Assert.Equal(
+                "000000000000000000000001",
                 principal.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
             Assert.True(expiresAtUtc > DateTime.UtcNow);
         }
 
@@ -58,22 +80,26 @@ namespace BusTrack.Tests.UnitTests.ServicesAPI
             var service = new JwtTokenServiceAPI(configuration);
 
             Assert.Throws<InvalidOperationException>(() =>
-                service.CreateToken(new UserDB
-                {
-                    Id = "000000000000000000000001",
-                    Email = "user@example.com"
-                }));
+                service.CreateToken(
+                    new UserDB
+                    {
+                        Id = "000000000000000000000001",
+                        Email = "user@example.com"
+                    },
+                    TestBrowserId,
+                    TestSessionId));
         }
 
         private static IConfiguration CreateConfiguration(string key) =>
             new ConfigurationBuilder()
-                .AddInMemoryCollection(new Dictionary<string, string?>
-                {
-                    ["JwtSettings:SecretKey"] = key,
-                    ["JwtSettings:Issuer"] = "BusTrack.Tests",
-                    ["JwtSettings:Audience"] = "BusTrack.Tests.Client",
-                    ["JwtSettings:ExpirationInMinutes"] = "30"
-                })
+                .AddInMemoryCollection(
+                    new Dictionary<string, string?>
+                    {
+                        ["JwtSettings:SecretKey"] = key,
+                        ["JwtSettings:Issuer"] = "BusTrack.Tests",
+                        ["JwtSettings:Audience"] = "BusTrack.Tests.Client",
+                        ["JwtSettings:ExpirationInMinutes"] = "30"
+                    })
                 .Build();
     }
 }
