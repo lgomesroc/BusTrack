@@ -1,3 +1,4 @@
+
 {
   "name": "bustrack.frontend.client",
   "version": "0.0.0",
@@ -12,6 +13,9 @@
     "start:default": "ng serve --ssl --ssl-cert \"$HOME/.aspnet/https/${npm_package_name}.pem\" --ssl-key \"$HOME/.aspnet/https/${npm_package_name}.key\" --host=127.0.0.1"
   },
   "private": true,
+  "overrides": {
+    "critters": "npm:beasties@0.3.4"
+  },
   "dependencies": {
     "@angular/animations": "^17.3.0",
     "@angular/cdk": "^17.3.10",
@@ -36,7 +40,7 @@
     "@angular/cli": "^17.3.6",
     "@angular/compiler-cli": "^17.3.0",
     "@angular/core": "^17.3.6",
-    "@angular/router": "^17.3.6",
+    "@angular/router": "^17.3.0",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^20.12.12",
     "jasmine-core": "~5.1.0",

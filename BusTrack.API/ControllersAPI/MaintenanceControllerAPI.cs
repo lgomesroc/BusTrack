@@ -30,13 +30,21 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         {
             var item = await _service.GetByIdAsync(id);
 
-            return item is null
+            return item is null ? NotFound() : Ok(item);
+        }
+
+        [HttpGet("{id}/audit")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> GetAudit(string id)
+        {
+            var history = await _service.GetAuditAsync(id);
+
+            return history is null
                 ? NotFound()
-                : Ok(item);
+                : Ok(history);
         }
 
         [HttpPost]
-        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Post(
             [FromBody] MaintenanceDTOAPI maintenance)
         {
@@ -81,13 +89,33 @@ namespace BusTrack.BusTrack.API.ControllersAPI
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "ADMIN")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(
+            string id,
+            [FromQuery] string? reason)
         {
-            var deleted = await _service.DeleteAsync(id);
+            if (string.IsNullOrWhiteSpace(reason))
+            {
+                return BadRequest(new
+                {
+                    message = "A justificativa da exclusão é obrigatória."
+                });
+            }
 
-            return deleted
-                ? NoContent()
-                : NotFound();
+            var deleted = await _service.DeleteAsync(id, reason);
+
+            if (deleted)
+            {
+                return NoContent();
+            }
+
+            var existing = await _service.GetByIdAsync(id);
+
+            return existing is null
+                ? NotFound()
+                : BadRequest(new
+                {
+                    message = "A manutenção não pode ser excluída. Verifique o status e a justificativa."
+                });
         }
     }
 }

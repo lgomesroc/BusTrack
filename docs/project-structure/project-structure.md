@@ -882,6 +882,7 @@ BusTrack/
 │   │   ├── EmailConfirmationDB.cs
 │   │   ├── InspectorDB.cs
 │   │   ├── LoginDB.cs
+│   │   ├── MaintenanceAuditDB.cs
 │   │   ├── MaintenanceDB.cs
 │   │   ├── PassengerDB.cs
 │   │   ├── PasswordHistoryDB.cs
@@ -911,6 +912,7 @@ BusTrack/
 │   │   │   ├── IAccountRepositoryDB.cs
 │   │   │   ├── IBusRepositoryDB.cs
 │   │   │   ├── IDriverRepositoryDB.cs
+│   │   │   ├── IMaintenanceAuditRepositoryDB.cs
 │   │   │   ├── IMaintenanceRepositoryDB.cs
 │   │   │   ├── IPassengerRepositoryDB.cs
 │   │   │   ├── IRouteRepositoryDB.cs
@@ -930,6 +932,7 @@ BusTrack/
 │   │   ├── BusRepositoryDB.cs
 │   │   ├── DriverRepositoryDB.cs
 │   │   ├── InspectorRepositoryDB.cs
+│   │   ├── MaintenanceAuditRepositoryDB.cs
 │   │   ├── MaintenanceRepositoryDB.cs
 │   │   ├── PassengerRepositoryDB.cs
 │   │   ├── RouteRepositoryDB.cs
@@ -942,7 +945,7 @@ BusTrack/
 │   │   ├── MinTripDurationContraintServiceDB.cs
 │   │   ├── TripMappingServiceDB.cs
 │   │   ├── TripServiceDB.cs
-│   │   ├── TripStatusUpdateServiceDB.cs
+│   │   └── TripStatusUpdateServiceDB.cs
 ├── BusTrack.Frontend/
 │   ├── bustrack.frontend.client/
 │   │   ├── src/
@@ -1004,9 +1007,9 @@ BusTrack/
 │   │   │   │   │   │   └── update-password.component.ts
 │   │   │   │   ├── main/
 │   │   │   │   │   ├── admin-dashboard/
-│   │   │   │   │   │   ├── admin-dashboard.component.ts
+│   │   │   │   │   │   ├── admin-dashboard.component.css
 │   │   │   │   │   │   ├── admin-dashboard.component.html
-│   │   │   │   │   │   └── admin-dashboard.component.css
+│   │   │   │   │   │   └── admin-dashboard.component.ts
 │   │   │   │   │   ├── buses/
 │   │   │   │   │   │   ├── buses.component.css
 │   │   │   │   │   │   ├── buses.component.html
@@ -1053,9 +1056,9 @@ BusTrack/
 │   │   │   │   │   │   ├── trips.component.html
 │   │   │   │   │   │   └── trips.component.ts
 │   │   │   │   │   └── user-dashboard/
-│   │   │   │   │   │   ├── user-dashboard.component.ts
+│   │   │   │   │   │   ├── user-dashboard.component.css
 │   │   │   │   │   │   ├── user-dashboard.component.html
-│   │   │   │   │   │   └── user-dashboard.component.css
+│   │   │   │   │   │   └── user-dashboard.component.ts
 │   │   │   │   ├── models/
 │   │   │   │   │   └── user.model.ts
 │   │   │   │   ├── services/

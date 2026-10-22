@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -46,7 +47,9 @@ export class MaintenanceService {
     return this.http.put<Maintenance>(`${this.apiUrl}/${id}`, payload);
   }
 
-  delete(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  delete(id: string, reason: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, {
+      params: { reason }
+    });
   }
 }

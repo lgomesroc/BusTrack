@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using BusTrack.BusTrack.API.DTOAPI;
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
+using BusTrack.BusTrack.DB.Classes;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -25,6 +26,7 @@ public class MaintenanceControllerAPIIntegrationTests : IDisposable
         "BusTrack-test-only-signing-key-not-for-production-2026";
     private const string TestIssuer = "BusTrack.Tests";
     private const string TestAudience = "BusTrack.Tests.Client";
+    private const string DeleteReason = "Registro criado por engano";
 
     private readonly MaintenanceTestFactory _factory;
     private readonly HttpClient _client;
@@ -101,23 +103,35 @@ public class MaintenanceControllerAPIIntegrationTests : IDisposable
             content);
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-    }
-
-    [Fact]
-    public async Task Post_WhenUserRole_ReturnsForbidden()
-    {
-        using var client = CreateClient("USER");
-        using var content = CreateJsonContent(CreateMaintenance());
-        using var response = await client.PostAsync(
-            "/api/Maintenance",
-            content);
-
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
 
         _factory.ServiceMock.Verify(
             service => service.CreateAsync(
                 It.IsAny<MaintenanceDTOAPI>()),
-            Times.Never);
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task Post_WhenUserRoleAndDataIsValid_ReturnsCreated()
+    {
+        var maintenance = CreateMaintenance();
+
+        _factory.ServiceMock
+            .Setup(service => service.CreateAsync(
+                It.IsAny<MaintenanceDTOAPI>()))
+            .ReturnsAsync(maintenance);
+
+        using var client = CreateClient("USER");
+        using var content = CreateJsonContent(maintenance);
+        using var response = await client.PostAsync(
+            "/api/Maintenance",
+            content);
+
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
+        _factory.ServiceMock.Verify(
+            service => service.CreateAsync(
+                It.IsAny<MaintenanceDTOAPI>()),
+            Times.Once);
     }
 
     [Fact]
@@ -176,17 +190,42 @@ public class MaintenanceControllerAPIIntegrationTests : IDisposable
     }
 
     [Fact]
-    public async Task Delete_WhenAdminAndDeletionSucceeds_ReturnsNoContent()
+    public async Task Delete_WhenAdminAndReasonProvided_ReturnsNoContent()
     {
         _factory.ServiceMock
-            .Setup(service => service.DeleteAsync(MaintenanceId))
+            .Setup(service => service.DeleteAsync(
+                MaintenanceId,
+                DeleteReason))
             .ReturnsAsync(true);
 
         using var client = CreateClient("ADMIN");
         using var response = await client.DeleteAsync(
-            $"/api/Maintenance/{MaintenanceId}");
+            $"/api/Maintenance/{MaintenanceId}?reason=" +
+            Uri.EscapeDataString(DeleteReason));
 
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+
+        _factory.ServiceMock.Verify(
+            service => service.DeleteAsync(
+                MaintenanceId,
+                DeleteReason),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task Delete_WhenReasonIsMissing_ReturnsBadRequest()
+    {
+        using var client = CreateClient("ADMIN");
+        using var response = await client.DeleteAsync(
+            $"/api/Maintenance/{MaintenanceId}");
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        _factory.ServiceMock.Verify(
+            service => service.DeleteAsync(
+                It.IsAny<string>(),
+                It.IsAny<string>()),
+            Times.Never);
     }
 
     [Fact]
@@ -194,27 +233,65 @@ public class MaintenanceControllerAPIIntegrationTests : IDisposable
     {
         using var client = CreateClient("USER");
         using var response = await client.DeleteAsync(
-            $"/api/Maintenance/{MaintenanceId}");
+            $"/api/Maintenance/{MaintenanceId}?reason=" +
+            Uri.EscapeDataString(DeleteReason));
 
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
 
         _factory.ServiceMock.Verify(
-            service => service.DeleteAsync(It.IsAny<string>()),
+            service => service.DeleteAsync(
+                It.IsAny<string>(),
+                It.IsAny<string>()),
             Times.Never);
     }
 
     [Fact]
-    public async Task Delete_WhenMaintenanceDoesNotExist_ReturnsNotFound()
+    public async Task Delete_WhenServiceRejectsDeletion_ReturnsNotFound()
     {
         _factory.ServiceMock
-            .Setup(service => service.DeleteAsync(MaintenanceId))
+            .Setup(service => service.DeleteAsync(
+                MaintenanceId,
+                DeleteReason))
             .ReturnsAsync(false);
+
+        _factory.ServiceMock
+            .Setup(service => service.GetByIdAsync(MaintenanceId))
+            .ReturnsAsync((MaintenanceDTOAPI?)null);
 
         using var client = CreateClient("ADMIN");
         using var response = await client.DeleteAsync(
-            $"/api/Maintenance/{MaintenanceId}");
+            $"/api/Maintenance/{MaintenanceId}?reason=" +
+            Uri.EscapeDataString(DeleteReason));
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetAudit_WhenAdmin_ReturnsOk()
+    {
+        _factory.ServiceMock
+            .Setup(service => service.GetAuditAsync(MaintenanceId))
+            .ReturnsAsync(new List<MaintenanceAuditDB>());
+
+        using var client = CreateClient("ADMIN");
+        using var response = await client.GetAsync(
+            $"/api/Maintenance/{MaintenanceId}/audit");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetAudit_WhenUserRole_ReturnsForbidden()
+    {
+        using var client = CreateClient("USER");
+        using var response = await client.GetAsync(
+            $"/api/Maintenance/{MaintenanceId}/audit");
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+
+        _factory.ServiceMock.Verify(
+            service => service.GetAuditAsync(It.IsAny<string>()),
+            Times.Never);
     }
 
     private HttpClient CreateClient(string role)
@@ -232,6 +309,7 @@ public class MaintenanceControllerAPIIntegrationTests : IDisposable
     private static string CreateTestToken(string role)
     {
         var now = DateTime.UtcNow;
+
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(TestKey));
 
@@ -244,8 +322,12 @@ public class MaintenanceControllerAPIIntegrationTests : IDisposable
             audience: TestAudience,
             claims:
             [
-                new Claim(ClaimTypes.NameIdentifier, "507f1f77bcf86cd799439099"),
-                new Claim(ClaimTypes.Name, "Maintenance Integration Test"),
+                new Claim(
+                    ClaimTypes.NameIdentifier,
+                    "507f1f77bcf86cd799439099"),
+                new Claim(
+                    ClaimTypes.Name,
+                    "Maintenance Integration Test"),
                 new Claim(ClaimTypes.Role, role)
             ],
             notBefore: now.AddSeconds(-5),

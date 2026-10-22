@@ -1,8 +1,11 @@
-﻿using AutoMapper;
+﻿
+using AutoMapper;
 using BusTrack.BusTrack.API.DTOAPI;
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
 using BusTrack.BusTrack.DB.Classes;
 using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 using MongoDB.Bson;
 
 namespace BusTrack.BusTrack.API.ServicesAPI
@@ -23,8 +26,12 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
         private readonly IMaintenanceRepositoryDB _repository;
         private readonly IBusRepositoryDB _busRepository;
+        private readonly IMaintenanceAuditRepositoryDB? _auditRepository;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor? _httpContextAccessor;
 
+        // Mantém compatibilidade com testes e chamadas existentes
+        // que ainda instanciam o serviço com três dependências.
         public MaintenanceServiceAPI(
             IMaintenanceRepositoryDB repository,
             IBusRepositoryDB busRepository,
@@ -33,6 +40,19 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             _repository = repository;
             _busRepository = busRepository;
             _mapper = mapper;
+        }
+
+        // Construtor utilizado pela injeção de dependências da aplicação.
+        public MaintenanceServiceAPI(
+            IMaintenanceRepositoryDB repository,
+            IBusRepositoryDB busRepository,
+            IMapper mapper,
+            IMaintenanceAuditRepositoryDB auditRepository,
+            IHttpContextAccessor httpContextAccessor)
+            : this(repository, busRepository, mapper)
+        {
+            _auditRepository = auditRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<IEnumerable<MaintenanceDTOAPI>> GetAllAsync()
@@ -55,6 +75,25 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 : _mapper.Map<MaintenanceDTOAPI>(item);
         }
 
+        public async Task<IEnumerable<MaintenanceAuditDB>?> GetAuditAsync(
+            string id)
+        {
+            if (!ObjectId.TryParse(id, out _) ||
+                _auditRepository is null)
+            {
+                return [];
+            }
+
+            var item = await _repository.GetByIdIncludingDeletedAsync(id);
+
+            if (item is null)
+            {
+                return [];
+            }
+
+            return await _auditRepository.GetByMaintenanceIdAsync(id);
+        }
+
         public async Task<MaintenanceDTOAPI?> CreateAsync(
             MaintenanceDTOAPI maintenance)
         {
@@ -66,7 +105,19 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             }
 
             var entity = _mapper.Map<MaintenanceDB>(normalized);
+            entity.IsDeleted = false;
+            entity.DeletedAtUtc = null;
+            entity.DeletedBy = null;
+            entity.DeletionReason = null;
+
             var created = await _repository.CreateAsync(entity);
+
+            await RecordAuditAsync(
+                created,
+                "Created",
+                "Criação da manutenção",
+                null,
+                created);
 
             return _mapper.Map<MaintenanceDTOAPI>(created);
         }
@@ -95,6 +146,8 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 return null;
             }
 
+            var before = existing.ToBsonDocument();
+
             _mapper.Map(normalized, existing);
             existing.Id = id;
 
@@ -105,17 +158,160 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 return null;
             }
 
-            return _mapper.Map<MaintenanceDTOAPI>(existing);
-        }
+            var saved = await _repository.GetByIdAsync(id);
 
-        public Task<bool> DeleteAsync(string id)
-        {
-            if (!ObjectId.TryParse(id, out _))
+            if (saved is null)
             {
-                return Task.FromResult(false);
+                return null;
             }
 
-            return _repository.DeleteAsync(id);
+            await RecordAuditAsync(
+                saved,
+                "Updated",
+                "Alteração da manutenção",
+                before,
+                saved);
+
+            return _mapper.Map<MaintenanceDTOAPI>(saved);
+        }
+
+        public async Task<bool> DeleteAsync(string id, string reason)
+        {
+            if (!ObjectId.TryParse(id, out _) ||
+                string.IsNullOrWhiteSpace(reason) ||
+                reason.Trim().Length > 1000)
+            {
+                return false;
+            }
+
+            var existing = await _repository.GetByIdAsync(id);
+
+            if (existing is null ||
+                !string.Equals(
+                    existing.Status?.Trim(),
+                    "Agendada",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            var before = existing.ToBsonDocument();
+
+            existing.IsDeleted = true;
+            existing.DeletedAtUtc = DateTime.UtcNow;
+            existing.DeletedBy = GetCurrentActor();
+            existing.DeletionReason = reason.Trim();
+
+            var deleted = await _repository.SoftDeleteAsync(id, existing);
+
+            if (!deleted)
+            {
+                return false;
+            }
+
+            await RecordAuditAsync(
+                existing,
+                "Deleted",
+                reason.Trim(),
+                before,
+                existing);
+
+            return true;
+        }
+
+        private async Task RecordAuditAsync(
+            MaintenanceDB maintenance,
+            string action,
+            string? reason,
+            BsonDocument? before,
+            MaintenanceDB after)
+        {
+            // Em produção, o repositório é registrado no Program.cs.
+            // Se estiver ausente, não fingimos que a auditoria foi gravada.
+            if (_auditRepository is null)
+            {
+                throw new InvalidOperationException(
+                    "O repositório de auditoria de manutenção não foi configurado.");
+            }
+
+            var afterDocument = after.ToBsonDocument();
+
+            var audit = new MaintenanceAuditDB
+            {
+                MaintenanceId = maintenance.Id!,
+                Action = action,
+                OccurredAtUtc = DateTime.UtcNow,
+                PerformedBy = GetCurrentActor(),
+                Reason = reason,
+                Snapshot = afterDocument,
+                Changes = BuildChanges(before, afterDocument)
+            };
+
+            await _auditRepository.CreateAsync(audit);
+        }
+
+        private static List<MaintenanceAuditChangeDB> BuildChanges(
+            BsonDocument? before,
+            BsonDocument after)
+        {
+            var changes = new List<MaintenanceAuditChangeDB>();
+
+            if (before is null)
+            {
+                foreach (var field in after.Elements)
+                {
+                    changes.Add(new MaintenanceAuditChangeDB
+                    {
+                        Field = field.Name,
+                        OldValue = null,
+                        NewValue = field.Value.ToJson()
+                    });
+                }
+
+                return changes;
+            }
+
+            var names = before.Names
+                .Union(after.Names, StringComparer.Ordinal)
+                .Distinct(StringComparer.Ordinal);
+
+            foreach (var name in names)
+            {
+                var hasOld = before.TryGetValue(name, out var oldValue);
+                var hasNew = after.TryGetValue(name, out var newValue);
+
+                var oldText = hasOld ? oldValue.ToJson() : null;
+                var newText = hasNew ? newValue.ToJson() : null;
+
+                if (string.Equals(oldText, newText, StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                changes.Add(new MaintenanceAuditChangeDB
+                {
+                    Field = name,
+                    OldValue = oldText,
+                    NewValue = newText
+                });
+            }
+
+            return changes;
+        }
+
+        private string GetCurrentActor()
+        {
+            var user = _httpContextAccessor?.HttpContext?.User;
+
+            var actor =
+                user?.FindFirst(ClaimTypes.NameIdentifier)?.Value ??
+                user?.FindFirst("sub")?.Value ??
+                user?.FindFirst(ClaimTypes.Email)?.Value ??
+                user?.Identity?.Name;
+
+            return string.IsNullOrWhiteSpace(actor)
+                ? "system"
+                : actor;
         }
 
         private async Task<MaintenanceDTOAPI?> NormalizeAndValidateAsync(
@@ -178,7 +374,8 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 return null;
             }
 
-            // Não se pode iniciar ou concluir um serviço com data futura.
+            // Serviços em andamento ou concluídos não podem ter
+            // data de serviço futura.
             if (normalizedStatus is "Em andamento" or "Concluída" &&
                 serviceDate > today)
             {
