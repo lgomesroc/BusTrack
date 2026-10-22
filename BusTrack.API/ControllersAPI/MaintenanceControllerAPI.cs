@@ -45,7 +45,6 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         }
 
         [HttpPost]
-        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Post(
             [FromBody] MaintenanceDTOAPI maintenance)
         {

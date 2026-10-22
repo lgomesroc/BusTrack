@@ -1,4 +1,3 @@
-
 <div class="trips-container">
   <header class="trips-header">
     <div>
@@ -105,7 +104,7 @@
           type="number"
           min="0"
           [(ngModel)]="tripForm.duration"
-      />
+        />
       </div>
 
       <div class="form-group">
@@ -227,7 +226,7 @@
             <td>{{ trip.arrivalTime | date:'dd/MM/yyyy HH:mm' }}</td>
             <td>{{ trip.duration }} min</td>
             <td>{{ trip.limitPassengers }}</td>
-            <td>{{ trip.passengers?.length ?? 0 }}</td>
+            <td>{{ trip.passengers.length }}</td>
 
             <td class="actions-cell">
               <button

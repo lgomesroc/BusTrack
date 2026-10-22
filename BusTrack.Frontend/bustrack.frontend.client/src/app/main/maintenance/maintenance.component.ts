@@ -298,18 +298,46 @@ export class MaintenanceComponent implements OnInit {
   }
 
   delete(item: Maintenance): void {
+    if (this.isLoading) {
+      return;
+    }
+
+    this.errorMessage = '';
+
+    const reasonInput = window.prompt(
+      `Informe a justificativa para excluir a manutenção "${item.serviceType}" do ônibus ${item.busNumber}:`
+    );
+
+    // Cancelar o prompt não executa a exclusão.
+    if (reasonInput === null) {
+      return;
+    }
+
+    const reason = reasonInput.trim();
+
+    if (!reason) {
+      this.errorMessage =
+        'Informe uma justificativa para excluir a manutenção.';
+      return;
+    }
+
+    if (reason.length > 1000) {
+      this.errorMessage =
+        'A justificativa deve ter no máximo 1000 caracteres.';
+      return;
+    }
+
     if (
       !window.confirm(
-        `Deseja excluir a manutenção "${item.serviceType}" do ônibus ${item.busNumber}?`
+        `Confirma a exclusão lógica desta manutenção?\n\nJustificativa: ${reason}`
       )
     ) {
       return;
     }
 
     this.isLoading = true;
-    this.errorMessage = '';
 
-    this.maintenanceService.delete(item.id).subscribe({
+    this.maintenanceService.delete(item.id, reason).subscribe({
       next: () => {
         this.maintenances = this.maintenances.filter(
           current => current.id !== item.id

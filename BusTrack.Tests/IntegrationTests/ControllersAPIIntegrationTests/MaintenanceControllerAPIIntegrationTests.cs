@@ -103,23 +103,35 @@ public class MaintenanceControllerAPIIntegrationTests : IDisposable
             content);
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-    }
-
-    [Fact]
-    public async Task Post_WhenUserRole_ReturnsForbidden()
-    {
-        using var client = CreateClient("USER");
-        using var content = CreateJsonContent(CreateMaintenance());
-        using var response = await client.PostAsync(
-            "/api/Maintenance",
-            content);
-
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
 
         _factory.ServiceMock.Verify(
             service => service.CreateAsync(
                 It.IsAny<MaintenanceDTOAPI>()),
-            Times.Never);
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task Post_WhenUserRoleAndDataIsValid_ReturnsCreated()
+    {
+        var maintenance = CreateMaintenance();
+
+        _factory.ServiceMock
+            .Setup(service => service.CreateAsync(
+                It.IsAny<MaintenanceDTOAPI>()))
+            .ReturnsAsync(maintenance);
+
+        using var client = CreateClient("USER");
+        using var content = CreateJsonContent(maintenance);
+        using var response = await client.PostAsync(
+            "/api/Maintenance",
+            content);
+
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
+        _factory.ServiceMock.Verify(
+            service => service.CreateAsync(
+                It.IsAny<MaintenanceDTOAPI>()),
+            Times.Once);
     }
 
     [Fact]

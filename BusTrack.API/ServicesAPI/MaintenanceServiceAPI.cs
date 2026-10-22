@@ -75,7 +75,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 : _mapper.Map<MaintenanceDTOAPI>(item);
         }
 
-        public async Task<IEnumerable<MaintenanceAuditDB>> GetAuditAsync(
+        public async Task<IEnumerable<MaintenanceAuditDB>?> GetAuditAsync(
             string id)
         {
             if (!ObjectId.TryParse(id, out _) ||
