@@ -12,12 +12,18 @@ namespace BusTrack.BusTrack.DB.RepositoriesDB
 
         public MaintenanceRepositoryDB(IMongoDatabase database)
         {
-            _collection = database.GetCollection<MaintenanceDB>("Maintenances");
+            _collection = database.GetCollection<MaintenanceDB>(
+                "Maintenances");
         }
 
         public async Task<IEnumerable<MaintenanceDB>> GetAllAsync()
         {
-            return await _collection.Find(_ => true)
+            var filter = Builders<MaintenanceDB>.Filter.Ne(
+                item => item.IsDeleted,
+                true);
+
+            return await _collection
+                .Find(filter)
                 .SortByDescending(item => item.ServiceDate)
                 .ToListAsync();
         }
@@ -29,43 +35,79 @@ namespace BusTrack.BusTrack.DB.RepositoriesDB
                 return null;
             }
 
-            return await _collection.Find(item => item.Id == id)
+            var filter = Builders<MaintenanceDB>.Filter.And(
+                Builders<MaintenanceDB>.Filter.Eq(item => item.Id, id),
+                Builders<MaintenanceDB>.Filter.Ne(item => item.IsDeleted, true));
+
+            return await _collection
+                .Find(filter)
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<MaintenanceDB> CreateAsync(MaintenanceDB maintenance)
+        public async Task<MaintenanceDB?> GetByIdIncludingDeletedAsync(
+            string id)
+        {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                return null;
+            }
+
+            return await _collection
+                .Find(item => item.Id == id)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<MaintenanceDB> CreateAsync(
+            MaintenanceDB maintenance)
         {
             await _collection.InsertOneAsync(maintenance);
             return maintenance;
         }
 
-        public async Task<bool> UpdateAsync(string id, MaintenanceDB maintenance)
+        public async Task<bool> UpdateAsync(
+            string id,
+            MaintenanceDB maintenance)
         {
-            if (!ObjectId.TryParse(id, out _))
+            if (!ObjectId.TryParse(id, out _) || maintenance.IsDeleted)
             {
                 return false;
             }
 
             maintenance.Id = id;
 
+            var filter = Builders<MaintenanceDB>.Filter.And(
+                Builders<MaintenanceDB>.Filter.Eq(item => item.Id, id),
+                Builders<MaintenanceDB>.Filter.Ne(item => item.IsDeleted, true));
+
             var result = await _collection.ReplaceOneAsync(
-                item => item.Id == id,
+                filter,
                 maintenance);
 
             return result.MatchedCount > 0;
         }
 
-        public async Task<bool> DeleteAsync(string id)
+        public async Task<bool> SoftDeleteAsync(
+            string id,
+            MaintenanceDB maintenance)
         {
-            if (!ObjectId.TryParse(id, out _))
+            if (!ObjectId.TryParse(id, out _) ||
+                !maintenance.IsDeleted ||
+                string.IsNullOrWhiteSpace(maintenance.DeletionReason))
             {
                 return false;
             }
 
-            var result = await _collection.DeleteOneAsync(
-                item => item.Id == id);
+            maintenance.Id = id;
 
-            return result.DeletedCount > 0;
+            var filter = Builders<MaintenanceDB>.Filter.And(
+                Builders<MaintenanceDB>.Filter.Eq(item => item.Id, id),
+                Builders<MaintenanceDB>.Filter.Ne(item => item.IsDeleted, true));
+
+            var result = await _collection.ReplaceOneAsync(
+                filter,
+                maintenance);
+
+            return result.MatchedCount > 0;
         }
     }
 }
