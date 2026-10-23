@@ -1,16 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { UserService } from '../../services/user.service';
-import { UserData } from '../../models/user.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
+import { finalize } from 'rxjs';
+
+import { environment } from '../../../environments/environment';
 import { blockSavePasswordRule } from '../rules/blockSavePasswordRules/blockSavePasswordRule';
 import { disableInteractionsRule } from '../rules/disableInteractionsRules/disableInteractionsRule';
 import { disableKeyboardShortcutsRule } from '../rules/disableKeyboardShortcutsRules/disableKeyboardShortcutsRule';
 import { preventBackNavigationRule } from '../rules/preventBackNavigationRules/preventBackNavigationRule';
 import { preventForwardNavigationRule } from '../rules/preventForwardNavigationRules/preventForwardNavigationRule';
-import { startSessionTimeoutRule, clearSessionTimeoutRule } from '../rules/sessionTimeoutRules/sessionTimeoutRule';
-import { startInactivityTimerRule, clearInactivityTimerRule } from '../rules/inactivityTimerRules/inactivityTimerRule';
+
+interface ChangePasswordResponse {
+  success: boolean;
+}
 
 @Component({
   selector: 'app-update-password',
@@ -18,14 +21,24 @@ import { startInactivityTimerRule, clearInactivityTimerRule } from '../rules/ina
   styleUrls: ['./update-password.component.css']
 })
 export class UpdatePasswordComponent implements OnInit {
-  fullName: string = '';
-  cpf: string = '';
-  email: string = '';
-  newPassword: string = '';
-  confirmPassword: string = '';
-  errorMessage: string = '';
+  email = '';
+  currentPassword = '';
+  newPassword = '';
+  confirmPassword = '';
 
-  constructor(private router: Router, private http: HttpClient, private userService: UserService) { }
+  errorMessage = '';
+  successMessage = '';
+  isSubmitting = false;
+
+  private readonly genericErrorMessage =
+    'Não foi possível alterar a senha. ' +
+    'Verifique os dados informados e tente novamente.';
+
+  constructor(
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly http: HttpClient
+  ) {}
 
   ngOnInit(): void {
     blockSavePasswordRule();
@@ -33,74 +46,86 @@ export class UpdatePasswordComponent implements OnInit {
     disableKeyboardShortcutsRule();
     preventBackNavigationRule();
     preventForwardNavigationRule();
-    startSessionTimeoutRule(180000);
-    clearSessionTimeoutRule();
-    startInactivityTimerRule(120000);
-    clearInactivityTimerRule();
-    // Recupere os dados do usuário
-    this.userService.getUserData().subscribe((userData: UserData) => {
-      this.fullName = userData.fullName;
-      this.cpf = userData.cpf;
-      this.email = userData.email;
-    });
+
+    this.email =
+      this.route.snapshot.queryParamMap.get('email')?.trim() ?? '';
   }
 
   updatePassword(form: NgForm): void {
-    if (form.valid) {
-      if (this.newPassword !== this.confirmPassword) {
-        this.errorMessage = 'As senhas não coincidem. Por favor, digite novamente.';
-        return;
-      }
+    this.errorMessage = '';
+    this.successMessage = '';
 
-      if (!this.validatePassword(this.newPassword)) {
-        this.errorMessage = 'Senha inválida. Por favor, escolha uma senha mais forte.';
-        return;
-      }
-
-      const data = { email: this.email, newPassword: this.newPassword };
-      this.http.post<any>('http://localhost:7072/auth/login', data).subscribe({
-        next: (response) => {
-          if (response.senhaAtualizadaComSucesso) {
-            alert('Senha atualizada com sucesso!');
-            this.router.navigate(['/enter-the-system']);
-          } else {
-            this.errorMessage = response.mensagemDeErro || 'Erro desconhecido ao atualizar a senha.';
-          }
-        },
-        error: (err) => {
-          this.errorMessage = `Ocorreu um erro ao atualizar a senha: ${err.error.message}`;
-        }
-      });
-    } else {
-      alert('Por favor, preencha todos os campos corretamente.');
+    if (!this.email) {
+      this.errorMessage =
+        'Não foi possível identificar a conta. Volte ao login e tente novamente.';
+      return;
     }
+
+    if (!form.valid) {
+      this.errorMessage = 'Preencha todos os campos.';
+      return;
+    }
+
+    if (this.newPassword !== this.confirmPassword) {
+      this.errorMessage = 'As senhas não coincidem.';
+      return;
+    }
+
+    if (!this.validatePassword(this.newPassword)) {
+      this.errorMessage =
+        'A senha deve ter no mínimo 8 caracteres, 2 letras minúsculas, ' +
+        '2 maiúsculas, 2 números e 2 caracteres especiais.';
+      return;
+    }
+
+    this.isSubmitting = true;
+
+    this.http.post<ChangePasswordResponse>(
+      `${environment.apiUrl}/AuthenticationControllerAPI/change-password`,
+      {
+        email: this.email,
+        currentPassword: this.currentPassword,
+        newPassword: this.newPassword,
+        confirmPassword: this.confirmPassword
+      }
+    ).pipe(
+      finalize(() => {
+        this.isSubmitting = false;
+      })
+    ).subscribe({
+      next: response => {
+        if (!response?.success) {
+          this.errorMessage = this.genericErrorMessage;
+          return;
+        }
+
+        this.successMessage = 'Senha alterada com sucesso.';
+
+        this.currentPassword = '';
+        this.newPassword = '';
+        this.confirmPassword = '';
+
+        form.resetForm();
+
+        window.setTimeout(() => {
+          void this.router.navigate(['/enter-the-system']);
+        }, 1200);
+      },
+      error: () => {
+        this.errorMessage = this.genericErrorMessage;
+      }
+    });
   }
 
   validatePassword(password: string): boolean {
-    if (password.length < 8) {
-      return false;
-    }
-
-    if ((password.match(/[A-Z]/g) || []).length < 2) {
-      return false;
-    }
-
-    if ((password.match(/[a-z]/g) || []).length < 2) {
-      return false;
-    }
-
-    if (!/(?!.*(\d)\1)(?!.*(\d)(\d)\2)\d{2}/.test(password)) {
-      return false;
-    }
-
-    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password)) {
-      return false;
-    }
-
-    return true;
+    return password.length >= 8
+      && (password.match(/[a-z]/g) ?? []).length >= 2
+      && (password.match(/[A-Z]/g) ?? []).length >= 2
+      && (password.match(/[0-9]/g) ?? []).length >= 2
+      && (password.match(/[^a-zA-Z0-9\s]/g) ?? []).length >= 2;
   }
 
   cancelar(): void {
-    this.router.navigate(['/main-screen']);
+    void this.router.navigate(['/enter-the-system']);
   }
 }

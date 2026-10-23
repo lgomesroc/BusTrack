@@ -1,4 +1,5 @@
-﻿module.exports = function (config) {
+﻿
+module.exports = function (config) {
   config.set({
     basePath: '',
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
@@ -10,16 +11,11 @@
       require('@angular-devkit/build-angular/plugins/karma')
     ],
     client: {
-      jasmine: {
-        // you can add configuration options for Jasmine here
-        // the possible options are listed at https://jasmine.github.io/api/edge/Configuration.html
-        // for example, you can disable the random execution with `random: false`
-        // or set a specific seed with `seed: 4321`
-      },
-      clearContext: false // leave Jasmine Spec Runner output visible in browser
+      jasmine: {},
+      clearContext: false
     },
     jasmineHtmlReporter: {
-      suppressAll: true // removes the duplicated traces
+      suppressAll: true
     },
     coverageReporter: {
       dir: require('path').join(__dirname, './coverage/'),
@@ -30,6 +26,15 @@
       ]
     },
     reporters: ['progress', 'kjhtml'],
+    customLaunchers: {
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: [
+          '--no-sandbox',
+          '--disable-dev-shm-usage'
+        ]
+      }
+    },
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
@@ -37,8 +42,7 @@
     browsers: ['Chrome'],
     singleRun: false,
     restartOnFileChange: true,
-    listenAddress: 'localhost',
+    listenAddress: '0.0.0.0',
     hostname: 'localhost'
   });
 };
-

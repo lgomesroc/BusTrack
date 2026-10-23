@@ -1,10 +1,10 @@
-
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using BusTrack.BusTrack.API.ControllersAPI;
 using BusTrack.BusTrack.API.DTOAPI;
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
+using BusTrack.BusTrack.API.ServicesAPI;
 using BusTrack.BusTrack.DB.ClassesDB;
 using BusTrack.BusTrack.DB.InterfacesDB.IRepositoriesDB;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Moq;
+using Xunit;
 
 namespace BusTrack.BusTrack.Tests.UnitTests.ControllersAPIUnitTests
 {
@@ -27,6 +28,7 @@ namespace BusTrack.BusTrack.Tests.UnitTests.ControllersAPIUnitTests
         private readonly Mock<IConfiguration> _configurationMock;
         private readonly Mock<IMongoDatabase> _databaseMock;
         private readonly Mock<IMongoCollection<BsonDocument>> _sessionsCollectionMock;
+        private readonly Mock<IMongoCollection<BsonDocument>> _passwordRecoveriesCollectionMock;
 
         public AuthenticationControllerAPIUnitTests()
         {
@@ -48,6 +50,9 @@ namespace BusTrack.BusTrack.Tests.UnitTests.ControllersAPIUnitTests
             _sessionsCollectionMock =
                 new Mock<IMongoCollection<BsonDocument>>();
 
+            _passwordRecoveriesCollectionMock =
+                new Mock<IMongoCollection<BsonDocument>>();
+
             _databaseMock
                 .Setup(database =>
                     database.GetCollection<BsonDocument>(
@@ -61,6 +66,13 @@ namespace BusTrack.BusTrack.Tests.UnitTests.ControllersAPIUnitTests
                         "BusTrackActiveSessions",
                         It.IsAny<MongoCollectionSettings>()))
                 .Returns(_sessionsCollectionMock.Object);
+
+            _databaseMock
+                .Setup(database =>
+                    database.GetCollection<BsonDocument>(
+                        "BusTrackPasswordRecovery",
+                        It.IsAny<MongoCollectionSettings>()))
+                .Returns(_passwordRecoveriesCollectionMock.Object);
         }
 
         private AuthenticationControllerAPI CreateController(
@@ -119,10 +131,9 @@ namespace BusTrack.BusTrack.Tests.UnitTests.ControllersAPIUnitTests
                 Password = "wrong-password"
             };
 
-            var result =
-                await controller.Login(
-                    request,
-                    CancellationToken.None);
+            var result = await controller.Login(
+                request,
+                CancellationToken.None);
 
             var unauthorized =
                 Assert.IsType<UnauthorizedObjectResult>(result);
@@ -141,15 +152,20 @@ namespace BusTrack.BusTrack.Tests.UnitTests.ControllersAPIUnitTests
         [Fact]
         public async Task Login_WithValidCredentials_ReturnsAuthenticationResponse()
         {
+            var now = DateTime.UtcNow;
+
             var user = new UserDB
             {
                 Id = "user-1",
                 FullName = "Usuário Teste",
                 Email = "user@example.com",
-                Role = "USER"
+                Role = "USER",
+                CreatedAtUtc = now,
+                PasswordChangedAtUtc = now,
+                PasswordHistory = new List<string>()
             };
 
-            var expiresAt = DateTime.UtcNow.AddMinutes(30);
+            var expiresAt = now.AddMinutes(30);
 
             _userServiceMock
                 .Setup(service =>
@@ -173,8 +189,7 @@ namespace BusTrack.BusTrack.Tests.UnitTests.ControllersAPIUnitTests
                         It.IsAny<BsonDocument>(),
                         It.IsAny<ReplaceOptions>(),
                         It.IsAny<CancellationToken>()))
-                .ReturnsAsync(
-                    Mock.Of<ReplaceOneResult>());
+                .ReturnsAsync(Mock.Of<ReplaceOneResult>());
 
             var controller = CreateController();
 
@@ -184,16 +199,14 @@ namespace BusTrack.BusTrack.Tests.UnitTests.ControllersAPIUnitTests
                 Password = "correct-password"
             };
 
-            var result =
-                await controller.Login(
-                    request,
-                    CancellationToken.None);
+            var result = await controller.Login(
+                request,
+                CancellationToken.None);
 
             var ok = Assert.IsType<OkObjectResult>(result);
 
             var response =
-                Assert.IsType<AuthenticationResponseDTOAPI>(
-                    ok.Value);
+                Assert.IsType<AuthenticationResponseDTOAPI>(ok.Value);
 
             Assert.True(response.Success);
             Assert.Equal("test-access-token", response.AccessToken);
@@ -244,10 +257,9 @@ namespace BusTrack.BusTrack.Tests.UnitTests.ControllersAPIUnitTests
                 Password = null
             };
 
-            var result =
-                await controller.Login(
-                    request,
-                    CancellationToken.None);
+            var result = await controller.Login(
+                request,
+                CancellationToken.None);
 
             Assert.IsType<UnauthorizedObjectResult>(result);
 
@@ -267,7 +279,7 @@ namespace BusTrack.BusTrack.Tests.UnitTests.ControllersAPIUnitTests
                 Id = "user-1",
                 FullName = "Novo Usuário",
                 Email = "new@example.com",
-                Password = "password",
+                Password = "AbCd12!!",
                 Role = "ADMIN"
             };
 
@@ -284,6 +296,8 @@ namespace BusTrack.BusTrack.Tests.UnitTests.ControllersAPIUnitTests
 
             Assert.Equal(200, ok.StatusCode);
             Assert.Equal("USER", user.Role);
+            Assert.Equal(DateTime.UtcNow.Date, user.CreatedAtUtc?.Date);
+            Assert.NotNull(user.PasswordChangedAtUtc);
 
             _userServiceMock.Verify(
                 service => service.Create(user),

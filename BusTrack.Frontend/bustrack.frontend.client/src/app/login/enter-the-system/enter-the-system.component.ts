@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -24,6 +25,9 @@ interface LoginResponse {
   accessToken?: string;
   welcomeMessage?: string;
   message?: string;
+  code?: string;
+  passwordExpirationWarning?: boolean;
+  passwordDaysUntilExpiration?: number;
 }
 
 @Component({
@@ -55,22 +59,32 @@ export class EnterTheSystemComponent implements OnInit {
 
   login(form: NgForm): void {
     if (!form.valid) {
-      alert('Por favor, preencha todos os campos corretamente.');
+      this.errorMessage = 'Informe seu e-mail e sua senha.';
       return;
     }
 
-    const credentials = {
-      email: this.email,
-      password: this.password
-    };
+    this.errorMessage = '';
 
     this.http.post<LoginResponse>(
       `${environment.apiUrl}/AuthenticationControllerAPI/login`,
-      credentials
+      {
+        email: this.email,
+        password: this.password
+      }
     ).subscribe({
       next: (response) => {
         if (response.success && response.accessToken) {
           this.sessionService.startSession(response.accessToken);
+
+          if (response.passwordExpirationWarning) {
+            const days = response.passwordDaysUntilExpiration ?? 0;
+
+            alert(
+              days > 0
+                ? `Atenção: sua senha expirará em ${days} dia(s). Troque-a em breve.`
+                : `Atenção: sua senha expirou. Troque-a assim que possível.`
+            );
+          }
 
           alert(
             response.welcomeMessage ??
@@ -82,33 +96,29 @@ export class EnterTheSystemComponent implements OnInit {
         }
 
         this.sessionService.clearSession();
-
-        alert(
-          'O servidor não retornou um token de acesso válido. Tente novamente.'
-        );
+        this.errorMessage =
+          'O servidor não retornou um token de acesso válido.';
       },
-      error: (err) => {
+      error: (error) => {
         this.sessionService.clearSession();
 
-        if (this.loginAttempts > 0) {
-          const message =
-            err?.error?.message ??
-            'E-mail, senha ou ambos não encontrados. Por favor, tente novamente.';
+        if (error?.error?.code === 'PASSWORD_EXPIRED') {
+          this.errorMessage =
+            'Sua senha expirou. Use “Trocar senha” para criar uma nova.';
+          return;
+        }
 
-          alert(
-            `${message}\n\nTentativas restantes: ${this.loginAttempts}`
-          );
+        if (this.loginAttempts > 0) {
+          this.errorMessage =
+            error?.error?.message ??
+            'E-mail ou senha incorretos.';
 
           this.loginAttempts--;
           return;
         }
 
-        alert(
-          'Você excedeu o número máximo de tentativas de login. ' +
-          'Redirecionando para a tela de criar conta.'
-        );
-
-        void this.router.navigate(['/create-an-account']);
+        this.errorMessage =
+          'Você excedeu o número de tentativas desta tela. Tente novamente mais tarde.';
       }
     });
   }
@@ -118,15 +128,23 @@ export class EnterTheSystemComponent implements OnInit {
     this.password = '';
     this.sessionService.clearSession();
 
-    alert('Operação de login cancelada.');
-
     void this.router.navigate(['/main-screen']);
   }
 
   voltar(): void {
     this.sessionService.clearSession();
-
     void this.router.navigate(['/create-an-account']);
+  }
+
+  openChangePassword(): void {
+    void this.router.navigate(
+      ['/update-password'],
+      { queryParams: { email: this.email.trim() } }
+    );
+  }
+
+  openForgotPassword(): void {
+    void this.router.navigate(['/forgot-password']);
   }
 
   onSubmit(form: NgForm): void {

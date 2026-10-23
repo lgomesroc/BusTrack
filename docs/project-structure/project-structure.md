@@ -823,18 +823,24 @@ BusTrack/
 │   │   ├── UserControllerAPI.cs
 │   │   └── UserPresenceController.cs
 │   ├── DTOAPI/
+│   │   ├── AdminPasswordResetRequestDTOAPI.cs
 │   │   ├── AuthenticationResponseDTOAPI.cs
 │   │   ├── AdminDashboardDTOAPI.cs
 │   │   ├── BootstrapAdminRequestDTOAPI.cs
 │   │   ├── BusDTOAPI.cs
+│   │   ├── ChangePasswordRequestDTOAPI.cs
 │   │   ├── DriverDTOAPI.cs
+│   │   ├── ForgotPasswordRequestDTOAPI.cs
 │   │   ├── LoginRequestDTOAPI.cs
 │   │   ├── MaintenanceDTOAPI.cs
 │   │   ├── PassengerDTOAPI.cs
+│   │   ├── PasswordRecoveryRequestDTOAPI.cs
+│   │   ├── ResetPasswordRequestDTOAPI.cs
 │   │   ├── RouteDTOAPI.cs
 │   │   ├── TripDTOAPI.cs
 │   │   ├── TripDetailsDTOAPI.cs
 │   │   ├── TripPassengerDTOAPI.cs
+│   │   ├── UnlockPasswordRecoveryRequestDTOAPI.cs
 │   │   └── UpdatePasswordDTOAPI.cs
 │   ├── InterfacesAPI/
 │   │   ├── ServicesAPI/
@@ -869,6 +875,7 @@ BusTrack/
 │   │   ├── JwtTokenServiceAPI.cs
 │   │   ├── MaintenanceServiceAPI.cs
 │   │   ├── PassengerServiceAPI.cs
+│   │   ├── PasswordPolicyServiceAPI.cs
 │   │   ├── RouteServiceAPI.cs
 │   │   ├── TripServiceAPI.cs
 │   │   ├── TripsPassengerServiceAPI.cs
@@ -974,11 +981,21 @@ BusTrack/
 │   │   │   │   │   │   ├── enter-the-system.component.html
 │   │   │   │   │   │   ├── enter-the-system.component.spec.ts
 │   │   │   │   │   │   └── enter-the-system.component.ts
+│   │   │   │   │   ├── forgot-password/
+│   │   │   │   │   │   ├── forgot-password.component.css
+│   │   │   │   │   │   ├── forgot-password.component.html
+│   │   │   │   │   │   ├── forgot-password.component.spec.ts
+│   │   │   │   │   │   └── forgot-password.component.ts
 │   │   │   │   │   ├── main-screen/
 │   │   │   │   │   │   ├── main-screen.component.css
 │   │   │   │   │   │   ├── main-screen.component.html
 │   │   │   │   │   │   ├── main-screen.component.spec.ts
 │   │   │   │   │   │   └── main-screen.component.ts
+│   │   │   │   │   ├── reset-password/
+│   │   │   │   │   │   ├── reset-password.component.css
+│   │   │   │   │   │   ├── reset-password.component.html
+│   │   │   │   │   │   ├── reset-password.component.spec.ts
+│   │   │   │   │   │   └── reset-password.component.ts
 │   │   │   │   │   ├── rules/
 │   │   │   │   │   │   ├── blockCopyRules/
 │   │   │   │   │   │   │   └── blockCopyRule.ts
@@ -1093,6 +1110,7 @@ BusTrack/
 │   │   ├── angular.json
 │   │   ├── bustrack.frontend.client.esproj
 │   │   ├── OIG4.jpeg
+│   │   ├── karma.docker.conf.cjs
 │   │   ├── package-lock.json
 │   │   ├── package.json
 │   │   ├── tsconfig.app.json
@@ -1110,6 +1128,8 @@ BusTrack/
 │   ├── MiddlewareProgram/
 │   │   └── ErrorHandlingMiddleware.cs
 │   └── Program.cs
+├── BusTrack.Script/
+│   └── AdminPasswordReset.cs
 ├── BusTrack.Tests/
 │   ├── IntegrationTests/
 │   │   ├── ControllersAPIIntegrationTests/
@@ -1198,6 +1218,7 @@ BusTrack/
 ├── BusTrack.sln
 ├── docker-compose.yml
 ├── Dockerfile
+├── Dockerfile.frontend-tests
 ├── firebase.firebaserc
 ├── fiberase.json
 ├── LICENSE.md

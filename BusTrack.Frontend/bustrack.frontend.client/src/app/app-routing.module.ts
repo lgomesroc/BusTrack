@@ -6,6 +6,7 @@ import { MainScreenComponent } from './login/main-screen/main-screen.component';
 import { EnterTheSystemComponent } from './login/enter-the-system/enter-the-system.component';
 import { CreateAnAccountComponent } from './login/create-an-account/create-an-account.component';
 import { UpdatePasswordComponent } from './login/update-password/update-password.component';
+import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
 import { ConfirmationComponent } from './login/confirmation/confirmation.component';
 import { ConcludedComponent } from './login/concluded/concluded.component';
 
@@ -46,6 +47,11 @@ const routes: Routes = [
   {
     path: 'update-password',
     component: UpdatePasswordComponent,
+    canActivate: [BrowserNavigationGuard]
+  },
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent,
     canActivate: [BrowserNavigationGuard]
   },
   {

@@ -1,3 +1,4 @@
+
 services:
   mongodb:
     image: mongo:7.0
@@ -50,6 +51,27 @@ services:
       npx ng serve --host 0.0.0.0 --port 4200"
     networks:
       - bustrack-network
+
+
+  frontend-tests:
+    image: bustrack-frontend-tests
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend-tests
+    profiles:
+      - testing
+    working_dir: /app
+    environment:
+      CHROME_BIN: /usr/bin/chromium
+    volumes:
+      - ./BusTrack.Frontend/bustrack.frontend.client:/app
+      - bustrack-frontend-node-modules:/app/node_modules
+    networks:
+      - bustrack-network
+    command: >
+      sh -lc "npx ng test --watch=false --browsers=ChromeHeadlessNoSandbox"
+    init: true
+
 
 networks:
   bustrack-network:
