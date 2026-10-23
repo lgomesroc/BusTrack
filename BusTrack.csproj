@@ -14,6 +14,8 @@
     <Compile Remove="BusTrack.Frontend\BusTrack.Frontend.Server\**" />
     <Content Remove="BusTrack.Frontend\BusTrack.Frontend.Server\**" />
     <None Remove="BusTrack.Frontend\BusTrack.Frontend.Server\**" />
+
+    <Compile Remove="BusTrack.Script\**\*.cs" />
   </ItemGroup>
 
   <ItemGroup>

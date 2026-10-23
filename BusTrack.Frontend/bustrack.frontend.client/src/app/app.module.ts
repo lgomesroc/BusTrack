@@ -11,6 +11,7 @@ import { MainScreenComponent } from './login/main-screen/main-screen.component';
 import { CreateAnAccountComponent } from './login/create-an-account/create-an-account.component';
 import { EnterTheSystemComponent } from './login/enter-the-system/enter-the-system.component';
 import { UpdatePasswordComponent } from './login/update-password/update-password.component';
+import { ForgotPasswordComponent } from './login/forgot-password/forgot-password.component';
 import { ConfirmationComponent } from './login/confirmation/confirmation.component';
 import { ConcludedComponent } from './login/concluded/concluded.component';
 
@@ -34,6 +35,7 @@ import { JwtAuthInterceptor } from './services/jwt-auth.interceptor';
     CreateAnAccountComponent,
     EnterTheSystemComponent,
     UpdatePasswordComponent,
+    ForgotPasswordComponent,
     ConfirmationComponent,
     ConcludedComponent,
     DashboardComponent,
