@@ -5,40 +5,64 @@ on:
     secrets:
       RENDER_BACKEND_DEPLOY_HOOK_URL:
         required: true
-
       RENDER_FRONTEND_DEPLOY_HOOK_URL:
         required: true
 
 jobs:
-
   deploy-backend:
-
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Trigger backend deployment
+        env:
+          DEPLOY_HOOK_URL: ${{ secrets.RENDER_BACKEND_DEPLOY_HOOK_URL }}
         run: |
           curl --fail --silent --show-error \
-            -X POST \
-            "${{ secrets.RENDER_BACKEND_DEPLOY_HOOK_URL }}"
+            --request POST \
+            "$DEPLOY_HOOK_URL"
 
-      - name: Backend deployment triggered
+      - name: Wait for backend health
         run: |
-          echo "Deploy do backend solicitado ao Render."
+          for i in {1..60}; do
+            if curl --connect-timeout 5 --max-time 10 --fail --silent --show-error \
+              https://bustrack-8yuy.onrender.com/api/Health; then
+              echo
+              echo "Backend saudável após o deploy."
+              exit 0
+            fi
+
+            echo "Aguardando o backend ficar saudável ($i/60)..."
+            sleep 10
+          done
+
+          echo "Backend não ficou saudável dentro do tempo limite."
+          exit 1
 
   deploy-frontend:
-
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Trigger frontend deployment
+        env:
+          DEPLOY_HOOK_URL: ${{ secrets.RENDER_FRONTEND_DEPLOY_HOOK_URL }}
         run: |
           curl --fail --silent --show-error \
-            -X POST \
-            "${{ secrets.RENDER_FRONTEND_DEPLOY_HOOK_URL }}"
+            --request POST \
+            "$DEPLOY_HOOK_URL"
 
-      - name: Frontend deployment triggered
+      - name: Wait for frontend availability
         run: |
-          echo "Deploy do frontend solicitado ao Render."
+          for i in {1..60}; do
+            if curl --connect-timeout 5 --max-time 10 --fail --silent --show-error \
+              https://bustrack-frontend-2cbs.onrender.com/; then
+              echo
+              echo "Frontend disponível após o deploy."
+              exit 0
+            fi
+
+            echo "Aguardando o frontend ficar disponível ($i/60)..."
+            sleep 10
+          done
+
+          echo "Frontend não ficou disponível dentro do tempo limite."
+          exit 1

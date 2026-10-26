@@ -65,9 +65,6 @@ jobs:
           echo "BUSTRACK_TEST_PASSWORD=$TEST_PASSWORD" >> "$GITHUB_ENV"
 
       - name: Create test user
-        env:
-          BUSTRACK_TEST_EMAIL: ${{ env.BUSTRACK_TEST_EMAIL }}
-          BUSTRACK_TEST_PASSWORD: ${{ env.BUSTRACK_TEST_PASSWORD }}
         run: |
           payload=$(jq -n \
             --arg fullName "BusTrack CI Test User" \
@@ -104,8 +101,6 @@ jobs:
         env:
           ConnectionStrings__BusTrackDBConnection: mongodb://localhost:27017
           ConnectionStrings__DatabaseName: BusTrackDB
-          BUSTRACK_TEST_EMAIL: ${{ env.BUSTRACK_TEST_EMAIL }}
-          BUSTRACK_TEST_PASSWORD: ${{ env.BUSTRACK_TEST_PASSWORD }}
         run: |
           dotnet test \
             BusTrack.Tests/BusTrack.Tests.csproj \

@@ -4,15 +4,16 @@ on:
   push:
     branches:
       - main
+      - developer
       - upgrade-dotnet-10
 
   pull_request:
     branches:
       - main
+      - developer
       - upgrade-dotnet-10
 
 jobs:
-
   backend-build:
     uses: ./.github/workflows/backend-build.yml
 
@@ -28,5 +29,4 @@ jobs:
       - backend-build
       - backend-tests
       - frontend-build
-
     uses: ./.github/workflows/docker-build.yml
