@@ -1,83 +1,24 @@
-
-<div class="container">
-  <h1 class="centered-title">
-    Seja bem-vindo à página de entrada do Sistema Bus Track
-  </h1>
-
-  <img
-    class="img-responsive centralized-image"
-    src="assets/imagem/OIG4.jpeg"
-    alt="Sistema Bus Track"
-    style="width: 200px; height: auto;"
-  >
-
-  <form #f="ngForm" (ngSubmit)="onSubmit(f)">
-    <div class="form-group">
-      <label for="email">E-mail:</label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        [(ngModel)]="email"
-        autocomplete="username"
-        required
-      >
-    </div>
-
-    <div class="form-group">
-      <label for="password">Senha:</label>
-      <input
-        type="password"
-        id="password"
-        name="password"
-        [(ngModel)]="password"
-        autocomplete="current-password"
-        required
-      >
-    </div>
-
-    <p *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
-
-    <div class="button-container">
-      <button
-        type="submit"
-        class="blue-button"
-        [disabled]="!f.valid"
-      >
-        Entrar
-      </button>
-
-      <button
-        type="button"
-        class="blue-button"
-        (click)="openForgotPassword()"
-      >
-        Esqueci minha senha
-      </button>
-
-      <button
-        type="button"
-        class="blue-button"
-        (click)="openChangePassword()"
-      >
-        Trocar senha
-      </button>
-
-      <button
-        type="button"
-        class="blue-button"
-        (click)="cancelar()"
-      >
-        Cancelar
-      </button>
-
-      <button
-        type="button"
-        class="blue-button"
-        (click)="voltar()"
-      >
-        Criar conta
-      </button>
-    </div>
-  </form>
+<div class="recovery-page">
+  <main class="recovery-card">
+    <section class="visual-panel">
+      <img src="assets/imagem/OIG4.jpeg" alt="Ilustração do Bus Track">
+      <p>Acesse sua conta Bus Track para continuar com segurança.</p>
+    </section>
+    <section class="form-panel">
+      <h1>Entrar no sistema</h1>
+      <p>Informe seus dados de acesso para entrar na sua conta.</p>
+      <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" [(ngModel)]="email" autocomplete="username" placeholder="seu@email.com" required email>
+        <label for="password">Senha</label>
+        <input type="password" id="password" name="password" [(ngModel)]="password" autocomplete="current-password" placeholder="Digite sua senha" required>
+        <p class="error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
+        <button type="submit" [disabled]="!f.valid">Entrar</button>
+        <button type="button" class="secondary" (click)="openForgotPassword()">Esqueci minha senha</button>
+        <button type="button" class="secondary" (click)="openChangePassword()">Trocar senha</button>
+        <button type="button" class="secondary" (click)="voltar()">Criar conta</button>
+        <button type="button" class="secondary" (click)="cancelar()">Voltar à tela inicial</button>
+      </form>
+    </section>
+  </main>
 </div>
