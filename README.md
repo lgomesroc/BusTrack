@@ -10,7 +10,7 @@ O projeto foi desenvolvido como uma aplicação completa, envolvendo backend, fr
 
 A solução também possui uma estrutura organizada por responsabilidades, com projetos separados para API, persistência, frontend e testes, além de documentação técnica específica para cada parte do sistema.
 
-O Bus Track continua em evolução, com melhorias de arquitetura, segurança, infraestrutura, documentação e preparação para implantação em ambiente de produção.
+O BusTrack possui uma V1 funcional com módulos operacionais, autenticação, controle de sessão e recursos administrativos. A V2 está reservada para evoluções como login com Google, MFA/2FA, reCAPTCHA e eventual adoção de cookies para autenticação/sessão.
 
 ## Funcionalidades
 
@@ -40,7 +40,7 @@ A documentação detalhada apresenta o funcionamento de cada módulo, suas regra
 
 O Bus Track utiliza uma stack composta por **C# e .NET 10 com ASP.NET Core** no backend, **Angular e TypeScript** no frontend e **MongoDB** para persistência dos dados.
 
-A solução também utiliza ferramentas para mapeamento de dados, segurança, documentação da API e testes automatizados, além de tecnologias de infraestrutura planejadas para o ambiente de produção, como **Docker, MongoDB Atlas e Render**.
+A solução também utiliza ferramentas para mapeamento de dados, segurança, documentação da API e testes automatizados, e infraestrutura para desenvolvimento e publicação, incluindo **Docker, MongoDB Atlas e Render**.
 
 A documentação detalha cada tecnologia, explica sua finalidade no projeto, o motivo de sua escolha e diferencia os recursos que já estão implementados daqueles que fazem parte da evolução planejada.
 
@@ -70,11 +70,11 @@ A API utiliza **JWT Bearer** para autenticar chamadas protegidas e aplica autori
 
 O Bus Track passou por diversas etapas de evolução desde sua criação, incluindo a implementação do frontend e da API, criação da estrutura de testes, migração dos projetos para .NET 10, refatoração das camadas da aplicação, implementação dos módulos de Ônibus e Viagens e preparação para implantação em ambiente de produção.
 
-As atualizações mais recentes estão concentradas na organização da configuração de ambientes, integração planejada com MongoDB Atlas, preparação do deployment, melhorias de autenticação e sessão, além da evolução da documentação técnica do projeto.
+As etapas recentes incluíram a migração para .NET 10, a consolidação da autenticação JWT, a evolução do controle de sessão e presença, os testes automatizados e a atualização da documentação. O histórico abaixo registra as mudanças cronologicamente; entradas antigas sobre pendências descrevem o estado da época.
 
 O histórico completo apresenta as principais alterações realizadas desde o início do desenvolvimento do Bus Track.
 
-[Ver histórico completo de atualizações](docs/history.md)
+[Ver histórico completo de atualizações](docs/history/history.md)
 
 ## Arquitetura
 
@@ -84,7 +84,7 @@ A solução também utiliza interfaces, injeção de dependência, Services e Re
 
 A explicação completa da organização dos projetos, responsabilidades das camadas, comunicação entre frontend e backend e decisões arquiteturais está disponível na documentação.
 
-[Ver documentação completa da arquitetura](docs/architecture.md)
+[Ver documentação completa da arquitetura](docs/architecture/architecture.md)
 
 ## Estrutura do Projeto
 

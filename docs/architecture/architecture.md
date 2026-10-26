@@ -424,7 +424,7 @@ Uma regra implementada apenas no frontend não deve ser considerada uma proteç�
 
 Por isso, regras que precisam realmente impedir uma operação devem ser aplicadas também no backend.
 
-A autenticação baseada em JWT está prevista como uma evolução da aplicação, mas não deve ser considerada parte da arquitetura atualmente implementada enquanto sua implementação efetiva não estiver concluída.
+A autenticação da aplicação utiliza JWT Bearer. A API valida assinatura, emissor, audiência e expiração, e aplica autorização no backend. O frontend mantém o token em `sessionStorage`. Google Login, MFA/2FA, reCAPTCHA e eventual adoção de cookies são possibilidades para a V2, não requisitos pendentes da V1.
 
 ---
 
@@ -516,10 +516,12 @@ Essa divisão permite que a aplicação seja desenvolvida e evoluída mantendo a
 
 Para consultar detalhes específicos sobre cada assunto:
 
-* [Funcionalidades](functionalities/functionalities.md)
-* [Tecnologias](technologies/technologies.md)
-* [Estrutura do projeto](project-structure/project-structure.md)
-* [Segurança](security/security.md)
-* [Banco de dados](database/database.md)
-* [Testes](testing/testing.md)
-* [Deploy](deployment/deployment.md)
+* [Funcionalidades](../functionalities/functionalities.md)
+* [Tecnologias](../technologies/technologies.md)
+* [Estrutura do projeto](../project-structure/project-structure.md)
+* [Configuração](../configuration/configuration.md)
+* [Migração para .NET 10](../dotnet-10-migration/dotnet-10-migration.md)
+* [Segurança](../security/security.md)
+* [Autenticação JWT](../security/jwt-authentication.md)
+* [Telas](../screens/screens.md)
+* [Histórico](../history/history.md)

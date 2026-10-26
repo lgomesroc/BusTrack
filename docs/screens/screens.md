@@ -1,45 +1,85 @@
 # Telas
 
-Esta documentação apresenta as principais telas do Bus Track e descreve a finalidade de cada uma delas.
+Esta documentação apresenta as principais telas atualmente disponíveis no BusTrack.
 
-## Tela principal
+## Autenticação
 
-A tela principal é a porta de entrada da aplicação. A partir dela, o usuário pode acessar as opções disponíveis para iniciar sua utilização do sistema.
+### Tela principal
+
+Porta de entrada da aplicação.
 
 ![Tela principal](images/1717028557844.jpeg)
 
-## Tela de login
+### Tela de login
 
-A tela de login permite que o usuário informe suas credenciais para acessar o sistema.
+Permite autenticar um usuário existente.
 
 ![Tela de login](images/1717028557779.jpeg)
 
-## Tela de criação de conta
+### Tela de criação de conta
 
-A tela de criação de conta permite o cadastramento de um novo usuário no sistema.
+Permite cadastrar uma nova conta de usuário.
 
 ![Tela de criar conta](images/1717028557786.jpeg)
 
-## Tela de atualização de senha
+### Tela de recuperação/redefinição de senha
 
-A tela de atualização de senha permite que o usuário altere sua senha de acesso de acordo com as regras definidas pela aplicação.
+Permite iniciar e concluir o fluxo de recuperação de senha.
+
+### Tela de atualização de senha
+
+Permite alterar a senha de uma conta autenticada.
 
 ![Tela de atualizar senha](images/1717028557715.jpeg)
 
-## Tela de confirmação
+### Tela de confirmação
 
-A tela de confirmação apresenta uma etapa intermediária do fluxo de criação ou atualização das informações do usuário.
+Apresenta uma etapa de confirmação dos fluxos de autenticação que utilizam essa etapa.
 
 ![Tela de confirmação](images/1717028558230.jpeg)
 
-## Tela de conclusão
+### Tela de conclusão
 
-A tela de conclusão informa ao usuário que o fluxo iniciado anteriormente foi finalizado.
+Apresenta a conclusão de um fluxo de autenticação ou conta.
 
 ![Tela de conclusão](images/1717028557758.jpeg)
 
-## Dashboard
+## Área autenticada
 
-O dashboard é a área principal após a autenticação do usuário. Ele apresenta a navegação para os diferentes módulos e funcionalidades disponíveis no sistema.
+### Dashboard
+
+Área principal após a autenticação. Apresenta a navegação e os recursos disponíveis conforme a role do usuário.
 
 ![Tela de dashboard](images/1717028557775.jpeg)
+
+### Dashboard administrativo
+
+Área administrativa disponível para `ADMIN`, com informações administrativas, usuários, pesquisa, paginação e dados de presença.
+
+### Ônibus
+
+Tela de gerenciamento de ônibus.
+
+### Motoristas
+
+Tela de gerenciamento de motoristas.
+
+### Rotas
+
+Tela de gerenciamento de rotas.
+
+### Passageiros
+
+Tela de gerenciamento de passageiros.
+
+### Viagens
+
+Tela de gerenciamento de viagens.
+
+### Detalhes da viagem
+
+Tela destinada à consulta detalhada de uma viagem e suas relações.
+
+## Observação sobre a V2
+
+Login com Google, MFA/2FA, reCAPTCHA e eventual autenticação baseada em cookies não fazem parte das telas da V1 e estão planejados para uma evolução futura.
