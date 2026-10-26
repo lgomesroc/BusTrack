@@ -61,7 +61,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
         public async Task<TripDTOAPI> CreateTripAsync(TripDTOAPI trip)
         {
-            if (trip.DepartureTime <= DateTime.Now)
+            if (trip.DepartureTime <= DateTime.UtcNow)
                 throw new ArgumentException("A saída deve ser agendada para um horário futuro.");
             var tripDB = _mapper.Map<TripDB>(trip);
             tripDB.Status = Scheduled;
@@ -89,9 +89,9 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
             if (requestedStatus == InProgress)
             {
-                if (DateTime.Now < existingTrip.DepartureTime)
+                if (DateTime.UtcNow < existingTrip.DepartureTime)
                     throw new ArgumentException("A viagem só pode entrar em andamento no horário previsto de saída ou depois dele.");
-                var now = DateTime.Now;
+                var now = DateTime.UtcNow;
                 existingTrip.Status = InProgress;
                 existingTrip.StartedAt = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, now.Kind);
                 existingTrip.ArrivalTime = null;
@@ -111,7 +111,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 var startedAt = existingTrip.StartedAt;
                 if (currentStatus == Scheduled)
                 {
-                    if (DateTime.Now < existingTrip.DepartureTime)
+                    if (DateTime.UtcNow < existingTrip.DepartureTime)
                         throw new ArgumentException("A viagem não pode ser concluída antes do horário previsto de saída.");
                     startedAt = existingTrip.DepartureTime;
                 }
@@ -119,7 +119,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                     throw new ArgumentException("Registre o início da viagem antes de concluí-la.");
                 if (trip.ArrivalTime == null || trip.ArrivalTime == default)
                     throw new ArgumentException("Informe a data e o horário reais de chegada para concluir a viagem.");
-                if (trip.ArrivalTime.Value > DateTime.Now)
+                if (trip.ArrivalTime.Value > DateTime.UtcNow)
                     throw new ArgumentException("A chegada real não pode estar no futuro.");
                 if (trip.ArrivalTime.Value < startedAt.Value)
                     throw new ArgumentException("A chegada não pode ser anterior ao início da viagem.");
