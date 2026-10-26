@@ -2,72 +2,91 @@
 
 ## Estado atual
 
-O backend é a autoridade para autenticação e autorização. Regras de segurança não podem depender apenas do Angular: qualquer cliente pode chamar a API diretamente, por exemplo usando `curl`.
+O backend é a autoridade para autenticação e autorização. As regras de segurança não dependem apenas do Angular: qualquer cliente pode chamar a API diretamente.
 
-A aplicação utiliza JWT Bearer para autenticar as requisições protegidas. O token é assinado com HMAC-SHA256 e a API valida assinatura, emissor, público e validade. A chave de assinatura é fornecida por configuração de ambiente e deve ter pelo menos 32 bytes.
+A aplicação utiliza JWT Bearer para autenticar requisições protegidas. O token é assinado com HMAC-SHA256 e a API valida assinatura, emissor, público e validade. A chave de assinatura é fornecida por configuração de ambiente e deve possuir pelo menos 32 bytes.
 
 ## Senhas
 
-As senhas são armazenadas como hashes BCrypt, nunca em texto puro. O fluxo de cadastro e alteração de senha deve validar os dados no backend; validações apenas na interface podem ser contornadas.
+As senhas são armazenadas como hashes BCrypt, nunca em texto puro.
 
-O projeto também contém mecanismos relacionados a histórico e validade de senhas. A cobertura efetiva desses mecanismos deve ser confirmada nos serviços que tratam cada operação; a documentação não deve ser interpretada como prova de que todos os fluxos de senha estão completos.
+A V1 possui:
+
+- alteração de senha;
+- recuperação de senha;
+- redefinição de senha;
+- histórico de senhas;
+- política de senhas.
+
+As regras de senha são aplicadas no backend e não dependem apenas das validações da interface.
 
 ## JWT e sessão
 
-- Login e cadastro comum são endpoints anônimos.
+- O login e o cadastro comum são endpoints anônimos.
 - A verificação de saúde da aplicação é anônima para monitoramento.
-- Os demais endpoints exigem um token válido por política padrão, salvo exceção explícita.
-- O frontend armazena o token em `sessionStorage` e o envia como `Authorization: Bearer <token>` apenas para a API configurada.
-- O frontend limpa a sessão quando o token expira ou uma chamada protegida retorna `401`.
-- O logout remove o token local. Como não há revogação/refresh-token store, um token copiado pode continuar válido até expirar; nunca registre nem compartilhe tokens.
+- Os demais endpoints protegidos exigem autenticação válida, salvo exceção explícita.
+- O frontend mantém o token em `sessionStorage` e o envia como `Authorization: Bearer <token>` para a API.
+- O logout remove o token local.
+- A sessão possui validade e controle de inatividade.
+- O sistema identifica o navegador associado à sessão.
+- Abas do mesmo navegador compartilham a sessão.
+- Navegadores diferentes podem possuir sessões independentes.
+- O mesmo navegador não mantém mais de uma sessão ativa.
+- O sistema possui controle de presença do usuário.
 
-Consulte [JWT authentication](jwt-authentication.md) para configuração local e produção.
+Como o JWT de acesso é stateless, o logout local não revoga cópias do token que tenham sido obtidas anteriormente; elas permanecem válidas até sua expiração conforme as regras da aplicação.
 
-## Regras de autorização de negócio
+## Autorização USER / ADMIN
 
-O backend aplica permissões por role (RBAC — Role-Based Access Control) nas operações de edição/exclusão dos recursos operacionais:
+A API utiliza RBAC (Role-Based Access Control).
 
-| Operação | USER | ADMIN |
-|---|---:|---:|
-| Consultar viagens, motoristas, passageiros, ônibus, rotas e manutenção | Permitido | Permitido |
-| Criar viagens, motoristas, passageiros, ônibus, rotas e manutenção | Permitido | Permitido |
-| Editar ou excluir esses recursos | Proibido | Permitido |
-| Consultar a própria conta | Permitido | Permitido |
-| Editar/excluir a própria conta | Proibido, salvo fluxo explicitamente aprovado | Permitido conforme endpoint administrativo |
-| Listar ou gerenciar contas de outras pessoas | Proibido | O controller legado `UserControllerAPI` ainda tem mapeamentos incompletos e precisa ser corrigido antes de ser usado |
-| Criar/promover ADMIN pelo cadastro público ou frontend | Proibido | Proibido |
-| Bootstrap controlado do primeiro ADMIN via ferramenta de linha de comando | Não aplicável | Procedimento operacional restrito |
+- `USER`: executa as operações permitidas para usuários comuns.
+- `ADMIN`: possui as permissões administrativas previstas pela aplicação.
+- O cadastro público cria somente `USER`.
+- O cliente não pode escolher ou promover a própria role.
+- Endpoints administrativos exigem `ADMIN` no backend.
+- A interface não é considerada mecanismo de autorização.
 
-As mesmas restrições foram aplicadas às rotas operacionais duplicadas/legadas e às relações entre passageiros e viagens. Uma rota alternativa não pode permitir uma operação que a rota principal proíbe.
+As mesmas regras devem ser aplicadas a rotas alternativas ou legadas que representem as mesmas operações.
 
-O cadastro público deve sempre criar uma conta com role `USER`, ignorando qualquer role enviada pelo cliente. A role deve vir de uma fonte confiável do backend e ser incluída como claim assinada no JWT. Nunca aceite uma role enviada pelo frontend como prova de autorização.
+## Dashboard administrativo
+
+O Dashboard administrativo é protegido por role `ADMIN` e disponibiliza recursos administrativos, incluindo consulta, pesquisa, paginação de usuários e informações de presença/usuários online.
 
 ## Bootstrap do ADMIN
 
-A criação do primeiro administrador não deve ser disponibilizada como botão ou formulário do frontend. O procedimento deve ser executado manualmente por um operador autorizado via `curl` no ambiente Linux, usando um segredo de bootstrap fornecido por variável de ambiente, nunca codificado no repositório.
+A criação do primeiro administrador é um procedimento controlado e não faz parte do cadastro público.
 
-O endpoint `POST /AuthenticationControllerAPI/bootstrap-admin` foi criado e exige `BootstrapAdmin:Secret` configurado fora do código. Ele recusa segredo incorreto e solicita conflito se já houver ADMIN. Sem configuração, responde `404`. O endpoint não é usado pelo frontend; a operação planejada é via `curl` em Linux. Ainda falta validar os testes de integração e revisar concorrência entre chamadas simultâneas. Não execute o bootstrap em produção até concluir essas verificações.
+O endpoint de bootstrap utiliza um segredo fornecido por configuração de ambiente e não deve receber credenciais administrativas por meio de parâmetros controlados pelo frontend.
 
 ## Respostas HTTP esperadas
 
-- `401 Unauthorized`: token ausente, inválido ou expirado para endpoint protegido.
-- `403 Forbidden`: identidade autenticada sem a role necessária.
-- `404 Not Found`: recurso inexistente (quando apropriado, sem revelar dados de outro usuário).
+- `401 Unauthorized`: autenticação ausente, inválida ou expirada.
+- `403 Forbidden`: usuário autenticado sem a permissão necessária.
+- `404 Not Found`: recurso inexistente, quando aplicável.
 
 ## Proteção da interface
 
-O Angular oculta ações de edição/exclusão nas telas de recursos operacionais para usuários sem role ADMIN. Isso melhora a experiência, mas é apenas apresentação; o backend deve negar a operação mesmo se alguém modificar a interface ou chamar a API diretamente.
+O Angular pode ocultar ações que o usuário não possui permissão para executar. Essa proteção é apenas de apresentação. A API deve negar a operação quando a role não for suficiente.
 
-## Limitações e itens para revisão
+## Presença e múltiplos navegadores
 
-- JWT de acesso é stateless; logout no navegador não revoga cópias do token.
-- CORS limita origens de navegador, mas não é mecanismo de autorização e não impede chamadas via `curl`.
-- Bloquear botão direito, seleção, cópia ou navegação do browser não protege dados fornecidos pela API.
-- Revisar endpoints legados/duplicados, especialmente os de viagens e usuários.
-- Validar os DTOs no backend, sem confiar nas validações do Angular.
-- Garantir que exceções não revelem detalhes internos, credenciais ou dados sensíveis.
-- Manter testes para token ausente/inválido, USER permitido, USER bloqueado (403), ADMIN permitido e tentativa de promoção indevida.
+A V1 possui controle de sessão por navegador e presença do usuário.
 
-## Configuração
+A regra atual permite que o mesmo usuário mantenha sessões independentes em navegadores diferentes, enquanto impede mais de uma sessão no mesmo navegador. Abas do mesmo navegador compartilham a sessão existente.
 
-A chave JWT deve ser exclusiva por ambiente. Nunca coloque segredos reais em `appsettings.json`, no frontend, na documentação, no histórico Git ou em logs. Consulte [JWT authentication](jwt-authentication.md) para as variáveis necessárias.
+## Recursos fora da V1
+
+Os seguintes mecanismos são planejados para a V2 e não são pendências da V1:
+
+- autenticação com Google;
+- MFA/2FA;
+- reCAPTCHA;
+- adoção de cookies como mecanismo de autenticação/sessão, caso essa arquitetura seja escolhida.
+
+## Limitações arquiteturais
+
+- JWT de acesso é stateless.
+- CORS não é mecanismo de autorização.
+- Restrições de interface, como bloquear cópia ou menu de contexto, não substituem segurança no backend.
+- Segredos nunca devem ser armazenados no repositório, frontend, documentação ou logs.
