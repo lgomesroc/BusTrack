@@ -1,174 +1,38 @@
-<!DOCTYPE html>
+<div class="recovery-page">
+  <main class="recovery-card">
+    <section class="visual-panel">
+      <img src="assets/imagem/OIG4.jpeg" alt="Ilustração do Bus Track">
+      <p>Crie sua conta para acessar o sistema Bus Track.</p>
+    </section>
+    <section class="form-panel">
+      <h1>Criar conta</h1>
+      <p>Preencha os dados abaixo para cadastrar sua conta.</p>
+      <form #f="ngForm" (ngSubmit)="criarConta()" autocomplete="off">
+        <label for="nomeCompleto">Nome completo</label>
+        <input type="text" id="nomeCompleto" name="nomeCompleto" [(ngModel)]="fullName" placeholder="Ex.: João da Silva" required autocomplete="name" (blur)="validarNome()">
+        <p class="error" *ngIf="nomeInvalido" role="alert">Informe seu nome completo.</p>
 
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Criar Conta - Sistema Bus Track</title>
-</head>
+        <label for="cpf">CPF</label>
+        <input type="text" id="cpf" name="cpf" [ngModel]="cpf" (ngModelChange)="formatarCPF($event)" maxlength="14" inputmode="numeric" placeholder="000.000.000-00" required autocomplete="off" aria-describedby="cpf-error">
+        <p class="error" id="cpf-error" *ngIf="cpfInvalido" role="alert">Informe um CPF válido.</p>
 
-<body>
-  <div class="container">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" [(ngModel)]="email" placeholder="Ex.: joao@gmail.com" required email autocomplete="email" (blur)="validarEmailCampo()">
+        <p class="error" *ngIf="emailInvalido" role="alert">Informe um e-mail válido. Ex.: joao&#64;gmail.com</p>
 
-<h1 class="centered-title">
-  Seja bem-vindo à página de Criar Conta do Sistema Bus Track
-</h1>
+        <label for="password">Senha</label>
+        <input type="password" id="password" name="password" [(ngModel)]="password" required autocomplete="new-password">
 
-<img
-  class="img-responsive centralized-image"
-  src="assets/imagem/OIG4.jpeg"
-  alt="Sistema Bus Track Logo"
-  style="width: 200px; height: auto;"
->
+        <label for="passwordConfirmation">Confirmar senha</label>
+        <input type="password" id="passwordConfirmation" name="passwordConfirmation" [(ngModel)]="confirmPassword" required autocomplete="new-password">
 
-<form
-  #f="ngForm"
-  (ngSubmit)="criarConta()"
-  autocomplete="off"
->
+        <p class="hint">A senha deve cumprir a política de segurança do sistema.</p>
+        <p class="error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
 
-  <div class="form-group">
-    <label for="nomeCompleto">
-      Nome Completo:
-    </label>
-
-    <input
-      type="text"
-      id="nomeCompleto"
-      name="nomeCompleto"
-      [(ngModel)]="fullName"
-      placeholder="Ex.: João da Silva"
-      required
-      autocomplete="name"
-      (blur)="validarNome()"
-    >
-
-    <div
-      class="error-message"
-      *ngIf="nomeInvalido"
-    >
-      Informe seu nome completo.
-    </div>
-  </div>
-
-
-  <div class="form-group">
-    <label for="cpf">
-      CPF:
-    </label>
-
-    <input
-      type="text"
-      id="cpf"
-      name="cpf"
-      [ngModel]="cpf"
-      (ngModelChange)="formatarCPF($event)"
-      maxlength="14"
-      inputmode="numeric"
-      placeholder="000.000.000-00"
-      required
-      autocomplete="off"
-    >
-  </div>
-
-
-  <div class="form-group">
-    <label for="email">
-      E-mail:
-    </label>
-
-    <input
-      type="email"
-      id="email"
-      name="email"
-      [(ngModel)]="email"
-      placeholder="Ex.: joao@gmail.com"
-      required
-      autocomplete="off"
-      (blur)="validarEmailCampo()"
-    >
-
-    <div
-      class="error-message"
-      *ngIf="emailInvalido"
-    >
-      Informe um e-mail válido. Ex.: joao&#64;gmail.com
-    </div>
-  </div>
-
-
-  <div class="form-group">
-    <label for="password">
-      Senha:
-    </label>
-
-    <input
-      type="password"
-      id="password"
-      name="password"
-      [(ngModel)]="password"
-      required
-      autocomplete="off"
-    >
-  </div>
-
-
-  <div class="form-group">
-    <label for="passwordConfirmation">
-      Confirmar Senha:
-    </label>
-
-    <input
-      type="password"
-      id="passwordConfirmation"
-      name="passwordConfirmation"
-      [(ngModel)]="confirmPassword"
-      required
-      autocomplete="off"
-    >
-  </div>
-
-
-  <div
-    class="error-message"
-    *ngIf="errorMessage"
-  >
-    {{ errorMessage }}
-  </div>
-
-
-  <div class="button-container">
-
-    <button
-      type="submit"
-      class="blue-button"
-      [disabled]="!f.valid || nomeInvalido || emailInvalido"
-    >
-      Criar Conta
-    </button>
-
-
-    <button
-      type="button"
-      class="blue-button"
-      (click)="cancelar()"
-    >
-      Cancelar
-    </button>
-
-
-    <button
-      type="button"
-      class="blue-button"
-      (click)="realizarLogin()"
-    >
-      Realizar Login
-    </button>
-
-  </div>
-
-</form>
-
-  </div>
-</body>
-</html>
+        <button type="submit" [disabled]="!f.valid || nomeInvalido || emailInvalido">Criar conta</button>
+        <button type="button" class="secondary" (click)="realizarLogin()">Já tenho uma conta</button>
+        <button type="button" class="secondary" (click)="cancelar()">Voltar à tela inicial</button>
+      </form>
+    </section>
+  </main>
+</div>
