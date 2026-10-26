@@ -21,7 +21,7 @@ namespace BusTrack.Tests.IntegrationTests.ControllersAPIIntegrationTests;
 public class MaintenanceControllerAdditionalIntegrationTests : IDisposable
 {
     private const string MaintenanceId = "507f1f77bcf86cd799439011";
-    private const string SigningKey = "BusTrack-maintenance-integration-test-key-2026-only";
+    private const string TestKey = "BusTrack-test-only-signing-key-not-for-production-2026";
     private const string TestIssuer = "BusTrack.Tests";
     private const string TestAudience = "BusTrack.Tests.Client";
     private const string DeleteReason = "Registro de teste";
@@ -131,7 +131,7 @@ public class MaintenanceControllerAdditionalIntegrationTests : IDisposable
 
     private static string CreateToken(string role)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SigningKey));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(TestKey));
         var token = new JwtSecurityToken(
             issuer: TestIssuer,
             audience: TestAudience,
@@ -173,24 +173,13 @@ public class MaintenanceControllerAdditionalIntegrationTests : IDisposable
     {
         public Mock<IMaintenanceServiceAPI> ServiceMock { get; } = new();
 
-        public MaintenanceTestFactory()
-        {
-            // Program/authentication configuration also reads environment variables.
-            // Set the same JWT values used to sign the tokens before the test host starts.
-            Environment.SetEnvironmentVariable("JwtSettings__SecretKey", SigningKey);
-            Environment.SetEnvironmentVariable("JwtSettings__Issuer", TestIssuer);
-            Environment.SetEnvironmentVariable("JwtSettings__Audience", TestAudience);
-            Environment.SetEnvironmentVariable("JwtSettings__ExpirationInMinutes", "30");
-            Environment.SetEnvironmentVariable("BootstrapAdmin__Secret", null);
-        }
-
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseEnvironment("Testing");
             builder.ConfigureAppConfiguration((_, configuration) =>
                 configuration.AddInMemoryCollection(new Dictionary<string, string?>
                 {
-                    ["JwtSettings:SecretKey"] = SigningKey,
+                    ["JwtSettings:SecretKey"] = TestKey,
                     ["JwtSettings:Issuer"] = TestIssuer,
                     ["JwtSettings:Audience"] = TestAudience,
                     ["JwtSettings:ExpirationInMinutes"] = "30",
