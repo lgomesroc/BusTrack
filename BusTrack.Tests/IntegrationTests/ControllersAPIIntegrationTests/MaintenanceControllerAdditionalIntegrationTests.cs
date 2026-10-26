@@ -22,6 +22,8 @@ public class MaintenanceControllerAdditionalIntegrationTests : IDisposable
 {
     private const string MaintenanceId = "507f1f77bcf86cd799439011";
     private const string SigningKey = "BusTrack-maintenance-integration-test-key-2026-only";
+    private const string TestIssuer = "BusTrack.Tests";
+    private const string TestAudience = "BusTrack.Tests.Client";
     private const string DeleteReason = "Registro de teste";
 
     private readonly MaintenanceTestFactory _factory = new();
@@ -131,11 +133,12 @@ public class MaintenanceControllerAdditionalIntegrationTests : IDisposable
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SigningKey));
         var token = new JwtSecurityToken(
-            issuer: "BusTrack.Tests",
-            audience: "BusTrack.Tests.Client",
+            issuer: TestIssuer,
+            audience: TestAudience,
             claims:
             [
                 new Claim(ClaimTypes.NameIdentifier, "507f1f77bcf86cd799439099"),
+                new Claim(ClaimTypes.Name, "Maintenance Integration Test"),
                 new Claim(ClaimTypes.Role, role)
             ],
             notBefore: DateTime.UtcNow.AddMinutes(-1),
@@ -170,6 +173,17 @@ public class MaintenanceControllerAdditionalIntegrationTests : IDisposable
     {
         public Mock<IMaintenanceServiceAPI> ServiceMock { get; } = new();
 
+        public MaintenanceTestFactory()
+        {
+            // Program/authentication configuration also reads environment variables.
+            // Set the same JWT values used to sign the tokens before the test host starts.
+            Environment.SetEnvironmentVariable("JwtSettings__SecretKey", SigningKey);
+            Environment.SetEnvironmentVariable("JwtSettings__Issuer", TestIssuer);
+            Environment.SetEnvironmentVariable("JwtSettings__Audience", TestAudience);
+            Environment.SetEnvironmentVariable("JwtSettings__ExpirationInMinutes", "30");
+            Environment.SetEnvironmentVariable("BootstrapAdmin__Secret", null);
+        }
+
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseEnvironment("Testing");
@@ -177,8 +191,8 @@ public class MaintenanceControllerAdditionalIntegrationTests : IDisposable
                 configuration.AddInMemoryCollection(new Dictionary<string, string?>
                 {
                     ["JwtSettings:SecretKey"] = SigningKey,
-                    ["JwtSettings:Issuer"] = "BusTrack.Tests",
-                    ["JwtSettings:Audience"] = "BusTrack.Tests.Client",
+                    ["JwtSettings:Issuer"] = TestIssuer,
+                    ["JwtSettings:Audience"] = TestAudience,
                     ["JwtSettings:ExpirationInMinutes"] = "30",
                     ["BootstrapAdmin:Secret"] = null
                 }));
