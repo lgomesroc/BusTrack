@@ -516,10 +516,12 @@ Essa divisão permite que a aplicação seja desenvolvida e evoluída mantendo a
 
 Para consultar detalhes específicos sobre cada assunto:
 
-* [Funcionalidades](functionalities/functionalities.md)
-* [Tecnologias](technologies/technologies.md)
-* [Estrutura do projeto](project-structure/project-structure.md)
-* [Segurança](security/security.md)
-* [Banco de dados](database/database.md)
-* [Testes](testing/testing.md)
-* [Deploy](deployment/deployment.md)
+* [Funcionalidades](../functionalities/functionalities.md)
+* [Tecnologias](../technologies/technologies.md)
+* [Estrutura do projeto](../project-structure/project-structure.md)
+* [Configuração](../configuration/configuration.md)
+* [Migração para .NET 10](../dotnet-10-migration/dotnet-10-migration.md)
+* [Segurança](../security/security.md)
+* [Autenticação JWT](../security/jwt-authentication.md)
+* [Telas](../screens/screens.md)
+* [Histórico](../history/history.md)
