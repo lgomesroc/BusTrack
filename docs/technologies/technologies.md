@@ -8,7 +8,7 @@ A escolha das tecnologias não foi feita apenas para reunir diferentes ferrament
 
 Algumas tecnologias já estão efetivamente utilizadas na aplicação.
 
-Outras fazem parte da evolução planejada do projeto e ainda não foram implementadas completamente. Quando isso ocorrer, essa documentação identifica explicitamente a situação para evitar que uma tecnologia planejada seja confundida com uma funcionalidade já existente.
+A documentação distingue as tecnologias efetivamente utilizadas das opções reservadas para a V2. A presença de um item no roadmap não significa que ele seja requisito pendente da V1.
 
 ---
 
@@ -227,17 +227,9 @@ BCrypt foi escolhido por ser um algoritmo desenvolvido especificamente para hash
 
 JWT significa JSON Web Token.
 
-A utilização de JWT faz parte da evolução planejada para a autenticação do Bus Track.
+JWT é utilizado na autenticação da V1. A API emite tokens assinados com HMAC-SHA256 e valida assinatura, issuer, audience e expiração. Os endpoints protegidos exigem `Authorization: Bearer <token>`, e a autorização por roles é aplicada no backend.
 
-**No estado atual da aplicação, a autenticação baseada em JWT ainda não está implementada efetivamente.**
-
-A presença de configurações relacionadas ao JWT no projeto não significa que o backend já esteja emitindo e validando tokens JWT.
-
-A implementação planejada deverá utilizar JWT para representar a autenticação do usuário através de tokens.
-
-A intenção é evoluir o mecanismo atual de sessão para uma solução de autenticação baseada em tokens adequada para uma API.
-
-Quando implementado, o mecanismo deverá envolver:
+A implementação inclui: 
 
 * Geração de tokens;
 * Validação de tokens;
@@ -249,7 +241,7 @@ Quando implementado, o mecanismo deverá envolver:
 * Autenticação das requisições;
 * Autorização de recursos protegidos.
 
-Portanto, JWT é uma **tecnologia planejada**, e não uma funcionalidade atualmente concluída.
+JWT faz parte da autenticação implementada na V1.
 
 ---
 
@@ -469,7 +461,7 @@ A utilização de containers permite empacotar a aplicação juntamente com o am
 
 No ambiente local, o projeto possui configuração através de Docker Compose.
 
-Para a implantação do backend no Render, a estratégia planejada utiliza um Dockerfile específico para construir a imagem da API.
+O backend é publicado no Render como Web Service utilizando um Dockerfile específico.
 
 ### Por que Docker?
 
@@ -495,11 +487,7 @@ O Docker Compose define como diferentes serviços podem ser executados em conjun
 
 ### Utilização no Render
 
-O Docker Compose não é o mecanismo planejado para executar continuamente a aplicação no Render.
-
-No ambiente de produção, a API deverá possuir uma imagem própria construída a partir de seu Dockerfile.
-
-O Render executa essa imagem como um Web Service.
+O Docker Compose organiza os serviços do ambiente local. No Render, a API é executada como Web Service a partir de sua imagem Docker.
 
 Portanto, o projeto não precisa reconstruir o `docker-compose.yml` toda vez que o serviço acordar após um período de inatividade.
 
@@ -513,10 +501,10 @@ O MongoDB continua sendo o banco de dados utilizado pela aplicação, enquanto o
 
 A utilização do Atlas permite separar o banco de produção do MongoDB utilizado localmente durante o desenvolvimento.
 
-A estratégia planejada é:
+A separação de ambientes utilizada é:
 
-* MongoDB local para desenvolvimento;
-* MongoDB Atlas para produção.
+* MongoDB local para desenvolvimento e testes locais;
+* MongoDB Atlas para a persistência do ambiente publicado.
 
 Essa separação evita que a aplicação publicada dependa de um banco executando na máquina de desenvolvimento.
 
@@ -524,7 +512,7 @@ Essa separação evita que a aplicação publicada dependa de um banco executand
 
 # Render
 
-Render é a plataforma planejada para hospedagem da aplicação.
+Render é a plataforma utilizada para hospedagem da aplicação publicada.
 
 A arquitetura de implantação utiliza serviços separados para frontend e backend.
 
@@ -663,20 +651,16 @@ Entre as tecnologias efetivamente utilizadas no estado atual do projeto estão:
 * BenchmarkDotNet;
 * Selenium WebDriver.
 
-### Planejadas ou em evolução
+### Recursos reservados para a V2
 
-Algumas tecnologias fazem parte da evolução do projeto ou da estratégia de produção:
+Os recursos abaixo não fazem parte da stack implementada na V1 e permanecem no roadmap:
 
-* JWT para autenticação baseada em tokens;
-* Docker para empacotamento do backend em produção;
-* Docker Compose para organização do ambiente local;
-* MongoDB Atlas para banco de produção;
-* Render para hospedagem;
-* Configuração completa de produção através de variáveis de ambiente.
+* Login/autenticação com Google;
+* MFA/2FA;
+* reCAPTCHA;
+* eventual adoção de cookies como mecanismo de autenticação/sessão, caso essa arquitetura seja escolhida.
 
-Essa distinção existe para que a documentação do projeto seja tecnicamente correta.
-
-Uma tecnologia pode fazer parte da arquitetura planejada sem que sua implementação já esteja concluída.
+Docker, Docker Compose, MongoDB Atlas, Render e JWT são utilizados na V1; não devem aparecer como tecnologias pendentes.
 
 ---
 
@@ -736,8 +720,8 @@ xUnit, Moq, TestHost, Coverlet, BenchmarkDotNet e Selenium permitem testar difer
 
 Docker e Docker Compose fazem parte da estratégia de execução e implantação.
 
-MongoDB Atlas representa a infraestrutura planejada para o banco em produção.
+MongoDB Atlas fornece a infraestrutura gerenciada do banco no ambiente publicado.
 
-Render representa a plataforma planejada para hospedagem da aplicação.
+Render é a plataforma utilizada para hospedar a aplicação publicada.
 
 Git e GitHub sustentam o controle de versão e a evolução do projeto.
