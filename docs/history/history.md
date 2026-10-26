@@ -2,6 +2,8 @@
 
 Este documento registra as principais alterações, correções, implementações e evoluções realizadas no Bus Track ao longo do desenvolvimento do projeto.
 
+> **Nota de leitura:** este arquivo é um registro cronológico. Referências a falhas, itens pendentes, planos ou branches descrevem o estado na data da entrada e não representam necessariamente pendências atuais. Para o estado atual das funcionalidades e o roadmap, consulte [Funcionalidades](../functionalities/functionalities.md), [Segurança](../security/security.md) e [Tecnologias](../technologies/technologies.md).
+
 ## 2026-09-28
 
 * Início da implantação do Bus Track em ambiente de produção utilizando Render para hospedagem do frontend Angular e da API ASP.NET Core.
