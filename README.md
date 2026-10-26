@@ -74,7 +74,7 @@ As etapas recentes incluíram a migração para .NET 10, a consolidação da aut
 
 O histórico completo apresenta as principais alterações realizadas desde o início do desenvolvimento do Bus Track.
 
-[Ver histórico completo de atualizações](docs/history.md)
+[Ver histórico completo de atualizações](docs/history/history.md)
 
 ## Arquitetura
 
@@ -84,7 +84,7 @@ A solução também utiliza interfaces, injeção de dependência, Services e Re
 
 A explicação completa da organização dos projetos, responsabilidades das camadas, comunicação entre frontend e backend e decisões arquiteturais está disponível na documentação.
 
-[Ver documentação completa da arquitetura](docs/architecture.md)
+[Ver documentação completa da arquitetura](docs/architecture/architecture.md)
 
 ## Estrutura do Projeto
 
