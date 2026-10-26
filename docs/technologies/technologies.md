@@ -82,7 +82,7 @@ A escolha do ASP.NET Core está diretamente relacionada à escolha do C# e do .N
 
 O framework fornece recursos necessários para construir uma API moderna sem que o projeto precise implementar manualmente toda a infraestrutura de comunicação HTTP.
 
-Entre os recursos utilizados ou previstos estão:
+Entre os recursos utilizados na versão atual estão:
 
 * Controllers;
 * Injeção de dependência;
@@ -616,15 +616,13 @@ Docker fornece uma forma padronizada de empacotar e executar o backend.
 
 MongoDB Atlas fornece a infraestrutura de banco de dados em produção.
 
-Render fornece a infraestrutura planejada para publicação do backend e frontend.
+Render fornece a infraestrutura utilizada para publicação do backend e frontend.
 
 Git e GitHub controlam e armazenam a evolução do código.
 
 ---
 
-# Tecnologias implementadas e tecnologias planejadas
-
-Nem todas as tecnologias mencionadas neste documento representam funcionalidades já concluídas.
+# Tecnologias utilizadas e recursos reservados para a V2
 
 ### Atualmente utilizadas
 
