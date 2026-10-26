@@ -2,11 +2,6 @@ name: Backend Tests
 
 on:
   workflow_call:
-    secrets:
-      BUSTRACK_TEST_EMAIL:
-        required: true
-      BUSTRACK_TEST_PASSWORD:
-        required: true
 
 jobs:
   test:
@@ -61,10 +56,18 @@ jobs:
           docker compose logs frontend
           exit 1
 
+      - name: Prepare isolated usability test credentials
+        run: |
+          TEST_EMAIL="bustrack-ci-${GITHUB_RUN_ID}@example.com"
+          TEST_PASSWORD="CiTestAa11@@"
+
+          echo "BUSTRACK_TEST_EMAIL=$TEST_EMAIL" >> "$GITHUB_ENV"
+          echo "BUSTRACK_TEST_PASSWORD=$TEST_PASSWORD" >> "$GITHUB_ENV"
+
       - name: Create test user
         env:
-          BUSTRACK_TEST_EMAIL: ${{ secrets.BUSTRACK_TEST_EMAIL }}
-          BUSTRACK_TEST_PASSWORD: ${{ secrets.BUSTRACK_TEST_PASSWORD }}
+          BUSTRACK_TEST_EMAIL: ${{ env.BUSTRACK_TEST_EMAIL }}
+          BUSTRACK_TEST_PASSWORD: ${{ env.BUSTRACK_TEST_PASSWORD }}
         run: |
           payload=$(jq -n \
             --arg fullName "BusTrack CI Test User" \
@@ -78,7 +81,7 @@ jobs:
               password: $password
             }')
 
-          echo "Criando usuário de teste no ambiente do CI..."
+          echo "Criando usuário de teste no ambiente isolado do CI..."
 
           curl --fail-with-body \
             --silent \
@@ -101,8 +104,8 @@ jobs:
         env:
           ConnectionStrings__BusTrackDBConnection: mongodb://localhost:27017
           ConnectionStrings__DatabaseName: BusTrackDB
-          BUSTRACK_TEST_EMAIL: ${{ secrets.BUSTRACK_TEST_EMAIL }}
-          BUSTRACK_TEST_PASSWORD: ${{ secrets.BUSTRACK_TEST_PASSWORD }}
+          BUSTRACK_TEST_EMAIL: ${{ env.BUSTRACK_TEST_EMAIL }}
+          BUSTRACK_TEST_PASSWORD: ${{ env.BUSTRACK_TEST_PASSWORD }}
         run: |
           dotnet test \
             BusTrack.Tests/BusTrack.Tests.csproj \
