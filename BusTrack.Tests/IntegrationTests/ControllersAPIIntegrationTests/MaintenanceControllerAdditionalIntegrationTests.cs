@@ -173,6 +173,17 @@ public class MaintenanceControllerAdditionalIntegrationTests : IDisposable
     {
         public Mock<IMaintenanceServiceAPI> ServiceMock { get; } = new();
 
+        public MaintenanceTestFactory()
+        {
+            // Program.Main validates JWT configuration before ConfigureWebHost runs.
+            // Seed process-level test settings before WebApplicationFactory starts the host.
+            Environment.SetEnvironmentVariable("JwtSettings__SecretKey", TestKey);
+            Environment.SetEnvironmentVariable("JwtSettings__Issuer", TestIssuer);
+            Environment.SetEnvironmentVariable("JwtSettings__Audience", TestAudience);
+            Environment.SetEnvironmentVariable("JwtSettings__ExpirationInMinutes", "30");
+            Environment.SetEnvironmentVariable("BootstrapAdmin__Secret", null);
+        }
+
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseEnvironment("Testing");
