@@ -1,19 +1,18 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tela Principal - Sistema Bus Track</title>
-  <link rel="stylesheet" href="main-screen.component.css">
-</head>
-<body>
-  <div class="container">
-   <h1 class="centered-title">Seja bem-vindo a página Principal do Sistema Bus Track</h1>
-   <img class="img-responsive" src="../../../assets/imagem/OIG4.jpeg" alt="Sistema Bus Track Logo" class="centralized-image" style="width: 200px; height: auto;">
-   <div class="button-container-horizontal">
-      <button class="blue-button" (click)="entrarNoSistema()" routerLink="/enter-the-system">Entrar no Sistema</button>
-      <button class="blue-button" (click)="criarConta()" routerLink="create-an-account">Criar Conta</button>
-   </div>
-  </div>
-</body>
-</html>
+<div class="recovery-page">
+  <main class="recovery-card">
+    <section class="visual-panel">
+      <img src="assets/imagem/OIG4.jpeg" alt="Ilustração do Bus Track">
+      <p>Bem-vindo ao Bus Track. Acesse sua conta ou crie um cadastro para continuar.</p>
+    </section>
+
+    <section class="form-panel">
+      <h1>Bem-vindo ao Bus Track</h1>
+      <p>Organize e acompanhe as informações do sistema em um só lugar.</p>
+
+      <div class="button-container">
+        <button type="button" (click)="entrarNoSistema()">Entrar no sistema</button>
+        <button type="button" class="secondary" (click)="criarConta()">Criar conta</button>
+      </div>
+    </section>
+  </main>
+</div>
