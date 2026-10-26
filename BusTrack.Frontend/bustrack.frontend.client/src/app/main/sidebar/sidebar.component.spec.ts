@@ -60,7 +60,7 @@ describe('SidebarComponent', () => {
 
   it('updates the displayed user data from a valid access token', () => {
     const payload = btoa(JSON.stringify({
-      name: 'Usuário de teste',
+      name: 'Usuario de teste',
       email: 'teste@example.com',
       role: 'ADMIN'
     }));
@@ -69,7 +69,7 @@ describe('SidebarComponent', () => {
     const fixture = TestBed.createComponent(SidebarComponent);
     fixture.detectChanges();
 
-    expect(fixture.componentInstance.nomeUsuario).toBe('Usuário de teste');
+    expect(fixture.componentInstance.nomeUsuario).toBe('Usuario de teste');
     expect(fixture.componentInstance.emailUsuario).toBe('teste@example.com');
     expect(fixture.componentInstance.perfilUsuario).toBe('ADMIN');
 
