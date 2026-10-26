@@ -12,7 +12,6 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         private const string InProgress = "Em andamento";
         private const string Completed = "Concluída";
         private const string Cancelled = "Cancelada";
-
         private readonly ITripRepositoryDB _tripRepository;
         private readonly ITripPassengerRepositoryDB _tripPassengerRepository;
         private readonly IBusRepositoryDB _busRepository;
@@ -21,14 +20,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         private readonly IPassengerRepositoryDB _passengerRepository;
         private readonly IMapper _mapper;
 
-        public TripServiceAPI(
-            ITripRepositoryDB tripRepository,
-            ITripPassengerRepositoryDB tripPassengerRepository,
-            IBusRepositoryDB busRepository,
-            IDriverRepositoryDB driverRepository,
-            IRouteRepositoryDB routeRepository,
-            IPassengerRepositoryDB passengerRepository,
-            IMapper mapper)
+        public TripServiceAPI(ITripRepositoryDB tripRepository, ITripPassengerRepositoryDB tripPassengerRepository, IBusRepositoryDB busRepository, IDriverRepositoryDB driverRepository, IRouteRepositoryDB routeRepository, IPassengerRepositoryDB passengerRepository, IMapper mapper)
         {
             _tripRepository = tripRepository;
             _tripPassengerRepository = tripPassengerRepository;
@@ -71,7 +63,6 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         {
             if (trip.DepartureTime <= DateTime.Now)
                 throw new ArgumentException("A saída deve ser agendada para um horário futuro.");
-
             var tripDB = _mapper.Map<TripDB>(trip);
             tripDB.Status = Scheduled;
             tripDB.StartedAt = null;
@@ -79,7 +70,6 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             tripDB.Duration = 0;
             tripDB.LimitPassengers = 0;
             tripDB.Passengers = new List<string>();
-
             var createdTrip = await _tripRepository.AddTripAsync(tripDB);
             return _mapper.Map<TripDTOAPI>(createdTrip);
         }
@@ -87,29 +77,23 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         public async Task<TripDTOAPI?> UpdateTripAsync(string? id, TripDTOAPI trip)
         {
             if (string.IsNullOrWhiteSpace(id)) return null;
-
             var existingTrip = await _tripRepository.GetTripByIdAsync(id);
             if (existingTrip == null) return null;
 
             var currentStatus = NormalizeStatus(existingTrip.Status);
             var requestedStatus = NormalizeStatus(trip.Status);
-
             if (currentStatus == Completed || currentStatus == Cancelled)
                 throw new ArgumentException("Viagens concluídas ou canceladas não podem ser alteradas.");
-
             if (!IsAllowedTransition(currentStatus, requestedStatus))
                 throw new ArgumentException($"Transição de '{currentStatus}' para '{requestedStatus}' não permitida.");
-
-            if (requestedStatus == Scheduled)
-                throw new ArgumentException("Uma viagem não pode voltar para Agendada.");
 
             if (requestedStatus == InProgress)
             {
                 if (DateTime.Now < existingTrip.DepartureTime)
                     throw new ArgumentException("A viagem só pode entrar em andamento no horário previsto de saída ou depois dele.");
-
+                var now = DateTime.Now;
                 existingTrip.Status = InProgress;
-                existingTrip.StartedAt = DateTime.Now;
+                existingTrip.StartedAt = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, now.Kind);
                 existingTrip.ArrivalTime = null;
                 existingTrip.Duration = 0;
                 existingTrip.LimitPassengers = 0;
@@ -131,11 +115,12 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                         throw new ArgumentException("A viagem não pode ser concluída antes do horário previsto de saída.");
                     startedAt = existingTrip.DepartureTime;
                 }
-
                 if (startedAt == null)
                     throw new ArgumentException("Registre o início da viagem antes de concluí-la.");
                 if (trip.ArrivalTime == null || trip.ArrivalTime == default)
                     throw new ArgumentException("Informe a data e o horário reais de chegada para concluir a viagem.");
+                if (trip.ArrivalTime.Value > DateTime.Now)
+                    throw new ArgumentException("A chegada real não pode estar no futuro.");
                 if (trip.ArrivalTime.Value < startedAt.Value)
                     throw new ArgumentException("A chegada não pode ser anterior ao início da viagem.");
                 if (trip.LimitPassengers <= 0)
@@ -179,13 +164,12 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             };
         }
 
-        private static bool IsAllowedTransition(string current, string requested) =>
-            current switch
-            {
-                Scheduled => requested is InProgress or Completed or Cancelled,
-                InProgress => requested is Completed or Cancelled,
-                _ => false
-            };
+        private static bool IsAllowedTransition(string current, string requested) => current switch
+        {
+            Scheduled => requested is InProgress or Completed or Cancelled,
+            InProgress => requested is Completed or Cancelled,
+            _ => false
+        };
 
         private async Task<TripDetailsDTOAPI> BuildTripDetailsAsync(TripDB trip)
         {
@@ -204,73 +188,30 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             if (!string.IsNullOrWhiteSpace(trip.BusId))
             {
                 var bus = await _busRepository.GetBusByIdAsync(trip.BusId);
-                if (bus != null)
-                    details.Bus = new BusDetailsDTOAPI
-                    {
-                        Id = bus.Id,
-                        Number = bus.Number,
-                        LicensePlate = bus.Plate,
-                        Model = bus.Line,
-                        Capacity = bus.Capacity
-                    };
+                if (bus != null) details.Bus = new BusDetailsDTOAPI { Id = bus.Id, Number = bus.Number, LicensePlate = bus.Plate, Model = bus.Line, Capacity = bus.Capacity };
             }
-
             if (!string.IsNullOrWhiteSpace(trip.DriverId))
             {
                 var driver = await _driverRepository.GetDriverByIdAsync(trip.DriverId);
-                if (driver != null)
-                    details.Driver = new DriverDetailsDTOAPI
-                    {
-                        Id = driver.Id,
-                        Name = driver.Name,
-                        LicenseNumber = driver.Cpf
-                    };
+                if (driver != null) details.Driver = new DriverDetailsDTOAPI { Id = driver.Id, Name = driver.Name, LicenseNumber = driver.Cpf };
             }
-
             if (!string.IsNullOrWhiteSpace(trip.RouteId))
             {
                 var route = await _routeRepository.GetRouteByIdAsync(trip.RouteId);
-                if (route != null)
-                    details.Route = new RouteDetailsDTOAPI
-                    {
-                        Id = route.Id,
-                        Name = route.Name,
-                        Origin = route.Origin,
-                        Destination = route.Destination
-                    };
+                if (route != null) details.Route = new RouteDetailsDTOAPI { Id = route.Id, Name = route.Name, Origin = route.Origin, Destination = route.Destination };
             }
 
             var tripPassengers = await _tripPassengerRepository.GetByTripIdAsync(trip.Id ?? string.Empty);
-            var passengerIds = tripPassengers
-                .Select(item => item.PassengerId)
-                .Where(passengerId => !string.IsNullOrWhiteSpace(passengerId))
-                .Select(passengerId => passengerId!)
-                .Distinct()
-                .ToList();
-
+            var passengerIds = tripPassengers.Select(item => item.PassengerId).Where(passengerId => !string.IsNullOrWhiteSpace(passengerId)).Select(passengerId => passengerId!).Distinct().ToList();
             if (passengerIds.Count == 0 && trip.Passengers != null)
-            {
-                passengerIds = trip.Passengers
-                    .Where(passengerId => !string.IsNullOrWhiteSpace(passengerId))
-                    .Select(passengerId => passengerId!)
-                    .Distinct()
-                    .ToList();
-            }
+                passengerIds = trip.Passengers.Where(passengerId => !string.IsNullOrWhiteSpace(passengerId)).Select(passengerId => passengerId!).Distinct().ToList();
 
             foreach (var passengerId in passengerIds)
             {
                 var passenger = await _passengerRepository.GetPassengerByIdAsync(passengerId);
                 if (passenger == null) continue;
-                details.Passengers.Add(new PassengerDetailsDTOAPI
-                {
-                    Id = passenger.Id,
-                    Name = passenger.Name,
-                    Cpf = passenger.Cpf,
-                    Email = passenger.Email,
-                    Phone = passenger.Phone
-                });
+                details.Passengers.Add(new PassengerDetailsDTOAPI { Id = passenger.Id, Name = passenger.Name, Cpf = passenger.Cpf, Email = passenger.Email, Phone = passenger.Phone });
             }
-
             return details;
         }
     }
