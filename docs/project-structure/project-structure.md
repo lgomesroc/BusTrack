@@ -1170,7 +1170,9 @@ BusTrack/
 │   │   │   ├── TripControllerAPIUnitTests.cs
 │   │   │   ├── TripsPassengerControllerAPIUnitTests.cs
 │   │   │   └── UserPresenceControllerAPIUnitTests.cs
-│   │   ├── ServicesAPI
+│   │   ├── Rules/
+│   │   │   └── TripRulesTests.cs
+│   │   └── ServicesAPI
 │   │   │   ├── JwtTokenServiceAPITests.cs
 │   │   │   ├── MaintenanceServiceAPIUnitTests.cs
 │   │   │   ├── TripServiceAPIUnitTests.cs
