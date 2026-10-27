@@ -36,7 +36,6 @@ describe('UserDashboardComponent', () => {
     expect(component.loadingTrips).toBeFalse();
   });
   it('shows an error when the trips request fails', () => {
-    component.tripsSubscription;
     trips.getMyTrips.and.returnValue(throwError(() => new Error('offline')));
     component.carregarMinhasViagens();
     http.expectOne(`${environment.apiUrl}/api/UserPresence/presence`).flush(null);
