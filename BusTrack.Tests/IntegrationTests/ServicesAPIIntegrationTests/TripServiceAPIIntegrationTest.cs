@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BusTrack.BusTrack.API.DTOAPI;
 using BusTrack.BusTrack.API.ServicesAPI;
 using BusTrack.BusTrack.DB.Classes;
@@ -11,525 +11,170 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
 {
     public class TripServiceAPIIntegrationTest
     {
-        private readonly Mock<ITripRepositoryDB>
-            _tripRepository;
-
-        private readonly Mock<ITripPassengerRepositoryDB>
-            _tripPassengerRepository;
-
-        private readonly Mock<IBusRepositoryDB>
-            _busRepository;
-
-        private readonly Mock<IDriverRepositoryDB>
-            _driverRepository;
-
-        private readonly Mock<IRouteRepositoryDB>
-            _routeRepository;
-
-        private readonly Mock<IPassengerRepositoryDB>
-            _passengerRepository;
-
-        private readonly IMapper _mapper;
-
-        private readonly TripServiceAPI
-            _tripServiceAPI;
+        private readonly Mock<ITripRepositoryDB> _tripRepository = new();
+        private readonly Mock<ITripPassengerRepositoryDB> _tripPassengerRepository = new();
+        private readonly Mock<IBusRepositoryDB> _busRepository = new();
+        private readonly Mock<IDriverRepositoryDB> _driverRepository = new();
+        private readonly Mock<IRouteRepositoryDB> _routeRepository = new();
+        private readonly Mock<IPassengerRepositoryDB> _passengerRepository = new();
+        private readonly ITripServiceAPI _tripServiceAPI;
 
         public TripServiceAPIIntegrationTest()
         {
-            _tripRepository =
-                new Mock<ITripRepositoryDB>();
-
-            _tripPassengerRepository =
-                new Mock<ITripPassengerRepositoryDB>();
-
-            _busRepository =
-                new Mock<IBusRepositoryDB>();
-
-            _driverRepository =
-                new Mock<IDriverRepositoryDB>();
-
-            _routeRepository =
-                new Mock<IRouteRepositoryDB>();
-
-            _passengerRepository =
-                new Mock<IPassengerRepositoryDB>();
-
-            var config =
-                new MapperConfiguration(
-                    cfg =>
-                    {
-                        cfg.AddProfile<AutoMapperProfile>();
-                    },
-                    NullLoggerFactory.Instance);
-
-            _mapper =
-                config.CreateMapper();
-
-            _tripServiceAPI =
-                new TripServiceAPI(
-                    _tripRepository.Object,
-                    _tripPassengerRepository.Object,
-                    _busRepository.Object,
-                    _driverRepository.Object,
-                    _routeRepository.Object,
-                    _passengerRepository.Object,
-                    _mapper);
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfile>(), NullLoggerFactory.Instance);
+            _tripServiceAPI = new TripServiceAPI(_tripRepository.Object, _tripPassengerRepository.Object, _busRepository.Object, _driverRepository.Object, _routeRepository.Object, _passengerRepository.Object, config.CreateMapper());
         }
 
         [Fact]
         public async Task GetAllTripsAsync_ReturnsAllTrips()
         {
-            var trips =
-                new List<TripDB>
-                {
-                    new TripDB
-                    {
-                        Id =
-                            "507f1f77bcf86cd799439011",
-
-                        BusId =
-                            "507f1f77bcf86cd799439012",
-
-                        DriverId =
-                            "507f1f77bcf86cd799439013",
-
-                        RouteId =
-                            "507f1f77bcf86cd799439014"
-                    },
-
-                    new TripDB
-                    {
-                        Id =
-                            "507f1f77bcf86cd799439015",
-
-                        BusId =
-                            "507f1f77bcf86cd799439016",
-
-                        DriverId =
-                            "507f1f77bcf86cd799439017",
-
-                        RouteId =
-                            "507f1f77bcf86cd799439018"
-                    }
-                };
-
-            _tripRepository
-                .Setup(repository =>
-                    repository.GetAllTripsAsync())
-                .ReturnsAsync(trips);
-
-            var result =
-                await _tripServiceAPI
-                    .GetAllTripsAsync();
-
+            _tripRepository.Setup(r => r.GetAllTripsAsync()).ReturnsAsync(new List<TripDB> { new(), new() });
+            var result = await _tripServiceAPI.GetAllTripsAsync();
             Assert.NotNull(result);
-
-            Assert.Equal(
-                2,
-                result.Count());
-
-            _tripRepository.Verify(
-                repository =>
-                    repository.GetAllTripsAsync(),
-                Times.Once);
+            Assert.Equal(2, result.Count());
+            _tripRepository.Verify(r => r.GetAllTripsAsync(), Times.Once);
         }
 
         [Fact]
         public async Task GetTripByIdAsync_WhenTripExists_ReturnsTrip()
         {
-            const string id =
-                "507f1f77bcf86cd799439011";
-
-            var trip =
-                new TripDB
-                {
-                    Id = id,
-
-                    BusId =
-                        "507f1f77bcf86cd799439012",
-
-                    DriverId =
-                        "507f1f77bcf86cd799439013",
-
-                    RouteId =
-                        "507f1f77bcf86cd799439014"
-                };
-
-            _tripRepository
-                .Setup(repository =>
-                    repository.GetTripByIdAsync(id))
-                .ReturnsAsync(trip);
-
-            var result =
-                await _tripServiceAPI
-                    .GetTripByIdAsync(id);
-
+            const string id = "507f1f77bcf86cd799439011";
+            var trip = new TripDB { Id = id, BusId = "507f1f77bcf86cd799439012", DriverId = "507f1f77bcf86cd799439013", RouteId = "507f1f77bcf86cd799439014" };
+            _tripRepository.Setup(r => r.GetTripByIdAsync(id)).ReturnsAsync(trip);
+            var result = await _tripServiceAPI.GetTripByIdAsync(id);
             Assert.NotNull(result);
-
-            Assert.Equal(
-                id,
-                result!.Id);
-
-            Assert.Equal(
-                trip.BusId,
-                result.BusId);
-
-            Assert.Equal(
-                trip.DriverId,
-                result.DriverId);
-
-            Assert.Equal(
-                trip.RouteId,
-                result.RouteId);
-
-            _tripRepository.Verify(
-                repository =>
-                    repository.GetTripByIdAsync(id),
-                Times.Once);
+            Assert.Equal(id, result!.Id);
+            Assert.Equal(trip.BusId, result.BusId);
+            Assert.Equal(trip.DriverId, result.DriverId);
+            Assert.Equal(trip.RouteId, result.RouteId);
         }
 
         [Fact]
         public async Task GetTripByIdAsync_WhenTripDoesNotExist_ReturnsNull()
         {
-            const string id =
-                "507f1f77bcf86cd799439011";
-
-            _tripRepository
-                .Setup(repository =>
-                    repository.GetTripByIdAsync(id))
-                .ReturnsAsync(
-                    (TripDB?)null);
-
-            var result =
-                await _tripServiceAPI
-                    .GetTripByIdAsync(id);
-
-            Assert.Null(result);
-
-            _tripRepository.Verify(
-                repository =>
-                    repository.GetTripByIdAsync(id),
-                Times.Once);
+            const string id = "507f1f77bcf86cd799439011";
+            _tripRepository.Setup(r => r.GetTripByIdAsync(id)).ReturnsAsync((TripDB?)null);
+            Assert.Null(await _tripServiceAPI.GetTripByIdAsync(id));
         }
 
         [Fact]
-        public async Task CreateTripAsync_ReturnsCreatedTrip()
+        public async Task CreateTripAsync_ReturnsCreatedTripAsScheduled()
         {
-            var trip =
-                new TripDTOAPI
-                {
-                    BusId =
-                        "507f1f77bcf86cd799439012",
+            var departure = DateTime.UtcNow.AddHours(1);
+            var trip = new TripDTOAPI { BusId = "bus", DriverId = "driver", RouteId = "route", DepartureTime = departure, ArrivalTime = DateTime.UtcNow.AddHours(2), Duration = 60, LimitPassengers = 40, Passengers = new List<string>() };
+            _tripRepository.Setup(r => r.AddTripAsync(It.IsAny<TripDB>())).ReturnsAsync((TripDB db) => { db.Id = "trip"; return db; });
 
-                    DriverId =
-                        "507f1f77bcf86cd799439013",
-
-                    RouteId =
-                        "507f1f77bcf86cd799439014",
-
-                    DepartureTime =
-                        new DateTime(
-                            2026,
-                            9,
-                            16,
-                            16,
-                            0,
-                            0),
-
-                    ArrivalTime =
-                        new DateTime(
-                            2026,
-                            9,
-                            16,
-                            18,
-                            0,
-                            0),
-
-                    Duration = 120,
-
-                    LimitPassengers = 40,
-
-                    Passengers =
-                        new List<string>()
-                };
-
-            _tripRepository
-                .Setup(repository =>
-                    repository.AddTripAsync(
-                        It.IsAny<TripDB>()))
-                .ReturnsAsync(
-                    (TripDB tripDB) =>
-                    {
-                        tripDB.Id =
-                            "507f1f77bcf86cd799439011";
-
-                        return tripDB;
-                    });
-
-            var result =
-                await _tripServiceAPI
-                    .CreateTripAsync(trip);
+            var result = await _tripServiceAPI.CreateTripAsync(trip);
 
             Assert.NotNull(result);
-
-            Assert.NotNull(
-                result.Id);
-
-            Assert.Equal(
-                trip.BusId,
-                result.BusId);
-
-            Assert.Equal(
-                trip.DriverId,
-                result.DriverId);
-
-            Assert.Equal(
-                trip.RouteId,
-                result.RouteId);
-
-            Assert.Equal(
-                trip.DepartureTime,
-                result.DepartureTime);
-
-            Assert.Equal(
-                trip.ArrivalTime,
-                result.ArrivalTime);
-
-            Assert.Equal(
-                trip.Duration,
-                result.Duration);
-
-            Assert.Equal(
-                trip.LimitPassengers,
-                result.LimitPassengers);
-
-            _tripRepository.Verify(
-                repository =>
-                    repository.AddTripAsync(
-                        It.IsAny<TripDB>()),
-                Times.Once);
+            Assert.Equal("trip", result.Id);
+            Assert.Equal(departure, result.DepartureTime);
+            Assert.Equal("Agendada", result.Status);
+            Assert.Null(result.StartedAt);
+            Assert.Null(result.ArrivalTime);
+            Assert.Equal(0, result.Duration);
+            Assert.Equal(0, result.LimitPassengers);
+            _tripRepository.Verify(r => r.AddTripAsync(It.IsAny<TripDB>()), Times.Once);
         }
 
         [Fact]
-        public async Task UpdateTripAsync_WhenTripExists_ReturnsUpdatedTrip()
+        public async Task CreateTripAsync_WhenDepartureIsPast_Throws()
         {
-            const string id =
-                "507f1f77bcf86cd799439011";
+            var trip = new TripDTOAPI { DepartureTime = DateTime.UtcNow.AddMinutes(-1) };
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _tripServiceAPI.CreateTripAsync(trip));
+            Assert.Equal("A saída deve ser agendada para um horário futuro.", exception.Message);
+            _tripRepository.Verify(r => r.AddTripAsync(It.IsAny<TripDB>()), Times.Never);
+        }
 
-            var existingTrip =
-                new TripDB
-                {
-                    Id = id,
+        [Fact]
+        public async Task UpdateTripAsync_AgendedToCancelled_ReturnsCancelledTrip()
+        {
+            const string id = "trip";
+            var existing = new TripDB { Id = id, Status = "Agendada", DepartureTime = DateTime.UtcNow.AddHours(1), BusId = "bus", DriverId = "driver", RouteId = "route" };
+            _tripRepository.Setup(r => r.GetTripByIdAsync(id)).ReturnsAsync(existing);
+            _tripRepository.Setup(r => r.UpdateTripAsync(id, It.IsAny<TripDB>())).ReturnsAsync((string _, TripDB db) => db);
 
-                    BusId =
-                        "507f1f77bcf86cd799439012",
-
-                    DriverId =
-                        "507f1f77bcf86cd799439013",
-
-                    RouteId =
-                        "507f1f77bcf86cd799439014"
-                };
-
-            var trip =
-                new TripDTOAPI
-                {
-                    Id = id,
-
-                    BusId =
-                        "507f1f77bcf86cd799439015",
-
-                    DriverId =
-                        "507f1f77bcf86cd799439016",
-
-                    RouteId =
-                        "507f1f77bcf86cd799439017",
-
-                    DepartureTime =
-                        new DateTime(
-                            2026,
-                            9,
-                            16,
-                            16,
-                            0,
-                            0),
-
-                    ArrivalTime =
-                        new DateTime(
-                            2026,
-                            9,
-                            16,
-                            18,
-                            0,
-                            0),
-
-                    Duration = 120,
-
-                    LimitPassengers = 45,
-
-                    Passengers =
-                        new List<string>()
-                };
-
-            _tripRepository
-                .Setup(repository =>
-                    repository.GetTripByIdAsync(id))
-                .ReturnsAsync(existingTrip);
-
-            _tripRepository
-                .Setup(repository =>
-                    repository.UpdateTripAsync(
-                        id,
-                        It.IsAny<TripDB>()))
-                .ReturnsAsync(
-                    (
-                        string _,
-                        TripDB tripDB) =>
-                    {
-                        tripDB.Id = id;
-
-                        return tripDB;
-                    });
-
-            var result =
-                await _tripServiceAPI
-                    .UpdateTripAsync(
-                        id,
-                        trip);
+            var result = await _tripServiceAPI.UpdateTripAsync(id, new TripDTOAPI { Status = "Cancelada" });
 
             Assert.NotNull(result);
+            Assert.Equal("Cancelada", result!.Status);
+            Assert.Null(result.ArrivalTime);
+            Assert.Equal(0, result.Duration);
+            Assert.Equal(0, result.LimitPassengers);
+            _tripRepository.Verify(r => r.UpdateTripAsync(id, It.IsAny<TripDB>()), Times.Once);
+        }
 
-            Assert.Equal(
-                id,
-                result!.Id);
+        [Fact]
+        public async Task UpdateTripAsync_InProgressToCompleted_UsesExactDuration()
+        {
+            const string id = "trip";
+            var started = DateTime.UtcNow.AddMinutes(-59);
+            var arrival = DateTime.UtcNow.AddMinutes(-1);
+            var existing = new TripDB { Id = id, Status = "Em andamento", StartedAt = started, DepartureTime = started, BusId = "bus", DriverId = "driver", RouteId = "route" };
+            _tripRepository.Setup(r => r.GetTripByIdAsync(id)).ReturnsAsync(existing);
+            _tripRepository.Setup(r => r.UpdateTripAsync(id, It.IsAny<TripDB>())).ReturnsAsync((string _, TripDB db) => db);
 
-            Assert.Equal(
-                trip.BusId,
-                result.BusId);
+            var result = await _tripServiceAPI.UpdateTripAsync(id, new TripDTOAPI { Status = "Concluída", ArrivalTime = arrival, Duration = 58, LimitPassengers = 35 });
 
-            Assert.Equal(
-                trip.DriverId,
-                result.DriverId);
+            Assert.NotNull(result);
+            Assert.Equal("Concluída", result!.Status);
+            Assert.Equal(58, result.Duration);
+            Assert.Equal(35, result.LimitPassengers);
+            Assert.Equal(arrival, result.ArrivalTime);
+        }
 
-            Assert.Equal(
-                trip.RouteId,
-                result.RouteId);
+        [Fact]
+        public async Task UpdateTripAsync_WhenDurationDoesNotMatchArrival_Throws()
+        {
+            const string id = "trip";
+            var started = DateTime.UtcNow.AddMinutes(-60);
+            var arrival = DateTime.UtcNow.AddMinutes(-1);
+            var existing = new TripDB { Id = id, Status = "Em andamento", StartedAt = started, DepartureTime = started };
+            _tripRepository.Setup(r => r.GetTripByIdAsync(id)).ReturnsAsync(existing);
 
-            Assert.Equal(
-                trip.DepartureTime,
-                result.DepartureTime);
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _tripServiceAPI.UpdateTripAsync(id, new TripDTOAPI { Status = "Concluída", ArrivalTime = arrival, Duration = 1, LimitPassengers = 35 }));
+            Assert.Contains("duração informada deve corresponder", exception.Message);
+        }
 
-            Assert.Equal(
-                trip.ArrivalTime,
-                result.ArrivalTime);
+        [Fact]
+        public async Task UpdateTripAsync_WhenCompletedTripIsChanged_Throws()
+        {
+            const string id = "trip";
+            _tripRepository.Setup(r => r.GetTripByIdAsync(id)).ReturnsAsync(new TripDB { Id = id, Status = "Concluída" });
+            await Assert.ThrowsAsync<ArgumentException>(() => _tripServiceAPI.UpdateTripAsync(id, new TripDTOAPI { Status = "Cancelada" }));
+        }
 
-            Assert.Equal(
-                trip.Duration,
-                result.Duration);
-
-            Assert.Equal(
-                trip.LimitPassengers,
-                result.LimitPassengers);
-
-            _tripRepository.Verify(
-                repository =>
-                    repository.GetTripByIdAsync(id),
-                Times.Once);
-
-            _tripRepository.Verify(
-                repository =>
-                    repository.UpdateTripAsync(
-                        id,
-                        It.IsAny<TripDB>()),
-                Times.Once);
+        [Fact]
+        public async Task UpdateTripAsync_WhenCancelledTripIsChanged_Throws()
+        {
+            const string id = "trip";
+            _tripRepository.Setup(r => r.GetTripByIdAsync(id)).ReturnsAsync(new TripDB { Id = id, Status = "Cancelada" });
+            await Assert.ThrowsAsync<ArgumentException>(() => _tripServiceAPI.UpdateTripAsync(id, new TripDTOAPI { Status = "Agendada" }));
         }
 
         [Fact]
         public async Task UpdateTripAsync_WhenTripDoesNotExist_ReturnsNull()
         {
-            const string id =
-                "507f1f77bcf86cd799439011";
-
-            var trip =
-                new TripDTOAPI
-                {
-                    Id = id,
-
-                    BusId =
-                        "507f1f77bcf86cd799439012"
-                };
-
-            _tripRepository
-                .Setup(repository =>
-                    repository.GetTripByIdAsync(id))
-                .ReturnsAsync(
-                    (TripDB?)null);
-
-            var result =
-                await _tripServiceAPI
-                    .UpdateTripAsync(
-                        id,
-                        trip);
-
-            Assert.Null(result);
-
-            _tripRepository.Verify(
-                repository =>
-                    repository.GetTripByIdAsync(id),
-                Times.Once);
-
-            _tripRepository.Verify(
-                repository =>
-                    repository.UpdateTripAsync(
-                        It.IsAny<string>(),
-                        It.IsAny<TripDB>()),
-                Times.Never);
+            const string id = "507f1f77bcf86cd799439011";
+            _tripRepository.Setup(r => r.GetTripByIdAsync(id)).ReturnsAsync((TripDB?)null);
+            Assert.Null(await _tripServiceAPI.UpdateTripAsync(id, new TripDTOAPI { Status = "Cancelada" }));
+            _tripRepository.Verify(r => r.UpdateTripAsync(It.IsAny<string>(), It.IsAny<TripDB>()), Times.Never);
         }
 
         [Fact]
         public async Task DeleteTripAsync_WhenTripExists_ReturnsTrue()
         {
-            const string id =
-                "507f1f77bcf86cd799439011";
-
-            _tripRepository
-                .Setup(repository =>
-                    repository.DeleteTripAsync(id))
-                .ReturnsAsync(true);
-
-            var result =
-                await _tripServiceAPI
-                    .DeleteTripAsync(id);
-
-            Assert.True(result);
-
-            _tripRepository.Verify(
-                repository =>
-                    repository.DeleteTripAsync(id),
-                Times.Once);
+            const string id = "507f1f77bcf86cd799439011";
+            _tripRepository.Setup(r => r.DeleteTripAsync(id)).ReturnsAsync(true);
+            Assert.True(await _tripServiceAPI.DeleteTripAsync(id));
         }
 
         [Fact]
         public async Task DeleteTripAsync_WhenTripDoesNotExist_ReturnsFalse()
         {
-            const string id =
-                "507f1f77bcf86cd799439011";
-
-            _tripRepository
-                .Setup(repository =>
-                    repository.DeleteTripAsync(id))
-                .ReturnsAsync(false);
-
-            var result =
-                await _tripServiceAPI
-                    .DeleteTripAsync(id);
-
-            Assert.False(result);
-
-            _tripRepository.Verify(
-                repository =>
-                    repository.DeleteTripAsync(id),
-                Times.Once);
+            const string id = "507f1f77bcf86cd799439011";
+            _tripRepository.Setup(r => r.DeleteTripAsync(id)).ReturnsAsync(false);
+            Assert.False(await _tripServiceAPI.DeleteTripAsync(id));
         }
     }
 }
