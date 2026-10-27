@@ -998,25 +998,34 @@ BusTrack/
 │   │   │   │   │   │   └── reset-password.component.ts
 │   │   │   │   │   ├── rules/
 │   │   │   │   │   │   ├── blockCopyRules/
+│   │   │   │   │   │   │   ├── blockCopyRule.spec.ts
 │   │   │   │   │   │   │   └── blockCopyRule.ts
 │   │   │   │   │   │   ├── blockSavePasswordRules/
+│   │   │   │   │   │   │   ├── blockSavePasswordRule.spec.ts
 │   │   │   │   │   │   │   └── blockSavePasswordRule.ts
 │   │   │   │   │   │   ├── checkPasswordStrengthpasswordRules/
+│   │   │   │   │   │   │   ├── checkPasswordStrength(passwordRule.spec.ts
 │   │   │   │   │   │   │   └── checkPasswordStrengthpasswordRule.ts
 │   │   │   │   │   │   ├── disableInteractionsRules/
+│   │   │   │   │   │   │   ├── disableInteractionsRule.spec.ts
 │   │   │   │   │   │   │   └── disableInteractionsRule.ts
 │   │   │   │   │   │   ├── disableKeyboardShortcutsRules/
+│   │   │   │   │   │   │   ├── disableKeyboardShortcutsRule.spec.ts
 │   │   │   │   │   │   │   └── disableKeyboardShortcutsRule.ts
 │   │   │   │   │   │   ├── hasRepeatedOrSequentialNumbersRules/
+│   │   │   │   │   │   │   ├── hasRepeatedOrSequentialNumbersRule.spec.ts
 │   │   │   │   │   │   │   └── hasRepeatedOrSequentialNumbersRule.ts
 │   │   │   │   │   │   ├── inactivityTimerRules/
 │   │   │   │   │   │   │   ├── inactivityTimerRule.spec.ts
 │   │   │   │   │   │   │   └── inactivityTimerRule.ts
 │   │   │   │   │   │   ├── preventBackNavigationRules/
+│   │   │   │   │   │   │   ├── preventBackNavigationRule.spec.ts
 │   │   │   │   │   │   │   └── preventBackNavigationRule.ts
 │   │   │   │   │   │   ├── preventForwardNavigationRules/
+│   │   │   │   │   │   │   ├── preventForwardNavigationRule.spec.ts
 │   │   │   │   │   │   │   └── preventForwardNavigationRule.ts
 │   │   │   │   │   │   ├── sessionTimeoutRules/
+│   │   │   │   │   │   │   ├── sessionTimeoutRule.spec.ts
 │   │   │   │   │   │   │   └── sessionTimeoutRule.ts
 │   │   │   │   │   ├── update-password/
 │   │   │   │   │   │   ├── update-password.component.css
@@ -1055,10 +1064,13 @@ BusTrack/
 │   │   │   │   │   │   └── routes.component.ts
 │   │   │   │   │   ├── rules-main/
 │   │   │   │   │   │   ├── limitCharactersRules/
+│   │   │   │   │   │   │   ├── limitCharactersRule.spec.ts
 │   │   │   │   │   │   │   └── limitCharactersRule.ts
 │   │   │   │   │   │   ├── validateEmailFormatRules/
+│   │   │   │   │   │   │   ├── validateEmailFormatRule.spec.ts
 │   │   │   │   │   │   │   └── validateEmailFormatRule.ts
 │   │   │   │   │   │   ├── validateFieldsRequiredRules/
+│   │   │   │   │   │   │   ├── validateFieldsRequiredRule.spec.ts
 │   │   │   │   │   │   │   └── validateFieldsRequiredRule.ts
 │   │   │   │   │   ├── sidebar/
 │   │   │   │   │   │   ├── sidebar.component.css
@@ -1140,6 +1152,7 @@ BusTrack/
 │   │   │   ├── JwtAuthenticationIntegrationTests.cs
 │   │   │   ├── MaintenanceControllerAdditionalIntegrationTests.cs
 │   │   │   ├── MaintenanceControllerAPIIntegrationTests.cs
+│   │   │   ├── MaintenanceServiceAPIPersistenceIntegrationTests.cs
 │   │   │   ├── PassengerControllerAPIIntegrationTest.cs
 │   │   │   ├── RouteControllerAPIIntegrationTest.cs
 │   │   │   └── TripControllerAPIIntegrationTest.cs
@@ -1170,7 +1183,9 @@ BusTrack/
 │   │   │   ├── TripControllerAPIUnitTests.cs
 │   │   │   ├── TripsPassengerControllerAPIUnitTests.cs
 │   │   │   └── UserPresenceControllerAPIUnitTests.cs
-│   │   ├── ServicesAPI
+│   │   ├── Rules/
+│   │   │   └── TripRulesTests.cs
+│   │   └── ServicesAPI
 │   │   │   ├── JwtTokenServiceAPITests.cs
 │   │   │   ├── MaintenanceServiceAPIUnitTests.cs
 │   │   │   ├── TripServiceAPIUnitTests.cs

@@ -15,10 +15,7 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         private readonly IUserRepositoryDB _userRepository;
         private readonly IPassengerRepositoryDB _passengerRepository;
 
-        public TripControllerAPI(
-            ITripServiceAPI tripService,
-            IUserRepositoryDB userRepository,
-            IPassengerRepositoryDB passengerRepository)
+        public TripControllerAPI(ITripServiceAPI tripService, IUserRepositoryDB userRepository, IPassengerRepositoryDB passengerRepository)
         {
             _tripService = tripService;
             _userRepository = userRepository;
@@ -26,11 +23,7 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            var trips = await _tripService.GetAllTripDetailsAsync();
-            return Ok(trips);
-        }
+        public async Task<IActionResult> GetAll() => Ok(await _tripService.GetAllTripDetailsAsync());
 
         [Authorize]
         [HttpGet("mine")]
@@ -42,27 +35,19 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
             var account = string.IsNullOrWhiteSpace(email) ? null : _userRepository.GetByEmail(email);
             var passengerIds = new HashSet<string>(StringComparer.Ordinal);
-
             if (account is not null)
             {
                 var passengers = await _passengerRepository.GetAllPassengersAsync();
                 foreach (var passenger in passengers)
                 {
-                    var emailMatches = !string.IsNullOrWhiteSpace(account.Email) &&
-                        string.Equals(passenger.Email, account.Email, StringComparison.OrdinalIgnoreCase);
-                    var cpfMatches = !string.IsNullOrWhiteSpace(account.CPF) &&
-                        string.Equals(NormalizeCpf(passenger.Cpf), NormalizeCpf(account.CPF), StringComparison.Ordinal);
-                    if ((emailMatches || cpfMatches) && !string.IsNullOrWhiteSpace(passenger.Id))
-                        passengerIds.Add(passenger.Id);
+                    var emailMatches = !string.IsNullOrWhiteSpace(account.Email) && string.Equals(passenger.Email, account.Email, StringComparison.OrdinalIgnoreCase);
+                    var cpfMatches = !string.IsNullOrWhiteSpace(account.CPF) && string.Equals(NormalizeCpf(passenger.Cpf), NormalizeCpf(account.CPF), StringComparison.Ordinal);
+                    if ((emailMatches || cpfMatches) && !string.IsNullOrWhiteSpace(passenger.Id)) passengerIds.Add(passenger.Id);
                 }
             }
 
             var trips = await _tripService.GetAllTripDetailsAsync();
-            var mine = trips.Where(trip =>
-                string.Equals(trip.UserId, userId, StringComparison.Ordinal) ||
-                trip.Passengers.Any(passenger => !string.IsNullOrWhiteSpace(passenger.Id) && passengerIds.Contains(passenger.Id)));
-
-            return Ok(mine);
+            return Ok(trips.Where(trip => string.Equals(trip.UserId, userId, StringComparison.Ordinal) || trip.Passengers.Any(passenger => !string.IsNullOrWhiteSpace(passenger.Id) && passengerIds.Contains(passenger.Id))));
         }
 
         [HttpGet("{id}", Name = "GetTrip")]
@@ -79,10 +64,17 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             if (trip == null) return BadRequest();
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("sub")?.Value;
             if (string.IsNullOrWhiteSpace(userId)) return Unauthorized();
-
             trip.UserId = userId;
-            var createdTrip = await _tripService.CreateTripAsync(trip);
-            return CreatedAtRoute("GetTrip", new { id = createdTrip.Id }, createdTrip);
+
+            try
+            {
+                var createdTrip = await _tripService.CreateTripAsync(trip);
+                return CreatedAtRoute("GetTrip", new { id = createdTrip.Id }, createdTrip);
+            }
+            catch (ArgumentException exception)
+            {
+                return BadRequest(new { message = exception.Message });
+            }
         }
 
         [Authorize(Roles = "ADMIN")]
@@ -90,8 +82,15 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         public async Task<IActionResult> Update(string id, [FromBody] TripDTOAPI trip)
         {
             if (trip == null) return BadRequest();
-            var updatedTrip = await _tripService.UpdateTripAsync(id, trip);
-            return updatedTrip == null ? NotFound() : Ok(updatedTrip);
+            try
+            {
+                var updatedTrip = await _tripService.UpdateTripAsync(id, trip);
+                return updatedTrip == null ? NotFound() : Ok(updatedTrip);
+            }
+            catch (ArgumentException exception)
+            {
+                return BadRequest(new { message = exception.Message });
+            }
         }
 
         [Authorize(Roles = "ADMIN")]
@@ -102,7 +101,6 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             return deleted ? NoContent() : NotFound();
         }
 
-        private static string NormalizeCpf(string? cpf) =>
-            new string((cpf ?? string.Empty).Where(char.IsDigit).ToArray());
+        private static string NormalizeCpf(string? cpf) => new((cpf ?? string.Empty).Where(char.IsDigit).ToArray());
     }
 }
