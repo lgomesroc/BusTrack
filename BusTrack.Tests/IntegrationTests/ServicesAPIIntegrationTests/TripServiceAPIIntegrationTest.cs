@@ -62,8 +62,41 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         public async Task CreateTripAsync_ReturnsCreatedTripAsScheduled()
         {
             var departure = DateTime.UtcNow.AddHours(1);
-            var trip = new TripDTOAPI { BusId = "bus", DriverId = "driver", RouteId = "route", DepartureTime = departure, ArrivalTime = DateTime.UtcNow.AddHours(2), Duration = 60, LimitPassengers = 40, Passengers = new List<string>() };
-            _tripRepository.Setup(r => r.AddTripAsync(It.IsAny<TripDB>())).ReturnsAsync((TripDB db) => { db.Id = "trip"; return db; });
+            var trip = new TripDTOAPI
+            {
+                BusId = "bus",
+                DriverId = "driver",
+                RouteId = "route",
+                DepartureTime = departure,
+                ArrivalTime = DateTime.UtcNow.AddHours(2),
+                Duration = 60,
+                LimitPassengers = 40,
+                Passengers = new List<string>()
+            };
+
+            _tripRepository
+                .Setup(r => r.AddTripAsync(It.IsAny<TripDB>()))
+                .ReturnsAsync((TripDB db) =>
+                {
+                    db.Id = "trip";
+                    return db;
+                });
+
+            var result = await _tripServiceAPI.CreateTripAsync(trip);
+
+            Assert.NotNull(result);
+            Assert.Equal("trip", result.Id);
+            Assert.Equal(departure, result.DepartureTime);
+            Assert.Equal("Agendada", result.Status);
+            Assert.Null(result.StartedAt);
+            Assert.Null(result.ArrivalTime);
+            Assert.Equal(0, result.Duration);
+            Assert.Equal(0, result.LimitPassengers);
+
+            _tripRepository.Verify(
+                r => r.AddTripAsync(It.IsAny<TripDB>()),
+                Times.Once);
+        }
 
             var result = await _tripServiceAPI.CreateTripAsync(trip);
 
@@ -81,12 +114,22 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         [Fact]
         public async Task CreateTripAsync_WhenDepartureIsPast_Throws()
         {
-            var trip = new TripDTOAPI { DepartureTime = DateTime.UtcNow.AddMinutes(-1) };
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _tripServiceAPI.CreateTripAsync(trip));
-            Assert.Equal("A saída deve ser agendada para um horário futuro.", exception.Message);
-            _tripRepository.Verify(r => r.AddTripAsync(It.IsAny<TripDB>()), Times.Never);
-        }
+            var trip = new TripDTOAPI
+            {
+                DepartureTime = DateTime.UtcNow.AddMinutes(-1)
+            };
 
+            var exception = await Assert.ThrowsAsync<ArgumentException>(
+                () => _tripServiceAPI.CreateTripAsync(trip));
+
+            Assert.Equal(
+                "A saída deve ser agendada para um horário futuro.",
+                exception.Message);
+
+            _tripRepository.Verify(
+                r => r.AddTripAsync(It.IsAny<TripDB>()),
+                Times.Never);
+        }
         [Fact]
         public async Task UpdateTripAsync_AgendedToCancelled_ReturnsCancelledTrip()
         {
