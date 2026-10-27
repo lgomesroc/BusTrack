@@ -961,7 +961,11 @@ BusTrack/
 │   │   ├── src/
 │   │   │   └── app/
 │   │   │   │   ├── guards/
+│   │   │   │   │   ├── authentication.guard.spec.ts
 │   │   │   │   │   ├── authentication.guard.ts
+│   │   │   │   │   ├── dashboard-role.guard.spec.ts
+│   │   │   │   │   ├── dashboard-role.guard.ts
+│   │   │   │   │   ├── browser-navigation.guard.spec.ts
 │   │   │   │   │   └── browser-navigation.guard.ts
 │   │   │   │   ├── login/
 │   │   │   │   │   ├── concluded/
@@ -1039,10 +1043,12 @@ BusTrack/
 │   │   │   │   │   ├── admin-dashboard/
 │   │   │   │   │   │   ├── admin-dashboard.component.css
 │   │   │   │   │   │   ├── admin-dashboard.component.html
+│   │   │   │   │   │   ├── admin-dashboard.component.spec.ts
 │   │   │   │   │   │   └── admin-dashboard.component.ts
 │   │   │   │   │   ├── buses/
 │   │   │   │   │   │   ├── buses.component.css
 │   │   │   │   │   │   ├── buses.component.html
+│   │   │   │   │   │   ├── buses.component.spec.ts 
 │   │   │   │   │   │   └── buses.component.ts
 │   │   │   │   │   ├── dashboard/
 │   │   │   │   │   │   ├── dashboard.component.css
@@ -1052,6 +1058,7 @@ BusTrack/
 │   │   │   │   │   ├──  drivers/
 │   │   │   │   │   │   ├── drivers.component.css
 │   │   │   │   │   │   ├── drivers.component.html
+│   │   │   │   │   │   ├── drivers.component.spec.ts
 │   │   │   │   │   │   └── drivers.component.ts
 │   │   │   │   │   ├──  maintenance/
 │   │   │   │   │   │   ├── maintenance.component.css
@@ -1061,10 +1068,12 @@ BusTrack/
 │   │   │   │   │   ├──  passengers/
 │   │   │   │   │   │   ├── passengers.component.css
 │   │   │   │   │   │   ├── passengers.component.html
+│   │   │   │   │   │   ├── passengers.component.spec.ts
 │   │   │   │   │   │   └── passengers.component.ts
 │   │   │   │   │   ├──  routes/
 │   │   │   │   │   │   ├── routes.component.css
 │   │   │   │   │   │   ├── routes.component.html
+│   │   │   │   │   │   ├── routes.component.spec.ts
 │   │   │   │   │   │   └── routes.component.ts
 │   │   │   │   │   ├── rules-main/
 │   │   │   │   │   │   ├── limitCharactersRules/
@@ -1084,14 +1093,17 @@ BusTrack/
 │   │   │   │   │   ├── trip-details/
 │   │   │   │   │   │   ├── trip-details.component.css
 │   │   │   │   │   │   ├── trip-details.component.html
+│   │   │   │   │   │   ├── trip-details.component.spec.ts
 │   │   │   │   │   │   └── trip-details.component.ts
 │   │   │   │   │   └── trips/
 │   │   │   │   │   │   ├── trips.component.css
 │   │   │   │   │   │   ├── trips.component.html
+│   │   │   │   │   │   ├── trips.component.spec.ts
 │   │   │   │   │   │   └── trips.component.ts
 │   │   │   │   │   └── user-dashboard/
 │   │   │   │   │   │   ├── user-dashboard.component.css
 │   │   │   │   │   │   ├── user-dashboard.component.html
+│   │   │   │   │   │   ├── user-dashboard.component.spec.ts
 │   │   │   │   │   │   └── user-dashboard.component.ts
 │   │   │   │   ├── models/
 │   │   │   │   │   └── user.model.ts
