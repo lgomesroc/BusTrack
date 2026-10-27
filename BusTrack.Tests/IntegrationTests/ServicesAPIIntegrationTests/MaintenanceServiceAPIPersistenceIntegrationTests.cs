@@ -7,7 +7,6 @@ using BusTrack.BusTrack.DB.RepositoriesDB;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging.Abstractions;
 using MongoDB.Driver;
-using Xunit.Sdk;
 
 namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests;
 
@@ -30,13 +29,9 @@ public sealed class MaintenanceServiceAPIPersistenceIntegrationTests : IAsyncLif
 
     public MaintenanceServiceAPIPersistenceIntegrationTests()
     {
-        var connectionString = Environment.GetEnvironmentVariable(ConnectionStringVariable);
-
-        if (string.IsNullOrWhiteSpace(connectionString))
-        {
-            throw new SkipException(
-                $"Defina a variável {ConnectionStringVariable} para executar testes de integração com MongoDB real.");
-        }
+        var connectionString = Environment.GetEnvironmentVariable(ConnectionStringVariable)
+            ?? throw new InvalidOperationException(
+                $"A variável {ConnectionStringVariable} deve estar configurada para executar esta suíte.");
 
         _client = new MongoClient(connectionString);
         var databaseName = $"BusTrackMaintenanceTests_{Guid.NewGuid():N}";
@@ -65,7 +60,7 @@ public sealed class MaintenanceServiceAPIPersistenceIntegrationTests : IAsyncLif
         await _client.DropDatabaseAsync(_database.DatabaseNamespace.DatabaseName);
     }
 
-    [Fact]
+    [RequiresMongoDbFact]
     public async Task CreateAsync_PersistsMaintenanceAndCreationAudit()
     {
         var bus = await CreateBusAsync();
@@ -98,7 +93,7 @@ public sealed class MaintenanceServiceAPIPersistenceIntegrationTests : IAsyncLif
         Assert.NotNull(created);
 
         var update = CreateMaintenance(bus.Id!);
-        update.ServiceDate = DateTime.UtcNow.AddHours(-1);
+        update.ServiceDate = DateTime.UtcNow.AddDays(-1);
         update.Status = "Em andamento";
         update.Description = "Revisão iniciada no teste";
         update.Cost = 325.50m;
@@ -193,5 +188,22 @@ public sealed class MaintenanceServiceAPIPersistenceIntegrationTests : IAsyncLif
             Cost = 250m,
             Status = "Agendada"
         };
+    }
+}
+
+/// <summary>
+/// Ignora automaticamente os testes quando a conexão MongoDB de teste não foi configurada.
+/// Compatível com a versão xUnit usada pelo projeto.
+/// </summary>
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+public sealed class RequiresMongoDbFactAttribute : FactAttribute
+{
+    public RequiresMongoDbFactAttribute()
+    {
+        if (string.IsNullOrWhiteSpace(
+            Environment.GetEnvironmentVariable("BUS_TRACK_TEST_MONGO_CONNECTION_STRING")))
+        {
+            Skip = "Defina BUS_TRACK_TEST_MONGO_CONNECTION_STRING para executar a integração com MongoDB real.";
+        }
     }
 }
