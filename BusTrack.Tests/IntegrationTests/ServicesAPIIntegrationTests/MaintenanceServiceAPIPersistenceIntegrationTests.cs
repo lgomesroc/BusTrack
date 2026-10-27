@@ -85,7 +85,7 @@ public sealed class MaintenanceServiceAPIPersistenceIntegrationTests : IAsyncLif
         Assert.NotEmpty(audit.Changes);
     }
 
-    [Fact]
+    [RequiresMongoDbFact]
     public async Task UpdateAsync_PersistsChangesAndAuditSnapshot()
     {
         var bus = await CreateBusAsync();
@@ -118,7 +118,7 @@ public sealed class MaintenanceServiceAPIPersistenceIntegrationTests : IAsyncLif
         Assert.Contains(updateAudit.Changes, change => change.Field == "Description");
     }
 
-    [Fact]
+    [RequiresMongoDbFact]
     public async Task DeleteAsync_SoftDeletesMaintenanceAndPersistsReasonInAudit()
     {
         var bus = await CreateBusAsync();
@@ -144,7 +144,7 @@ public sealed class MaintenanceServiceAPIPersistenceIntegrationTests : IAsyncLif
         Assert.NotNull(deleteAudit.Snapshot);
     }
 
-    [Fact]
+    [RequiresMongoDbFact]
     public async Task CreateAsync_WhenBusDoesNotExist_DoesNotPersistMaintenanceOrAudit()
     {
         var result = await _service.CreateAsync(
@@ -158,7 +158,7 @@ public sealed class MaintenanceServiceAPIPersistenceIntegrationTests : IAsyncLif
             .ToListAsync());
     }
 
-    [Fact]
+    [RequiresMongoDbFact]
     public async Task GetByIdAsync_WhenIdIsInvalid_ReturnsNullWithoutDatabaseRead()
     {
         var result = await _service.GetByIdAsync("id-invalido");
