@@ -260,6 +260,34 @@ As regras relacionadas ao processamento dos dados permanecem no backend.
 
 ---
 
+# Módulo de manutenções
+
+O módulo de manutenções atravessa as camadas da aplicação:
+
+- `BusTrack.API/ControllersAPI/MaintenanceControllerAPI.cs`: endpoints HTTP e autorização por papel;
+- `BusTrack.API/ServicesAPI/MaintenanceServiceAPI.cs`: validações e regras de negócio;
+- `BusTrack.API/InterfacesAPI/IServicesAPI/IMaintenanceServiceAPI.cs`: contrato do serviço;
+- `BusTrack.DB/RepositoriesDB/MaintenanceRepositoryDB.cs`: persistência dos registros;
+- repositório de auditoria de manutenção: histórico de alterações;
+- `BusTrack.Frontend/bustrack.frontend.client/src/app/main/maintenance/`: interface Angular;
+- testes unitários do serviço e testes de integração com persistência real em `BusTrack.Tests`.
+
+A consulta de auditoria e as operações de alteração/exclusão são administrativas. A exclusão exige justificativa. O serviço aplica validações de data, custo e transições de status; a interface deve refletir essas regras, sem substituir a autorização no backend.
+
+---
+
+# Autenticação, autorização e recuperação de senha
+
+O backend configura uma política global que exige usuário autenticado, salvo endpoints explicitamente marcados com `AllowAnonymous`. Restrições por papel são aplicadas nos controllers/endpoints e devem ser verificadas independentemente da visibilidade dos botões no Angular. O frontend utiliza guards para controlar navegação, mas isso não substitui a autorização da API.
+
+A recuperação de senha é uma exceção importante ao estado esperado: o formulário `forgot-password` chama um endpoint administrativo que recebe uma nova senha diretamente, enquanto o endpoint público `POST /api/password-recovery/request` declara que a verificação segura ainda não está implementada. O componente de redefinição por código não está registrado nas rotas/módulo Angular revisados. Logo, o fluxo ainda precisa ser integrado e testado antes de ser documentado como funcional.
+
+## Roteamento por papel
+
+A aplicação possui telas distintas para dashboard de usuário e de administrador nas branches recentes. A rota geral `/dashboard` e os guards devem encaminhar o usuário autenticado ao destino compatível com sua role. Os testes de usabilidade precisam autenticar o papel correto para cada ação: gerenciamento de passageiros, por exemplo, é uma operação administrativa e não deve ser testada como se estivesse disponível para qualquer usuário.
+
+---
+
 # BusTrack.Tests
 
 O projeto `BusTrack.Tests` concentra os testes automatizados da solução.
