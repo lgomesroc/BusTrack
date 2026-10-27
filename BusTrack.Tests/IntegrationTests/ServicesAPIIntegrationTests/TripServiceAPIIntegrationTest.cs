@@ -215,6 +215,9 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         [Fact]
         public async Task CreateTripAsync_ReturnsCreatedTrip()
         {
+            var departureTime = DateTime.Now.AddHours(1);
+            var arrivalTime = departureTime.AddHours(2);
+
             var trip =
                 new TripDTOAPI
                 {
@@ -227,23 +230,9 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                     RouteId =
                         "507f1f77bcf86cd799439014",
 
-                    DepartureTime =
-                        new DateTime(
-                            2026,
-                            9,
-                            16,
-                            16,
-                            0,
-                            0),
+                    DepartureTime = departureTime,
 
-                    ArrivalTime =
-                        new DateTime(
-                            2026,
-                            9,
-                            16,
-                            18,
-                            0,
-                            0),
+                    ArrivalTime = arrivalTime,
 
                     Duration = 120,
 
@@ -331,6 +320,9 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                         "507f1f77bcf86cd799439014"
                 };
 
+            var departureTime = DateTime.Now.AddHours(1);
+            var arrivalTime = departureTime.AddHours(2);
+
             var trip =
                 new TripDTOAPI
                 {
@@ -345,23 +337,9 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                     RouteId =
                         "507f1f77bcf86cd799439017",
 
-                    DepartureTime =
-                        new DateTime(
-                            2026,
-                            9,
-                            16,
-                            16,
-                            0,
-                            0),
+                    DepartureTime = departureTime,
 
-                    ArrivalTime =
-                        new DateTime(
-                            2026,
-                            9,
-                            16,
-                            18,
-                            0,
-                            0),
+                    ArrivalTime = arrivalTime,
 
                     Duration = 120,
 
