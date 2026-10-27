@@ -98,19 +98,6 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                 Times.Once);
         }
 
-            var result = await _tripServiceAPI.CreateTripAsync(trip);
-
-            Assert.NotNull(result);
-            Assert.Equal("trip", result.Id);
-            Assert.Equal(departure, result.DepartureTime);
-            Assert.Equal("Agendada", result.Status);
-            Assert.Null(result.StartedAt);
-            Assert.Null(result.ArrivalTime);
-            Assert.Equal(0, result.Duration);
-            Assert.Equal(0, result.LimitPassengers);
-            _tripRepository.Verify(r => r.AddTripAsync(It.IsAny<TripDB>()), Times.Once);
-        }
-
         [Fact]
         public async Task CreateTripAsync_WhenDepartureIsPast_Throws()
         {
@@ -130,6 +117,7 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                 r => r.AddTripAsync(It.IsAny<TripDB>()),
                 Times.Never);
         }
+        
         [Fact]
         public async Task UpdateTripAsync_AgendedToCancelled_ReturnsCancelledTrip()
         {
