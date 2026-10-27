@@ -1,4 +1,7 @@
-import { clearSessionTimeoutRule, startSessionTimeoutRule } from './sessionTimeoutRule';
+import {
+  clearSessionTimeoutRule,
+  startSessionTimeoutRule
+} from './sessionTimeoutRule';
 
 describe('sessionTimeoutRule', () => {
   beforeEach(() => {
@@ -11,23 +14,46 @@ describe('sessionTimeoutRule', () => {
   });
 
   it('redirects to the login screen after the configured timeout', () => {
-    const location = window.location;
-    spyOnProperty(window, 'location', 'get').and.returnValue({ href: '' } as Location);
+    const redirect = jasmine.createSpy('redirect');
 
-    startSessionTimeoutRule(1000);
-    jasmine.clock().tick(1000);
+    startSessionTimeoutRule(1000, redirect);
 
-    expect(window.location.href).toBe('/enter-the-system');
-    void location;
+    expect(redirect).not.toHaveBeenCalled();
+
+    jasmine.clock().tick(999);
+    expect(redirect).not.toHaveBeenCalled();
+
+    jasmine.clock().tick(1);
+
+    expect(redirect).toHaveBeenCalledOnceWith('/enter-the-system');
   });
 
   it('cancels the scheduled timeout', () => {
-    const locationSpy = spyOnProperty(window, 'location', 'get').and.returnValue({ href: '' } as Location);
+    const redirect = jasmine.createSpy('redirect');
 
-    startSessionTimeoutRule(1000);
+    startSessionTimeoutRule(1000, redirect);
     clearSessionTimeoutRule();
+
     jasmine.clock().tick(1000);
 
-    expect(locationSpy).not.toHaveBeenCalled();
+    expect(redirect).not.toHaveBeenCalled();
+  });
+
+  it('replaces a previously scheduled timeout', () => {
+    const firstRedirect = jasmine.createSpy('firstRedirect');
+    const secondRedirect = jasmine.createSpy('secondRedirect');
+
+    startSessionTimeoutRule(1000, firstRedirect);
+    startSessionTimeoutRule(2000, secondRedirect);
+
+    jasmine.clock().tick(1000);
+
+    expect(firstRedirect).not.toHaveBeenCalled();
+    expect(secondRedirect).not.toHaveBeenCalled();
+
+    jasmine.clock().tick(1000);
+
+    expect(firstRedirect).not.toHaveBeenCalled();
+    expect(secondRedirect).toHaveBeenCalledOnceWith('/enter-the-system');
   });
 });
