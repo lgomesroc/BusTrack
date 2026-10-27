@@ -4,140 +4,88 @@
       <h1>Viagens</h1>
       <p>Gerencie as viagens cadastradas no Bus Track.</p>
     </div>
-
     <div class="header-actions">
-      <button
-        type="button"
-        class="secondary-button"
-        (click)="voltarAoDashboard()"
-      >
-        Voltar ao dashboard
-      </button>
-
-      <button
-        type="button"
-        class="primary-button"
-        (click)="iniciarCriacao()"
-        [disabled]="isLoading"
-      >
-        Criar viagem
-      </button>
+      <button type="button" class="secondary-button" (click)="voltarAoDashboard()">Voltar ao dashboard</button>
+      <button type="button" class="primary-button" (click)="iniciarCriacao()" [disabled]="isLoading">Criar viagem</button>
     </div>
   </header>
 
-  <div
-    class="error-message"
-    *ngIf="errorMessage"
-    role="alert"
-  >
-    {{ errorMessage }}
-  </div>
+  <div class="error-message" *ngIf="errorMessage" role="alert">{{ errorMessage }}</div>
 
-  <section
-    class="trip-form"
-    *ngIf="isCreating || (sessionService.isAdmin() && editingTrip)"
-  >
+  <section class="trip-form" *ngIf="isCreating || (sessionService.isAdmin() && editingTrip)">
     <div class="form-header">
       <div>
-        <h2>{{ editingTrip ? 'Editar viagem' : 'Criar viagem' }}</h2>
-        <p>
-          {{ editingTrip
-            ? 'Altere os dados da viagem selecionada.'
-            : 'Informe os dados da nova viagem.' }}
-        </p>
+        <h2>{{ editingTrip ? 'Atualizar viagem' : 'Criar viagem' }}</h2>
+        <p>{{ editingTrip ? 'Atualize o status conforme a operação da viagem.' : 'Toda viagem nova começa com o status Agendada.' }}</p>
       </div>
     </div>
 
     <div class="form-grid">
       <div class="form-group">
         <label for="busId">Ônibus</label>
-        <select id="busId" [(ngModel)]="tripForm.busId">
+        <select id="busId" [(ngModel)]="tripForm.busId" [disabled]="!!editingTrip">
           <option value="">Selecione um ônibus</option>
-          <option *ngFor="let bus of buses" [value]="bus.id">
-            Nº {{ bus.number }} - {{ bus.licensePlate }} - {{ bus.model }}
-          </option>
+          <option *ngFor="let bus of buses" [value]="bus.id">Nº {{ bus.number }} - {{ bus.licensePlate }} - {{ bus.model }}</option>
         </select>
       </div>
 
       <div class="form-group">
         <label for="driverId">Motorista</label>
-        <select id="driverId" [(ngModel)]="tripForm.driverId">
+        <select id="driverId" [(ngModel)]="tripForm.driverId" [disabled]="!!editingTrip">
           <option value="">Selecione um motorista</option>
-          <option *ngFor="let driver of drivers" [value]="driver.id">
-            {{ driver.name }} - {{ driver.licenseNumber }}
-          </option>
+          <option *ngFor="let driver of drivers" [value]="driver.id">{{ driver.name }} - {{ driver.licenseNumber }}</option>
         </select>
       </div>
 
       <div class="form-group">
         <label for="routeId">Rota</label>
-        <select id="routeId" [(ngModel)]="tripForm.routeId">
+        <select id="routeId" [(ngModel)]="tripForm.routeId" [disabled]="!!editingTrip">
           <option value="">Selecione uma rota</option>
-          <option *ngFor="let route of routes" [value]="route.id">
-            {{ route.name }} - {{ route.origin }} → {{ route.destination }}
-          </option>
+          <option *ngFor="let route of routes" [value]="route.id">{{ route.name }} - {{ route.origin }} → {{ route.destination }}</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label for="departureTime">Data e hora de saída</label>
-        <input
-          id="departureTime"
-          type="datetime-local"
-          [(ngModel)]="tripForm.departureTime"
-        />
+        <label for="departureTime">Data e hora previstas de saída</label>
+        <input id="departureTime" type="datetime-local" [(ngModel)]="tripForm.departureTime" [disabled]="!!editingTrip" />
       </div>
 
       <div class="form-group">
-        <label for="arrivalTime">Data e hora de chegada</label>
-        <input
-          id="arrivalTime"
-          type="datetime-local"
-          [(ngModel)]="tripForm.arrivalTime"
-        />
+        <label for="status">Status da viagem</label>
+        <select id="status" [(ngModel)]="tripForm.status" (ngModelChange)="aoAlterarStatus()" [disabled]="!editingTrip || editingTrip.status === 'Concluída' || editingTrip.status === 'Cancelada'">
+          <option *ngFor="let status of statuses" [value]="status" [disabled]="editingTrip && editingTrip.status === 'Em andamento' && status === 'Agendada'">{{ status }}</option>
+        </select>
+      </div>
+
+      <div class="form-group" *ngIf="editingTrip?.startedAt">
+        <label>Início real da viagem</label>
+        <input type="text" [value]="editingTrip?.startedAt | date:'dd/MM/yyyy HH:mm'" disabled />
       </div>
 
       <div class="form-group">
-        <label for="duration">Duração (minutos)</label>
-        <input
-          id="duration"
-          type="number"
-          min="0"
-          [(ngModel)]="tripForm.duration"
-        />
+        <label for="arrivalTime">Data e horário reais de chegada</label>
+        <input id="arrivalTime" type="datetime-local" [(ngModel)]="tripForm.arrivalTime" [disabled]="tripForm.status !== 'Concluída'" />
       </div>
 
       <div class="form-group">
-        <label for="limitPassengers">Limite de passageiros</label>
-        <input
-          id="limitPassengers"
-          type="number"
-          min="0"
-          [(ngModel)]="tripForm.limitPassengers"
-        />
+        <label for="duration">Duração real (minutos)</label>
+        <input id="duration" type="number" min="1" step="1" [(ngModel)]="tripForm.duration" [disabled]="tripForm.status !== 'Concluída'" />
+      </div>
+
+      <div class="form-group">
+        <label for="limitPassengers">Quantidade de passageiros transportados</label>
+        <input id="limitPassengers" type="number" min="1" step="1" [(ngModel)]="tripForm.limitPassengers" [disabled]="tripForm.status !== 'Concluída'" />
       </div>
     </div>
 
-    <div class="form-actions">
-      <button
-        type="button"
-        class="secondary-button"
-        (click)="cancelarEdicao()"
-        [disabled]="isLoading"
-      >
-        Cancelar
-      </button>
+    <p class="form-help" *ngIf="tripForm.status === 'Agendada'">A saída precisa estar no futuro. Os dados reais de chegada serão informados ao concluir a viagem.</p>
+    <p class="form-help" *ngIf="tripForm.status === 'Em andamento'">O início real será registrado pelo sistema quando a viagem passar para Em andamento.</p>
+    <p class="form-help" *ngIf="tripForm.status === 'Concluída'">A chegada, a duração e a quantidade de passageiros são obrigatórias. A duração deve corresponder ao tempo real transcorrido.</p>
+    <p class="form-help" *ngIf="tripForm.status === 'Cancelada'">Os dados de chegada, duração e passageiros serão apagados; a duração e os passageiros ficarão em zero.</p>
 
-      <button
-        type="button"
-        class="primary-button"
-        (click)="salvarViagem()"
-        [disabled]="isLoading"
-      >
-        {{ isLoading
-          ? 'Salvando...'
-          : (editingTrip ? 'Salvar alterações' : 'Criar viagem') }}
-      </button>
+    <div class="form-actions">
+      <button type="button" class="secondary-button" (click)="cancelarEdicao()" [disabled]="isLoading">Fechar</button>
+      <button type="button" class="primary-button" (click)="salvarViagem()" [disabled]="isLoading">{{ isLoading ? 'Salvando...' : (editingTrip ? 'Salvar status' : 'Agendar viagem') }}</button>
     </div>
   </section>
 
@@ -145,118 +93,35 @@
     <div class="section-header">
       <div>
         <h2>Viagens cadastradas</h2>
-
-        <p *ngIf="!isLoading">
-          {{ trips.length }}
-          {{ trips.length === 1
-            ? 'viagem encontrada'
-            : 'viagens encontradas' }}
-        </p>
-
+        <p *ngIf="!isLoading">{{ trips.length }} {{ trips.length === 1 ? 'viagem encontrada' : 'viagens encontradas' }}</p>
         <p *ngIf="isLoading">Carregando viagens...</p>
       </div>
     </div>
 
-    <div
-      class="empty-state"
-      *ngIf="!isLoading && trips.length === 0"
-    >
+    <div class="empty-state" *ngIf="!isLoading && trips.length === 0">
       <h3>Nenhuma viagem cadastrada</h3>
-      <p>
-        Ainda não existem viagens cadastradas.
-        Clique em "Criar viagem" para adicionar a primeira.
-      </p>
-
-      <button
-        type="button"
-        class="primary-button"
-        (click)="iniciarCriacao()"
-      >
-        Criar primeira viagem
-      </button>
+      <p>Ainda não existem viagens cadastradas. Clique em "Criar viagem" para adicionar a primeira.</p>
+      <button type="button" class="primary-button" (click)="iniciarCriacao()">Criar primeira viagem</button>
     </div>
 
-    <div
-      class="table-wrapper"
-      *ngIf="trips.length > 0"
-    >
+    <div class="table-wrapper" *ngIf="!isLoading && trips.length > 0">
       <table>
         <thead>
-          <tr>
-            <th>Ônibus</th>
-            <th>Motorista</th>
-            <th>Rota</th>
-            <th>Saída</th>
-            <th>Chegada</th>
-            <th>Duração</th>
-            <th>Limite</th>
-            <th>Passageiros</th>
-            <th>Ações</th>
-          </tr>
+          <tr><th>Ônibus</th><th>Motorista</th><th>Rota</th><th>Saída prevista</th><th>Chegada real</th><th>Duração</th><th>Status</th><th>Passageiros</th><th>Ações</th></tr>
         </thead>
-
         <tbody>
           <tr *ngFor="let trip of trips">
-            <td>
-              <strong>{{ trip.bus?.number || '—' }}</strong>
-              <span class="table-secondary-text">
-                {{ trip.bus?.licensePlate || '—' }}
-              </span>
-              <span class="table-secondary-text">
-                {{ trip.bus?.model || '—' }}
-              </span>
-            </td>
-
-            <td>
-              <strong>{{ trip.driver?.name || '—' }}</strong>
-              <span class="table-secondary-text">
-                {{ trip.driver?.licenseNumber || '—' }}
-              </span>
-            </td>
-
-            <td>
-              <strong>{{ trip.route?.name || '—' }}</strong>
-              <span class="table-secondary-text">
-                {{ trip.route?.origin || '—' }}
-                → {{ trip.route?.destination || '—' }}
-              </span>
-            </td>
-
+            <td><strong>{{ trip.bus?.number || '—' }}</strong><span class="table-secondary-text">{{ trip.bus?.licensePlate || '—' }}</span></td>
+            <td>{{ trip.driver?.name || '—' }}</td>
+            <td><strong>{{ trip.route?.name || '—' }}</strong><span class="table-secondary-text">{{ trip.route?.origin || '—' }} → {{ trip.route?.destination || '—' }}</span></td>
             <td>{{ trip.departureTime | date:'dd/MM/yyyy HH:mm' }}</td>
-            <td>{{ trip.arrivalTime | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ trip.arrivalTime ? (trip.arrivalTime | date:'dd/MM/yyyy HH:mm') : '—' }}</td>
             <td>{{ trip.duration }} min</td>
+            <td>{{ trip.status || 'Agendada' }}</td>
             <td>{{ trip.limitPassengers }}</td>
-            <td>{{ trip.passengers.length }}</td>
-
             <td class="actions-cell">
-              <button
-                type="button"
-                class="details-button"
-                [routerLink]="['/trips', trip.id]"
-                [disabled]="isLoading"
-              >
-                Ver detalhes
-              </button>
-
-              <button
-                type="button"
-                class="edit-button"
-                (click)="iniciarEdicao(trip)"
-                [hidden]="!sessionService.isAdmin()"
-                [disabled]="isLoading"
-              >
-                Editar
-              </button>
-
-              <button
-                type="button"
-                class="delete-button"
-                (click)="excluirViagem(trip)"
-                [hidden]="!sessionService.isAdmin()"
-                [disabled]="isLoading"
-              >
-                Excluir
-              </button>
+              <button type="button" class="details-button" [routerLink]="['/trips', trip.id]" [disabled]="isLoading">Ver detalhes</button>
+              <button type="button" class="edit-button" (click)="iniciarEdicao(trip)" [hidden]="!sessionService.isAdmin() || !podeAlterarStatus(trip)" [disabled]="isLoading">Atualizar status</button>
             </td>
           </tr>
         </tbody>

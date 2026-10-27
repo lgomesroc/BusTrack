@@ -22,9 +22,17 @@ namespace BusTrack.BusTrack.DB.Classes
         public string? RouteId { get; set; }
 
         public DateTime DepartureTime { get; set; }
-        public DateTime ArrivalTime { get; set; }
+
+        public DateTime? StartedAt { get; set; }
+
+        public DateTime? ArrivalTime { get; set; }
+
         public int Duration { get; set; }
+
         public int LimitPassengers { get; set; }
+
+        public string Status { get; set; } = "Agendada";
+
         public List<string>? Passengers { get; set; }
     }
 }

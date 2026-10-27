@@ -817,12 +817,14 @@ BusTrack/
 │   │   ├── HealthController.cs
 │   │   ├── MaintenanceControllerAPI.cs
 │   │   ├── PassengerControllerAPI.cs
+│   │   ├── PasswordRecoveryControllerAPI.cs
 │   │   ├── RouteControllerAPI.cs
 │   │   ├── TripControllerAPI.cs
 │   │   ├── TripsPassengerControllerAPI.cs
 │   │   ├── UserControllerAPI.cs
 │   │   └── UserPresenceController.cs
 │   ├── DTOAPI/
+│   │   ├── AdminDashboardDTOAPI.cs
 │   │   ├── AdminPasswordResetRequestDTOAPI.cs
 │   │   ├── AuthenticationResponseDTOAPI.cs
 │   │   ├── AdminDashboardDTOAPI.cs
@@ -843,7 +845,7 @@ BusTrack/
 │   │   ├── UnlockPasswordRecoveryRequestDTOAPI.cs
 │   │   └── UpdatePasswordDTOAPI.cs
 │   ├── InterfacesAPI/
-│   │   ├── ServicesAPI/
+│   │   ├── IServicesAPI/
 │   │   │   ├── IAccountServiceAPI.cs
 │   │   │   ├── IBusServiceAPI.cs
 │   │   │   ├── IDriverServiceAPI.cs
@@ -860,7 +862,7 @@ BusTrack/
 │   ├── MappingsAPI/
 │   │   └── MappingProfileAPI.cs
 │   ├── ModelsAPI/
-│   │   ├── AccountModelAPI.cs
+│   │   ├── AccountModelsAPI.cs
 │   │   ├── BusModelAPI.cs
 │   │   ├── DriverModelAPI.cs
 │   │   ├── PassengerModelAPI.cs
@@ -896,7 +898,7 @@ BusTrack/
 │   │   ├── PasswordRecordDB.cs
 │   │   ├── RouteDB.cs
 │   │   ├── TripDB.cs
-│   │   ├── TripsPassengerDB.cs
+│   │   ├── TripPassengerDB.cs
 │   │   ├── UserDB.cs
 │   │   ├── UserPasswordHistoryDB.cs
 │   │   └── UserRegistrationDB.cs
@@ -913,18 +915,19 @@ BusTrack/
 │   │   │   ├── IPassengerModelDB.cs
 │   │   │   ├── IRouteModelDB.cs
 │   │   │   ├── ITripModelDB.cs
-│   │   │   ├── ITripsPassengerModelDB.cs
+│   │   │   ├── ITripPassengerModelDB.cs
 │   │   │   └── IUserModelDB.cs
 │   │   └── IRepositoriesDB/
 │   │   │   ├── IAccountRepositoryDB.cs
 │   │   │   ├── IBusRepositoryDB.cs
 │   │   │   ├── IDriverRepositoryDB.cs
+│   │   │   ├── IInspectorRepositoryDB.cs
 │   │   │   ├── IMaintenanceAuditRepositoryDB.cs
 │   │   │   ├── IMaintenanceRepositoryDB.cs
 │   │   │   ├── IPassengerRepositoryDB.cs
 │   │   │   ├── IRouteRepositoryDB.cs
 │   │   │   ├── ITripRepositoryDB.cs
-│   │   │   ├── ITripsPassengerRepositoryDB.cs
+│   │   │   ├── ITripPassengerRepositoryDB.cs
 │   │   │   └── IUserRepositoryDB.cs
 │   ├── ModelsDB/
 │   │   ├── AccountModelDB.cs
@@ -933,7 +936,7 @@ BusTrack/
 │   │   ├── PassengerModelDB.cs
 │   │   ├── RouteModelDB.cs
 │   │   ├── TripModelDB.cs
-│   │   ├── TripsPassengerModelDB.cs
+│   │   ├── TripPassengerModelDB.cs
 │   │   └── UserModelDB.cs
 │   ├── RepositoriesDB/
 │   │   ├── BusRepositoryDB.cs
@@ -997,26 +1000,35 @@ BusTrack/
 │   │   │   │   │   │   ├── reset-password.component.spec.ts
 │   │   │   │   │   │   └── reset-password.component.ts
 │   │   │   │   │   ├── rules/
-│   │   │   │   │   │   ├── blockCopyRules/
+│   │   │   │   │   │   ├── blockCopyRule/
+│   │   │   │   │   │   │   ├── blockCopyRule.spec.ts
 │   │   │   │   │   │   │   └── blockCopyRule.ts
-│   │   │   │   │   │   ├── blockSavePasswordRules/
+│   │   │   │   │   │   ├── blockSavePasswordRule/
+│   │   │   │   │   │   │   ├── blockSavePasswordRule.spec.ts
 │   │   │   │   │   │   │   └── blockSavePasswordRule.ts
-│   │   │   │   │   │   ├── checkPasswordStrengthpasswordRules/
+│   │   │   │   │   │   ├── checkPasswordStrengthpasswordRule/
+│   │   │   │   │   │   │   ├── checkPasswordStrengthpasswordRule.spec.ts
 │   │   │   │   │   │   │   └── checkPasswordStrengthpasswordRule.ts
-│   │   │   │   │   │   ├── disableInteractionsRules/
+│   │   │   │   │   │   ├── disableInteractionsRule/
+│   │   │   │   │   │   │   ├── disableInteractionsRule.spec.ts
 │   │   │   │   │   │   │   └── disableInteractionsRule.ts
-│   │   │   │   │   │   ├── disableKeyboardShortcutsRules/
+│   │   │   │   │   │   ├── disableKeyboardShortcutsRule/
+│   │   │   │   │   │   │   ├── disableKeyboardShortcutsRule.spec.ts
 │   │   │   │   │   │   │   └── disableKeyboardShortcutsRule.ts
-│   │   │   │   │   │   ├── hasRepeatedOrSequentialNumbersRules/
+│   │   │   │   │   │   ├── hasRepeatedOrSequentialNumbersRule/
+│   │   │   │   │   │   │   ├── hasRepeatedOrSequentialNumbersRule.spec.ts
 │   │   │   │   │   │   │   └── hasRepeatedOrSequentialNumbersRule.ts
-│   │   │   │   │   │   ├── inactivityTimerRules/
+│   │   │   │   │   │   ├── inactivityTimerRule/
 │   │   │   │   │   │   │   ├── inactivityTimerRule.spec.ts
 │   │   │   │   │   │   │   └── inactivityTimerRule.ts
-│   │   │   │   │   │   ├── preventBackNavigationRules/
+│   │   │   │   │   │   ├── preventBackNavigationRule/
+│   │   │   │   │   │   │   ├── preventBackNavigationRule.spec.ts
 │   │   │   │   │   │   │   └── preventBackNavigationRule.ts
-│   │   │   │   │   │   ├── preventForwardNavigationRules/
+│   │   │   │   │   │   ├── preventForwardNavigationRule/
+│   │   │   │   │   │   │   ├── preventForwardNavigationRule.spec.ts
 │   │   │   │   │   │   │   └── preventForwardNavigationRule.ts
-│   │   │   │   │   │   ├── sessionTimeoutRules/
+│   │   │   │   │   │   ├── sessionTimeoutRule/
+│   │   │   │   │   │   │   ├── sessionTimeoutRule.spec.ts
 │   │   │   │   │   │   │   └── sessionTimeoutRule.ts
 │   │   │   │   │   ├── update-password/
 │   │   │   │   │   │   ├── update-password.component.css
@@ -1044,6 +1056,7 @@ BusTrack/
 │   │   │   │   │   ├──  maintenance/
 │   │   │   │   │   │   ├── maintenance.component.css
 │   │   │   │   │   │   ├── maintenance.component.html
+│   │   │   │   │   │   ├── maintenance.component.spec.ts
 │   │   │   │   │   │   └── maintenance.component.ts
 │   │   │   │   │   ├──  passengers/
 │   │   │   │   │   │   ├── passengers.component.css
@@ -1055,10 +1068,13 @@ BusTrack/
 │   │   │   │   │   │   └── routes.component.ts
 │   │   │   │   │   ├── rules-main/
 │   │   │   │   │   │   ├── limitCharactersRules/
+│   │   │   │   │   │   │   ├── limitCharactersRule.spec.ts
 │   │   │   │   │   │   │   └── limitCharactersRule.ts
 │   │   │   │   │   │   ├── validateEmailFormatRules/
+│   │   │   │   │   │   │   ├── validateEmailFormatRule.spec.ts
 │   │   │   │   │   │   │   └── validateEmailFormatRule.ts
 │   │   │   │   │   │   ├── validateFieldsRequiredRules/
+│   │   │   │   │   │   │   ├── validateFieldsRequiredRule.spec.ts
 │   │   │   │   │   │   │   └── validateFieldsRequiredRule.ts
 │   │   │   │   │   ├── sidebar/
 │   │   │   │   │   │   ├── sidebar.component.css
@@ -1109,15 +1125,23 @@ BusTrack/
 │   │   │   │   ├── environment.prod.ts
 │   │   │   │   └── environment.ts
 │   │   ├── angular.json
+│   │   ├── app.component.spec.ts
 │   │   ├── bustrack.frontend.client.esproj
-│   │   ├── OIG4.jpeg
+│   │   ├── index.html
 │   │   ├── karma.docker.conf.cjs
+│   │   ├── main.ts
+│   │   ├── OIG4.jpeg
 │   │   ├── package-lock.json
 │   │   ├── package.json
+│   │   ├── styles.css
 │   │   ├── tsconfig.app.json
-│   │   └── tsconfig.json
+│   │   ├── tsconfig.json
+│   │   └── tsconfig.spec.json
 │   └── BusTrack.Frontend.Server/
 │   │   ├── Properties/
+│   │   │   └── launchSettings.json
+│   │   ├── appsettings.json
+│   │   ├── appsettings.Development.json
 │   │   ├── BusTrack.Frontend.Server.csproj
 │   │   └── Program.cs
 ├── BusTrack.Program/
@@ -1142,7 +1166,8 @@ BusTrack/
 │   │   │   ├── MaintenanceControllerAPIIntegrationTests.cs
 │   │   │   ├── PassengerControllerAPIIntegrationTest.cs
 │   │   │   ├── RouteControllerAPIIntegrationTest.cs
-│   │   │   └── TripControllerAPIIntegrationTest.cs
+│   │   │   ├── TripControllerAPIIntegrationTest.cs
+│   │   │   └── TripsPassengerControllerAPIIntegrationTest.cs
 │   │   ├── CustomWebApplicationFactory/
 │   │   │   └── CustomWebApplicationFactory.cs
 │   │   ├── MappingsIntegrationTests/
@@ -1150,6 +1175,7 @@ BusTrack/
 │   │   ├── ServicesAPIIntegrationTests/
 │   │   │   ├── BusServiceAPIIntegrationTest.cs
 │   │   │   ├── DriverServiceAPIIntegrationTest.cs
+│   │   │   ├── MaintenanceServiceAPIPersistenceIntegrationTests.cs
 │   │   │   ├── PassengerServiceAPIIntegrationTest.cs
 │   │   │   ├── RouteServiceAPIIntegrationTest.cs
 │   │   │   ├── TripServiceAPIIntegrationTest.cs
@@ -1170,6 +1196,8 @@ BusTrack/
 │   │   │   ├── TripControllerAPIUnitTests.cs
 │   │   │   ├── TripsPassengerControllerAPIUnitTests.cs
 │   │   │   └── UserPresenceControllerAPIUnitTests.cs
+│   │   └── Rules/
+│   │   │   └── TripRulesTests.cs
 │   │   ├── ServicesAPI
 │   │   │   ├── JwtTokenServiceAPITests.cs
 │   │   │   ├── MaintenanceServiceAPIUnitTests.cs
@@ -1211,18 +1239,20 @@ BusTrack/
 │   │   └── security.md
 │   └── technologies/
 │   │   └── technologies.md
+├── Properties/
 ├── .dockerignore
 ├── .env.example
 ├── .gitignore
-├── appsettings.json
 ├── appsettings.Development.json
+├── appsettings.json
 ├── BusTrack.csproj
+├── BusTrack.csproj.user
 ├── BusTrack.sln
 ├── docker-compose.yml
 ├── Dockerfile
 ├── Dockerfile.frontend-tests
 ├── firebase.firebaserc
-├── fiberase.json
+├── firebase.json
 ├── LICENSE.md
 ├── OIG4.jpeg
 ├── package-lock.json
