@@ -383,7 +383,8 @@ export class MaintenanceComponent implements OnInit {
 
   private getTimeInputValue(value: string | null | undefined): string {
     if (!value) return '';
-    const match = value.match(/T(\\d{2}:\\d{2})/);
+    const timePart = value.split('T')[1];
+    const match = timePart?.match(/^(\d{2}:\d{2})/);
     return match?.[1] ?? value.slice(0, 5);
   }
 
