@@ -8,6 +8,25 @@ A documentação deste arquivo representa o estado atual da aplicação. Funcion
 
 ---
 
+## Listas operacionais
+
+As principais listas operacionais do frontend possuem filtros e paginação para evitar tabelas extensas e facilitar a consulta conforme a quantidade de registros cresce.
+
+A V1 contempla:
+
+- filtro e paginação de ônibus;
+- filtro e paginação de motoristas;
+- filtro e paginação de passageiros;
+- filtro por status e paginação de viagens;
+- filtro e paginação de manutenções;
+- página com até 10 registros por vez;
+- retorno à primeira página quando um novo filtro é aplicado;
+- mensagens específicas quando o filtro não encontra registros.
+
+A paginação atual é aplicada no frontend sobre os dados retornados pela API. Ela melhora a usabilidade das telas e evita a renderização de listas completas, mas não substitui paginação no backend para volumes muito grandes.
+
+---
+
 ## Ônibus
 
 O sistema permite:
@@ -194,7 +213,8 @@ A V1 atualmente contempla:
 - relações entre passageiros e viagens;
 - controle de permissões;
 - navegação da aplicação;
-- monitoramento de disponibilidade.
+- monitoramento de disponibilidade;
+- filtros e paginação das listas operacionais.
 
 Não há, no estado atual da documentação, uma funcionalidade principal de negócio conhecida como pendência obrigatória para concluir a V1.
 
