@@ -45,6 +45,7 @@ export interface Trip {
   startedAt: string | null;
   arrivalTime: string | null;
   duration: number;
+  plannedDuration: number;
   limitPassengers: number;
   status: TripStatus;
   passengers: Passenger[];
@@ -58,6 +59,7 @@ export interface TripPayload {
   startedAt?: string | null;
   arrivalTime: string | null;
   duration: number;
+  plannedDuration: number;
   limitPassengers: number;
   status: TripStatus;
   passengers: string[];
