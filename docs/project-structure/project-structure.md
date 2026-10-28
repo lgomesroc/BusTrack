@@ -816,6 +816,7 @@ BusTrack/
 │   │   ├── DriverControllerAPI.cs
 │   │   ├── HealthController.cs
 │   │   ├── MaintenanceControllerAPI.cs
+│   │   ├── OperationalReportControllerAPI.cs
 │   │   ├── PassengerControllerAPI.cs
 │   │   ├── PasswordRecoveryControllerAPI.cs
 │   │   ├── RouteControllerAPI.cs
@@ -835,6 +836,7 @@ BusTrack/
 │   │   ├── ForgotPasswordRequestDTOAPI.cs
 │   │   ├── LoginRequestDTOAPI.cs
 │   │   ├── MaintenanceDTOAPI.cs
+│   │   ├── OperationalReportDTOAPI.cs
 │   │   ├── PassengerDTOAPI.cs
 │   │   ├── PasswordRecoveryRequestDTOAPI.cs
 │   │   ├── ResetPasswordRequestDTOAPI.cs
@@ -852,6 +854,7 @@ BusTrack/
 │   │   │   ├── IEmailConfirmationServiceAPI.cs
 │   │   │   ├── IJwtTokenServiceAPI.cs
 │   │   │   ├── IMaintenanceServiceAPI.cs
+│   │   │   ├── IOperationalReportServiceAPI.cs
 │   │   │   ├── IPassengerServiceAPI.cs
 │   │   │   ├── IRouteServiceAPI.cs
 │   │   │   ├── ITripServiceAPI.cs
@@ -876,6 +879,7 @@ BusTrack/
 │   │   ├── DriverServiceAPI.cs
 │   │   ├── JwtTokenServiceAPI.cs
 │   │   ├── MaintenanceServiceAPI.cs
+│   │   ├── OperationalReportServiceAPI.cs
 │   │   ├── PassengerServiceAPI.cs
 │   │   ├── PasswordPolicyServiceAPI.cs
 │   │   ├── RouteServiceAPI.cs
@@ -898,6 +902,7 @@ BusTrack/
 │   │   ├── PasswordRecordDB.cs
 │   │   ├── RouteDB.cs
 │   │   ├── TripDB.cs
+│   │   ├── TripAuditDB.cs
 │   │   ├── TripPassengerDB.cs
 │   │   ├── UserDB.cs
 │   │   ├── UserPasswordHistoryDB.cs
@@ -926,6 +931,7 @@ BusTrack/
 │   │   │   ├── IMaintenanceRepositoryDB.cs
 │   │   │   ├── IPassengerRepositoryDB.cs
 │   │   │   ├── IRouteRepositoryDB.cs
+│   │   │   ├── ITripAuditRepositoryDB.cs
 │   │   │   ├── ITripRepositoryDB.cs
 │   │   │   ├── ITripPassengerRepositoryDB.cs
 │   │   │   └── IUserRepositoryDB.cs
@@ -946,6 +952,7 @@ BusTrack/
 │   │   ├── MaintenanceRepositoryDB.cs
 │   │   ├── PassengerRepositoryDB.cs
 │   │   ├── RouteRepositoryDB.cs
+│   │   ├── TripAuditRepositoryDB.cs
 │   │   ├── TripPassengerRepositoryDB.cs
 │   │   ├── TripRepositoryDB.cs
 │   │   └── UserRepositoryDB.cs
@@ -1055,22 +1062,27 @@ BusTrack/
 │   │   │   │   │   │   ├── dashboard.component.html
 │   │   │   │   │   │   ├── dashboard.component.spec.ts
 │   │   │   │   │   │   └── dashboard.component.ts
-│   │   │   │   │   ├──  drivers/
+│   │   │   │   │   ├── drivers/
 │   │   │   │   │   │   ├── drivers.component.css
 │   │   │   │   │   │   ├── drivers.component.html
 │   │   │   │   │   │   ├── drivers.component.spec.ts
 │   │   │   │   │   │   └── drivers.component.ts
-│   │   │   │   │   ├──  maintenance/
+│   │   │   │   │   ├── maintenance/
 │   │   │   │   │   │   ├── maintenance.component.css
 │   │   │   │   │   │   ├── maintenance.component.html
 │   │   │   │   │   │   ├── maintenance.component.spec.ts
 │   │   │   │   │   │   └── maintenance.component.ts
-│   │   │   │   │   ├──  passengers/
+│   │   │   │   │   ├── operational-reports/
+│   │   │   │   │   │   ├── operational-reports.component.css
+│   │   │   │   │   │   ├── operational-reports.component.html
+│   │   │   │   │   │   ├── operational-reports.component.spec.ts
+│   │   │   │   │   │   └── operational-reports.component.ts
+│   │   │   │   │   ├── passengers/
 │   │   │   │   │   │   ├── passengers.component.css
 │   │   │   │   │   │   ├── passengers.component.html
 │   │   │   │   │   │   ├── passengers.component.spec.ts
 │   │   │   │   │   │   └── passengers.component.ts
-│   │   │   │   │   ├──  routes/
+│   │   │   │   │   ├── routes/
 │   │   │   │   │   │   ├── routes.component.css
 │   │   │   │   │   │   ├── routes.component.html
 │   │   │   │   │   │   ├── routes.component.spec.ts
@@ -1115,6 +1127,10 @@ BusTrack/
 │   │   │   │   │   ├── driver.service.ts
 │   │   │   │   │   ├── jwt-auth.interceptor.ts
 │   │   │   │   │   ├── maintenance.service.ts
+│   │   │   │   │   ├── operational-list-state.spec.ts
+│   │   │   │   │   ├── operational-list-state.ts
+│   │   │   │   │   ├── operational-report.service.spec.ts
+│   │   │   │   │   ├── operational-report.service.ts
 │   │   │   │   │   ├── passenger.service.ts
 │   │   │   │   │   ├── route.service.ts
 │   │   │   │   │   ├── session.service.ts
@@ -1208,11 +1224,14 @@ BusTrack/
 │   │   │   ├── TripControllerAPIUnitTests.cs
 │   │   │   ├── TripsPassengerControllerAPIUnitTests.cs
 │   │   │   └── UserPresenceControllerAPIUnitTests.cs
+│   │   ├── RepositoriesDB/
+│   │   │   └── TripAuditRepositoryDBUnitTests.cs
 │   │   └── Rules/
 │   │   │   └── TripRulesTests.cs
 │   │   ├── ServicesAPI
 │   │   │   ├── JwtTokenServiceAPITests.cs
 │   │   │   ├── MaintenanceServiceAPIUnitTests.cs
+│   │   │   ├── OperationalReportServiceAPIUnitTests.cs
 │   │   │   ├── TripServiceAPIUnitTests.cs
 │   │   │   └── UserAuthenticationServiceAPITests.cs
 │   ├── UsabilityTests/
