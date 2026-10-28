@@ -94,12 +94,12 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             if (trip.PlannedDuration > 0)
                 existingTrip.PlannedDuration = trip.PlannedDuration;
 
-            ValidatePlannedDuration(existingTrip.PlannedDuration);
-
             if (requestedStatus == InProgress)
             {
+                ValidatePlannedDuration(existingTrip.PlannedDuration);
                 if (DateTime.UtcNow < existingTrip.DepartureTime)
                     throw new ArgumentException("A viagem só pode entrar em andamento no horário previsto de saída ou depois dele.");
+                await ValidateResourceAvailabilityAsync(existingTrip.BusId, existingTrip.DriverId, existingTrip.DepartureTime, existingTrip.PlannedDuration, existingTrip.Id);
                 var now = DateTime.UtcNow;
                 existingTrip.Status = InProgress;
                 existingTrip.StartedAt = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, now.Kind);
@@ -148,8 +148,6 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 existingTrip.LimitPassengers = trip.LimitPassengers;
                 existingTrip.Passengers = trip.Passengers ?? new List<string>();
             }
-
-            await ValidateResourceAvailabilityAsync(existingTrip.BusId, existingTrip.DriverId, existingTrip.DepartureTime, existingTrip.PlannedDuration, existingTrip.Id);
 
             existingTrip.Id = id;
             var updatedTrip = await _tripRepository.UpdateTripAsync(id, existingTrip);
