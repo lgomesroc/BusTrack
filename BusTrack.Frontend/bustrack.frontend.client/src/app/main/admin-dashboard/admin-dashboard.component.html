@@ -10,7 +10,7 @@
         <article class="dashboard-card"><h2>Usuários cadastrados</h2><p class="metric">{{ data.users.total }}</p><p>{{ data.users.administrators }} administradores · {{ data.users.normalUsers }} usuários comuns</p></article>
         <article class="dashboard-card"><h2>Ônibus</h2><p class="metric">{{ data.buses.total }}</p><p>Total cadastrado</p></article>
         <article class="dashboard-card"><h2>Motoristas</h2><p class="metric">{{ data.drivers.total }}</p><p>Total cadastrado</p></article>
-        <article class="dashboard-card"><h2>Passageiros</h2><p class="metric">{{ data.passengers.total }}</p><p>Total cadastrado</p></article>
+        <button type="button" class="dashboard-card" (click)="navegarParaPassageiros()"><h2>Passageiros</h2><p class="metric">{{ data.passengers.total }}</p><p>Total cadastrado · consultar passageiros</p></button>
         <article class="dashboard-card"><h2>Rotas</h2><p class="metric">{{ data.routes.total }}</p><p>Total cadastrado</p></article>
         <article class="dashboard-card"><h2>Viagens</h2><p class="metric">{{ data.trips.total }}</p><p>{{ data.trips.upcoming }} com saída futura</p></article>
       </section>
