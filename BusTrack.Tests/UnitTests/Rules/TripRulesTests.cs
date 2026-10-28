@@ -17,12 +17,13 @@ namespace BusTrack.Tests.UnitTests.Rules
         private readonly Mock<IDriverRepositoryDB> _driverRepository = new();
         private readonly Mock<IRouteRepositoryDB> _routeRepository = new();
         private readonly Mock<IPassengerRepositoryDB> _passengerRepository = new();
+        private readonly Mock<IMaintenanceRepositoryDB> _maintenanceRepository = new();
         private readonly TripServiceAPI _service;
 
         public TripRulesTests()
         {
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfile>(), NullLoggerFactory.Instance);
-            _service = new TripServiceAPI(_tripRepository.Object, _tripPassengerRepository.Object, _busRepository.Object, _driverRepository.Object, _routeRepository.Object, _passengerRepository.Object, configuration.CreateMapper());
+            _service = new TripServiceAPI(_tripRepository.Object, _tripPassengerRepository.Object, _busRepository.Object, _driverRepository.Object, _routeRepository.Object, _passengerRepository.Object, configuration.CreateMapper(), _maintenanceRepository.Object);
         }
 
         [Fact]
