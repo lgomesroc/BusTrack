@@ -1,4 +1,5 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
+import localePtBr from '@angular/common/locales/pt';
 import { FormsModule } from '@angular/forms';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
@@ -12,6 +13,8 @@ import {
   MaintenanceService
 } from '../../services/maintenance.service';
 import { SessionService } from '../../services/session.service';
+
+registerLocaleData(localePtBr);
 
 describe('MaintenanceComponent', () => {
   let component: MaintenanceComponent;
@@ -60,6 +63,7 @@ describe('MaintenanceComponent', () => {
 
   function dateOffset(offsetDays: number): string {
     const [year, month, day] = brazilToday().split('-').map(Number);
+
     return new Date(Date.UTC(year, month - 1, day + offsetDays))
       .toISOString()
       .slice(0, 10);
@@ -88,11 +92,17 @@ describe('MaintenanceComponent', () => {
 
   beforeEach(async () => {
     router = jasmine.createSpyObj<Router>('Router', ['navigate']);
-    busService = jasmine.createSpyObj<BusService>('BusService', ['getBuses']);
+
+    busService = jasmine.createSpyObj<BusService>(
+      'BusService',
+      ['getBuses']
+    );
+
     maintenanceService = jasmine.createSpyObj<MaintenanceService>(
       'MaintenanceService',
       ['getAll', 'create', 'update', 'delete']
     );
+
     sessionService = jasmine.createSpyObj<SessionService>(
       'SessionService',
       ['isAdmin']
@@ -100,12 +110,17 @@ describe('MaintenanceComponent', () => {
 
     busService.getBuses.and.returnValue(of(buses));
     maintenanceService.getAll.and.returnValue(of([maintenance]));
-    maintenanceService.create.and.returnValue(of({
-      ...maintenance,
-      id: 'maintenance-new'
-    }));
+
+    maintenanceService.create.and.returnValue(
+      of({
+        ...maintenance,
+        id: 'maintenance-new'
+      })
+    );
+
     maintenanceService.update.and.returnValue(of(maintenance));
     maintenanceService.delete.and.returnValue(of(void 0));
+
     sessionService.isAdmin.and.returnValue(true);
     router.navigate.and.returnValue(Promise.resolve(true));
 
@@ -163,6 +178,7 @@ describe('MaintenanceComponent', () => {
     maintenanceService.getAll.and.returnValue(
       throwError(() => new Error('API indisponível'))
     );
+
     spyOn(console, 'error');
     initializeComponent();
 
@@ -176,6 +192,7 @@ describe('MaintenanceComponent', () => {
 
   it('shows an error when buses cannot be loaded', () => {
     initializeComponent();
+
     busService.getBuses.and.returnValue(
       throwError(() => new Error('API indisponível'))
     );
@@ -292,11 +309,14 @@ describe('MaintenanceComponent', () => {
     component.startCreate();
     component.form = validPayload();
     component.form.cost = 0;
-    maintenanceService.create.and.returnValue(of({
-      ...maintenance,
-      cost: 0,
-      id: 'maintenance-zero'
-    }));
+
+    maintenanceService.create.and.returnValue(
+      of({
+        ...maintenance,
+        cost: 0,
+        id: 'maintenance-zero'
+      })
+    );
 
     component.save();
 
@@ -336,9 +356,7 @@ describe('MaintenanceComponent', () => {
 
     component.save();
 
-    expect(component.errorMessage).toContain(
-      'não pode ter data futura'
-    );
+    expect(component.errorMessage).toContain('não pode ter data futura');
     expect(maintenanceService.create).not.toHaveBeenCalled();
   });
 
@@ -349,9 +367,7 @@ describe('MaintenanceComponent', () => {
 
     component.save();
 
-    expect(component.errorMessage).toContain(
-      'não pode ter data futura'
-    );
+    expect(component.errorMessage).toContain('não pode ter data futura');
     expect(maintenanceService.create).not.toHaveBeenCalled();
   });
 
@@ -361,7 +377,9 @@ describe('MaintenanceComponent', () => {
       id: 'maintenance-new',
       serviceDate: `${brazilToday()}T03:00:00.000Z`
     };
+
     maintenanceService.create.and.returnValue(of(saved));
+
     initializeComponent();
     component.startCreate();
     component.form = validPayload();
@@ -377,6 +395,7 @@ describe('MaintenanceComponent', () => {
         status: 'Agendada'
       })
     );
+
     expect(component.maintenances[0]).toEqual(saved);
     expect(component.isCreating).toBeFalse();
     expect(component.editing).toBeNull();
@@ -386,6 +405,7 @@ describe('MaintenanceComponent', () => {
   it('trims the service type, description and bus id before creating', () => {
     initializeComponent();
     component.startCreate();
+
     component.form = {
       ...validPayload(),
       busId: ' bus-1 ',
@@ -410,7 +430,9 @@ describe('MaintenanceComponent', () => {
         error: { message: 'Ônibus não encontrado.' }
       }))
     );
+
     spyOn(console, 'error');
+
     initializeComponent();
     component.startCreate();
     component.form = validPayload();
@@ -450,20 +472,26 @@ describe('MaintenanceComponent', () => {
       ...maintenance,
       serviceType: 'Troca de filtros'
     };
+
     maintenanceService.update.and.returnValue(of(updated));
+
     initializeComponent();
     component.startEdit(maintenance);
+
     component.form = {
-      ...validPayload(),
-      serviceDate: maintenance.serviceDate
+      ...component.form,
+      serviceType: 'Troca de filtros'
     };
 
     component.save();
 
     expect(maintenanceService.update).toHaveBeenCalledWith(
       maintenance.id,
-      jasmine.objectContaining({ serviceType: 'Troca de óleo' })
+      jasmine.objectContaining({
+        serviceType: 'Troca de filtros'
+      })
     );
+
     expect(component.maintenances[0]).toEqual(updated);
     expect(component.isLoading).toBeFalse();
   });
@@ -473,6 +501,7 @@ describe('MaintenanceComponent', () => {
     component.startEdit({ ...maintenance, status: 'Concluída' });
 
     expect(component.isReadOnly).toBeTrue();
+
     component.save();
 
     expect(component.errorMessage).toContain('somente para consulta');
@@ -484,18 +513,24 @@ describe('MaintenanceComponent', () => {
     component.startEdit({ ...maintenance, status: 'Cancelada' });
 
     expect(component.isReadOnly).toBeTrue();
+
     component.save();
 
     expect(component.errorMessage).toContain('somente para consulta');
     expect(maintenanceService.update).not.toHaveBeenCalled();
   });
 
-  it('renders read-only fields and hides the save button for completed maintenance', () => {
+  it('renders read-only fields and hides the save button for completed maintenance', async () => {
     initializeComponent();
     component.startEdit({ ...maintenance, status: 'Concluída' });
     fixture.detectChanges();
 
+    // O NgModel aplica [disabled] de forma assíncrona (microtask),
+    // então é preciso esperar a zona estabilizar antes de ler o DOM.
+    await fixture.whenStable();
+
     const element: HTMLElement = fixture.nativeElement;
+
     const saveButton = Array.from(
       element.querySelectorAll('button')
     ).find(button => button.textContent?.includes('Salvar alterações'));
@@ -507,6 +542,7 @@ describe('MaintenanceComponent', () => {
     const serviceType = element.querySelector(
       '#maintenance-type'
     ) as HTMLInputElement;
+
     expect(serviceType.disabled).toBeTrue();
   });
 
@@ -541,6 +577,7 @@ describe('MaintenanceComponent', () => {
 
   it('does not delete when the user declines confirmation', () => {
     initializeComponent();
+
     spyOn(window, 'prompt').and.returnValue('Registro duplicado');
     spyOn(window, 'confirm').and.returnValue(false);
 
@@ -551,6 +588,7 @@ describe('MaintenanceComponent', () => {
 
   it('deletes a maintenance after a reason and confirmation are provided', () => {
     initializeComponent();
+
     spyOn(window, 'prompt').and.returnValue('Registro duplicado');
     spyOn(window, 'confirm').and.returnValue(true);
 
@@ -560,19 +598,23 @@ describe('MaintenanceComponent', () => {
       maintenance.id,
       'Registro duplicado'
     );
+
     expect(component.maintenances).not.toContain(maintenance);
     expect(component.isLoading).toBeFalse();
   });
 
   it('shows an error when deleting a maintenance fails', () => {
     maintenanceService.delete.and.returnValue(
-      throwError(() => ({ error: { message: 'Exclusão não permitida.' } }))
+      throwError(() => ({
+        error: { message: 'Exclusão não permitida.' }
+      }))
     );
+
     spyOn(console, 'error');
     spyOn(window, 'prompt').and.returnValue('Registro duplicado');
     spyOn(window, 'confirm').and.returnValue(true);
-    initializeComponent();
 
+    initializeComponent();
     component.delete(maintenance);
 
     expect(component.errorMessage).toBe('Exclusão não permitida.');
@@ -594,7 +636,17 @@ describe('MaintenanceComponent', () => {
 
     const element: HTMLElement = fixture.nativeElement;
 
-    expect(element.querySelector('.edit-button')).toBeNull();
-    expect(element.querySelector('.delete-button')).toBeNull();
+    const editButton = element.querySelector(
+      '.edit-button'
+    ) as HTMLButtonElement;
+
+    const deleteButton = element.querySelector(
+      '.delete-button'
+    ) as HTMLButtonElement;
+
+    expect(editButton).not.toBeNull();
+    expect(deleteButton).not.toBeNull();
+    expect(editButton.hidden).toBeTrue();
+    expect(deleteButton.hidden).toBeTrue();
   });
 });

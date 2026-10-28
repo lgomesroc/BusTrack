@@ -81,6 +81,7 @@ namespace BusTrack.Tests.IntegrationTests.ControllersAPIIntegrationTests
                 DriverId = driver.Id,
                 RouteId = route.Id,
                 DepartureTime = DateTime.UtcNow.AddMinutes(10),
+                PlannedDuration = 60,
                 ArrivalTime = (DateTime?)null,
                 PlannedDuration = 60,
                 Duration = 0,

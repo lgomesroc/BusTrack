@@ -1,0 +1,32 @@
+<div class="dashboard-container">
+  <app-sidebar></app-sidebar>
+  <main class="main-content">
+    <header class="top-bar"><span class="system-name">Bus Track</span><div class="user-area"><span>Área administrativa</span><button type="button" (click)="sair()">Sair</button></div></header>
+    <section class="dashboard-body">
+      <div class="welcome-section"><h1>Painel administrativo</h1><p>Indicadores consultados diretamente na API.</p></div>
+      <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+      <p *ngIf="isLoading">Carregando indicadores...</p>
+      <section class="dashboard-cards" *ngIf="dashboard as data">
+        <article class="dashboard-card"><h2>Usuários cadastrados</h2><p class="metric">{{ data.users.total }}</p><p>{{ data.users.administrators }} administradores · {{ data.users.normalUsers }} usuários comuns</p></article>
+        <article class="dashboard-card"><h2>Ônibus</h2><p class="metric">{{ data.buses.total }}</p><p>Total cadastrado</p></article>
+        <article class="dashboard-card"><h2>Motoristas</h2><p class="metric">{{ data.drivers.total }}</p><p>Total cadastrado</p></article>
+        <button type="button" class="dashboard-card" (click)="navegarParaPassageiros()"><h2>Passageiros</h2><p class="metric">{{ data.passengers.total }}</p><p>Total cadastrado · consultar passageiros</p></button>
+        <article class="dashboard-card"><h2>Rotas</h2><p class="metric">{{ data.routes.total }}</p><p>Total cadastrado</p></article>
+        <article class="dashboard-card"><h2>Viagens</h2><p class="metric">{{ data.trips.total }}</p><p>{{ data.trips.upcoming }} com saída futura</p></article>
+      </section>
+      <section class="users-panel">
+        <div class="panel-heading"><div><h2>Usuários online</h2><p>Atividade nos últimos 90 segundos.</p></div><button type="button" (click)="carregarDados()">Atualizar</button></div>
+        <p *ngIf="dashboard && dashboard.activeUsers.length === 0">Nenhum usuário online identificado neste momento.</p>
+        <div class="table-wrapper" *ngIf="dashboard?.activeUsers?.length"><table><thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Última atividade</th></tr></thead><tbody><tr *ngFor="let user of dashboard?.activeUsers"><td>{{ user.fullName || 'Não informado' }}</td><td>{{ user.email || 'Não informado' }}</td><td>{{ user.role }}</td><td>{{ user.lastSeenUtc ? (user.lastSeenUtc | date:'dd/MM/yyyy HH:mm:ss':'-0300') : 'Não disponível' }}</td></tr></tbody></table></div>
+      </section>
+      <section class="users-panel">
+        <div class="panel-heading"><div><h2>Usuários cadastrados</h2><p>{{ usersTotal }} conta(s) encontrada(s).</p></div><button type="button" (click)="carregarUsuarios()">Atualizar lista</button></div>
+        <form class="search-form" (submit)="$event.preventDefault(); pesquisarUsuarios()"><label for="userSearch">Pesquisar por nome, e-mail ou perfil</label><div class="search-controls"><input id="userSearch" type="search" [value]="userSearch" (input)="userSearch = $any($event.target).value" autocomplete="off"><button type="submit">Pesquisar</button><button type="button" (click)="limparPesquisa()">Limpar</button></div></form>
+        <p *ngIf="usersLoading">Carregando usuários...</p><p class="error-message" *ngIf="usersError">{{ usersError }}</p>
+        <div class="table-wrapper" *ngIf="!usersLoading && registeredUsers.length"><table><thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Cadastro</th><th>Última atividade</th><th>Status</th></tr></thead><tbody><tr *ngFor="let user of registeredUsers"><td>{{ user.fullName || 'Não informado' }}</td><td>{{ user.email || 'Não informado' }}</td><td>{{ user.role }}</td><td>{{ user.createdAtUtc ? (user.createdAtUtc | date:'dd/MM/yyyy HH:mm':'-0300') : 'Não disponível' }}</td><td>{{ user.lastSeenUtc ? (user.lastSeenUtc | date:'dd/MM/yyyy HH:mm:ss':'-0300') : 'Não disponível' }}</td><td>{{ user.isOnline ? 'Online' : 'Offline' }}</td></tr></tbody></table></div>
+        <p *ngIf="!usersLoading && !usersError && registeredUsers.length === 0">Nenhuma conta encontrada.</p>
+        <div class="pagination" *ngIf="usersTotalPages > 0"><span>Exibindo {{ usersStart }}–{{ usersEnd }} de {{ usersTotal }}</span><div><button type="button" (click)="paginaAnterior()" [disabled]="usersPage <= 1 || usersLoading">Anterior</button><span>{{ usersPage }} / {{ usersTotalPages }}</span><button type="button" (click)="proximaPagina()" [disabled]="usersPage >= usersTotalPages || usersLoading">Próxima</button></div></div>
+      </section>
+    </section>
+  </main>
+</div>

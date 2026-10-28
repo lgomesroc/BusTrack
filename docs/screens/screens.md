@@ -22,9 +22,9 @@ Permite cadastrar uma nova conta de usuário.
 
 ![Tela de criar conta](images/1717028557786.jpeg)
 
-### Tela de recuperação/redefinição de senha
+### Tela de recuperação de senha
 
-Permite iniciar e concluir o fluxo de recuperação de senha.
+A tela de solicitação está disponível, mas não representa um fluxo de recuperação pronto: o endpoint chamado pelo formulário é protegido para `ADMIN`, enquanto o endpoint público de solicitação ainda informa que a verificação segura não foi implementada. O componente de redefinição por código também não está registrado nas rotas revisadas.
 
 ### Tela de atualização de senha
 
@@ -52,9 +52,13 @@ Apresenta a conclusão de um fluxo de autenticação ou conta.
 
 ![Tela de dashboard](images/1717028557775.jpeg)
 
+### Dashboard do usuário
+
+Área destinada ao papel `USER`. A rota e o guard devem encaminhar o usuário ao dashboard correspondente ao papel autenticado.
+
 ### Dashboard administrativo
 
-Área administrativa disponível para `ADMIN`, com informações administrativas, usuários, pesquisa, paginação e dados de presença.
+Área administrativa disponível para `ADMIN`, com indicadores, usuários, pesquisa, paginação e dados de presença.
 
 ### Ônibus
 
@@ -75,6 +79,10 @@ Tela de gerenciamento de passageiros.
 ### Viagens
 
 Tela de gerenciamento de viagens.
+
+### Manutenções
+
+Tela de gerenciamento das manutenções dos ônibus. As regras de edição e exclusão dependem do papel autorizado e do status do registro.
 
 ### Detalhes da viagem
 

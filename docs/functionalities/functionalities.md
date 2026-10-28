@@ -1,10 +1,11 @@
+
 # Funcionalidades
 
 ## Visão geral
 
-O BusTrack é uma aplicação para gerenciamento de transporte coletivo. A solução contém módulos operacionais, autenticação, controle de sessão e recursos administrativos.
+O BusTrack é uma aplicação para gerenciamento de transporte coletivo. A V1 reúne autenticação, gerenciamento operacional e recursos administrativos para ônibus, motoristas, rotas, passageiros, viagens e manutenções.
 
-Este documento diferencia funcionalidades implementadas de fluxos que ainda não estão completos. A presença de uma tela ou endpoint, isoladamente, não significa que a funcionalidade esteja pronta para uso.
+Esta documentação descreve as funcionalidades da aplicação e as regras de negócio implementadas. Recursos planejados para versões futuras não devem ser apresentados como funcionalidades concluídas da V1.
 
 ---
 
@@ -13,11 +14,15 @@ Este documento diferencia funcionalidades implementadas de fluxos que ainda não
 O sistema permite:
 
 - cadastrar ônibus;
-- consultar ônibus;
+- consultar a lista de ônibus;
 - consultar um ônibus específico;
 - editar ônibus;
 - excluir ônibus;
-- utilizar ônibus no contexto das viagens.
+- associar ônibus às viagens;
+- associar ônibus às manutenções;
+- verificar a disponibilidade do ônibus nos intervalos de operação planejados.
+
+A disponibilidade de um ônibus deve considerar as viagens e as manutenções ativas que utilizam o mesmo veículo.
 
 ---
 
@@ -26,11 +31,14 @@ O sistema permite:
 O sistema permite:
 
 - cadastrar motoristas;
-- consultar motoristas;
+- consultar a lista de motoristas;
 - consultar um motorista específico;
 - editar motoristas;
 - excluir motoristas;
-- associar motoristas às viagens.
+- associar motoristas às viagens;
+- utilizar o motorista como recurso para verificar conflitos de horário entre viagens.
+
+Um motorista não deve ser alocado em duas viagens com intervalos de operação sobrepostos.
 
 ---
 
@@ -39,7 +47,7 @@ O sistema permite:
 O sistema permite:
 
 - cadastrar rotas;
-- consultar rotas;
+- consultar a lista de rotas;
 - consultar uma rota específica;
 - editar rotas;
 - excluir rotas;
@@ -52,11 +60,12 @@ O sistema permite:
 O sistema permite:
 
 - cadastrar passageiros;
-- consultar passageiros;
+- consultar a lista de passageiros;
 - consultar um passageiro específico;
 - editar passageiros;
 - excluir passageiros;
-- associar passageiros às viagens.
+- associar passageiros às viagens;
+- consultar os passageiros relacionados a uma viagem.
 
 A associação entre passageiro e viagem é mantida separadamente do cadastro do passageiro.
 
@@ -69,72 +78,149 @@ Uma viagem reúne as informações necessárias para representar uma operação 
 O sistema permite:
 
 - cadastrar viagens;
-- consultar viagens;
+- consultar a lista de viagens;
 - consultar uma viagem específica;
-- editar viagens;
-- excluir viagens;
+- consultar os detalhes de uma viagem;
+- editar viagens conforme as regras de status;
+- excluir viagens conforme as permissões aplicáveis;
 - associar ônibus;
 - associar motorista;
 - associar rota;
 - associar passageiros;
-- consultar os detalhes da viagem;
+- informar a data e o horário previstos de saída;
+- definir a duração planejada da viagem em minutos;
+- registrar o início efetivo da viagem;
+- registrar a data e o horário reais de chegada;
+- registrar a duração real da viagem;
+- registrar a quantidade de passageiros transportados;
 - aplicar as regras relacionadas à capacidade de passageiros;
-- informar a duração prevista da viagem;
-- impedir conflitos de agenda do mesmo ônibus;
-- impedir conflitos de agenda do mesmo motorista.
+- validar conflitos de horário com outras viagens e manutenções.
 
-### Conflitos de recursos
+### Duração planejada
 
-A duração prevista define o intervalo operacional usado para verificar a disponibilidade dos recursos.
+A duração planejada representa o intervalo estimado de operação da viagem. Ela é utilizada para determinar o horário previsto de término e verificar a disponibilidade dos recursos envolvidos.
 
-Para uma viagem com saída em `T` e duração prevista de `D` minutos, o período considerado é:
+A duração planejada deve ser maior que zero e não pode ultrapassar 1.440 minutos.
 
-`[T, T + D)`
+O intervalo da viagem é calculado a partir do horário previsto de saída e da duração planejada.
 
-Uma nova viagem entra em conflito quando os intervalos se sobrepõem. Assim, uma viagem que termina exatamente no horário de saída da próxima não é considerada conflitante.
+### Status das viagens
 
-A regra é aplicada no backend e considera:
+Os status operacionais são:
 
-- o mesmo ônibus não pode estar alocado em duas viagens simultâneas;
-- o mesmo motorista não pode estar alocado em duas viagens simultâneas;
-- viagens `Concluída` e `Cancelada` não bloqueiam novos agendamentos;
-- a própria viagem é ignorada durante uma atualização para não gerar conflito consigo mesma;
-- a duração prevista deve ser maior que zero;
-- a verificação é feita antes da persistência da viagem.
+- **Agendada:** a viagem está planejada e ainda não começou;
+- **Em andamento:** a operação da viagem foi iniciada;
+- **Concluída:** a viagem foi encerrada com os dados reais exigidos;
+- **Cancelada:** a viagem foi cancelada.
 
-A interface informa a duração prevista e apresenta ao usuário uma mensagem de erro quando a API rejeita a alocação por conflito. A API permanece como autoridade para a regra de disponibilidade.
+As transições de status obedecem às regras de negócio da aplicação.
+
+Uma viagem agendada pode iniciar no horário previsto de saída ou depois dele. Uma viagem não pode ser iniciada antes do horário previsto.
+
+Para concluir uma viagem, é necessário informar a chegada real, uma quantidade positiva de passageiros e uma duração compatível com o tempo decorrido entre o início e a chegada.
+
+Viagens concluídas ou canceladas não podem ter seus dados alterados pelas operações de atualização de viagem.
 
 ---
 
 ## Manutenções
 
-O módulo de manutenções possui consulta, criação, atualização e exclusão de registros vinculados a ônibus. O backend valida os dados, datas, custo e transições de status. A atualização e exclusão são restritas a `ADMIN`; a consulta do histórico de auditoria também é administrativa. A exclusão exige justificativa e a elegibilidade depende do status da manutenção. Existem testes unitários do serviço e testes de integração com persistência real. A tela Angular está registrada na navegação/roteamento, mas a cobertura de ponta a ponta e a documentação de regras devem continuar alinhadas ao comportamento do serviço.
+O sistema permite gerenciar as manutenções associadas aos ônibus.
 
-### Disponibilidade do ônibus durante manutenção
+As informações de uma manutenção incluem:
 
-Ao cadastrar uma viagem, o backend verifica se o ônibus possui manutenção com status `Agendada` ou `Em andamento` na mesma data de serviço. Nessa versão, a manutenção contém `ServiceDate`, sem horário inicial/final ou duração planejada; por isso, a regra considera o dia de serviço inteiro, em vez de inventar um intervalo de horas.
+- ônibus relacionado;
+- tipo de serviço;
+- descrição;
+- data do serviço;
+- horário previsto de início;
+- duração planejada em minutos;
+- custo;
+- status;
+- data de conclusão, quando aplicável;
+- informações de exclusão lógica, quando aplicável.
 
-Manutenções concluídas, canceladas ou excluídas logicamente não bloqueiam a viagem. A verificação ocorre no backend e é combinada com a validação de conflitos de horário entre viagens para o mesmo ônibus ou motorista.
+### Duração planejada da manutenção
+
+A duração planejada define o intervalo durante o qual o ônibus ficará reservado para a manutenção.
+
+O intervalo é calculado com base na data do serviço, no horário previsto de início e na duração planejada.
+
+A duração deve ser positiva para que o intervalo possa ser utilizado na verificação de conflitos.
+
+### Status das manutenções
+
+Os status operacionais considerados nas verificações de disponibilidade são:
+
+- **Agendada:** a manutenção está planejada;
+- **Em andamento:** a manutenção está em execução;
+- **Concluída:** a manutenção foi encerrada;
+- **Cancelada:** a manutenção foi cancelada.
+
+Manutenções concluídas, canceladas ou excluídas logicamente não devem bloquear novos intervalos como se fossem manutenções ativas.
+
+As operações de criação, consulta, atualização e exclusão devem respeitar as permissões e as regras de negócio aplicáveis ao módulo.
+
+---
+
+## Conflitos entre viagens e manutenções
+
+A disponibilidade do ônibus deve considerar os intervalos de operação das viagens e das manutenções.
+
+### Viagem que conflita com manutenção
+
+Uma viagem não pode ser cadastrada ou reagendada para um intervalo que se sobreponha a uma manutenção ativa do mesmo ônibus.
+
+A verificação considera:
+
+- identificação do ônibus;
+- data e horário de saída da viagem;
+- duração planejada da viagem;
+- data e horário de início da manutenção;
+- duração planejada da manutenção;
+- status da manutenção;
+- exclusão lógica da manutenção.
+
+### Manutenção que conflita com viagem
+
+Uma manutenção também não deve ser agendada ou alterada para um intervalo que se sobreponha a uma viagem ativa do mesmo ônibus.
+
+A verificação deve considerar o intervalo planejado da viagem e o intervalo planejado da manutenção.
+
+### Limites dos intervalos
+
+Dois intervalos são conflitantes quando existe sobreposição entre eles. Um intervalo que termina exatamente quando o outro começa não representa sobreposição por si só.
+
+As validações devem considerar os horários efetivos e as regras de fuso horário da aplicação, evitando comparar apenas as datas e ignorar os horários.
+
+### Conflitos entre viagens
+
+Além das manutenções, a verificação de disponibilidade deve impedir a sobreposição de viagens que utilizem:
+
+- o mesmo ônibus;
+- o mesmo motorista.
+
+A validação deve desconsiderar a própria viagem quando uma operação estiver atualizando seus dados e não deve tratar viagens concluídas ou canceladas como operações ativas para essa finalidade.
 
 ---
 
 ## Contas e autenticação
 
-O código contém os seguintes recursos:
+A V1 possui os seguintes recursos:
 
-- criação de conta e login;
-- logout e controle de sessão;
-- alteração de senha autenticada;
-- política e histórico de senhas;
+- criação de conta;
+- login;
+- logout;
+- alteração de senha;
+- recuperação de senha;
+- redefinição de senha;
+- histórico de senhas;
+- política de senhas;
 - autenticação por JWT;
 - autorização por roles `USER` e `ADMIN`;
 - bootstrap controlado do primeiro administrador.
 
-O cadastro público cria contas com role `USER`; a role não deve ser definida pelo cliente.
-
-### Estado da recuperação de senha
-
-A recuperação de senha **não deve ser considerada concluída**. O frontend possui uma tela `forgot-password` que envia uma nova senha diretamente para `AuthenticationControllerAPI/forgot-password`, endpoint protegido por `ADMIN`. Já `PasswordRecoveryControllerAPI` expõe `POST /api/password-recovery/request`, mas a própria resposta informa que a verificação segura ainda precisa ser implementada. Também existe um componente `reset-password`, que envia código de recuperação, mas ele não está registrado nas rotas nem no módulo Angular revisados. Portanto, tela, API e fluxo de recuperação ainda não estão alinhados e precisam ser corrigidos antes de divulgar essa funcionalidade como pronta.
+O cadastro público cria contas com role `USER`. A role não é definida pelo cliente.
 
 ---
 
@@ -147,10 +233,10 @@ O sistema permite:
 - manter a sessão autenticada no navegador;
 - compartilhar a sessão entre abas do mesmo navegador;
 - permitir sessões independentes em navegadores diferentes;
-- impedir mais de uma sessão no mesmo navegador;
-- identificar o navegador da sessão;
+- impedir mais de uma sessão ativa no mesmo navegador, conforme as regras implementadas;
+- identificar o navegador associado à sessão;
 - controlar a validade da sessão;
-- controlar inatividade;
+- controlar a inatividade;
 - detectar a presença do usuário;
 - encerrar a sessão quando a comunicação necessária com a aplicação é perdida.
 
@@ -160,7 +246,7 @@ O token de acesso é mantido em `sessionStorage` no frontend.
 
 ## Dashboard
 
-A aplicação tem um dashboard geral e componentes específicos para os papéis `USER` e `ADMIN`. A rota `/dashboard` usa o redirecionamento por papel quando o guard correspondente está configurado na versão em análise; confirme o destino efetivo com os testes de rota antes de assumir que ambos os papéis chegam à mesma tela.
+O Dashboard é o ponto central da área autenticada.
 
 ### Usuário comum
 
@@ -168,31 +254,31 @@ O usuário acessa as funcionalidades permitidas pela role `USER`.
 
 ### Administrador
 
-O administrador possui o Dashboard administrativo, incluindo informações administrativas e gerenciamento/consulta de usuários.
+O administrador possui acesso ao Dashboard administrativo, incluindo informações administrativas e recursos de gerenciamento e consulta de usuários.
 
-O Dashboard administrativo possui:
+O Dashboard administrativo contempla:
 
 - visualização de usuários;
 - pesquisa de usuários;
 - paginação;
-- informações de usuários online/presença;
-- indicadores administrativos disponíveis pela API.
+- informações de usuários online e presença;
+- indicadores administrativos disponibilizados pela API.
 
 ---
 
 ## Navegação
 
-A aplicação possui navegação entre os módulos e controle específico dos botões Voltar e Avançar do navegador.
+A aplicação possui navegação entre os módulos e tratamento específico dos botões Voltar e Avançar do navegador.
 
 O `AuthenticationGuard` protege as rotas autenticadas. O `BrowserNavigationGuard` trata a navegação pelos controles do navegador conforme as regras da aplicação.
 
 ---
 
-## Disponibilidade e sessão
+## Disponibilidade dos serviços
 
 A aplicação monitora a disponibilidade dos serviços necessários ao funcionamento do sistema.
 
-Quando uma sessão autenticada perde a comunicação necessária com a aplicação, o frontend trata a situação e encerra o acesso conforme as regras da sessão.
+Quando uma sessão autenticada perde a comunicação necessária com a aplicação, o frontend trata a situação conforme as regras de sessão e disponibilidade.
 
 ---
 
@@ -206,17 +292,17 @@ As operações permitidas para `USER` e `ADMIN` são definidas pelas regras atua
 
 ---
 
-## Funcionalidades da V1
+## Funcionalidades contempladas na V1
 
-A V1 atualmente contempla:
+A V1 contempla os módulos e recursos implementados de:
 
 - autenticação e contas;
-- alteração de senha e política/histórico de senhas;
+- recuperação e alteração de senha;
 - política e histórico de senhas;
 - JWT e autorização;
 - controle de sessão;
 - múltiplos navegadores e abas;
-- User Presence;
+- presença do usuário;
 - controle de inatividade;
 - Dashboard de usuário;
 - Dashboard administrativo;
@@ -226,27 +312,28 @@ A V1 atualmente contempla:
 - gerenciamento de rotas;
 - gerenciamento de passageiros;
 - gerenciamento de viagens;
-- gerenciamento de manutenções;
 - detalhes de viagem;
 - relações entre passageiros e viagens;
+- duração planejada e dados reais das viagens;
+- gerenciamento de manutenções;
+- duração planejada das manutenções;
+- validação de conflitos de horário entre viagens;
+- validação de conflitos de horário entre viagens e manutenções;
 - controle de permissões;
 - navegação da aplicação;
-- monitoramento de disponibilidade;
-- detecção de conflitos de agenda entre viagens para ônibus e motoristas.
+- monitoramento de disponibilidade.
 
-A recuperação de senha permanece como pendência funcional concreta: o pedido público ainda informa que a verificação segura não está implementada e os endpoints/telas não formam um fluxo coerente. A V1 não deve ser declarada totalmente concluída enquanto isso e os testes de navegação por papel não forem resolvidos.
+A documentação funcional não substitui a execução de testes. A conclusão técnica de cada funcionalidade deve ser confirmada pelos testes unitários, de integração e pela validação dos fluxos relevantes da aplicação.
 
 ---
 
 ## Roadmap da V2
 
-Os recursos abaixo não fazem parte da V1 e devem ser tratados como evolução futura:
+Os recursos abaixo são possibilidades de evolução futura e não devem ser considerados funcionalidades concluídas da V1 sem implementação e validação específicas:
 
-- login/autenticação com Google;
+- login e autenticação com Google;
 - autenticação multifator (MFA/2FA);
 - reCAPTCHA;
-- adoção de cookies como mecanismo de autenticação/sessão, caso seja escolhida essa arquitetura;
+- adoção de cookies como mecanismo de autenticação e sessão, caso essa arquitetura seja escolhida;
 - novas extensões de segurança e autenticação;
-- novas extensões dos módulos operacionais conforme necessidade do produto.
-
-Esses itens não devem ser apresentados como funcionalidades faltantes da V1.
+- novas extensões dos módulos operacionais conforme a necessidade do produto.
