@@ -480,8 +480,8 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             maintenance.ServiceType = serviceType;
             maintenance.Description = description;
             maintenance.Status = normalizedStatus;
-            maintenance.ServiceDate = AsUtc(maintenance.ServiceDate.Date.Add(maintenance.ServiceStartTime.TimeOfDay));
-            maintenance.ServiceStartTime = AsUtc(maintenance.ServiceStartTime);
+            maintenance.ServiceDate = AsUtc(maintenance.ServiceDate);
+            maintenance.ServiceStartTime = DateTime.MinValue.Add(maintenance.ServiceStartTime.TimeOfDay);
             maintenance.CompletedDate = completedDate.HasValue
                 ? AsUtc(completedDate.Value)
                 : null;
