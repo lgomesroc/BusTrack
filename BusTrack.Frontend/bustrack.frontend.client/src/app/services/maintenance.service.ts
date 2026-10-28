@@ -17,6 +17,8 @@ export interface Maintenance {
   serviceType: string;
   description: string;
   serviceDate: string;
+  serviceStartTime: string;
+  plannedDurationMinutes: number;
   completedDate?: string | null;
   cost: number;
   status: MaintenanceStatus;
