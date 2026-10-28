@@ -42,6 +42,7 @@ export interface Trip {
   driver: Driver | null;
   route: Route | null;
   departureTime: string;
+  plannedDurationMinutes: number;
   startedAt: string | null;
   arrivalTime: string | null;
   duration: number;
@@ -55,6 +56,7 @@ export interface TripPayload {
   driverId: string;
   routeId: string;
   departureTime: string;
+  plannedDurationMinutes: number;
   startedAt?: string | null;
   arrivalTime: string | null;
   duration: number;
