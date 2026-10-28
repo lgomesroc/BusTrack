@@ -82,6 +82,7 @@ export class TripsComponent implements OnInit {
       driverId: trip.driver?.id ?? '',
       routeId: trip.route?.id ?? '',
       departureTime: this.converterParaDatetimeLocal(trip.departureTime),
+      plannedDurationMinutes: trip.plannedDurationMinutes || 60,
       arrivalTime: this.converterParaDatetimeLocal(trip.arrivalTime ?? ''),
       duration: trip.duration,
       limitPassengers: trip.limitPassengers,
@@ -120,6 +121,7 @@ export class TripsComponent implements OnInit {
       driverId: this.tripForm.driverId,
       routeId: this.tripForm.routeId,
       departureTime: this.converterParaIso(this.tripForm.departureTime),
+      plannedDurationMinutes: Number(this.tripForm.plannedDurationMinutes),
       startedAt: this.editingTrip?.startedAt ?? null,
       arrivalTime: this.tripForm.status === 'Concluída' ? this.converterParaIso(this.tripForm.arrivalTime) : null,
       duration: this.tripForm.status === 'Concluída' ? Number(this.tripForm.duration) : 0,
@@ -183,12 +185,12 @@ export class TripsComponent implements OnInit {
   podeAlterarStatus(trip: Trip): boolean { return trip.status === 'Agendada' || trip.status === 'Em andamento'; }
 
   private criarFormularioVazio() {
-    return { busId: '', driverId: '', routeId: '', departureTime: '', arrivalTime: '', duration: 0, limitPassengers: 0, status: 'Agendada' as TripStatus, passengers: [] as string[] };
+    return { busId: '', driverId: '', routeId: '', departureTime: '', plannedDurationMinutes: 60, arrivalTime: '', duration: 0, limitPassengers: 0, status: 'Agendada' as TripStatus, passengers: [] as string[] };
   }
 
   private validarFormulario(): boolean {
-    if (!this.tripForm.busId || !this.tripForm.driverId || !this.tripForm.routeId || !this.tripForm.departureTime) {
-      this.errorMessage = 'Informe o ônibus, o motorista, a rota e a data e hora de saída.';
+    if (!this.tripForm.busId || !this.tripForm.driverId || !this.tripForm.routeId || !this.tripForm.departureTime || !this.tripForm.plannedDurationMinutes || this.tripForm.plannedDurationMinutes < 1 || this.tripForm.plannedDurationMinutes > 1440) {
+      this.errorMessage = 'Informe ônibus, motorista, rota, saída e duração planejada entre 1 e 1440 minutos.';
       return false;
     }
 
