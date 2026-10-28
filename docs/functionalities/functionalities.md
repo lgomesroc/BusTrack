@@ -82,6 +82,45 @@ O sistema permite:
 
 ---
 
+## Manutenções
+
+O sistema permite:
+
+- cadastrar manutenções;
+- consultar manutenções;
+- editar manutenções conforme o ciclo de vida permitido;
+- cancelar/excluir logicamente manutenções agendadas;
+- registrar custo da manutenção;
+- consultar o histórico de auditoria das alterações.
+
+Os custos das manutenções podem ser consolidados nos relatórios operacionais.
+
+---
+
+## Relatórios operacionais
+
+O administrador pode consultar um relatório consolidado informando uma data inicial e uma data final.
+
+O relatório apresenta:
+
+- quantidade total de viagens no período;
+- viagens concluídas;
+- viagens canceladas;
+- viagens agendadas;
+- viagens em andamento;
+- utilização dos ônibus, com quantidade de viagens e viagens concluídas por ônibus;
+- quantidade de viagens por motorista e quantidade de viagens concluídas;
+- custo total das manutenções no período;
+- custo total e quantidade de manutenções por ônibus.
+
+A consulta é disponibilizada pelo endpoint `GET /api/OperationalReports` e exige a role `ADMIN`.
+
+O período é inclusivo: a data inicial e a data final fazem parte da consulta. As viagens são consideradas pela data/hora de saída e as manutenções pela data do serviço.
+
+Os relatórios são calculados a partir dos dados operacionais existentes. Não há armazenamento separado de dados de relatório.
+
+---
+
 ## Contas e autenticação
 
 A V1 possui os seguintes recursos:
@@ -190,8 +229,13 @@ A V1 atualmente contempla:
 - gerenciamento de rotas;
 - gerenciamento de passageiros;
 - gerenciamento de viagens;
+- gerenciamento de manutenções;
 - detalhes de viagem;
 - relações entre passageiros e viagens;
+- ciclo de vida das viagens;
+- controle de conflitos de recursos entre viagens;
+- integração entre manutenção e disponibilidade de ônibus;
+- relatórios operacionais;
 - controle de permissões;
 - navegação da aplicação;
 - monitoramento de disponibilidade.
