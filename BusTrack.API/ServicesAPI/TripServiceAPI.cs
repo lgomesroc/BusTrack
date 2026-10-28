@@ -18,9 +18,18 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         private readonly IDriverRepositoryDB _driverRepository;
         private readonly IRouteRepositoryDB _routeRepository;
         private readonly IPassengerRepositoryDB _passengerRepository;
+        private readonly IMaintenanceRepositoryDB? _maintenanceRepository;
         private readonly IMapper _mapper;
 
-        public TripServiceAPI(ITripRepositoryDB tripRepository, ITripPassengerRepositoryDB tripPassengerRepository, IBusRepositoryDB busRepository, IDriverRepositoryDB driverRepository, IRouteRepositoryDB routeRepository, IPassengerRepositoryDB passengerRepository, IMapper mapper)
+        public TripServiceAPI(
+            ITripRepositoryDB tripRepository,
+            ITripPassengerRepositoryDB tripPassengerRepository,
+            IBusRepositoryDB busRepository,
+            IDriverRepositoryDB driverRepository,
+            IRouteRepositoryDB routeRepository,
+            IPassengerRepositoryDB passengerRepository,
+            IMapper mapper,
+            IMaintenanceRepositoryDB? maintenanceRepository = null)
         {
             _tripRepository = tripRepository;
             _tripPassengerRepository = tripPassengerRepository;
@@ -29,6 +38,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             _routeRepository = routeRepository;
             _passengerRepository = passengerRepository;
             _mapper = mapper;
+            _maintenanceRepository = maintenanceRepository;
         }
 
         public async Task<IEnumerable<TripDTOAPI>> GetAllTripsAsync()
@@ -63,6 +73,9 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         {
             if (trip.DepartureTime <= DateTime.UtcNow)
                 throw new ArgumentException("A saída deve ser agendada para um horário futuro.");
+
+            await EnsureBusAvailableForTripAsync(trip.BusId, trip.DepartureTime);
+
             var tripDB = _mapper.Map<TripDB>(trip);
             tripDB.Status = Scheduled;
             tripDB.StartedAt = null;
@@ -149,6 +162,58 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         {
             if (string.IsNullOrWhiteSpace(id)) return false;
             return await _tripRepository.DeleteTripAsync(id);
+        }
+
+        private async Task EnsureBusAvailableForTripAsync(
+            string? busId,
+            DateTime departureTime)
+        {
+            if (string.IsNullOrWhiteSpace(busId) || _maintenanceRepository is null)
+                return;
+
+            var maintenanceItems = await _maintenanceRepository.GetAllAsync();
+
+            var tripDate = GetBrazilDate(departureTime);
+
+            var blocksBus = maintenanceItems.Any(maintenance =>
+                !maintenance.IsDeleted &&
+                string.Equals(maintenance.BusId, busId, StringComparison.OrdinalIgnoreCase) &&
+                IsActiveMaintenanceStatus(maintenance.Status) &&
+                GetBrazilDate(maintenance.ServiceDate) == tripDate);
+
+            if (blocksBus)
+            {
+                throw new ArgumentException(
+                    "O ônibus não está disponível para esta viagem porque possui manutenção agendada ou em andamento na data da viagem.");
+            }
+        }
+
+        private static bool IsActiveMaintenanceStatus(string? status)
+        {
+            return string.Equals(status?.Trim(), "Agendada", StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(status?.Trim(), "Em andamento", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static DateTime GetBrazilDate(DateTime value)
+        {
+            var utc = value.Kind switch
+            {
+                DateTimeKind.Utc => value,
+                DateTimeKind.Local => value.ToUniversalTime(),
+                _ => DateTime.SpecifyKind(value, DateTimeKind.Utc)
+            };
+
+            TimeZoneInfo timeZone;
+            try
+            {
+                timeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Sao_Paulo");
+            }
+            catch (TimeZoneNotFoundException)
+            {
+                timeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
+            }
+
+            return TimeZoneInfo.ConvertTimeFromUtc(utc, timeZone).Date;
         }
 
         private static string NormalizeStatus(string? status)
