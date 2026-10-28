@@ -37,6 +37,7 @@ namespace BusTrack.Tests.IntegrationTests.ControllersAPIIntegrationTests
                 RouteId = dependencies.RouteId,
                 DepartureTime = DateTime.UtcNow.AddMinutes(10),
                 ArrivalTime = (DateTime?)null,
+                PlannedDuration = 60,
                 Duration = 0,
                 LimitPassengers = 0,
                 Passengers = new List<string>()
@@ -108,6 +109,7 @@ namespace BusTrack.Tests.IntegrationTests.ControllersAPIIntegrationTests
                 RouteId = dependencies.RouteId,
                 DepartureTime = departure,
                 ArrivalTime = (DateTime?)null,
+                PlannedDuration = 60,
                 Duration = 0,
                 LimitPassengers = 0,
                 Passengers = new List<string>()
