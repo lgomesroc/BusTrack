@@ -96,6 +96,8 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 var busId = trip.BusId ?? existingTrip.BusId;
                 var departure = trip.DepartureTime == default ? existingTrip.DepartureTime : trip.DepartureTime;
                 var plannedDuration = trip.PlannedDurationMinutes > 0 ? trip.PlannedDurationMinutes : existingTrip.PlannedDurationMinutes;
+                if (plannedDuration <= 0 || plannedDuration > 1440)
+                    throw new ArgumentException("A duração planejada da viagem deve estar entre 1 e 1440 minutos.");
                 await EnsureNoMaintenanceConflictAsync(busId, departure, plannedDuration, id);
                 existingTrip.BusId = busId;
                 existingTrip.DepartureTime = departure;
