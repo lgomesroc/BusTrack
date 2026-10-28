@@ -1,4 +1,3 @@
-
 using System.Reflection;
 using System.Text;
 using BusTrack.BusTrack.API.InterfacesAPI.IServicesAPI;
@@ -131,7 +130,6 @@ public partial class Program
             return client.GetDatabase(databaseName);
         });
 
-        // Necessário para identificar o usuário responsável pela auditoria.
         builder.Services.AddHttpContextAccessor();
 
         builder.Services.AddScoped<IUserRepositoryDB, UserRepositoryDB>();
@@ -150,14 +148,10 @@ public partial class Program
         builder.Services.AddScoped<ITripServiceAPI, TripServiceAPI>();
         builder.Services.AddScoped<ITripPassengerRepositoryDB, TripPassengerRepositoryDB>();
         builder.Services.AddScoped<ITripsPassengerServiceAPI, TripsPassengerServiceAPI>();
+        builder.Services.AddScoped<IOperationalReportServiceAPI, OperationalReportServiceAPI>();
 
         builder.Services.AddScoped<IMaintenanceRepositoryDB, MaintenanceRepositoryDB>();
-
-        // Novos registros do histórico de manutenção.
-        builder.Services.AddScoped<
-            IMaintenanceAuditRepositoryDB,
-            MaintenanceAuditRepositoryDB>();
-
+        builder.Services.AddScoped<IMaintenanceAuditRepositoryDB, MaintenanceAuditRepositoryDB>();
         builder.Services.AddScoped<IMaintenanceServiceAPI, MaintenanceServiceAPI>();
 
         var app = builder.Build();
@@ -166,7 +160,6 @@ public partial class Program
 
         if (app.Environment.IsDevelopment())
         {
-            // O documento OpenAPI continua protegido por JWT + ADMIN.
             app.UseWhen(
                 context => context.Request.Path.StartsWithSegments(
                     "/swagger/v1/swagger.json"),
