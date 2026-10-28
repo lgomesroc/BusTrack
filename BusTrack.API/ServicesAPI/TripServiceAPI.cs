@@ -19,8 +19,9 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         private readonly IRouteRepositoryDB _routeRepository;
         private readonly IPassengerRepositoryDB _passengerRepository;
         private readonly IMapper _mapper;
+        private readonly IMaintenanceRepositoryDB? _maintenanceRepository;
 
-        public TripServiceAPI(ITripRepositoryDB tripRepository, ITripPassengerRepositoryDB tripPassengerRepository, IBusRepositoryDB busRepository, IDriverRepositoryDB driverRepository, IRouteRepositoryDB routeRepository, IPassengerRepositoryDB passengerRepository, IMapper mapper)
+        public TripServiceAPI(ITripRepositoryDB tripRepository, ITripPassengerRepositoryDB tripPassengerRepository, IBusRepositoryDB busRepository, IDriverRepositoryDB driverRepository, IRouteRepositoryDB routeRepository, IPassengerRepositoryDB passengerRepository, IMapper mapper, IMaintenanceRepositoryDB? maintenanceRepository = null)
         {
             _tripRepository = tripRepository;
             _tripPassengerRepository = tripPassengerRepository;
@@ -29,6 +30,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             _routeRepository = routeRepository;
             _passengerRepository = passengerRepository;
             _mapper = mapper;
+            _maintenanceRepository = maintenanceRepository;
         }
 
         public async Task<IEnumerable<TripDTOAPI>> GetAllTripsAsync()
@@ -63,6 +65,9 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         {
             if (trip.DepartureTime <= DateTime.UtcNow)
                 throw new ArgumentException("A saída deve ser agendada para um horário futuro.");
+            if (trip.PlannedDurationMinutes <= 0 || trip.PlannedDurationMinutes > 1440)
+                throw new ArgumentException("A duração planejada da viagem deve estar entre 1 e 1440 minutos.");
+            await EnsureNoMaintenanceConflictAsync(trip.BusId, trip.DepartureTime, trip.PlannedDurationMinutes, null);
             var tripDB = _mapper.Map<TripDB>(trip);
             tripDB.Status = Scheduled;
             tripDB.StartedAt = null;
@@ -86,6 +91,16 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 throw new ArgumentException("Viagens concluídas ou canceladas não podem ser alteradas.");
             if (!IsAllowedTransition(currentStatus, requestedStatus))
                 throw new ArgumentException($"Transição de '{currentStatus}' para '{requestedStatus}' não permitida.");
+            if (requestedStatus == Scheduled || requestedStatus == InProgress)
+            {
+                var busId = trip.BusId ?? existingTrip.BusId;
+                var departure = trip.DepartureTime == default ? existingTrip.DepartureTime : trip.DepartureTime;
+                var plannedDuration = trip.PlannedDurationMinutes > 0 ? trip.PlannedDurationMinutes : existingTrip.PlannedDurationMinutes;
+                await EnsureNoMaintenanceConflictAsync(busId, departure, plannedDuration, id);
+                existingTrip.BusId = busId;
+                existingTrip.DepartureTime = departure;
+                existingTrip.PlannedDurationMinutes = plannedDuration;
+            }
 
             if (requestedStatus == InProgress)
             {
@@ -150,6 +165,29 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             if (string.IsNullOrWhiteSpace(id)) return false;
             return await _tripRepository.DeleteTripAsync(id);
         }
+
+        private async Task EnsureNoMaintenanceConflictAsync(string? busId, DateTime departure, int durationMinutes, string? ignoredTripId)
+        {
+            if (_maintenanceRepository is null || string.IsNullOrWhiteSpace(busId))
+                return;
+            var tripStart = departure.Kind == DateTimeKind.Utc ? departure : departure.ToUniversalTime();
+            var tripEnd = tripStart.AddMinutes(durationMinutes);
+            var maintenanceItems = await _maintenanceRepository.GetAllAsync();
+            var conflict = maintenanceItems.FirstOrDefault(item =>
+                !item.IsDeleted &&
+                string.Equals(item.BusId, busId, StringComparison.OrdinalIgnoreCase) &&
+                item.Status is "Agendada" or "Em andamento" &&
+                item.PlannedDurationMinutes > 0 &&
+                IntervalsOverlap(
+                    tripStart, tripEnd,
+                    item.ServiceDate.Date.Add(item.ServiceStartTime.TimeOfDay),
+                    item.ServiceDate.Date.Add(item.ServiceStartTime.TimeOfDay).AddMinutes(item.PlannedDurationMinutes)));
+            if (conflict is not null)
+                throw new ArgumentException($"O ônibus possui manutenção ativa no intervalo solicitado ({conflict.ServiceType}).");
+        }
+
+        private static bool IntervalsOverlap(DateTime firstStart, DateTime firstEnd, DateTime secondStart, DateTime secondEnd)
+            => firstStart < secondEnd && secondStart < firstEnd;
 
         private static string NormalizeStatus(string? status)
         {
