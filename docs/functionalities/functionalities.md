@@ -2,9 +2,9 @@
 
 ## Visão geral
 
-O BusTrack é uma aplicação para gerenciamento de transporte coletivo. A V1 reúne autenticação, gerenciamento operacional e recursos administrativos para ônibus, motoristas, rotas, passageiros e viagens.
+O BusTrack é uma aplicação para gerenciamento de transporte coletivo. A solução contém módulos operacionais, autenticação, controle de sessão e recursos administrativos.
 
-A documentação deste arquivo representa o estado atual da aplicação. Funcionalidades antigas que eram apenas planejadas não devem ser tratadas como pendências da V1.
+Este documento diferencia funcionalidades implementadas de fluxos que ainda não estão completos. A presença de uma tela ou endpoint, isoladamente, não significa que a funcionalidade esteja pronta para uso.
 
 ---
 
@@ -82,23 +82,29 @@ O sistema permite:
 
 ---
 
+## Manutenções
+
+O módulo de manutenções possui consulta, criação, atualização e exclusão de registros vinculados a ônibus. O backend valida os dados, datas, custo e transições de status. A atualização e exclusão são restritas a `ADMIN`; a consulta do histórico de auditoria também é administrativa. A exclusão exige justificativa e a elegibilidade depende do status da manutenção. Existem testes unitários do serviço e testes de integração com persistência real. A tela Angular está registrada na navegação/roteamento, mas a cobertura de ponta a ponta e a documentação de regras devem continuar alinhadas ao comportamento do serviço.
+
+---
+
 ## Contas e autenticação
 
-A V1 possui os seguintes recursos:
+O código contém os seguintes recursos:
 
-- criação de conta;
-- login;
-- logout;
-- alteração de senha;
-- recuperação de senha;
-- redefinição de senha;
-- histórico de senhas;
-- política de senhas;
+- criação de conta e login;
+- logout e controle de sessão;
+- alteração de senha autenticada;
+- política e histórico de senhas;
 - autenticação por JWT;
 - autorização por roles `USER` e `ADMIN`;
 - bootstrap controlado do primeiro administrador.
 
-O cadastro público cria contas com role `USER`. A role não é definida pelo cliente.
+O cadastro público cria contas com role `USER`; a role não deve ser definida pelo cliente.
+
+### Estado da recuperação de senha
+
+A recuperação de senha **não deve ser considerada concluída**. O frontend possui uma tela `forgot-password` que envia uma nova senha diretamente para `AuthenticationControllerAPI/forgot-password`, endpoint protegido por `ADMIN`. Já `PasswordRecoveryControllerAPI` expõe `POST /api/password-recovery/request`, mas a própria resposta informa que a verificação segura ainda precisa ser implementada. Também existe um componente `reset-password`, que envia código de recuperação, mas ele não está registrado nas rotas nem no módulo Angular revisados. Portanto, tela, API e fluxo de recuperação ainda não estão alinhados e precisam ser corrigidos antes de divulgar essa funcionalidade como pronta.
 
 ---
 
@@ -124,7 +130,7 @@ O token de acesso é mantido em `sessionStorage` no frontend.
 
 ## Dashboard
 
-O Dashboard é o ponto central da área autenticada.
+A aplicação tem um dashboard geral e componentes específicos para os papéis `USER` e `ADMIN`. A rota `/dashboard` usa o redirecionamento por papel quando o guard correspondente está configurado na versão em análise; confirme o destino efetivo com os testes de rota antes de assumir que ambos os papéis chegam à mesma tela.
 
 ### Usuário comum
 
@@ -175,7 +181,7 @@ As operações permitidas para `USER` e `ADMIN` são definidas pelas regras atua
 A V1 atualmente contempla:
 
 - autenticação e contas;
-- recuperação e alteração de senha;
+- alteração de senha e política/histórico de senhas;
 - política e histórico de senhas;
 - JWT e autorização;
 - controle de sessão;
@@ -190,13 +196,14 @@ A V1 atualmente contempla:
 - gerenciamento de rotas;
 - gerenciamento de passageiros;
 - gerenciamento de viagens;
+- gerenciamento de manutenções;
 - detalhes de viagem;
 - relações entre passageiros e viagens;
 - controle de permissões;
 - navegação da aplicação;
 - monitoramento de disponibilidade.
 
-Não há, no estado atual da documentação, uma funcionalidade principal de negócio conhecida como pendência obrigatória para concluir a V1.
+A recuperação de senha permanece como pendência funcional concreta: o pedido público ainda informa que a verificação segura não está implementada e os endpoints/telas não formam um fluxo coerente. A V1 não deve ser declarada totalmente concluída enquanto isso e os testes de navegação por papel não forem resolvidos.
 
 ---
 

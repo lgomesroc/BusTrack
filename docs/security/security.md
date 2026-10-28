@@ -10,15 +10,14 @@ A aplicação utiliza JWT Bearer para autenticar requisições protegidas. O tok
 
 As senhas são armazenadas como hashes BCrypt, nunca em texto puro.
 
-A V1 possui:
+O código possui:
 
-- alteração de senha;
-- recuperação de senha;
-- redefinição de senha;
+- alteração de senha autenticada;
 - histórico de senhas;
-- política de senhas.
+- política de senhas;
+- componentes e endpoints relacionados à recuperação, ainda sem um fluxo público completo e coerente.
 
-As regras de senha são aplicadas no backend e não dependem apenas das validações da interface.
+**A recuperação de senha não está concluída.** O formulário Angular `forgot-password` envia a nova senha para `POST /AuthenticationControllerAPI/forgot-password`, endpoint marcado como `ADMIN`. Em separado, `POST /api/password-recovery/request` é anônimo, mas sua resposta informa que a verificação segura ainda precisa ser implementada. O componente de redefinição por código existe, mas não está registrado nas rotas/módulo Angular revisados. Não divulgar recuperação/redefinição como funcional até alinhar endpoint, emissão e validação de código, expiração, uso único, invalidação de sessões e testes de ponta a ponta.
 
 ## JWT e sessão
 
@@ -48,6 +47,10 @@ A API utiliza RBAC (Role-Based Access Control).
 - A interface não é considerada mecanismo de autorização.
 
 As mesmas regras devem ser aplicadas a rotas alternativas ou legadas que representem as mesmas operações.
+
+## Manutenções
+
+O controller de manutenção exige autenticação global. A criação e a leitura seguem as políticas do endpoint; atualização, exclusão e consulta de auditoria exigem `ADMIN`. A exclusão exige justificativa e o serviço aplica regras de status e validações do registro. A role da API é a fronteira de segurança; ocultar controles no frontend não é suficiente.
 
 ## Dashboard administrativo
 
