@@ -51,6 +51,11 @@
       </div>
 
       <div class="form-group">
+        <label for="plannedDurationMinutes">Duração planejada (minutos) *</label>
+        <input id="plannedDurationMinutes" type="number" min="1" max="1440" step="1" [(ngModel)]="tripForm.plannedDurationMinutes" [disabled]="!!editingTrip" required />
+      </div>
+
+      <div class="form-group">
         <label for="status">Status da viagem</label>
         <select id="status" [(ngModel)]="tripForm.status" (ngModelChange)="aoAlterarStatus()" [disabled]="!editingTrip || editingTrip.status === 'Concluída' || editingTrip.status === 'Cancelada'">
           <option *ngFor="let status of statuses" [value]="status" [disabled]="editingTrip && editingTrip.status === 'Em andamento' && status === 'Agendada'">{{ status }}</option>
