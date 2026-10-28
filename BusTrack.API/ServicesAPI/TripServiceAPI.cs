@@ -237,6 +237,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 Id = trip.Id,
                 UserId = trip.UserId,
                 DepartureTime = trip.DepartureTime,
+                PlannedDurationMinutes = trip.PlannedDurationMinutes,
                 StartedAt = trip.StartedAt,
                 ArrivalTime = trip.ArrivalTime,
                 Duration = trip.Duration,
