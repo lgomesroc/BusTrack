@@ -90,6 +90,31 @@
       </div>
 
       <div class="form-group">
+        <label for="maintenance-start-time">Horário de início *</label>
+        <input
+          id="maintenance-start-time"
+          name="serviceStartTime"
+          type="time"
+          [(ngModel)]="form.serviceStartTime"
+          [disabled]="isReadOnly"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label for="maintenance-duration">Duração planejada (minutos) *</label>
+        <input
+          id="maintenance-duration"
+          name="plannedDurationMinutes"
+          type="number"
+          min="1"
+          max="1440"
+          step="1"
+          [(ngModel)]="form.plannedDurationMinutes"
+          [disabled]="isReadOnly"
+          required>
+      </div>
+
+      <div class="form-group">
         <label for="maintenance-cost">Custo (R$)</label>
         <input
           id="maintenance-cost"
