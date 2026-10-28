@@ -24,6 +24,7 @@ import { RoutesComponent } from './main/routes/routes.component';
 import { DriversComponent } from './main/drivers/drivers.component';
 import { PassengersComponent } from './main/passengers/passengers.component';
 import { MaintenanceComponent } from './main/maintenance/maintenance.component';
+import { OperationalReportsComponent } from './main/operational-reports/operational-reports.component';
 
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { JwtAuthInterceptor } from './services/jwt-auth.interceptor';
@@ -46,7 +47,8 @@ import { JwtAuthInterceptor } from './services/jwt-auth.interceptor';
     RoutesComponent,
     DriversComponent,
     PassengersComponent,
-    MaintenanceComponent
+    MaintenanceComponent,
+    OperationalReportsComponent
   ],
   imports: [
     BrowserModule,
