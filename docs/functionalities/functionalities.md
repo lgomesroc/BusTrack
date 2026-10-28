@@ -2,7 +2,7 @@
 
 ## Visão geral
 
-O BusTrack é uma aplicação para gerenciamento de transporte coletivo. A V1 reúne autenticação, gerenciamento operacional e recursos administrativos para ônibus, motoristas, rotas, passageiros e viagens.
+O BusTrack é uma aplicação para gerenciamento de transporte coletivo. A V1 reúne autenticação, gerenciamento operacional e recursos administrativos para ônibus, motoristas, rotas, passageiros, viagens e manutenções.
 
 A documentação deste arquivo representa o estado atual da aplicação. Funcionalidades antigas que eram apenas planejadas não devem ser tratadas como pendências da V1.
 
@@ -78,7 +78,40 @@ O sistema permite:
 - associar rota;
 - associar passageiros;
 - consultar os detalhes da viagem;
-- aplicar as regras relacionadas à capacidade de passageiros.
+- aplicar as regras relacionadas à capacidade de passageiros;
+- impedir conflitos de alocação do mesmo ônibus ou motorista em viagens com horários sobrepostos.
+
+### Conflitos de recursos
+
+A disponibilidade do ônibus e do motorista é validada no backend usando o intervalo operacional previsto da viagem. Uma nova viagem não pode ocupar um recurso que já esteja comprometido por outra viagem em período sobreposto.
+
+Uma viagem que termina exatamente no horário de início da próxima não é considerada sobreposta. Viagens concluídas ou canceladas não bloqueiam novos agendamentos.
+
+---
+
+## Manutenções
+
+O sistema permite:
+
+- cadastrar manutenções para ônibus;
+- consultar manutenções;
+- editar manutenções enquanto ainda estão abertas;
+- concluir ou cancelar conforme as transições permitidas;
+- registrar custo, descrição e tipo de serviço;
+- manter histórico de auditoria das alterações;
+- realizar exclusão lógica de manutenções agendadas, com motivo.
+
+### Disponibilidade do ônibus durante manutenção
+
+A manutenção também participa da regra de disponibilidade das viagens.
+
+Quando uma viagem é agendada, o backend verifica as manutenções do ônibus selecionado. Uma manutenção com status `Agendada` ou `Em andamento` bloqueia a utilização daquele ônibus durante a data de serviço.
+
+A regra considera o período operacional disponível no modelo atual: como a manutenção possui uma `ServiceDate`, a indisponibilidade é tratada para o dia da manutenção. Portanto, uma viagem em outro dia não é bloqueada apenas pela existência dessa manutenção.
+
+Manutenções `Concluída` ou `Cancelada`, além de registros excluídos logicamente, não bloqueiam novas viagens.
+
+Essa validação é realizada no backend e não depende somente do comportamento da interface Angular.
 
 ---
 
@@ -192,6 +225,10 @@ A V1 atualmente contempla:
 - gerenciamento de viagens;
 - detalhes de viagem;
 - relações entre passageiros e viagens;
+- controle de conflitos de alocação de ônibus e motoristas;
+- gerenciamento de manutenções;
+- bloqueio de ônibus durante manutenção ativa;
+- auditoria de manutenção;
 - controle de permissões;
 - navegação da aplicação;
 - monitoramento de disponibilidade.
