@@ -520,10 +520,14 @@ describe('MaintenanceComponent', () => {
     expect(maintenanceService.update).not.toHaveBeenCalled();
   });
 
-  it('renders read-only fields and hides the save button for completed maintenance', () => {
+  it('renders read-only fields and hides the save button for completed maintenance', async () => {
     initializeComponent();
     component.startEdit({ ...maintenance, status: 'Concluída' });
     fixture.detectChanges();
+
+    // O NgModel aplica [disabled] de forma assíncrona (microtask),
+    // então é preciso esperar a zona estabilizar antes de ler o DOM.
+    await fixture.whenStable();
 
     const element: HTMLElement = fixture.nativeElement;
 
