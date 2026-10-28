@@ -305,6 +305,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.router.navigate(['/maintenance']);
   }
 
+  navegarParaRelatorios(): void {
+    this.router.navigate(['/operational-reports']);
+  }
+
   sair(): void {
     this.refreshSubscription?.unsubscribe();
     this.presenceSubscription?.unsubscribe();
