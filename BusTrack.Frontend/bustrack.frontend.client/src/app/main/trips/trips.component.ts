@@ -82,6 +82,7 @@ export class TripsComponent implements OnInit {
       driverId: trip.driver?.id ?? '',
       routeId: trip.route?.id ?? '',
       departureTime: this.converterParaDatetimeLocal(trip.departureTime),
+      plannedDuration: trip.plannedDuration,
       arrivalTime: this.converterParaDatetimeLocal(trip.arrivalTime ?? ''),
       duration: trip.duration,
       limitPassengers: trip.limitPassengers,
@@ -123,6 +124,7 @@ export class TripsComponent implements OnInit {
       startedAt: this.editingTrip?.startedAt ?? null,
       arrivalTime: this.tripForm.status === 'Concluída' ? this.converterParaIso(this.tripForm.arrivalTime) : null,
       duration: this.tripForm.status === 'Concluída' ? Number(this.tripForm.duration) : 0,
+      plannedDuration: Number(this.tripForm.plannedDuration),
       limitPassengers: this.tripForm.status === 'Concluída' ? Number(this.tripForm.limitPassengers) : 0,
       status: this.tripForm.status,
       passengers: this.tripForm.status === 'Concluída' ? this.tripForm.passengers : []
@@ -183,12 +185,17 @@ export class TripsComponent implements OnInit {
   podeAlterarStatus(trip: Trip): boolean { return trip.status === 'Agendada' || trip.status === 'Em andamento'; }
 
   private criarFormularioVazio() {
-    return { busId: '', driverId: '', routeId: '', departureTime: '', arrivalTime: '', duration: 0, limitPassengers: 0, status: 'Agendada' as TripStatus, passengers: [] as string[] };
+    return { busId: '', driverId: '', routeId: '', departureTime: '', plannedDuration: 60, arrivalTime: '', duration: 0, limitPassengers: 0, status: 'Agendada' as TripStatus, passengers: [] as string[] };
   }
 
   private validarFormulario(): boolean {
     if (!this.tripForm.busId || !this.tripForm.driverId || !this.tripForm.routeId || !this.tripForm.departureTime) {
       this.errorMessage = 'Informe o ônibus, o motorista, a rota e a data e hora de saída.';
+      return false;
+    }
+
+    if (!Number.isInteger(Number(this.tripForm.plannedDuration)) || Number(this.tripForm.plannedDuration) <= 0) {
+      this.errorMessage = 'Informe a duração prevista da viagem em minutos.';
       return false;
     }
 

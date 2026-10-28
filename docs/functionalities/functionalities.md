@@ -78,7 +78,31 @@ O sistema permite:
 - associar rota;
 - associar passageiros;
 - consultar os detalhes da viagem;
-- aplicar as regras relacionadas à capacidade de passageiros.
+- aplicar as regras relacionadas à capacidade de passageiros;
+- informar a duração prevista da viagem;
+- impedir conflitos de agenda do mesmo ônibus;
+- impedir conflitos de agenda do mesmo motorista.
+
+### Conflitos de recursos
+
+A duração prevista define o intervalo operacional usado para verificar a disponibilidade dos recursos.
+
+Para uma viagem com saída em `T` e duração prevista de `D` minutos, o período considerado é:
+
+`[T, T + D)`
+
+Uma nova viagem entra em conflito quando os intervalos se sobrepõem. Assim, uma viagem que termina exatamente no horário de saída da próxima não é considerada conflitante.
+
+A regra é aplicada no backend e considera:
+
+- o mesmo ônibus não pode estar alocado em duas viagens simultâneas;
+- o mesmo motorista não pode estar alocado em duas viagens simultâneas;
+- viagens `Concluída` e `Cancelada` não bloqueiam novos agendamentos;
+- a própria viagem é ignorada durante uma atualização para não gerar conflito consigo mesma;
+- a duração prevista deve ser maior que zero;
+- a verificação é feita antes da persistência da viagem.
+
+A interface informa a duração prevista e apresenta ao usuário uma mensagem de erro quando a API rejeita a alocação por conflito. A API permanece como autoridade para a regra de disponibilidade.
 
 ---
 
@@ -201,7 +225,8 @@ A V1 atualmente contempla:
 - relações entre passageiros e viagens;
 - controle de permissões;
 - navegação da aplicação;
-- monitoramento de disponibilidade.
+- monitoramento de disponibilidade;
+- detecção de conflitos de agenda entre viagens para ônibus e motoristas.
 
 A recuperação de senha permanece como pendência funcional concreta: o pedido público ainda informa que a verificação segura não está implementada e os endpoints/telas não formam um fluxo coerente. A V1 não deve ser declarada totalmente concluída enquanto isso e os testes de navegação por papel não forem resolvidos.
 
