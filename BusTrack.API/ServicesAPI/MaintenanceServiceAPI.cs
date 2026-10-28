@@ -228,10 +228,11 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
         private async Task EnsureNoTripConflictAsync(MaintenanceDTOAPI maintenance, string? ignoredMaintenanceId)
         {
-            if (_tripRepository is null)
+            if (_tripRepository is null ||
+                (maintenance.Status != "Agendada" && maintenance.Status != "Em andamento"))
                 return;
 
-            var maintenanceStart = maintenance.ServiceDate.Date.Add(maintenance.ServiceStartTime.TimeOfDay);
+            var maintenanceStart = GetMaintenanceStartUtc(maintenance.ServiceDate, maintenance.ServiceStartTime);
             var maintenanceEnd = maintenanceStart.AddMinutes(maintenance.PlannedDurationMinutes);
             var trips = await _tripRepository.GetAllTripsAsync();
             var conflict = trips.FirstOrDefault(trip =>
@@ -247,6 +248,25 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
             if (conflict is not null)
                 throw new ArgumentException("O ônibus possui uma viagem agendada ou em andamento no intervalo informado.");
+        }
+
+        private static DateTime GetMaintenanceStartUtc(DateTime serviceDate, DateTime serviceStartTime)
+        {
+            var localDate = DateTime.SpecifyKind(
+                serviceDate.Date.Add(serviceStartTime.TimeOfDay),
+                DateTimeKind.Unspecified);
+
+            TimeZoneInfo timeZone;
+            try
+            {
+                timeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Sao_Paulo");
+            }
+            catch (TimeZoneNotFoundException)
+            {
+                timeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
+            }
+
+            return TimeZoneInfo.ConvertTimeToUtc(localDate, timeZone);
         }
 
         private static bool Overlaps(DateTime firstStart, DateTime firstEnd, DateTime secondStart, DateTime secondEnd)
