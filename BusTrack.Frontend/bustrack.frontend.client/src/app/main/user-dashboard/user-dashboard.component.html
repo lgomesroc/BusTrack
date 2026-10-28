@@ -7,6 +7,15 @@
       <section class="summary-grid"><article class="summary-card"><span>Viagens cadastradas</span><strong>{{ trips.length }}</strong></article><article class="summary-card"><span>Próximas viagens</span><strong>{{ upcomingTrips.length }}</strong></article><article class="summary-card"><span>Viagens anteriores</span><strong>{{ pastTrips.length }}</strong></article></section>
       <section class="information-panel"><h2>Próximas viagens</h2><p *ngIf="loadingTrips">Carregando suas viagens...</p><p class="error-message" *ngIf="tripsError">{{ tripsError }}</p><p *ngIf="!loadingTrips && !tripsError && upcomingTrips.length === 0">Você não tem viagens futuras cadastradas.</p><div class="trip-list" *ngIf="!loadingTrips"><article class="trip-item" *ngFor="let trip of upcomingTrips"><div><strong>{{ trip.route?.name || 'Rota não informada' }}</strong><span>{{ trip.route?.origin || 'Origem não informada' }} → {{ trip.route?.destination || 'Destino não informado' }}</span><time>{{ trip.departureTime | date:'dd/MM/yyyy HH:mm':'-0300' }}</time></div><span class="card-icon">{{ trip.status }}</span></article></div><button type="button" (click)="navegarParaViagens()">Consultar viagens</button></section>
       <section class="information-panel"><h2>Viagens anteriores</h2><p *ngIf="!loadingTrips && pastTrips.length === 0">Suas viagens anteriores aparecerão aqui.</p><div class="trip-list"><article class="trip-item" *ngFor="let trip of pastTrips"><div><strong>{{ trip.route?.name || 'Rota não informada' }}</strong><span>{{ trip.route?.origin || 'Origem não informada' }} → {{ trip.route?.destination || 'Destino não informado' }}</span><time>{{ trip.departureTime | date:'dd/MM/yyyy HH:mm':'-0300' }}</time></div><span class="card-icon">{{ trip.status }}</span></article></div></section>
+      <section class="dashboard-cards" aria-label="Módulos disponíveis">
+        <button type="button" class="dashboard-card" (click)="navegarParaPassageiros()">
+          <span class="card-icon">Passageiros</span>
+          <div>
+            <h2>Passageiros</h2>
+            <p>Consultar os passageiros cadastrados.</p>
+          </div>
+        </button>
+      </section>
     </section>
   </main>
 </div>
