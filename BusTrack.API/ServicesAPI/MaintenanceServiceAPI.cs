@@ -394,7 +394,9 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 return null;
             }
 
-            if (maintenance.PlannedDurationMinutes <= 0 || maintenance.PlannedDurationMinutes > 1440 ||\n                maintenance.ServiceStartTime == default ||\n                maintenance.ServiceDate == default ||
+            if (maintenance.PlannedDurationMinutes <= 0 || maintenance.PlannedDurationMinutes > 1440 ||
+                maintenance.ServiceStartTime == default ||
+                maintenance.ServiceDate == default ||
                 maintenance.ServiceDate == DateTime.MinValue ||
                 maintenance.ServiceDate == DateTime.MaxValue)
             {
