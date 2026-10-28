@@ -71,6 +71,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             tripDB.StartedAt = null;
             tripDB.ArrivalTime = null;
             tripDB.Duration = 0;
+            tripDB.PlannedDuration = trip.PlannedDuration;
             tripDB.LimitPassengers = 0;
             tripDB.Passengers = new List<string>();
             var createdTrip = await _tripRepository.AddTripAsync(tripDB);
@@ -89,6 +90,11 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 throw new ArgumentException("Viagens concluídas ou canceladas não podem ser alteradas.");
             if (!IsAllowedTransition(currentStatus, requestedStatus))
                 throw new ArgumentException($"Transição de '{currentStatus}' para '{requestedStatus}' não permitida.");
+
+            if (trip.PlannedDuration > 0)
+                existingTrip.PlannedDuration = trip.PlannedDuration;
+
+            ValidatePlannedDuration(existingTrip.PlannedDuration);
 
             if (requestedStatus == InProgress)
             {
@@ -143,7 +149,6 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 existingTrip.Passengers = trip.Passengers ?? new List<string>();
             }
 
-            ValidatePlannedDuration(existingTrip.PlannedDuration);
             await ValidateResourceAvailabilityAsync(existingTrip.BusId, existingTrip.DriverId, existingTrip.DepartureTime, existingTrip.PlannedDuration, existingTrip.Id);
 
             existingTrip.Id = id;
@@ -222,6 +227,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 StartedAt = trip.StartedAt,
                 ArrivalTime = trip.ArrivalTime,
                 Duration = trip.Duration,
+                PlannedDuration = trip.PlannedDuration,
                 LimitPassengers = trip.LimitPassengers,
                 Status = string.IsNullOrWhiteSpace(trip.Status) ? Scheduled : trip.Status
             };
