@@ -1,4 +1,4 @@
-﻿using MongoDB.Bson;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace BusTrack.BusTrack.DB.Classes
@@ -28,6 +28,8 @@ namespace BusTrack.BusTrack.DB.Classes
         public DateTime? ArrivalTime { get; set; }
 
         public int Duration { get; set; }
+
+        public int PlannedDuration { get; set; }
 
         public int LimitPassengers { get; set; }
 
