@@ -47,6 +47,7 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
     })).subscribe(trips => { this.trips = trips; this.loadingTrips = false; });
   }
   navegarParaViagens(): void { this.router.navigate(['/trips']); }
+  navegarParaPassageiros(): void { this.router.navigate(['/passengers']); }
   sair(): void {
     this.presenceSubscription?.unsubscribe();
     this.tripsSubscription?.unsubscribe();
