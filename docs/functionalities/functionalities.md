@@ -78,7 +78,52 @@ O sistema permite:
 - associar rota;
 - associar passageiros;
 - consultar os detalhes da viagem;
-- aplicar as regras relacionadas à capacidade de passageiros.
+- aplicar as regras relacionadas à capacidade de passageiros;
+- impedir conflitos de horário para o mesmo ônibus;
+- impedir conflitos de horário para o mesmo motorista;
+- impedir a alocação de ônibus indisponíveis por manutenção ativa;
+- controlar o ciclo de vida da viagem entre `Agendada`, `Em andamento`, `Concluída` e `Cancelada`.
+
+As validações de conflito consideram o intervalo operacional da viagem. A disponibilidade por manutenção considera a data da manutenção enquanto o modelo não possuir um intervalo de horário específico.
+
+---
+
+## Manutenções
+
+O sistema permite registrar e consultar manutenções associadas aos ônibus, incluindo seus estados e custos.
+
+As manutenções ativas são consideradas na validação de disponibilidade do ônibus para novas viagens.
+
+---
+
+## Relatórios operacionais
+
+Administradores podem consultar relatórios por período, utilizando data inicial e final.
+
+A tela de relatórios apresenta:
+
+- resumo de viagens por status;
+- utilização de cada ônibus;
+- viagens por motorista;
+- custos de manutenção por ônibus;
+- custo total de manutenção do período;
+- mensagens para períodos sem dados;
+- estados de carregamento e erro.
+
+Os relatórios são calculados sobre os dados operacionais existentes, sem criar uma estrutura de persistência duplicada para os resultados.
+
+### Exportação dos relatórios
+
+Os relatórios podem ser exportados em formato CSV para uso externo.
+
+A exportação contempla:
+
+- resumo das viagens por status do período;
+- utilização dos ônibus;
+- viagens por motorista;
+- custos de manutenção por ônibus.
+
+Os arquivos são gerados no navegador com o período selecionado no nome do arquivo. A exportação não cria dados adicionais no banco de dados.
 
 ---
 
@@ -190,8 +235,13 @@ A V1 atualmente contempla:
 - gerenciamento de rotas;
 - gerenciamento de passageiros;
 - gerenciamento de viagens;
+- regras de conflito entre viagens;
+- integração entre manutenção e disponibilidade de ônibus;
+- ciclo de vida das viagens;
 - detalhes de viagem;
 - relações entre passageiros e viagens;
+- relatórios operacionais;
+- exportação dos relatórios operacionais em CSV;
 - controle de permissões;
 - navegação da aplicação;
 - monitoramento de disponibilidade.
