@@ -51,6 +51,11 @@
       </div>
 
       <div class="form-group">
+        <label for="plannedDuration">Duração prevista (minutos)</label>
+        <input id="plannedDuration" type="number" min="1" step="1" [(ngModel)]="tripForm.plannedDuration" />
+      </div>
+
+      <div class="form-group">
         <label for="status">Status da viagem</label>
         <select id="status" [(ngModel)]="tripForm.status" (ngModelChange)="aoAlterarStatus()" [disabled]="!editingTrip || editingTrip.status === 'Concluída' || editingTrip.status === 'Cancelada'">
           <option *ngFor="let status of statuses" [value]="status" [disabled]="editingTrip && editingTrip.status === 'Em andamento' && status === 'Agendada'">{{ status }}</option>
@@ -78,7 +83,7 @@
       </div>
     </div>
 
-    <p class="form-help" *ngIf="tripForm.status === 'Agendada'">A saída precisa estar no futuro. Os dados reais de chegada serão informados ao concluir a viagem.</p>
+    <p class="form-help" *ngIf="tripForm.status === 'Agendada'">A saída precisa estar no futuro. A duração prevista é usada para verificar se o ônibus e o motorista estarão disponíveis no período.</p>
     <p class="form-help" *ngIf="tripForm.status === 'Em andamento'">O início real será registrado pelo sistema quando a viagem passar para Em andamento.</p>
     <p class="form-help" *ngIf="tripForm.status === 'Concluída'">A chegada, a duração e a quantidade de passageiros são obrigatórias. A duração deve corresponder ao tempo real transcorrido.</p>
     <p class="form-help" *ngIf="tripForm.status === 'Cancelada'">Os dados de chegada, duração e passageiros serão apagados; a duração e os passageiros ficarão em zero.</p>
@@ -107,7 +112,7 @@
     <div class="table-wrapper" *ngIf="!isLoading && trips.length > 0">
       <table>
         <thead>
-          <tr><th>Ônibus</th><th>Motorista</th><th>Rota</th><th>Saída prevista</th><th>Chegada real</th><th>Duração</th><th>Status</th><th>Passageiros</th><th>Ações</th></tr>
+          <tr><th>Ônibus</th><th>Motorista</th><th>Rota</th><th>Saída prevista</th><th>Duração prevista</th><th>Chegada real</th><th>Duração</th><th>Status</th><th>Passageiros</th><th>Ações</th></tr>
         </thead>
         <tbody>
           <tr *ngFor="let trip of trips">
@@ -115,6 +120,7 @@
             <td>{{ trip.driver?.name || '—' }}</td>
             <td><strong>{{ trip.route?.name || '—' }}</strong><span class="table-secondary-text">{{ trip.route?.origin || '—' }} → {{ trip.route?.destination || '—' }}</span></td>
             <td>{{ trip.departureTime | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ trip.plannedDuration }} min</td>
             <td>{{ trip.arrivalTime ? (trip.arrivalTime | date:'dd/MM/yyyy HH:mm') : '—' }}</td>
             <td>{{ trip.duration }} min</td>
             <td>{{ trip.status || 'Agendada' }}</td>
