@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -26,7 +27,7 @@ export class ResetPasswordComponent implements OnInit {
 
   private readonly genericErrorMessage =
     'Não foi possível validar a recuperação. ' +
-    'Verifique os dados informados e tente novamente.';
+    'Verifique os dados e o código informado.';
 
   constructor(
     private readonly http: HttpClient,
@@ -88,8 +89,7 @@ export class ResetPasswordComponent implements OnInit {
           return;
         }
 
-        this.successMessage =
-          'Senha redefinida com sucesso.';
+        this.successMessage = 'Senha redefinida com sucesso.';
 
         this.recoveryCode = '';
         this.newPassword = '';

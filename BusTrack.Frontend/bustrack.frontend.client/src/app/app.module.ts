@@ -16,6 +16,8 @@ import { ConfirmationComponent } from './login/confirmation/confirmation.compone
 import { ConcludedComponent } from './login/concluded/concluded.component';
 
 import { DashboardComponent } from './main/dashboard/dashboard.component';
+import { AdminDashboardComponent } from './main/admin-dashboard/admin-dashboard.component';
+import { UserDashboardComponent } from './main/user-dashboard/user-dashboard.component';
 import { SidebarComponent } from './main/sidebar/sidebar.component';
 import { TripsComponent } from './main/trips/trips.component';
 import { TripDetailsComponent } from './main/trip-details/trip-details.component';
@@ -39,6 +41,8 @@ import { JwtAuthInterceptor } from './services/jwt-auth.interceptor';
     ConfirmationComponent,
     ConcludedComponent,
     DashboardComponent,
+    AdminDashboardComponent,
+    UserDashboardComponent,
     SidebarComponent,
     TripsComponent,
     TripDetailsComponent,
