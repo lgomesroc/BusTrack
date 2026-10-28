@@ -25,13 +25,16 @@ namespace BusTrack.BusTrack.API.ControllersAPI
         [HttpGet]
         public async Task<IActionResult> GetAll() => Ok(await _tripService.GetAllTripDetailsAsync());
 
+        [Authorize(Roles = "ADMIN")]
+        [HttpGet("{id}/audit")]
+        public async Task<IActionResult> GetAudit(string id) => Ok(await _tripService.GetAuditAsync(id));
+
         [Authorize]
         [HttpGet("mine")]
         public async Task<IActionResult> GetMine()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("sub")?.Value;
             if (string.IsNullOrWhiteSpace(userId)) return Unauthorized();
-
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
             var account = string.IsNullOrWhiteSpace(email) ? null : _userRepository.GetByEmail(email);
             var passengerIds = new HashSet<string>(StringComparer.Ordinal);
@@ -45,7 +48,6 @@ namespace BusTrack.BusTrack.API.ControllersAPI
                     if ((emailMatches || cpfMatches) && !string.IsNullOrWhiteSpace(passenger.Id)) passengerIds.Add(passenger.Id);
                 }
             }
-
             var trips = await _tripService.GetAllTripDetailsAsync();
             return Ok(trips.Where(trip => string.Equals(trip.UserId, userId, StringComparison.Ordinal) || trip.Passengers.Any(passenger => !string.IsNullOrWhiteSpace(passenger.Id) && passengerIds.Contains(passenger.Id))));
         }
@@ -65,16 +67,12 @@ namespace BusTrack.BusTrack.API.ControllersAPI
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("sub")?.Value;
             if (string.IsNullOrWhiteSpace(userId)) return Unauthorized();
             trip.UserId = userId;
-
             try
             {
                 var createdTrip = await _tripService.CreateTripAsync(trip);
                 return CreatedAtRoute("GetTrip", new { id = createdTrip.Id }, createdTrip);
             }
-            catch (ArgumentException exception)
-            {
-                return BadRequest(new { message = exception.Message });
-            }
+            catch (ArgumentException exception) { return BadRequest(new { message = exception.Message }); }
         }
 
         [Authorize(Roles = "ADMIN")]
@@ -87,10 +85,7 @@ namespace BusTrack.BusTrack.API.ControllersAPI
                 var updatedTrip = await _tripService.UpdateTripAsync(id, trip);
                 return updatedTrip == null ? NotFound() : Ok(updatedTrip);
             }
-            catch (ArgumentException exception)
-            {
-                return BadRequest(new { message = exception.Message });
-            }
+            catch (ArgumentException exception) { return BadRequest(new { message = exception.Message }); }
         }
 
         [Authorize(Roles = "ADMIN")]
