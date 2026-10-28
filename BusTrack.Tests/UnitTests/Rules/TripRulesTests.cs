@@ -17,12 +17,25 @@ namespace BusTrack.Tests.UnitTests.Rules
         private readonly Mock<IDriverRepositoryDB> _driverRepository = new();
         private readonly Mock<IRouteRepositoryDB> _routeRepository = new();
         private readonly Mock<IPassengerRepositoryDB> _passengerRepository = new();
+        private readonly Mock<IMaintenanceRepositoryDB> _maintenanceRepository = new();
         private readonly TripServiceAPI _service;
 
         public TripRulesTests()
         {
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfile>(), NullLoggerFactory.Instance);
-            _service = new TripServiceAPI(_tripRepository.Object, _tripPassengerRepository.Object, _busRepository.Object, _driverRepository.Object, _routeRepository.Object, _passengerRepository.Object, configuration.CreateMapper());
+            _maintenanceRepository
+                .Setup(repository => repository.GetAllAsync())
+                .ReturnsAsync(new List<MaintenanceDB>());
+
+            _service = new TripServiceAPI(
+                _tripRepository.Object,
+                _tripPassengerRepository.Object,
+                _busRepository.Object,
+                _driverRepository.Object,
+                _routeRepository.Object,
+                _passengerRepository.Object,
+                configuration.CreateMapper(),
+                _maintenanceRepository.Object);
         }
 
         [Fact]
@@ -45,6 +58,135 @@ namespace BusTrack.Tests.UnitTests.Rules
             Assert.Null(result.ArrivalTime);
             Assert.Equal(0, result.Duration);
             Assert.Equal(0, result.LimitPassengers);
+        }
+
+        [Fact]
+        public async Task CreateTrip_WhenBusHasScheduledMaintenanceOnTripDate_Rejects()
+        {
+            var departure = DateTime.UtcNow.AddDays(1).Date.AddHours(10);
+            _maintenanceRepository
+                .Setup(repository => repository.GetAllAsync())
+                .ReturnsAsync(new List<MaintenanceDB>
+                {
+                    new()
+                    {
+                        Id = "maintenance",
+                        BusId = "bus",
+                        ServiceDate = departure.Date.AddHours(8),
+                        Status = "Agendada"
+                    }
+                });
+
+            var exception = await Assert.ThrowsAsync<ArgumentException>(
+                () => _service.CreateTripAsync(CreateTrip(departure)));
+
+            Assert.Contains("manutenção agendada ou em andamento", exception.Message);
+            _tripRepository.Verify(repository => repository.AddTripAsync(It.IsAny<TripDB>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task CreateTrip_WhenBusHasMaintenanceInProgressOnTripDate_Rejects()
+        {
+            var departure = DateTime.UtcNow.AddDays(1).Date.AddHours(10);
+            _maintenanceRepository
+                .Setup(repository => repository.GetAllAsync())
+                .ReturnsAsync(new List<MaintenanceDB>
+                {
+                    new()
+                    {
+                        Id = "maintenance",
+                        BusId = "bus",
+                        ServiceDate = departure.Date.AddHours(12),
+                        Status = "Em andamento"
+                    }
+                });
+
+            var exception = await Assert.ThrowsAsync<ArgumentException>(
+                () => _service.CreateTripAsync(CreateTrip(departure)));
+
+            Assert.Contains("manutenção agendada ou em andamento", exception.Message);
+        }
+
+        [Fact]
+        public async Task CreateTrip_WhenMaintenanceIsCompleted_DoesNotBlockBus()
+        {
+            var departure = DateTime.UtcNow.AddDays(1).Date.AddHours(10);
+            _maintenanceRepository
+                .Setup(repository => repository.GetAllAsync())
+                .ReturnsAsync(new List<MaintenanceDB>
+                {
+                    new()
+                    {
+                        Id = "maintenance",
+                        BusId = "bus",
+                        ServiceDate = departure.Date,
+                        Status = "Concluída"
+                    }
+                });
+
+            _tripRepository
+                .Setup(repository => repository.AddTripAsync(It.IsAny<TripDB>()))
+                .ReturnsAsync((TripDB value) => value);
+
+            var result = await _service.CreateTripAsync(CreateTrip(departure));
+
+            Assert.Equal("Agendada", result.Status);
+            _tripRepository.Verify(repository => repository.AddTripAsync(It.IsAny<TripDB>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task CreateTrip_WhenMaintenanceBelongsToAnotherBus_DoesNotBlockBus()
+        {
+            var departure = DateTime.UtcNow.AddDays(1).Date.AddHours(10);
+            _maintenanceRepository
+                .Setup(repository => repository.GetAllAsync())
+                .ReturnsAsync(new List<MaintenanceDB>
+                {
+                    new()
+                    {
+                        Id = "maintenance",
+                        BusId = "another-bus",
+                        ServiceDate = departure.Date,
+                        Status = "Agendada"
+                    }
+                });
+
+            _tripRepository
+                .Setup(repository => repository.AddTripAsync(It.IsAny<TripDB>()))
+                .ReturnsAsync((TripDB value) => value);
+
+            var result = await _service.CreateTripAsync(CreateTrip(departure));
+
+            Assert.Equal("Agendada", result.Status);
+            _tripRepository.Verify(repository => repository.AddTripAsync(It.IsAny<TripDB>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task CreateTrip_WhenMaintenanceIsDeleted_DoesNotBlockBus()
+        {
+            var departure = DateTime.UtcNow.AddDays(1).Date.AddHours(10);
+            _maintenanceRepository
+                .Setup(repository => repository.GetAllAsync())
+                .ReturnsAsync(new List<MaintenanceDB>
+                {
+                    new()
+                    {
+                        Id = "maintenance",
+                        BusId = "bus",
+                        ServiceDate = departure.Date,
+                        Status = "Agendada",
+                        IsDeleted = true
+                    }
+                });
+
+            _tripRepository
+                .Setup(repository => repository.AddTripAsync(It.IsAny<TripDB>()))
+                .ReturnsAsync((TripDB value) => value);
+
+            var result = await _service.CreateTripAsync(CreateTrip(departure));
+
+            Assert.Equal("Agendada", result.Status);
+            _tripRepository.Verify(repository => repository.AddTripAsync(It.IsAny<TripDB>()), Times.Once);
         }
 
         [Fact]
