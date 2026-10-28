@@ -172,13 +172,19 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         {
             if (_maintenanceRepository is null || string.IsNullOrWhiteSpace(busId))
                 return;
-            var tripStart = departure.Kind == DateTimeKind.Utc ? departure : departure.ToUniversalTime();
+            var tripStart = departure.Kind switch
+            {
+                DateTimeKind.Utc => departure,
+                DateTimeKind.Local => departure.ToUniversalTime(),
+                _ => DateTime.SpecifyKind(departure, DateTimeKind.Utc)
+            };
             var tripEnd = tripStart.AddMinutes(durationMinutes);
             var maintenanceItems = await _maintenanceRepository.GetAllAsync();
             var conflict = maintenanceItems.FirstOrDefault(item =>
                 !item.IsDeleted &&
                 string.Equals(item.BusId, busId, StringComparison.OrdinalIgnoreCase) &&
-                item.Status is "Agendada" or "Em andamento" &&
+                (string.Equals(item.Status, "Agendada", StringComparison.OrdinalIgnoreCase) ||
+                 string.Equals(item.Status, "Em andamento", StringComparison.OrdinalIgnoreCase)) &&
                 item.PlannedDurationMinutes > 0 &&
                 IntervalsOverlap(
                     tripStart, tripEnd,
