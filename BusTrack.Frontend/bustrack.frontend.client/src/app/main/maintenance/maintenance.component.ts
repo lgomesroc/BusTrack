@@ -88,6 +88,8 @@ export class MaintenanceComponent implements OnInit {
       serviceType: item.serviceType,
       description: item.description,
       serviceDate: this.getDateInputValue(item.serviceDate),
+      serviceStartTime: this.getTimeInputValue(item.serviceStartTime),
+      plannedDurationMinutes: item.plannedDurationMinutes,
       completedDate: item.completedDate ?? null,
       cost: item.cost,
       status: item.status
@@ -178,10 +180,14 @@ export class MaintenanceComponent implements OnInit {
       !this.form.busId?.trim() ||
       !this.form.serviceType?.trim() ||
       !this.form.description?.trim() ||
-      !this.form.serviceDate
+      !this.form.serviceDate ||
+      !this.form.serviceStartTime ||
+      !this.form.plannedDurationMinutes ||
+      this.form.plannedDurationMinutes < 1 ||
+      this.form.plannedDurationMinutes > 1440
     ) {
       this.errorMessage =
-        'Preencha o ônibus, o tipo de serviço, a descrição e a data.';
+        'Preencha o ônibus, o tipo de serviço, a descrição, a data, o horário e uma duração entre 1 e 1440 minutos.';
       return;
     }
 
@@ -265,7 +271,9 @@ export class MaintenanceComponent implements OnInit {
 
       // IMPORTANTE: não substituir por new Date(serviceDateInput).
       // Esta conversão preserva a correção do dia selecionado.
-      serviceDate: serviceDate.toISOString()
+      serviceDate: serviceDate.toISOString(),
+      serviceStartTime: `${serviceDateInput}T${this.form.serviceStartTime}:00`,
+      plannedDurationMinutes: Number(this.form.plannedDurationMinutes)
     };
 
     this.isLoading = true;
@@ -373,12 +381,20 @@ export class MaintenanceComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
+  private getTimeInputValue(value: string | null | undefined): string {
+    if (!value) return '';
+    const match = value.match(/T(\\d{2}:\\d{2})/);
+    return match?.[1] ?? value.slice(0, 5);
+  }
+
   private emptyForm(): MaintenancePayload {
     return {
       busId: '',
       serviceType: '',
       description: '',
       serviceDate: '',
+      serviceStartTime: '08:00',
+      plannedDurationMinutes: 60,
       completedDate: null,
       cost: 0,
       status: 'Agendada'
