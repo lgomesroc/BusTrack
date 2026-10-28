@@ -182,10 +182,29 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 item.PlannedDurationMinutes > 0 &&
                 IntervalsOverlap(
                     tripStart, tripEnd,
-                    item.ServiceDate.Date.Add(item.ServiceStartTime.TimeOfDay),
-                    item.ServiceDate.Date.Add(item.ServiceStartTime.TimeOfDay).AddMinutes(item.PlannedDurationMinutes)));
+                    GetMaintenanceStartUtc(item.ServiceDate, item.ServiceStartTime),
+                    GetMaintenanceStartUtc(item.ServiceDate, item.ServiceStartTime).AddMinutes(item.PlannedDurationMinutes)));
             if (conflict is not null)
                 throw new ArgumentException($"O ônibus possui manutenção ativa no intervalo solicitado ({conflict.ServiceType}).");
+        }
+
+        private static DateTime GetMaintenanceStartUtc(DateTime serviceDate, DateTime serviceStartTime)
+        {
+            var localDate = DateTime.SpecifyKind(
+                serviceDate.Date.Add(serviceStartTime.TimeOfDay),
+                DateTimeKind.Unspecified);
+
+            TimeZoneInfo timeZone;
+            try
+            {
+                timeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Sao_Paulo");
+            }
+            catch (TimeZoneNotFoundException)
+            {
+                timeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
+            }
+
+            return TimeZoneInfo.ConvertTimeToUtc(localDate, timeZone);
         }
 
         private static bool IntervalsOverlap(DateTime firstStart, DateTime firstEnd, DateTime secondStart, DateTime secondEnd)
