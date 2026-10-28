@@ -63,6 +63,9 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         {
             if (trip.DepartureTime <= DateTime.UtcNow)
                 throw new ArgumentException("A saída deve ser agendada para um horário futuro.");
+            ValidatePlannedDuration(trip.PlannedDuration);
+            await ValidateResourceAvailabilityAsync(trip.BusId, trip.DriverId, trip.DepartureTime, trip.PlannedDuration, null);
+
             var tripDB = _mapper.Map<TripDB>(trip);
             tripDB.Status = Scheduled;
             tripDB.StartedAt = null;
@@ -140,6 +143,9 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 existingTrip.Passengers = trip.Passengers ?? new List<string>();
             }
 
+            ValidatePlannedDuration(existingTrip.PlannedDuration);
+            await ValidateResourceAvailabilityAsync(existingTrip.BusId, existingTrip.DriverId, existingTrip.DepartureTime, existingTrip.PlannedDuration, existingTrip.Id);
+
             existingTrip.Id = id;
             var updatedTrip = await _tripRepository.UpdateTripAsync(id, existingTrip);
             return updatedTrip == null ? null : _mapper.Map<TripDTOAPI>(updatedTrip);
@@ -149,6 +155,41 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         {
             if (string.IsNullOrWhiteSpace(id)) return false;
             return await _tripRepository.DeleteTripAsync(id);
+        }
+
+        private async Task ValidateResourceAvailabilityAsync(string? busId, string? driverId, DateTime departureTime, int plannedDuration, string? ignoredTripId)
+        {
+            if (string.IsNullOrWhiteSpace(busId) || string.IsNullOrWhiteSpace(driverId))
+                throw new ArgumentException("Informe o ônibus e o motorista da viagem.");
+
+            var departureEnd = departureTime.AddMinutes(plannedDuration);
+            var trips = await _tripRepository.GetAllTripsAsync();
+
+            foreach (var existing in trips)
+            {
+                if (!string.IsNullOrWhiteSpace(ignoredTripId) && existing.Id == ignoredTripId)
+                    continue;
+                if (NormalizeStatus(existing.Status) is Completed or Cancelled)
+                    continue;
+                if (existing.PlannedDuration <= 0)
+                    continue;
+
+                var existingEnd = existing.DepartureTime.AddMinutes(existing.PlannedDuration);
+                var overlaps = departureTime < existingEnd && existing.DepartureTime < departureEnd;
+                if (!overlaps)
+                    continue;
+
+                if (string.Equals(existing.BusId, busId, StringComparison.OrdinalIgnoreCase))
+                    throw new ArgumentException("O ônibus selecionado já está alocado em outra viagem no mesmo período.");
+                if (string.Equals(existing.DriverId, driverId, StringComparison.OrdinalIgnoreCase))
+                    throw new ArgumentException("O motorista selecionado já está alocado em outra viagem no mesmo período.");
+            }
+        }
+
+        private static void ValidatePlannedDuration(int plannedDuration)
+        {
+            if (plannedDuration <= 0)
+                throw new ArgumentException("Informe a duração prevista da viagem em minutos.");
         }
 
         private static string NormalizeStatus(string? status)
