@@ -109,6 +109,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       });
   }
 
+  navegarParaPassageiros(): void { this.router.navigate(['/passengers']); }
+
   pesquisarUsuarios(): void { this.appliedSearch = this.userSearch.trim(); this.usersPage = 1; this.carregarUsuarios(); }
   limparPesquisa(): void { this.userSearch = ''; this.appliedSearch = ''; this.usersPage = 1; this.carregarUsuarios(); }
   paginaAnterior(): void { if (this.usersPage > 1 && !this.usersLoading) { this.usersPage--; this.carregarUsuarios(); } }
