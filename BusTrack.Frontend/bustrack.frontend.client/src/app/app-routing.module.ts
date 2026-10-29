@@ -23,6 +23,9 @@ import { OperationalReportsComponent } from './main/operational-reports/operatio
 
 import { AuthenticationGuard } from './guards/authentication.guard';
 import { BrowserNavigationGuard } from './guards/browser-navigation.guard';
+import { DashboardRoleGuard } from './guards/dashboard-role.guard';
+import { AdminDashboardComponent } from './main/admin-dashboard/admin-dashboard.component';
+import { UserDashboardComponent } from './main/user-dashboard/user-dashboard.component';
 
 const protectedGuards = [
   AuthenticationGuard,
@@ -68,7 +71,20 @@ const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
-    canActivate: protectedGuards
+    canActivate: [...protectedGuards, DashboardRoleGuard],
+    data: { redirectByRole: true }
+  },
+  {
+    path: 'admin-dashboard',
+    component: AdminDashboardComponent,
+    canActivate: [...protectedGuards, DashboardRoleGuard],
+    data: { role: 'ADMIN' }
+  },
+  {
+    path: 'user-dashboard',
+    component: UserDashboardComponent,
+    canActivate: [...protectedGuards, DashboardRoleGuard],
+    data: { role: 'USER' }
   },
   {
     path: 'trips',
