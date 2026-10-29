@@ -9,6 +9,7 @@ import { of, throwError } from 'rxjs';
 
 import { OperationalReportsComponent } from './operational-reports.component';
 import { OperationalReport, OperationalReportService } from '../../services/operational-report.service';
+import { OperationalReportExportService } from '../../services/operational-report-export.service';
 import { SessionService } from '../../services/session.service';
 
 describe('OperationalReportsComponent', () => {
@@ -17,6 +18,7 @@ describe('OperationalReportsComponent', () => {
   let router: Router;
   let isAdmin: boolean;
   let reportService: jasmine.SpyObj<OperationalReportService>;
+  let exportService: jasmine.SpyObj<OperationalReportExportService>;
   let sessionService: jasmine.SpyObj<SessionService>;
 
   const report: OperationalReport = {
@@ -53,6 +55,11 @@ describe('OperationalReportsComponent', () => {
     );
     reportService.getReport.and.returnValue(of(report));
 
+    exportService = jasmine.createSpyObj<OperationalReportExportService>(
+      'OperationalReportExportService',
+      ['downloadCsv']
+    );
+
     sessionService = jasmine.createSpyObj<SessionService>(
       'SessionService',
       ['isAdmin']
@@ -64,6 +71,7 @@ describe('OperationalReportsComponent', () => {
       imports: [CommonModule, FormsModule, HttpClientTestingModule, RouterTestingModule],
       providers: [
         { provide: OperationalReportService, useValue: reportService },
+        { provide: OperationalReportExportService, useValue: exportService },
         { provide: SessionService, useValue: sessionService }
       ],
       schemas: [NO_ERRORS_SCHEMA]
@@ -134,6 +142,59 @@ describe('OperationalReportsComponent', () => {
 
     expect(component.errorMessage).toBe('Período inválido.');
     expect(component.isLoading).toBeFalse();
+  });
+
+  it('exports the bus utilization report as csv', () => {
+    initializeComponent();
+
+    component.exportBusUtilization();
+
+    expect(exportService.downloadCsv).toHaveBeenCalledWith(
+      jasmine.stringMatching(/^bustrack-relatorio-utilizacao-onibus-/),
+      ['Ônibus', 'Viagens', 'Concluídas'],
+      [['101', 3, 1]]
+    );
+  });
+
+  it('exports driver trips as csv', () => {
+    initializeComponent();
+
+    component.exportDriverTrips();
+
+    expect(exportService.downloadCsv).toHaveBeenCalledWith(
+      jasmine.stringMatching(/^bustrack-relatorio-viagens-motoristas-/),
+      ['Motorista', 'Viagens', 'Concluídas'],
+      [['Motorista Teste', 3, 1]]
+    );
+  });
+
+  it('exports maintenance costs as csv', () => {
+    initializeComponent();
+
+    component.exportMaintenanceCosts();
+
+    expect(exportService.downloadCsv).toHaveBeenCalledWith(
+      jasmine.stringMatching(/^bustrack-relatorio-custos-manutencao-/),
+      ['Ônibus', 'Manutenções', 'Custo total'],
+      [['101', 1, '250.50']]
+    );
+  });
+
+  it('exports trip status summary as csv', () => {
+    initializeComponent();
+
+    component.exportTrips();
+
+    expect(exportService.downloadCsv).toHaveBeenCalledWith(
+      jasmine.stringMatching(/^bustrack-relatorio-viagens-/),
+      ['Status', 'Quantidade'],
+      [
+        ['Agendada', 1],
+        ['Em andamento', 0],
+        ['Concluída', 1],
+        ['Cancelada', 1]
+      ]
+    );
   });
 
   it('redirects non-administrators back to the dashboard without requesting reports', () => {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { OperationalReport, OperationalReportService } from '../../services/operational-report.service';
+import { OperationalReportExportService } from '../../services/operational-report-export.service';
 import { SessionService } from '../../services/session.service';
 
 @Component({
@@ -19,6 +20,7 @@ export class OperationalReportsComponent implements OnInit {
   constructor(
     private readonly router: Router,
     private readonly reportService: OperationalReportService,
+    private readonly exportService: OperationalReportExportService,
     public readonly sessionService: SessionService
   ) {}
 
@@ -64,6 +66,55 @@ export class OperationalReportsComponent implements OnInit {
     });
   }
 
+  exportTrips(): void {
+    if (!this.report) return;
+
+    this.exportService.downloadCsv(
+      this.buildFilename('viagens'),
+      ['Status', 'Quantidade'],
+      [
+        ['Agendada', this.report.scheduledTrips],
+        ['Em andamento', this.report.inProgressTrips],
+        ['Concluída', this.report.completedTrips],
+        ['Cancelada', this.report.cancelledTrips]
+      ]
+    );
+  }
+
+  exportBusUtilization(): void {
+    if (!this.report) return;
+
+    this.exportService.downloadCsv(
+      this.buildFilename('utilizacao-onibus'),
+      ['Ônibus', 'Viagens', 'Concluídas'],
+      this.report.busUtilization.map(bus => [bus.busNumber || 'Não informado', bus.tripCount, bus.completedTripCount])
+    );
+  }
+
+  exportDriverTrips(): void {
+    if (!this.report) return;
+
+    this.exportService.downloadCsv(
+      this.buildFilename('viagens-motoristas'),
+      ['Motorista', 'Viagens', 'Concluídas'],
+      this.report.driverTrips.map(driver => [driver.driverName || 'Não informado', driver.tripCount, driver.completedTripCount])
+    );
+  }
+
+  exportMaintenanceCosts(): void {
+    if (!this.report) return;
+
+    this.exportService.downloadCsv(
+      this.buildFilename('custos-manutencao'),
+      ['Ônibus', 'Manutenções', 'Custo total'],
+      this.report.maintenanceCosts.map(maintenance => [
+        maintenance.busNumber || 'Não informado',
+        maintenance.maintenanceCount,
+        maintenance.totalCost.toFixed(2)
+      ])
+    );
+  }
+
   get hasTrips(): boolean {
     return (this.report?.totalTrips ?? 0) > 0;
   }
@@ -75,6 +126,10 @@ export class OperationalReportsComponent implements OnInit {
 
   backToDashboard(): void {
     void this.router.navigate(['/dashboard']);
+  }
+
+  private buildFilename(section: string): string {
+    return `bustrack-relatorio-${section}-${this.startDate}-a-${this.endDate}.csv`;
   }
 
   private getToday(): string {

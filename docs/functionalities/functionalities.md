@@ -79,21 +79,25 @@ O sistema permite:
 - cadastrar viagens;
 - consultar a lista de viagens;
 - consultar uma viagem específica;
-- consultar os detalhes de uma viagem;
+- consultar os detalhes da viagem;
 - editar viagens conforme as regras de status;
 - excluir viagens conforme as permissões aplicáveis;
 - associar ônibus;
 - associar motorista;
 - associar rota;
 - associar passageiros;
+- aplicar as regras relacionadas à capacidade de passageiros;
 - informar a data e o horário previstos de saída;
 - definir a duração planejada da viagem em minutos;
 - registrar o início efetivo da viagem;
 - registrar a data e o horário reais de chegada;
 - registrar a duração real da viagem;
 - registrar a quantidade de passageiros transportados;
-- aplicar as regras relacionadas à capacidade de passageiros;
-- validar conflitos de horário com outras viagens e manutenções.
+- impedir conflitos de horário para o mesmo ônibus;
+- impedir conflitos de horário para o mesmo motorista;
+- impedir a alocação de ônibus indisponíveis por manutenção ativa;
+- validar conflitos de horário com outras viagens e manutenções;
+- controlar o ciclo de vida da viagem entre `Agendada`, `Em andamento`, `Concluída` e `Cancelada`.
 
 ### Duração planejada
 
@@ -101,7 +105,7 @@ A duração planejada representa o intervalo estimado de operação da viagem. E
 
 A duração planejada deve ser maior que zero e não pode ultrapassar 1.440 minutos.
 
-O intervalo da viagem é calculado a partir do horário previsto de saída e da duração planejada.
+O intervalo da viagem é calculado a partir do horário previsto de saída e da duração planejada. As validações de conflito consideram o intervalo operacional da viagem.
 
 ### Status das viagens
 
@@ -141,9 +145,7 @@ As informações de uma manutenção incluem:
 
 ### Duração planejada da manutenção
 
-A duração planejada define o intervalo durante o qual o ônibus ficará reservado para a manutenção.
-
-O intervalo é calculado com base na data do serviço, no horário previsto de início e na duração planejada.
+A duração planejada define o intervalo durante o qual o ônibus ficará reservado para a manutenção. O intervalo é calculado com base na data do serviço, no horário previsto de início e na duração planejada.
 
 A duração deve ser positiva para que o intervalo possa ser utilizado na verificação de conflitos.
 
@@ -159,102 +161,6 @@ Os status operacionais considerados nas verificações de disponibilidade são:
 Manutenções concluídas, canceladas ou excluídas logicamente não devem bloquear novos intervalos como se fossem manutenções ativas.
 
 As operações de criação, consulta, atualização e exclusão devem respeitar as permissões e as regras de negócio aplicáveis ao módulo. O sistema também permite registrar custos e consultar o histórico de auditoria das alterações de manutenção.
-
----
-
-## Conflitos entre viagens e manutenções
-
-A disponibilidade do ônibus deve considerar os intervalos de operação das viagens e das manutenções.
-
-### Viagem que conflita com manutenção
-
-Uma viagem não pode ser cadastrada ou reagendada para um intervalo que se sobreponha a uma manutenção ativa do mesmo ônibus.
-
-A verificação considera:
-
-- identificação do ônibus;
-- data e horário de saída da viagem;
-- duração planejada da viagem;
-- data e horário de início da manutenção;
-- duração planejada da manutenção;
-- status da manutenção;
-- exclusão lógica da manutenção.
-
-### Manutenção que conflita com viagem
-
-Uma manutenção também não deve ser agendada ou alterada para um intervalo que se sobreponha a uma viagem ativa do mesmo ônibus.
-
-A verificação deve considerar o intervalo planejado da viagem e o intervalo planejado da manutenção.
-
-### Limites dos intervalos
-
-Dois intervalos são conflitantes quando existe sobreposição entre eles. Um intervalo que termina exatamente quando o outro começa não representa sobreposição por si só.
-
-As validações devem considerar os horários efetivos e as regras de fuso horário da aplicação, evitando comparar apenas as datas e ignorar os horários.
-
-### Conflitos entre viagens
-
-Além das manutenções, a verificação de disponibilidade deve impedir a sobreposição de viagens que utilizem:
-
-- o mesmo ônibus;
-- o mesmo motorista.
-
-A validação deve desconsiderar a própria viagem quando uma operação estiver atualizando seus dados e não deve tratar viagens concluídas ou canceladas como operações ativas para essa finalidade.
-
-### Ciclo de vida da viagem
-
-Toda viagem possui um estado que representa sua etapa operacional. Os estados válidos são:
-
-- `Agendada`: estado inicial de uma nova viagem;
-- `Em andamento`: indica que a viagem foi iniciada;
-- `Concluída`: indica que a viagem terminou e possui os dados reais de chegada e duração;
-- `Cancelada`: indica que a viagem não será realizada.
-
-As transições são controladas pelo backend:
-
-```text
-Agendada ────────> Em andamento ────────> Concluída
-    │                    │
-    └────────────────────┴──────────────> Cancelada
-```
-
-Regras principais:
-
-- uma viagem nova sempre começa como `Agendada`;
-- `Agendada` pode avançar para `Em andamento` somente no horário previsto de saída ou depois dele;
-- `Agendada` pode ser cancelada antes de começar;
-- `Em andamento` pode ser concluída ou cancelada;
-- `Concluída` é um estado final e não pode ser alterado;
-- `Cancelada` é um estado final e não pode ser alterado;
-- não é permitido voltar de `Em andamento` para `Agendada`;
-- não é permitido manter uma viagem `Agendada` por meio de uma atualização de status sem efetuar uma transição;
-- a conclusão exige horário real de chegada, duração calculada de acordo com o intervalo real e quantidade positiva de passageiros;
-- a chegada não pode estar no futuro nem ser anterior ao início da viagem.
-
-A API é a autoridade para essas transições. O frontend pode orientar a interface conforme o estado da viagem, mas não substitui as validações do backend.
-
-### Dados de tempo da viagem
-
-Os campos de tempo possuem finalidades diferentes e não devem ser confundidos:
-
-- `DepartureTime`: data e horário planejados para a saída;
-- `PlannedDuration`: duração prevista da viagem, em minutos, usada para estimar o fim do intervalo operacional;
-- `StartedAt`: data e horário reais em que a viagem foi iniciada;
-- `ArrivalTime`: data e horário reais de chegada;
-- `Duration`: duração real da viagem, em minutos, calculada a partir do início efetivo e da chegada.
-
-A duração planejada deve ser positiva e limitada a 1.440 minutos. Ela serve para verificar a disponibilidade do ônibus e do motorista no intervalo previsto. A duração real representa o que ocorreu durante a operação e deve ser coerente com os horários efetivos registrados.
-
-A atualização de status não deve permitir que o cliente defina livremente campos derivados ou contorne as regras do ciclo de vida. As validações e a persistência dos dados são responsabilidade do backend.
-
-### Disponibilidade dos recursos
-
-Antes de alocar recursos em uma viagem, o backend também verifica a disponibilidade do ônibus e do motorista conforme as regras operacionais da aplicação.
-
-- o mesmo ônibus não pode ser utilizado em viagens com horários sobrepostos;
-- o mesmo motorista não pode ser utilizado em viagens com horários sobrepostos;
-- um ônibus com manutenção ativa para a data de serviço não pode ser alocado em uma viagem naquela data;
-- manutenções concluídas, canceladas ou excluídas logicamente não bloqueiam a alocação.
 
 ---
 
@@ -277,6 +183,19 @@ O relatório apresenta:
 A consulta é disponibilizada pelo endpoint `GET /api/OperationalReports?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD` e exige a role `ADMIN`.
 
 O período é inclusivo: a data inicial e a data final fazem parte da consulta. As viagens são consideradas pela data/hora de saída e as manutenções pela data do serviço.
+
+### Exportação dos relatórios
+
+Os relatórios podem ser exportados em formato CSV para uso externo. A exportação contempla:
+
+- resumo das viagens por status do período;
+- utilização dos ônibus;
+- viagens por motorista;
+- custos de manutenção por ônibus.
+
+Os arquivos são gerados no navegador com o período selecionado no nome do arquivo. O CSV utiliza BOM UTF-8 para preservar a acentuação em programas como o Excel e escapa vírgulas, aspas e quebras de linha.
+
+Os botões de exportação ficam desabilitados quando a seção correspondente não possui dados. A exportação não cria dados adicionais no banco de dados.
 
 Os relatórios são calculados a partir dos dados operacionais existentes. Não há armazenamento separado de dados de relatório.
 
@@ -390,6 +309,8 @@ A V1 contempla os módulos e recursos implementados de:
 - gerenciamento de rotas;
 - gerenciamento de passageiros;
 - gerenciamento de viagens;
+- regras de conflito entre viagens;
+- integração entre manutenção e disponibilidade de ônibus;
 - ciclo de vida e transições de status das viagens;
 - detalhes de viagem;
 - relações entre passageiros e viagens;
@@ -397,10 +318,10 @@ A V1 contempla os módulos e recursos implementados de:
 - controle de conflitos de recursos entre viagens;
 - gerenciamento de manutenções;
 - duração planejada das manutenções;
-- integração entre manutenção e disponibilidade de ônibus;
 - validação de conflitos de horário entre viagens;
 - validação de conflitos de horário entre viagens e manutenções;
 - relatórios operacionais;
+- exportação dos relatórios operacionais em CSV;
 - controle de permissões;
 - navegação da aplicação;
 - monitoramento de disponibilidade.

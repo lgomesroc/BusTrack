@@ -64,6 +64,9 @@
             <h2>Utilização por ônibus</h2>
             <p>Quantidade de viagens no período e quantas foram concluídas.</p>
           </div>
+          <button type="button" class="secondary-button" (click)="exportBusUtilization()" [disabled]="data.busUtilization.length === 0">
+            Exportar CSV
+          </button>
         </div>
         <p class="empty-state" *ngIf="data.busUtilization.length === 0">
           Nenhuma viagem associada a ônibus foi encontrada neste período.
@@ -88,6 +91,9 @@
             <h2>Viagens por motorista</h2>
             <p>Quantidade total e concluída por motorista no período.</p>
           </div>
+          <button type="button" class="secondary-button" (click)="exportDriverTrips()" [disabled]="data.driverTrips.length === 0">
+            Exportar CSV
+          </button>
         </div>
         <p class="empty-state" *ngIf="data.driverTrips.length === 0">
           Nenhuma viagem associada a motorista foi encontrada neste período.
@@ -116,6 +122,9 @@
             <span>Total no período</span>
             <strong>{{ data.totalMaintenanceCost | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
           </div>
+          <button type="button" class="secondary-button" (click)="exportMaintenanceCosts()" [disabled]="data.maintenanceCosts.length === 0">
+            Exportar CSV
+          </button>
         </div>
         <p class="empty-state" *ngIf="data.maintenanceCosts.length === 0">
           Nenhuma manutenção com custo registrado foi encontrada neste período.
@@ -131,6 +140,18 @@
               </tr>
             </tbody>
           </table>
+        </div>
+      </section>
+
+      <section class="report-panel export-panel">
+        <div class="section-heading">
+          <div>
+            <h2>Exportar viagens do período</h2>
+            <p>Baixe um resumo das viagens por status em formato CSV.</p>
+          </div>
+          <button type="button" class="primary-button" (click)="exportTrips()" [disabled]="data.totalTrips === 0">
+            Exportar viagens CSV
+          </button>
         </div>
       </section>
 
