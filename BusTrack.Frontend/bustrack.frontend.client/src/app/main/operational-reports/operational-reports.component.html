@@ -1,0 +1,142 @@
+<div class="reports-page">
+  <app-sidebar></app-sidebar>
+
+  <main class="reports-content">
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">BUS TRACK · ADMINISTRAÇÃO</p>
+        <h1>Relatórios operacionais</h1>
+        <p>Consulte viagens, utilização da frota e custos de manutenção por período.</p>
+      </div>
+      <button type="button" class="secondary-button" (click)="backToDashboard()">Voltar ao painel</button>
+    </header>
+
+    <section class="filter-panel" aria-labelledby="filters-title">
+      <h2 id="filters-title">Período do relatório</h2>
+      <form class="filter-form" (ngSubmit)="loadReport()">
+        <div class="form-field">
+          <label for="startDate">Data inicial</label>
+          <input id="startDate" name="startDate" type="date" [(ngModel)]="startDate" required>
+        </div>
+        <div class="form-field">
+          <label for="endDate">Data final</label>
+          <input id="endDate" name="endDate" type="date" [(ngModel)]="endDate" required>
+        </div>
+        <button type="submit" class="primary-button" [disabled]="isLoading">
+          {{ isLoading ? 'Consultando...' : 'Aplicar filtros' }}
+        </button>
+      </form>
+      <p class="period-note" *ngIf="report">
+        Período consultado: {{ startDate | date:'dd/MM/yyyy' }} a {{ endDate | date:'dd/MM/yyyy' }}.
+      </p>
+    </section>
+
+    <p class="loading-message" *ngIf="isLoading" role="status">Carregando relatórios...</p>
+    <p class="error-message" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
+
+    <ng-container *ngIf="report as data">
+      <section class="summary-grid" aria-label="Resumo das viagens">
+        <article class="summary-card summary-total">
+          <span>Total de viagens</span>
+          <strong>{{ data.totalTrips }}</strong>
+        </article>
+        <article class="summary-card">
+          <span>Agendadas</span>
+          <strong>{{ data.scheduledTrips }}</strong>
+        </article>
+        <article class="summary-card">
+          <span>Em andamento</span>
+          <strong>{{ data.inProgressTrips }}</strong>
+        </article>
+        <article class="summary-card">
+          <span>Concluídas</span>
+          <strong>{{ data.completedTrips }}</strong>
+        </article>
+        <article class="summary-card">
+          <span>Canceladas</span>
+          <strong>{{ data.cancelledTrips }}</strong>
+        </article>
+      </section>
+
+      <section class="report-panel">
+        <div class="section-heading">
+          <div>
+            <h2>Utilização por ônibus</h2>
+            <p>Quantidade de viagens no período e quantas foram concluídas.</p>
+          </div>
+        </div>
+        <p class="empty-state" *ngIf="data.busUtilization.length === 0">
+          Nenhuma viagem associada a ônibus foi encontrada neste período.
+        </p>
+        <div class="table-wrapper" *ngIf="data.busUtilization.length > 0">
+          <table>
+            <thead><tr><th>Ônibus</th><th>Viagens</th><th>Concluídas</th></tr></thead>
+            <tbody>
+              <tr *ngFor="let bus of data.busUtilization">
+                <td data-label="Ônibus">{{ bus.busNumber || 'Não informado' }}</td>
+                <td data-label="Viagens">{{ bus.tripCount }}</td>
+                <td data-label="Concluídas">{{ bus.completedTripCount }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="report-panel">
+        <div class="section-heading">
+          <div>
+            <h2>Viagens por motorista</h2>
+            <p>Quantidade total e concluída por motorista no período.</p>
+          </div>
+        </div>
+        <p class="empty-state" *ngIf="data.driverTrips.length === 0">
+          Nenhuma viagem associada a motorista foi encontrada neste período.
+        </p>
+        <div class="table-wrapper" *ngIf="data.driverTrips.length > 0">
+          <table>
+            <thead><tr><th>Motorista</th><th>Viagens</th><th>Concluídas</th></tr></thead>
+            <tbody>
+              <tr *ngFor="let driver of data.driverTrips">
+                <td data-label="Motorista">{{ driver.driverName || 'Não informado' }}</td>
+                <td data-label="Viagens">{{ driver.tripCount }}</td>
+                <td data-label="Concluídas">{{ driver.completedTripCount }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="report-panel">
+        <div class="section-heading">
+          <div>
+            <h2>Custos de manutenção</h2>
+            <p>Custos por ônibus e valor consolidado do período.</p>
+          </div>
+          <div class="total-cost">
+            <span>Total no período</span>
+            <strong>{{ data.totalMaintenanceCost | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong>
+          </div>
+        </div>
+        <p class="empty-state" *ngIf="data.maintenanceCosts.length === 0">
+          Nenhuma manutenção com custo registrado foi encontrada neste período.
+        </p>
+        <div class="table-wrapper" *ngIf="data.maintenanceCosts.length > 0">
+          <table>
+            <thead><tr><th>Ônibus</th><th>Quantidade de manutenções</th><th>Custo total</th></tr></thead>
+            <tbody>
+              <tr *ngFor="let maintenance of data.maintenanceCosts">
+                <td data-label="Ônibus">{{ maintenance.busNumber || 'Não informado' }}</td>
+                <td data-label="Manutenções">{{ maintenance.maintenanceCount }}</td>
+                <td data-label="Custo total">{{ maintenance.totalCost | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <p class="empty-period" *ngIf="data.totalTrips === 0 && data.maintenanceCosts.length === 0 && data.totalMaintenanceCost === 0">
+        Não há viagens nem custos de manutenção para o período selecionado.
+      </p>
+    </ng-container>
+  </main>
+</div>

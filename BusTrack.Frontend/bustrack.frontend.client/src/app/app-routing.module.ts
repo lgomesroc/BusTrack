@@ -19,6 +19,7 @@ import { RoutesComponent } from './main/routes/routes.component';
 import { DriversComponent } from './main/drivers/drivers.component';
 import { PassengersComponent } from './main/passengers/passengers.component';
 import { MaintenanceComponent } from './main/maintenance/maintenance.component';
+import { OperationalReportsComponent } from './main/operational-reports/operational-reports.component';
 
 import { AuthenticationGuard } from './guards/authentication.guard';
 import { BrowserNavigationGuard } from './guards/browser-navigation.guard';
@@ -118,6 +119,11 @@ const routes: Routes = [
   {
     path: 'maintenance',
     component: MaintenanceComponent,
+    canActivate: protectedGuards
+  },
+  {
+    path: 'operational-reports',
+    component: OperationalReportsComponent,
     canActivate: protectedGuards
   },
   {
