@@ -102,14 +102,11 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 throw new ArgumentException(
                     "A saída deve ser agendada para um horário futuro.");
 
-            var plannedDuration = trip.PlannedDuration > 0
-                ? trip.PlannedDuration
-                : trip.PlannedDurationMinutes;
+            var plannedDuration = trip.PlannedDuration;
 
             ValidatePlannedDuration(plannedDuration);
 
             trip.PlannedDuration = plannedDuration;
-            trip.PlannedDurationMinutes = plannedDuration;
 
             await EnsureNoMaintenanceConflictAsync(
                 trip.BusId,
@@ -130,7 +127,6 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             tripDB.ArrivalTime = null;
             tripDB.Duration = 0;
             tripDB.PlannedDuration = plannedDuration;
-            tripDB.PlannedDurationMinutes = plannedDuration;
             tripDB.LimitPassengers = 0;
             tripDB.Passengers = new List<string>();
 
@@ -175,9 +171,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                     ? existingTrip.DepartureTime
                     : trip.DepartureTime;
 
-                var requestedDuration = trip.PlannedDuration > 0
-                    ? trip.PlannedDuration
-                    : trip.PlannedDurationMinutes;
+                var requestedDuration = trip.PlannedDuration;
 
                 var plannedDuration = requestedDuration > 0
                     ? requestedDuration
@@ -201,7 +195,6 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 existingTrip.DriverId = driverId;
                 existingTrip.DepartureTime = departure;
                 existingTrip.PlannedDuration = plannedDuration;
-                existingTrip.PlannedDurationMinutes = plannedDuration;
             }
 
             if (requestedStatus == InProgress)
@@ -321,9 +314,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             if (_maintenanceRepository == null)
                 return;
 
-            var tripStart = NormalizeUtc(departure);
-            var tripEnd = tripStart.AddMinutes(durationMinutes);
-
+            var tripDate = NormalizeUtc(departure).Date;
             var maintenanceItems = await _maintenanceRepository.GetAllAsync();
 
             foreach (var maintenance in maintenanceItems)
@@ -347,24 +338,12 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                         StringComparison.OrdinalIgnoreCase))
                     continue;
 
-                if (maintenance.PlannedDurationMinutes <= 0)
-                    continue;
+                var maintenanceDate = NormalizeUtc(maintenance.ServiceDate).Date;
 
-                var maintenanceStart = GetMaintenanceStartUtc(
-                    maintenance.ServiceDate,
-                    maintenance.ServiceStartTime);
-
-                var maintenanceEnd = maintenanceStart.AddMinutes(
-                    maintenance.PlannedDurationMinutes);
-
-                if (IntervalsOverlap(
-                    tripStart,
-                    tripEnd,
-                    maintenanceStart,
-                    maintenanceEnd))
+                if (tripDate == maintenanceDate)
                 {
                     throw new ArgumentException(
-                        $"O ônibus possui manutenção ativa no intervalo solicitado ({maintenance.ServiceType}).");
+                        $"O ônibus possui manutenção ativa na data solicitada ({maintenance.ServiceType}).");
                 }
             }
         }
@@ -441,10 +420,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
         private static int GetPlannedDuration(TripDB trip)
         {
-            if (trip.PlannedDuration > 0)
-                return trip.PlannedDuration;
-
-            return trip.PlannedDurationMinutes;
+            return trip.PlannedDuration;
         }
 
         private static void SynchronizePlannedDuration(TripDB trip)
@@ -455,7 +431,6 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 return;
 
             trip.PlannedDuration = duration;
-            trip.PlannedDurationMinutes = duration;
         }
 
         private static void ValidatePlannedDuration(int plannedDuration)
@@ -547,7 +522,6 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 Id = trip.Id,
                 UserId = trip.UserId,
                 DepartureTime = trip.DepartureTime,
-                PlannedDurationMinutes = plannedDuration,
                 PlannedDuration = plannedDuration,
                 StartedAt = trip.StartedAt,
                 ArrivalTime = trip.ArrivalTime,
