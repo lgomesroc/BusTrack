@@ -90,7 +90,7 @@ namespace BusTrack.Tests.UnitTests.Rules
             int plannedDurationMinutes)
         {
             var trip = CreateTrip(DateTime.UtcNow.AddMinutes(10));
-            trip.PlannedDurationMinutes = plannedDurationMinutes;
+            trip.PlannedDuration = plannedDurationMinutes;
 
             var exception = await Assert.ThrowsAsync<ArgumentException>(
                 () => _service.CreateTripAsync(trip));
@@ -118,8 +118,6 @@ namespace BusTrack.Tests.UnitTests.Rules
                 BusId = trip.BusId!,
                 ServiceType = "Revisão",
                 ServiceDate = localMaintenanceStart.Date,
-                ServiceStartTime = localMaintenanceStart,
-                PlannedDurationMinutes = 60,
                 Status = "Agendada",
                 IsDeleted = false
             };
@@ -155,8 +153,6 @@ namespace BusTrack.Tests.UnitTests.Rules
                 BusId = trip.BusId!,
                 ServiceType = "Revisão",
                 ServiceDate = localMaintenanceStart.Date,
-                ServiceStartTime = localMaintenanceStart,
-                PlannedDurationMinutes = 60,
                 Status = "Agendada",
                 IsDeleted = true
             };
@@ -558,7 +554,7 @@ namespace BusTrack.Tests.UnitTests.Rules
             DriverId = "driver",
             RouteId = "route",
             DepartureTime = departure,
-            PlannedDurationMinutes = 60,
+            PlannedDuration = 60,
             Status = "Agendada"
         };
 
@@ -571,7 +567,7 @@ namespace BusTrack.Tests.UnitTests.Rules
             DriverId = "driver",
             RouteId = "route",
             DepartureTime = departure,
-            PlannedDurationMinutes = 60,
+            PlannedDuration = 60,
             Status = status,
             Duration = 0,
             LimitPassengers = 0,
