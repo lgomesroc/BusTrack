@@ -1,4 +1,3 @@
-
 # Funcionalidades
 
 ## Visão geral
@@ -204,6 +203,49 @@ A validação deve desconsiderar a própria viagem quando uma operação estiver
 
 ---
 
+### Ciclo de vida da viagem
+
+Toda viagem possui um estado que representa sua etapa operacional. Os estados válidos são:
+
+- `Agendada`: estado inicial de uma nova viagem;
+- `Em andamento`: indica que a viagem foi iniciada;
+- `Concluída`: indica que a viagem terminou e possui os dados reais de chegada e duração;
+- `Cancelada`: indica que a viagem não será realizada.
+
+As transições são controladas pelo backend:
+
+```text
+Agendada ────────> Em andamento ────────> Concluída
+    │                    │
+    └────────────────────┴──────────────> Cancelada
+```
+
+Regras principais:
+
+- uma viagem nova sempre começa como `Agendada`;
+- `Agendada` pode avançar para `Em andamento` somente no horário previsto de saída ou depois dele;
+- `Agendada` pode ser cancelada antes de começar;
+- `Em andamento` pode ser concluída ou cancelada;
+- `Concluída` é um estado final e não pode ser alterado;
+- `Cancelada` é um estado final e não pode ser alterado;
+- não é permitido voltar de `Em andamento` para `Agendada`;
+- não é permitido manter uma viagem `Agendada` por meio de uma atualização de status sem efetuar uma transição;
+- a conclusão exige horário real de chegada, duração calculada de acordo com o intervalo real e quantidade positiva de passageiros;
+- a chegada não pode estar no futuro nem ser anterior ao início da viagem.
+
+A API é a autoridade para essas transições. O frontend pode orientar a interface conforme o estado da viagem, mas não substitui as validações do backend.
+
+### Disponibilidade dos recursos
+
+Antes de alocar recursos em uma viagem, o backend também verifica a disponibilidade do ônibus e do motorista conforme as regras operacionais da aplicação.
+
+- o mesmo ônibus não pode ser utilizado em viagens com horários sobrepostos;
+- o mesmo motorista não pode ser utilizado em viagens com horários sobrepostos;
+- um ônibus com manutenção ativa para a data de serviço não pode ser alocado em uma viagem naquela data;
+- manutenções concluídas, canceladas ou excluídas logicamente não bloqueiam a alocação.
+
+---
+
 ## Contas e autenticação
 
 A V1 possui os seguintes recursos:
@@ -312,11 +354,14 @@ A V1 contempla os módulos e recursos implementados de:
 - gerenciamento de rotas;
 - gerenciamento de passageiros;
 - gerenciamento de viagens;
+- ciclo de vida e transições de status das viagens;
 - detalhes de viagem;
 - relações entre passageiros e viagens;
 - duração planejada e dados reais das viagens;
+- controle de conflitos de recursos entre viagens;
 - gerenciamento de manutenções;
 - duração planejada das manutenções;
+- integração entre manutenção e disponibilidade de ônibus;
 - validação de conflitos de horário entre viagens;
 - validação de conflitos de horário entre viagens e manutenções;
 - controle de permissões;
