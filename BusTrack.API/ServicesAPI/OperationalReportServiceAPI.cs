@@ -117,7 +117,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         }
 
         private static string GetBusNumber(
-            IReadOnlyDictionary<string, BusTrack.BusTrack.DB.Classes.BusDB> buses,
+            IReadOnlyDictionary<string, global::BusTrack.BusTrack.DB.Classes.BusDB> buses,
             string busId)
         {
             return buses.TryGetValue(busId, out var bus)
@@ -128,7 +128,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         }
 
         private static string GetDriverName(
-            IReadOnlyDictionary<string, BusTrack.BusTrack.DB.Classes.DriverDB> drivers,
+            IReadOnlyDictionary<string, global::BusTrack.BusTrack.DB.Classes.DriverDB> drivers,
             string driverId)
         {
             return drivers.TryGetValue(driverId, out var driver)
