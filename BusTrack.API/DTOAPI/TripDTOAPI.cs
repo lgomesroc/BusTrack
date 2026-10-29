@@ -1,24 +1,18 @@
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+using System;
+using System.Collections.Generic;
 
-namespace BusTrack.BusTrack.DB.Classes
+namespace BusTrack.BusTrack.API.DTOAPI
 {
-    public class TripDB
+    public class TripDTOAPI
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
-        [BsonRepresentation(BsonType.ObjectId)]
         public string? UserId { get; set; }
 
-        [BsonRepresentation(BsonType.ObjectId)]
         public string? BusId { get; set; }
 
-        [BsonRepresentation(BsonType.ObjectId)]
         public string? DriverId { get; set; }
 
-        [BsonRepresentation(BsonType.ObjectId)]
         public string? RouteId { get; set; }
 
         public DateTime DepartureTime { get; set; }
