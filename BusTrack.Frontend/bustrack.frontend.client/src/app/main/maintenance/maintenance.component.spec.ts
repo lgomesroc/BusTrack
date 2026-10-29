@@ -1,4 +1,5 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
 import { FormsModule } from '@angular/forms';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
@@ -12,6 +13,9 @@ import {
   MaintenanceService
 } from '../../services/maintenance.service';
 import { SessionService } from '../../services/session.service';
+
+// O template usa o CurrencyPipe com pt-BR; o TestBed precisa dos dados do locale.
+registerLocaleData(localePt, 'pt-BR');
 
 describe('MaintenanceComponent', () => {
   let component: MaintenanceComponent;
@@ -38,6 +42,8 @@ describe('MaintenanceComponent', () => {
     serviceType: 'Troca de óleo',
     description: 'Manutenção preventiva',
     serviceDate: '2026-10-27T03:00:00.000Z',
+    serviceStartTime: '09:00',
+    plannedDurationMinutes: 60,
     completedDate: null,
     cost: 250.5,
     status: 'Agendada'
@@ -60,6 +66,7 @@ describe('MaintenanceComponent', () => {
 
   function dateOffset(offsetDays: number): string {
     const [year, month, day] = brazilToday().split('-').map(Number);
+
     return new Date(Date.UTC(year, month - 1, day + offsetDays))
       .toISOString()
       .slice(0, 10);
@@ -74,6 +81,8 @@ describe('MaintenanceComponent', () => {
       serviceType: 'Troca de óleo',
       description: 'Manutenção preventiva',
       serviceDate,
+      serviceStartTime: '09:00',
+      plannedDurationMinutes: 60,
       completedDate: null,
       cost: 250.5,
       status
@@ -89,10 +98,12 @@ describe('MaintenanceComponent', () => {
   beforeEach(async () => {
     router = jasmine.createSpyObj<Router>('Router', ['navigate']);
     busService = jasmine.createSpyObj<BusService>('BusService', ['getBuses']);
+
     maintenanceService = jasmine.createSpyObj<MaintenanceService>(
       'MaintenanceService',
       ['getAll', 'create', 'update', 'delete']
     );
+
     sessionService = jasmine.createSpyObj<SessionService>(
       'SessionService',
       ['isAdmin']
@@ -100,10 +111,12 @@ describe('MaintenanceComponent', () => {
 
     busService.getBuses.and.returnValue(of(buses));
     maintenanceService.getAll.and.returnValue(of([maintenance]));
+
     maintenanceService.create.and.returnValue(of({
       ...maintenance,
       id: 'maintenance-new'
     }));
+
     maintenanceService.update.and.returnValue(of(maintenance));
     maintenanceService.delete.and.returnValue(of(void 0));
     sessionService.isAdmin.and.returnValue(true);
@@ -163,6 +176,7 @@ describe('MaintenanceComponent', () => {
     maintenanceService.getAll.and.returnValue(
       throwError(() => new Error('API indisponível'))
     );
+
     spyOn(console, 'error');
     initializeComponent();
 
@@ -176,6 +190,7 @@ describe('MaintenanceComponent', () => {
 
   it('shows an error when buses cannot be loaded', () => {
     initializeComponent();
+
     busService.getBuses.and.returnValue(
       throwError(() => new Error('API indisponível'))
     );
@@ -292,6 +307,7 @@ describe('MaintenanceComponent', () => {
     component.startCreate();
     component.form = validPayload();
     component.form.cost = 0;
+
     maintenanceService.create.and.returnValue(of({
       ...maintenance,
       cost: 0,
@@ -336,9 +352,7 @@ describe('MaintenanceComponent', () => {
 
     component.save();
 
-    expect(component.errorMessage).toContain(
-      'não pode ter data futura'
-    );
+    expect(component.errorMessage).toContain('não pode ter data futura');
     expect(maintenanceService.create).not.toHaveBeenCalled();
   });
 
@@ -349,9 +363,7 @@ describe('MaintenanceComponent', () => {
 
     component.save();
 
-    expect(component.errorMessage).toContain(
-      'não pode ter data futura'
-    );
+    expect(component.errorMessage).toContain('não pode ter data futura');
     expect(maintenanceService.create).not.toHaveBeenCalled();
   });
 
@@ -361,6 +373,7 @@ describe('MaintenanceComponent', () => {
       id: 'maintenance-new',
       serviceDate: `${brazilToday()}T03:00:00.000Z`
     };
+
     maintenanceService.create.and.returnValue(of(saved));
     initializeComponent();
     component.startCreate();
@@ -373,10 +386,13 @@ describe('MaintenanceComponent', () => {
         busId: 'bus-1',
         serviceType: 'Troca de óleo',
         description: 'Manutenção preventiva',
+        serviceStartTime: '09:00',
+        plannedDurationMinutes: 60,
         cost: 250.5,
         status: 'Agendada'
       })
     );
+
     expect(component.maintenances[0]).toEqual(saved);
     expect(component.isCreating).toBeFalse();
     expect(component.editing).toBeNull();
@@ -386,6 +402,7 @@ describe('MaintenanceComponent', () => {
   it('trims the service type, description and bus id before creating', () => {
     initializeComponent();
     component.startCreate();
+
     component.form = {
       ...validPayload(),
       busId: ' bus-1 ',
@@ -410,6 +427,7 @@ describe('MaintenanceComponent', () => {
         error: { message: 'Ônibus não encontrado.' }
       }))
     );
+
     spyOn(console, 'error');
     initializeComponent();
     component.startCreate();
@@ -450,9 +468,11 @@ describe('MaintenanceComponent', () => {
       ...maintenance,
       serviceType: 'Troca de filtros'
     };
+
     maintenanceService.update.and.returnValue(of(updated));
     initializeComponent();
     component.startEdit(maintenance);
+
     component.form = {
       ...validPayload(),
       serviceDate: maintenance.serviceDate
@@ -464,6 +484,7 @@ describe('MaintenanceComponent', () => {
       maintenance.id,
       jasmine.objectContaining({ serviceType: 'Troca de óleo' })
     );
+
     expect(component.maintenances[0]).toEqual(updated);
     expect(component.isLoading).toBeFalse();
   });
@@ -473,6 +494,7 @@ describe('MaintenanceComponent', () => {
     component.startEdit({ ...maintenance, status: 'Concluída' });
 
     expect(component.isReadOnly).toBeTrue();
+
     component.save();
 
     expect(component.errorMessage).toContain('somente para consulta');
@@ -484,6 +506,7 @@ describe('MaintenanceComponent', () => {
     component.startEdit({ ...maintenance, status: 'Cancelada' });
 
     expect(component.isReadOnly).toBeTrue();
+
     component.save();
 
     expect(component.errorMessage).toContain('somente para consulta');
@@ -507,6 +530,7 @@ describe('MaintenanceComponent', () => {
     const serviceType = element.querySelector(
       '#maintenance-type'
     ) as HTMLInputElement;
+
     expect(serviceType.disabled).toBeTrue();
   });
 
@@ -560,6 +584,7 @@ describe('MaintenanceComponent', () => {
       maintenance.id,
       'Registro duplicado'
     );
+
     expect(component.maintenances).not.toContain(maintenance);
     expect(component.isLoading).toBeFalse();
   });
@@ -568,6 +593,7 @@ describe('MaintenanceComponent', () => {
     maintenanceService.delete.and.returnValue(
       throwError(() => ({ error: { message: 'Exclusão não permitida.' } }))
     );
+
     spyOn(console, 'error');
     spyOn(window, 'prompt').and.returnValue('Registro duplicado');
     spyOn(window, 'confirm').and.returnValue(true);

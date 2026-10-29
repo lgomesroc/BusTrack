@@ -22,6 +22,8 @@ namespace BusTrack.BusTrack.API.DTOAPI
 
         public int Duration { get; set; }
 
+        public int PlannedDuration { get; set; }
+
         public int LimitPassengers { get; set; }
 
         public string Status { get; set; } = "Agendada";

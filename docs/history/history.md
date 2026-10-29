@@ -4,6 +4,15 @@ Este documento registra as principais alterações, correções, implementaçõe
 
 > **Nota de leitura:** este arquivo é um registro cronológico. Referências a falhas, itens pendentes, planos ou branches descrevem o estado na data da entrada e não representam necessariamente pendências atuais. Para o estado atual das funcionalidades e o roadmap, consulte [Funcionalidades](../functionalities/functionalities.md), [Segurança](../security/security.md) e [Tecnologias](../technologies/technologies.md).
 
+## 2026-10-27
+
+* Revisão documental das funcionalidades, arquitetura, telas, segurança, README e mapa de navegação.
+* Documentação atualizada para incluir o módulo de manutenções e explicar seus controles administrativos, validações e auditoria.
+* Correção da documentação de recuperação de senha: o fluxo ainda não está concluído, pois o formulário atual chama endpoint administrativo e o endpoint público informa que a verificação segura permanece pendente.
+* Registro da divergência observada nos testes de usabilidade: o teste de inclusão de passageiro espera `/dashboard`, enquanto o fluxo por role pode encaminhar o usuário para `/user-dashboard`. A correção do teste/código não foi feita nesta atualização documental.
+* A listagem integral de arquivos e pastas em `docs/project-structure/project-structure.md` foi preservada sem alterações, conforme solicitado.
+* Esta revisão atualiza documentação; não altera código da aplicação, testes ou configuração de implantação.
+
 ## 2026-09-28
 
 * Início da implantação do Bus Track em ambiente de produção utilizando Render para hospedagem do frontend Angular e da API ASP.NET Core.

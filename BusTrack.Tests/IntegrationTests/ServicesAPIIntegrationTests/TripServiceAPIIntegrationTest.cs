@@ -40,7 +40,7 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
         public async Task GetTripByIdAsync_WhenTripExists_ReturnsTrip()
         {
             const string id = "507f1f77bcf86cd799439011";
-            var trip = new TripDB { Id = id, BusId = "507f1f77bcf86cd799439012", DriverId = "507f1f77bcf86cd799439013", RouteId = "507f1f77bcf86cd799439014" };
+            var trip = new TripDB { Id = id, BusId = "507f1f77bcf86cd799439012", DriverId = "507f1f77bcf86cd799439013", RouteId = "507f1f77bcf86cd799439014", PlannedDurationMinutes = 60 };
             _tripRepository.Setup(r => r.GetTripByIdAsync(id)).ReturnsAsync(trip);
             var result = await _tripServiceAPI.GetTripByIdAsync(id);
             Assert.NotNull(result);
@@ -48,6 +48,7 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
             Assert.Equal(trip.BusId, result.BusId);
             Assert.Equal(trip.DriverId, result.DriverId);
             Assert.Equal(trip.RouteId, result.RouteId);
+            Assert.Equal(60, result.PlannedDurationMinutes);
         }
 
         [Fact]
@@ -68,12 +69,14 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                 DriverId = "driver",
                 RouteId = "route",
                 DepartureTime = departure,
+                PlannedDurationMinutes = 60,
                 ArrivalTime = DateTime.UtcNow.AddHours(2),
                 Duration = 60,
                 LimitPassengers = 40,
                 Passengers = new List<string>()
             };
 
+            _tripRepository.Setup(r => r.GetAllTripsAsync()).ReturnsAsync(Array.Empty<TripDB>());
             _tripRepository
                 .Setup(r => r.AddTripAsync(It.IsAny<TripDB>()))
                 .ReturnsAsync((TripDB db) =>
@@ -91,11 +94,10 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
             Assert.Null(result.StartedAt);
             Assert.Null(result.ArrivalTime);
             Assert.Equal(0, result.Duration);
+            Assert.Equal(60, result.PlannedDurationMinutes);
             Assert.Equal(0, result.LimitPassengers);
 
-            _tripRepository.Verify(
-                r => r.AddTripAsync(It.IsAny<TripDB>()),
-                Times.Once);
+            _tripRepository.Verify(r => r.AddTripAsync(It.IsAny<TripDB>()), Times.Once);
         }
 
         [Fact]
@@ -106,27 +108,22 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                 DepartureTime = DateTime.UtcNow.AddMinutes(-1)
             };
 
-            var exception = await Assert.ThrowsAsync<ArgumentException>(
-                () => _tripServiceAPI.CreateTripAsync(trip));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _tripServiceAPI.CreateTripAsync(trip));
 
-            Assert.Equal(
-                "A saída deve ser agendada para um horário futuro.",
-                exception.Message);
-
-            _tripRepository.Verify(
-                r => r.AddTripAsync(It.IsAny<TripDB>()),
-                Times.Never);
+            Assert.Equal("A saída deve ser agendada para um horário futuro.", exception.Message);
+            _tripRepository.Verify(r => r.AddTripAsync(It.IsAny<TripDB>()), Times.Never);
         }
-        
+
         [Fact]
         public async Task UpdateTripAsync_AgendedToCancelled_ReturnsCancelledTrip()
         {
             const string id = "trip";
-            var existing = new TripDB { Id = id, Status = "Agendada", DepartureTime = DateTime.UtcNow.AddHours(1), BusId = "bus", DriverId = "driver", RouteId = "route" };
+            var existing = new TripDB { Id = id, Status = "Agendada", DepartureTime = DateTime.UtcNow.AddHours(1), BusId = "bus", DriverId = "driver", RouteId = "route", PlannedDurationMinutes = 60 };
             _tripRepository.Setup(r => r.GetTripByIdAsync(id)).ReturnsAsync(existing);
+            _tripRepository.Setup(r => r.GetAllTripsAsync()).ReturnsAsync(new[] { existing });
             _tripRepository.Setup(r => r.UpdateTripAsync(id, It.IsAny<TripDB>())).ReturnsAsync((string _, TripDB db) => db);
 
-            var result = await _tripServiceAPI.UpdateTripAsync(id, new TripDTOAPI { Status = "Cancelada" });
+            var result = await _tripServiceAPI.UpdateTripAsync(id, new TripDTOAPI { Status = "Cancelada", PlannedDurationMinutes = 60 });
 
             Assert.NotNull(result);
             Assert.Equal("Cancelada", result!.Status);
@@ -142,11 +139,12 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
             const string id = "trip";
             var started = DateTime.UtcNow.AddMinutes(-59);
             var arrival = DateTime.UtcNow.AddMinutes(-1);
-            var existing = new TripDB { Id = id, Status = "Em andamento", StartedAt = started, DepartureTime = started, BusId = "bus", DriverId = "driver", RouteId = "route" };
+            var existing = new TripDB { Id = id, Status = "Em andamento", StartedAt = started, DepartureTime = started, BusId = "bus", DriverId = "driver", RouteId = "route", PlannedDurationMinutes = 60 };
             _tripRepository.Setup(r => r.GetTripByIdAsync(id)).ReturnsAsync(existing);
+            _tripRepository.Setup(r => r.GetAllTripsAsync()).ReturnsAsync(new[] { existing });
             _tripRepository.Setup(r => r.UpdateTripAsync(id, It.IsAny<TripDB>())).ReturnsAsync((string _, TripDB db) => db);
 
-            var result = await _tripServiceAPI.UpdateTripAsync(id, new TripDTOAPI { Status = "Concluída", ArrivalTime = arrival, Duration = 58, LimitPassengers = 35 });
+            var result = await _tripServiceAPI.UpdateTripAsync(id, new TripDTOAPI { Status = "Concluída", ArrivalTime = arrival, Duration = 58, LimitPassengers = 35, PlannedDurationMinutes = 60 });
 
             Assert.NotNull(result);
             Assert.Equal("Concluída", result!.Status);
@@ -161,10 +159,10 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
             const string id = "trip";
             var started = DateTime.UtcNow.AddMinutes(-60);
             var arrival = DateTime.UtcNow.AddMinutes(-1);
-            var existing = new TripDB { Id = id, Status = "Em andamento", StartedAt = started, DepartureTime = started };
+            var existing = new TripDB { Id = id, Status = "Em andamento", StartedAt = started, DepartureTime = started, BusId = "bus", DriverId = "driver", RouteId = "route", PlannedDurationMinutes = 60 };
             _tripRepository.Setup(r => r.GetTripByIdAsync(id)).ReturnsAsync(existing);
 
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _tripServiceAPI.UpdateTripAsync(id, new TripDTOAPI { Status = "Concluída", ArrivalTime = arrival, Duration = 1, LimitPassengers = 35 }));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _tripServiceAPI.UpdateTripAsync(id, new TripDTOAPI { Status = "Concluída", ArrivalTime = arrival, Duration = 1, LimitPassengers = 35, PlannedDurationMinutes = 60 }));
             Assert.Contains("duração informada deve corresponder", exception.Message);
         }
 

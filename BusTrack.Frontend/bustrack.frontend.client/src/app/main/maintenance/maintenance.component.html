@@ -1,3 +1,4 @@
+
 <main class="maintenance-container">
   <header class="page-header">
     <div>
@@ -41,20 +42,28 @@
           ? 'Visualizar manutenção'
           : (editing ? 'Editar manutenção' : 'Registrar manutenção') }}
       </h2>
-      <p *ngIf="!isReadOnly">Campos marcados com * são obrigatórios.</p>
-      <p *ngIf="isReadOnly">Manutenções concluídas ou canceladas são imutáveis.</p>
+
+      <p *ngIf="!isReadOnly">
+        Campos marcados com * são obrigatórios.
+      </p>
+
+      <p *ngIf="isReadOnly">
+        Manutenções concluídas ou canceladas são imutáveis.
+      </p>
     </div>
 
     <div class="form-grid">
       <div class="form-group">
         <label for="maintenance-bus">Ônibus *</label>
+
         <select
           id="maintenance-bus"
           name="busId"
           [(ngModel)]="form.busId"
-          [disabled]="isReadOnly"
+          [disabled]="isReadOnly || form.status === 'Concluída' || form.status === 'Cancelada'"
           required>
           <option value="">Selecione um ônibus</option>
+
           <option *ngFor="let bus of buses" [value]="bus.id">
             {{ bus.number || bus.licensePlate || bus.id }} —
             {{ bus.model || 'Modelo não informado' }}
@@ -64,11 +73,12 @@
 
       <div class="form-group">
         <label for="maintenance-type">Tipo de serviço *</label>
+
         <input
           id="maintenance-type"
           name="serviceType"
           [(ngModel)]="form.serviceType"
-          [disabled]="isReadOnly"
+          [disabled]="isReadOnly || form.status === 'Concluída' || form.status === 'Cancelada'"
           maxlength="80"
           required
           placeholder="Ex.: troca de óleo">
@@ -76,12 +86,13 @@
 
       <div class="form-group">
         <label for="maintenance-date">Data da manutenção *</label>
+
         <input
           id="maintenance-date"
           name="serviceDate"
           type="date"
           [(ngModel)]="form.serviceDate"
-          [disabled]="!isCreating || isReadOnly"
+          [disabled]="!isCreating || isReadOnly || form.status === 'Concluída' || form.status === 'Cancelada'"
           required>
 
         <small *ngIf="editing">
@@ -116,6 +127,7 @@
 
       <div class="form-group">
         <label for="maintenance-cost">Custo (R$)</label>
+
         <input
           id="maintenance-cost"
           name="cost"
@@ -123,16 +135,17 @@
           min="0"
           step="0.01"
           [(ngModel)]="form.cost"
-          [disabled]="isReadOnly">
+          [disabled]="isReadOnly || form.status === 'Concluída' || form.status === 'Cancelada'">
       </div>
 
       <div class="form-group">
         <label for="maintenance-status">Status *</label>
+
         <select
           id="maintenance-status"
           name="status"
           [(ngModel)]="form.status"
-          [disabled]="isReadOnly"
+          [disabled]="isReadOnly || form.status === 'Concluída' || form.status === 'Cancelada'"
           required>
           <option *ngFor="let status of statuses" [value]="status">
             {{ status }}
@@ -142,11 +155,12 @@
 
       <div class="form-group full-width">
         <label for="maintenance-description">Descrição *</label>
+
         <textarea
           id="maintenance-description"
           name="description"
           [(ngModel)]="form.description"
-          [disabled]="isReadOnly"
+          [disabled]="isReadOnly || form.status === 'Concluída' || form.status === 'Cancelada'"
           maxlength="1000"
           rows="3"
           required

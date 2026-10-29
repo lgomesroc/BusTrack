@@ -71,14 +71,19 @@ public sealed class MaintenanceServiceAPIPersistenceIntegrationTests : IAsyncLif
         Assert.False(string.IsNullOrWhiteSpace(created.Id));
 
         var persisted = await _maintenanceRepository.GetByIdAsync(created.Id!);
+
         Assert.NotNull(persisted);
         Assert.Equal(bus.Id, persisted.BusId);
         Assert.Equal("Revisão", persisted.ServiceType);
         Assert.Equal("Agendada", persisted.Status);
         Assert.False(persisted.IsDeleted);
 
-        var audits = (await _auditRepository.GetByMaintenanceIdAsync(created.Id!)).ToList();
+        var audits = (await _auditRepository
+            .GetByMaintenanceIdAsync(created.Id!))
+            .ToList();
+
         var audit = Assert.Single(audits);
+
         Assert.Equal("Created", audit.Action);
         Assert.Equal(created.Id, audit.MaintenanceId);
         Assert.NotNull(audit.Snapshot);
@@ -89,7 +94,9 @@ public sealed class MaintenanceServiceAPIPersistenceIntegrationTests : IAsyncLif
     public async Task UpdateAsync_PersistsChangesAndAuditSnapshot()
     {
         var bus = await CreateBusAsync();
+
         var created = await _service.CreateAsync(CreateMaintenance(bus.Id!));
+
         Assert.NotNull(created);
 
         var update = CreateMaintenance(bus.Id!);
@@ -106,23 +113,34 @@ public sealed class MaintenanceServiceAPIPersistenceIntegrationTests : IAsyncLif
         Assert.Equal(325.50m, updated.Cost);
 
         var persisted = await _maintenanceRepository.GetByIdAsync(created.Id!);
+
         Assert.NotNull(persisted);
         Assert.Equal("Em andamento", persisted.Status);
         Assert.Equal("Revisão iniciada no teste", persisted.Description);
         Assert.Equal(325.50m, persisted.Cost);
 
-        var audits = (await _auditRepository.GetByMaintenanceIdAsync(created.Id!)).ToList();
+        var audits = (await _auditRepository
+            .GetByMaintenanceIdAsync(created.Id!))
+            .ToList();
+
         Assert.Equal(2, audits.Count);
-        var updateAudit = Assert.Single(audits.Where(audit => audit.Action == "Updated"));
+
+        var updateAudit = Assert.Single(
+            audits.Where(audit => audit.Action == "Updated"));
+
         Assert.NotNull(updateAudit.Snapshot);
-        Assert.Contains(updateAudit.Changes, change => change.Field == "Description");
+        Assert.Contains(
+            updateAudit.Changes,
+            change => change.Field == "Description");
     }
 
     [RequiresMongoDbFact]
     public async Task DeleteAsync_SoftDeletesMaintenanceAndPersistsReasonInAudit()
     {
         var bus = await CreateBusAsync();
+
         var created = await _service.CreateAsync(CreateMaintenance(bus.Id!));
+
         Assert.NotNull(created);
 
         var deleted = await _service.DeleteAsync(created.Id!, DeleteReason);
@@ -131,15 +149,23 @@ public sealed class MaintenanceServiceAPIPersistenceIntegrationTests : IAsyncLif
         Assert.Null(await _maintenanceRepository.GetByIdAsync(created.Id!));
         Assert.Empty(await _maintenanceRepository.GetAllAsync());
 
-        var includingDeleted = await _maintenanceRepository.GetByIdIncludingDeletedAsync(created.Id!);
+        var includingDeleted =
+            await _maintenanceRepository.GetByIdIncludingDeletedAsync(created.Id!);
+
         Assert.NotNull(includingDeleted);
         Assert.True(includingDeleted.IsDeleted);
         Assert.Equal(DeleteReason, includingDeleted.DeletionReason);
         Assert.NotNull(includingDeleted.DeletedAtUtc);
 
-        var audits = (await _auditRepository.GetByMaintenanceIdAsync(created.Id!)).ToList();
+        var audits = (await _auditRepository
+            .GetByMaintenanceIdAsync(created.Id!))
+            .ToList();
+
         Assert.Equal(2, audits.Count);
-        var deleteAudit = Assert.Single(audits.Where(audit => audit.Action == "Deleted"));
+
+        var deleteAudit = Assert.Single(
+            audits.Where(audit => audit.Action == "Deleted"));
+
         Assert.Equal(DeleteReason, deleteAudit.Reason);
         Assert.NotNull(deleteAudit.Snapshot);
     }
@@ -152,10 +178,12 @@ public sealed class MaintenanceServiceAPIPersistenceIntegrationTests : IAsyncLif
 
         Assert.Null(result);
         Assert.Empty(await _maintenanceRepository.GetAllAsync());
-        Assert.Empty(await _database
-            .GetCollection<MaintenanceAuditDB>("MaintenanceAudits")
-            .Find(_ => true)
-            .ToListAsync());
+
+        Assert.Empty(
+            await _database
+                .GetCollection<MaintenanceAuditDB>("MaintenanceAudits")
+                .Find(_ => true)
+                .ToListAsync());
     }
 
     [RequiresMongoDbFact]
@@ -185,6 +213,8 @@ public sealed class MaintenanceServiceAPIPersistenceIntegrationTests : IAsyncLif
             ServiceType = "Revisão",
             Description = "Revisão preventiva de integração",
             ServiceDate = DateTime.UtcNow.AddDays(2),
+            ServiceStartTime = DateTime.MinValue.AddHours(9),
+            PlannedDurationMinutes = 60,
             Cost = 250m,
             Status = "Agendada"
         };
@@ -201,7 +231,8 @@ public sealed class RequiresMongoDbFactAttribute : FactAttribute
     public RequiresMongoDbFactAttribute()
     {
         if (string.IsNullOrWhiteSpace(
-            Environment.GetEnvironmentVariable("BUS_TRACK_TEST_MONGO_CONNECTION_STRING")))
+            Environment.GetEnvironmentVariable(
+                "BUS_TRACK_TEST_MONGO_CONNECTION_STRING")))
         {
             Skip = "Defina BUS_TRACK_TEST_MONGO_CONNECTION_STRING para executar a integração com MongoDB real.";
         }

@@ -23,9 +23,10 @@ Entre as principais funcionalidades estão:
 * **Rotas:** organização das rotas utilizadas pelo sistema de transporte.
 * **Passageiros:** cadastro e gerenciamento dos passageiros.
 * **Viagens:** criação, consulta e gerenciamento das viagens, relacionando ônibus, motoristas, rotas e passageiros.
-* **Usuários e contas:** criação de contas, autenticação e gerenciamento de senha.
+* **Manutenções:** gerenciamento das manutenções de ônibus, com validações de status, datas, custo e auditoria administrativa.
+* **Usuários e contas:** criação de contas, autenticação, política e histórico de senhas.
 
-A documentação detalhada apresenta o funcionamento de cada módulo, suas regras de negócio, relacionamentos entre as funcionalidades e os principais comportamentos esperados da aplicação.
+A recuperação de senha ainda não está concluída: o formulário atual chama um endpoint administrativo e o endpoint público de solicitação informa que a verificação segura não foi implementada. Consulte a documentação de funcionalidades antes de considerar esse fluxo disponível. A documentação detalhada descreve também as regras conhecidas e os pontos que precisam de correção.
 
 [Ver documentação completa das funcionalidades](docs/functionalities/functionalities.md)
 
