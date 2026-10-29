@@ -235,6 +235,22 @@ Regras principais:
 
 A API é a autoridade para essas transições. O frontend pode orientar a interface conforme o estado da viagem, mas não substitui as validações do backend.
 
+### Dados de tempo da viagem
+
+Os campos de tempo possuem finalidades diferentes e não devem ser confundidos:
+
+- `DepartureTime`: data e horário planejados para a saída;
+- `PlannedDuration`: duração prevista da viagem, em minutos, usada para estimar o fim do intervalo operacional;
+- `StartedAt`: data e horário reais em que a viagem foi iniciada;
+- `ArrivalTime`: data e horário reais de chegada;
+- `Duration`: duração real da viagem, em minutos, calculada a partir do início efetivo e da chegada.
+
+A duração planejada deve ser positiva e limitada a 1.440 minutos. Ela serve para verificar a disponibilidade do ônibus e do motorista no intervalo previsto. A duração real representa o que ocorreu durante a operação e deve ser coerente com os horários efetivos registrados.
+
+A atualização de status não deve permitir que o cliente defina livremente campos derivados ou contorne as regras do ciclo de vida. As validações e a persistência dos dados são responsabilidade do backend.
+
+---
+
 ### Disponibilidade dos recursos
 
 Antes de alocar recursos em uma viagem, o backend também verifica a disponibilidade do ônibus e do motorista conforme as regras operacionais da aplicação.
