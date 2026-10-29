@@ -158,7 +158,7 @@ Os status operacionais considerados nas verificações de disponibilidade são:
 
 Manutenções concluídas, canceladas ou excluídas logicamente não devem bloquear novos intervalos como se fossem manutenções ativas.
 
-As operações de criação, consulta, atualização e exclusão devem respeitar as permissões e as regras de negócio aplicáveis ao módulo.
+As operações de criação, consulta, atualização e exclusão devem respeitar as permissões e as regras de negócio aplicáveis ao módulo. O sistema também permite registrar custos e consultar o histórico de auditoria das alterações de manutenção.
 
 ---
 
@@ -200,8 +200,6 @@ Além das manutenções, a verificação de disponibilidade deve impedir a sobre
 - o mesmo motorista.
 
 A validação deve desconsiderar a própria viagem quando uma operação estiver atualizando seus dados e não deve tratar viagens concluídas ou canceladas como operações ativas para essa finalidade.
-
----
 
 ### Ciclo de vida da viagem
 
@@ -249,8 +247,6 @@ A duração planejada deve ser positiva e limitada a 1.440 minutos. Ela serve pa
 
 A atualização de status não deve permitir que o cliente defina livremente campos derivados ou contorne as regras do ciclo de vida. As validações e a persistência dos dados são responsabilidade do backend.
 
----
-
 ### Disponibilidade dos recursos
 
 Antes de alocar recursos em uma viagem, o backend também verifica a disponibilidade do ônibus e do motorista conforme as regras operacionais da aplicação.
@@ -259,6 +255,30 @@ Antes de alocar recursos em uma viagem, o backend também verifica a disponibili
 - o mesmo motorista não pode ser utilizado em viagens com horários sobrepostos;
 - um ônibus com manutenção ativa para a data de serviço não pode ser alocado em uma viagem naquela data;
 - manutenções concluídas, canceladas ou excluídas logicamente não bloqueiam a alocação.
+
+---
+
+## Relatórios operacionais
+
+O administrador pode consultar um relatório consolidado informando uma data inicial e uma data final.
+
+O relatório apresenta:
+
+- quantidade total de viagens no período;
+- viagens concluídas;
+- viagens canceladas;
+- viagens agendadas;
+- viagens em andamento;
+- utilização dos ônibus, com quantidade de viagens e viagens concluídas por ônibus;
+- quantidade de viagens por motorista e quantidade de viagens concluídas;
+- custo total das manutenções no período;
+- custo total e quantidade de manutenções por ônibus.
+
+A consulta é disponibilizada pelo endpoint `GET /api/OperationalReports?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD` e exige a role `ADMIN`.
+
+O período é inclusivo: a data inicial e a data final fazem parte da consulta. As viagens são consideradas pela data/hora de saída e as manutenções pela data do serviço.
+
+Os relatórios são calculados a partir dos dados operacionais existentes. Não há armazenamento separado de dados de relatório.
 
 ---
 
@@ -380,6 +400,7 @@ A V1 contempla os módulos e recursos implementados de:
 - integração entre manutenção e disponibilidade de ônibus;
 - validação de conflitos de horário entre viagens;
 - validação de conflitos de horário entre viagens e manutenções;
+- relatórios operacionais;
 - controle de permissões;
 - navegação da aplicação;
 - monitoramento de disponibilidade.
