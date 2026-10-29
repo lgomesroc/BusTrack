@@ -1,7 +1,11 @@
 import { blockSavePasswordRule } from './blockSavePasswordRule';
 
 describe('blockSavePasswordRule', () => {
+  let cleanup: (() => void) | undefined;
+
   afterEach(() => {
+    cleanup?.();
+    cleanup = undefined;
     document.body.innerHTML = '';
   });
 
@@ -14,27 +18,49 @@ describe('blockSavePasswordRule', () => {
       <input type="number" autocomplete="on">
     `;
 
-    blockSavePasswordRule();
+    cleanup = blockSavePasswordRule();
 
-    expect(document.querySelector('form')?.getAttribute('autocomplete')).toBe('off');
-    expect(document.querySelector('input[type="password"]')?.getAttribute('autocomplete')).toBe('off');
-    expect(document.querySelector('input[type="email"]')?.getAttribute('autocomplete')).toBe('off');
-    expect(document.querySelector('input[type="text"]')?.getAttribute('autocomplete')).toBe('off');
-    expect(document.querySelector('input[type="number"]')?.getAttribute('autocomplete')).toBe('on');
+    expect(
+      document.querySelector('form')?.getAttribute('autocomplete')
+    ).toBe('off');
+
+    expect(
+      document.querySelector('input[type="password"]')
+        ?.getAttribute('autocomplete')
+    ).toBe('off');
+
+    expect(
+      document.querySelector('input[type="email"]')
+        ?.getAttribute('autocomplete')
+    ).toBe('off');
+
+    expect(
+      document.querySelector('input[type="text"]')
+        ?.getAttribute('autocomplete')
+    ).toBe('off');
+
+    expect(
+      document.querySelector('input[type="number"]')
+        ?.getAttribute('autocomplete')
+    ).toBe('on');
   });
 
   it('applies the rule to dynamically added forms and inputs', async () => {
-    blockSavePasswordRule();
+    cleanup = blockSavePasswordRule();
 
     const form = document.createElement('form');
     form.setAttribute('autocomplete', 'on');
+
     const input = document.createElement('input');
     input.type = 'password';
     input.setAttribute('autocomplete', 'on');
+
     form.appendChild(input);
     document.body.appendChild(form);
 
-    await Promise.resolve();
+    await new Promise<void>(resolve => {
+      setTimeout(resolve, 0);
+    });
 
     expect(form.getAttribute('autocomplete')).toBe('off');
     expect(input.getAttribute('autocomplete')).toBe('off');

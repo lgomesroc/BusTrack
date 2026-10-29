@@ -386,6 +386,8 @@ guards/
 services/
 ```
 
+O roteamento está centralizado em `src/app/app-routing.module.ts`, e os componentes declarados ficam em `src/app/app.module.ts`. A lista detalhada no final deste documento é mantida separadamente como inventário de arquivos; esta descrição explica responsabilidades, não substitui a conferência do inventário com a árvore atual do repositório.
+
 ---
 
 ## login
@@ -403,9 +405,12 @@ main-screen/
 enter-the-system/
 create-an-account/
 update-password/
+forgot-password/
 confirmation/
 concluded/
 ```
+
+O fluxo de recuperação de senha ainda não está completo. O componente `forgot-password` chama um endpoint restrito a `ADMIN`, enquanto a API pública de solicitação informa que a verificação segura ainda precisa ser implementada. Há também um componente `reset-password`, mas ele não está registrado no roteamento/módulo Angular revisados. Não trate a existência desses arquivos como confirmação de que a recuperação funciona.
 
 ---
 
@@ -421,12 +426,19 @@ Entre as áreas existentes estão:
 
 ```text
 dashboard/
+admin-dashboard/
+user-dashboard/
 sidebar/
 trips/
+trip-details/
 buses/
+routes/
+drivers/
+passengers/
+maintenance/
 ```
 
-Outros módulos poderão ser incorporados nessa área conforme o sistema evoluir.
+O módulo `maintenance/` contém a interface de manutenções de ônibus. A regra de negócio e a autorização correspondente permanecem no backend; os estados e as ações visíveis na tela devem respeitar as validações do serviço.
 
 ---
 
@@ -436,14 +448,17 @@ Outros módulos poderão ser incorporados nessa área conforme o sistema evoluir
 src/app/guards/
 ```
 
-Contém os guards responsáveis pelo controle de navegação e autenticação.
+Contém os guards responsáveis por autenticação, navegação e restrição de rotas conforme a role.
 
-Exemplos:
+Entre os arquivos a considerar estão:
 
 ```text
 authentication.guard.ts
 browser-navigation.guard.ts
+dashboard-role.guard.ts
 ```
+
+A proteção dos guards controla a navegação do Angular, mas não substitui as regras de autorização aplicadas aos endpoints da API.
 
 Se a dúvida for:
 
@@ -651,7 +666,7 @@ Explica **como a aplicação é arquitetada**, incluindo:
 
 Este documento.
 
-Seu objetivo é funcionar como um **mapa de navegação do código**, permitindo localizar rapidamente pastas e arquivos.
+Seu objetivo é funcionar como um **mapa de navegação do código**, permitindo localizar rapidamente pastas e arquivos. A listagem completa ao final é um inventário textual independente: conforme solicitado, esta atualização não altera o bloco que enumera todos os arquivos e pastas. Portanto, a listagem deve ser comparada com a árvore do repositório em uma revisão específica, sem presumir que o bloco tenha sido regenerado por esta alteração.
 
 ### dotnet-10-migration.md
 
@@ -816,6 +831,7 @@ BusTrack/
 │   │   ├── DriverControllerAPI.cs
 │   │   ├── HealthController.cs
 │   │   ├── MaintenanceControllerAPI.cs
+│   │   ├── OperationalReportControllerAPI.cs
 │   │   ├── PassengerControllerAPI.cs
 │   │   ├── PasswordRecoveryControllerAPI.cs
 │   │   ├── RouteControllerAPI.cs
@@ -835,6 +851,7 @@ BusTrack/
 │   │   ├── ForgotPasswordRequestDTOAPI.cs
 │   │   ├── LoginRequestDTOAPI.cs
 │   │   ├── MaintenanceDTOAPI.cs
+│   │   ├── OperationalReportDTOAPI.cs
 │   │   ├── PassengerDTOAPI.cs
 │   │   ├── PasswordRecoveryRequestDTOAPI.cs
 │   │   ├── ResetPasswordRequestDTOAPI.cs
@@ -852,6 +869,7 @@ BusTrack/
 │   │   │   ├── IEmailConfirmationServiceAPI.cs
 │   │   │   ├── IJwtTokenServiceAPI.cs
 │   │   │   ├── IMaintenanceServiceAPI.cs
+│   │   │   ├── IOperationalReportServiceAPI.cs
 │   │   │   ├── IPassengerServiceAPI.cs
 │   │   │   ├── IRouteServiceAPI.cs
 │   │   │   ├── ITripServiceAPI.cs
@@ -876,6 +894,7 @@ BusTrack/
 │   │   ├── DriverServiceAPI.cs
 │   │   ├── JwtTokenServiceAPI.cs
 │   │   ├── MaintenanceServiceAPI.cs
+│   │   ├── OperationalReportServiceAPI.cs
 │   │   ├── PassengerServiceAPI.cs
 │   │   ├── PasswordPolicyServiceAPI.cs
 │   │   ├── RouteServiceAPI.cs
@@ -898,6 +917,7 @@ BusTrack/
 │   │   ├── PasswordRecordDB.cs
 │   │   ├── RouteDB.cs
 │   │   ├── TripDB.cs
+│   │   ├── TripAuditDB.cs
 │   │   ├── TripPassengerDB.cs
 │   │   ├── UserDB.cs
 │   │   ├── UserPasswordHistoryDB.cs
@@ -926,6 +946,7 @@ BusTrack/
 │   │   │   ├── IMaintenanceRepositoryDB.cs
 │   │   │   ├── IPassengerRepositoryDB.cs
 │   │   │   ├── IRouteRepositoryDB.cs
+│   │   │   ├── ITripAuditRepositoryDB.cs
 │   │   │   ├── ITripRepositoryDB.cs
 │   │   │   ├── ITripPassengerRepositoryDB.cs
 │   │   │   └── IUserRepositoryDB.cs
@@ -946,6 +967,7 @@ BusTrack/
 │   │   ├── MaintenanceRepositoryDB.cs
 │   │   ├── PassengerRepositoryDB.cs
 │   │   ├── RouteRepositoryDB.cs
+│   │   ├── TripAuditRepositoryDB.cs
 │   │   ├── TripPassengerRepositoryDB.cs
 │   │   ├── TripRepositoryDB.cs
 │   │   └── UserRepositoryDB.cs
@@ -1055,22 +1077,27 @@ BusTrack/
 │   │   │   │   │   │   ├── dashboard.component.html
 │   │   │   │   │   │   ├── dashboard.component.spec.ts
 │   │   │   │   │   │   └── dashboard.component.ts
-│   │   │   │   │   ├──  drivers/
+│   │   │   │   │   ├── drivers/
 │   │   │   │   │   │   ├── drivers.component.css
 │   │   │   │   │   │   ├── drivers.component.html
 │   │   │   │   │   │   ├── drivers.component.spec.ts
 │   │   │   │   │   │   └── drivers.component.ts
-│   │   │   │   │   ├──  maintenance/
+│   │   │   │   │   ├── maintenance/
 │   │   │   │   │   │   ├── maintenance.component.css
 │   │   │   │   │   │   ├── maintenance.component.html
 │   │   │   │   │   │   ├── maintenance.component.spec.ts
 │   │   │   │   │   │   └── maintenance.component.ts
-│   │   │   │   │   ├──  passengers/
+│   │   │   │   │   ├── operational-reports/
+│   │   │   │   │   │   ├── operational-reports.component.css
+│   │   │   │   │   │   ├── operational-reports.component.html
+│   │   │   │   │   │   ├── operational-reports.component.spec.ts
+│   │   │   │   │   │   └── operational-reports.component.ts
+│   │   │   │   │   ├── passengers/
 │   │   │   │   │   │   ├── passengers.component.css
 │   │   │   │   │   │   ├── passengers.component.html
 │   │   │   │   │   │   ├── passengers.component.spec.ts
 │   │   │   │   │   │   └── passengers.component.ts
-│   │   │   │   │   ├──  routes/
+│   │   │   │   │   ├── routes/
 │   │   │   │   │   │   ├── routes.component.css
 │   │   │   │   │   │   ├── routes.component.html
 │   │   │   │   │   │   ├── routes.component.spec.ts
@@ -1115,6 +1142,10 @@ BusTrack/
 │   │   │   │   │   ├── driver.service.ts
 │   │   │   │   │   ├── jwt-auth.interceptor.ts
 │   │   │   │   │   ├── maintenance.service.ts
+│   │   │   │   │   ├── operational-list-state.spec.ts
+│   │   │   │   │   ├── operational-list-state.ts
+│   │   │   │   │   ├── operational-report.service.spec.ts
+│   │   │   │   │   ├── operational-report.service.ts
 │   │   │   │   │   ├── passenger.service.ts
 │   │   │   │   │   ├── route.service.ts
 │   │   │   │   │   ├── session.service.ts
@@ -1208,11 +1239,14 @@ BusTrack/
 │   │   │   ├── TripControllerAPIUnitTests.cs
 │   │   │   ├── TripsPassengerControllerAPIUnitTests.cs
 │   │   │   └── UserPresenceControllerAPIUnitTests.cs
+│   │   ├── RepositoriesDB/
+│   │   │   └── TripAuditRepositoryDBUnitTests.cs
 │   │   └── Rules/
 │   │   │   └── TripRulesTests.cs
 │   │   ├── ServicesAPI
 │   │   │   ├── JwtTokenServiceAPITests.cs
 │   │   │   ├── MaintenanceServiceAPIUnitTests.cs
+│   │   │   ├── OperationalReportServiceAPIUnitTests.cs
 │   │   │   ├── TripServiceAPIUnitTests.cs
 │   │   │   └── UserAuthenticationServiceAPITests.cs
 │   ├── UsabilityTests/

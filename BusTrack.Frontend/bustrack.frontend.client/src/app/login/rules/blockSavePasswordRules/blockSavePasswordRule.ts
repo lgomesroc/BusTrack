@@ -1,63 +1,36 @@
-export function blockSavePasswordRule(): void {
-
+export function blockSavePasswordRule(): () => void {
   const aplicarRegra = (): void => {
-
-    const forms =
-      document.querySelectorAll('form');
-
-    forms.forEach(form => {
-
-      form.setAttribute(
-        'autocomplete',
-        'off'
-      );
-
+    document.querySelectorAll('form').forEach(form => {
+      form.setAttribute('autocomplete', 'off');
     });
 
-
-    const inputs =
-      document.querySelectorAll('input');
-
-    inputs.forEach(input => {
-
-      const type =
-        input.getAttribute('type')?.toLowerCase();
+    document.querySelectorAll('input').forEach(input => {
+      const type = input.getAttribute('type')?.toLowerCase();
 
       if (
         type === 'password' ||
         type === 'email' ||
         type === 'text'
       ) {
-
-        input.setAttribute(
-          'autocomplete',
-          'off'
-        );
-
+        input.setAttribute('autocomplete', 'off');
       }
-
     });
-
   };
-
 
   aplicarRegra();
 
+  const observer = new MutationObserver(() => {
+    aplicarRegra();
+  });
 
-  const observer =
-    new MutationObserver(() => {
-
-      aplicarRegra();
-
-    });
-
-
-  observer.observe(
-    document.body,
-    {
+  if (document.body) {
+    observer.observe(document.body, {
       childList: true,
       subtree: true
-    }
-  );
+    });
+  }
 
+  return () => {
+    observer.disconnect();
+  };
 }
