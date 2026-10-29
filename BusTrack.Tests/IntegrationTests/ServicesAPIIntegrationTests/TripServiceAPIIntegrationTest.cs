@@ -71,7 +71,6 @@ namespace BusTrack.Tests.IntegrationTests.ServicesAPIIntegrationTests
                 DepartureTime = departure,
                 PlannedDuration = 60,
                 ArrivalTime = DateTime.UtcNow.AddHours(2),
-                PlannedDuration = 60,
                 Duration = 60,
                 LimitPassengers = 40,
                 Passengers = new List<string>()
