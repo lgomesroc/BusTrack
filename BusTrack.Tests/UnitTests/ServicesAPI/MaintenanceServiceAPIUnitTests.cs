@@ -1,4 +1,3 @@
-
 using AutoMapper;
 using BusTrack.BusTrack.API.DTOAPI;
 using BusTrack.BusTrack.API.MappingsAPI;
@@ -615,6 +614,8 @@ public class MaintenanceServiceAPIUnitTests
             ServiceType = "Revisão",
             Description = "Revisão preventiva",
             ServiceDate = DateTime.UtcNow.AddDays(2),
+            ServiceStartTime = DateTime.MinValue.AddHours(9),
+            PlannedDurationMinutes = 60,
             Cost = 250m,
             Status = "Agendada"
         };
@@ -628,6 +629,8 @@ public class MaintenanceServiceAPIUnitTests
             ServiceType = "Revisão",
             Description = "Revisão preventiva",
             ServiceDate = DateTime.UtcNow.AddDays(2),
+            ServiceStartTime = DateTime.MinValue.AddHours(9),
+            PlannedDurationMinutes = 60,
             Cost = 250m,
             Status = "Agendada"
         };

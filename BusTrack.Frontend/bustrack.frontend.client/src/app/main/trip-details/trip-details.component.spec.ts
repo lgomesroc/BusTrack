@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
+
 import { TripDetailsComponent } from './trip-details.component';
 import { TripService, Trip } from '../../services/trip.service';
 
@@ -32,6 +33,7 @@ describe('TripDetailsComponent', () => {
       distance: 10
     },
     departureTime: '2026-10-20T10:00:00Z',
+    plannedDurationMinutes: 60,
     startedAt: '2026-10-20T10:00:00Z',
     arrivalTime: '2026-10-20T10:30:00Z',
     duration: 30,
@@ -42,10 +44,12 @@ describe('TripDetailsComponent', () => {
 
   beforeEach(async () => {
     tripId = 'trip-1';
+
     tripService = jasmine.createSpyObj<TripService>(
       'TripService',
       ['getTripById']
     );
+
     router = jasmine.createSpyObj<Router>('Router', ['navigate']);
     tripService.getTripById.and.returnValue(of(trip));
 
@@ -93,6 +97,7 @@ describe('TripDetailsComponent', () => {
     tripService.getTripById.and.returnValue(
       throwError(() => new HttpErrorResponse({ status: 404 }))
     );
+
     fixture.detectChanges();
 
     expect(component.notFound).toBeTrue();
@@ -104,9 +109,12 @@ describe('TripDetailsComponent', () => {
     tripService.getTripById.and.returnValue(
       throwError(() => new HttpErrorResponse({ status: 0 }))
     );
+
     fixture.detectChanges();
 
-    expect(component.errorMessage).toContain('Não foi possível conectar à API');
+    expect(component.errorMessage).toContain(
+      'Não foi possível conectar à API'
+    );
     expect(component.isLoading).toBeFalse();
   });
 

@@ -25,6 +25,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
         private const decimal MaxCost = 999999999m;
 
         private readonly IMaintenanceRepositoryDB _repository;
+        private readonly ITripRepositoryDB? _tripRepository;
         private readonly IBusRepositoryDB _busRepository;
         private readonly IMaintenanceAuditRepositoryDB? _auditRepository;
         private readonly IMapper _mapper;
@@ -48,11 +49,13 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             IBusRepositoryDB busRepository,
             IMapper mapper,
             IMaintenanceAuditRepositoryDB auditRepository,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            ITripRepositoryDB? tripRepository = null)
             : this(repository, busRepository, mapper)
         {
             _auditRepository = auditRepository;
             _httpContextAccessor = httpContextAccessor;
+            _tripRepository = tripRepository;
         }
 
         public async Task<IEnumerable<MaintenanceDTOAPI>> GetAllAsync()
@@ -104,6 +107,8 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 return null;
             }
 
+            await EnsureNoTripConflictAsync(normalized, null);
+
             var entity = _mapper.Map<MaintenanceDB>(normalized);
             entity.IsDeleted = false;
             entity.DeletedAtUtc = null;
@@ -145,6 +150,8 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             {
                 return null;
             }
+
+            await EnsureNoTripConflictAsync(normalized, id);
 
             var before = existing.ToBsonDocument();
 
@@ -218,6 +225,52 @@ namespace BusTrack.BusTrack.API.ServicesAPI
 
             return true;
         }
+
+        private async Task EnsureNoTripConflictAsync(MaintenanceDTOAPI maintenance, string? ignoredMaintenanceId)
+        {
+            if (_tripRepository is null ||
+                (maintenance.Status != "Agendada" && maintenance.Status != "Em andamento"))
+                return;
+
+            var maintenanceStart = GetMaintenanceStartUtc(maintenance.ServiceDate, maintenance.ServiceStartTime);
+            var maintenanceEnd = maintenanceStart.AddMinutes(maintenance.PlannedDurationMinutes);
+            var trips = await _tripRepository.GetAllTripsAsync();
+            var conflict = trips.FirstOrDefault(trip =>
+                !string.Equals(trip.Status, "Concluída", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(trip.Status, "Cancelada", StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(trip.BusId, maintenance.BusId, StringComparison.OrdinalIgnoreCase) &&
+                trip.PlannedDurationMinutes > 0 &&
+                Overlaps(
+                    maintenanceStart,
+                    maintenanceEnd,
+                    trip.DepartureTime,
+                    trip.DepartureTime.AddMinutes(trip.PlannedDurationMinutes)));
+
+            if (conflict is not null)
+                throw new ArgumentException("O ônibus possui uma viagem agendada ou em andamento no intervalo informado.");
+        }
+
+        private static DateTime GetMaintenanceStartUtc(DateTime serviceDate, DateTime serviceStartTime)
+        {
+            var localDate = DateTime.SpecifyKind(
+                serviceDate.Date.Add(serviceStartTime.TimeOfDay),
+                DateTimeKind.Unspecified);
+
+            TimeZoneInfo timeZone;
+            try
+            {
+                timeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Sao_Paulo");
+            }
+            catch (TimeZoneNotFoundException)
+            {
+                timeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
+            }
+
+            return TimeZoneInfo.ConvertTimeToUtc(localDate, timeZone);
+        }
+
+        private static bool Overlaps(DateTime firstStart, DateTime firstEnd, DateTime secondStart, DateTime secondEnd)
+            => firstStart < secondEnd && secondStart < firstEnd;
 
         private async Task RecordAuditAsync(
             MaintenanceDB maintenance,
@@ -341,7 +394,9 @@ namespace BusTrack.BusTrack.API.ServicesAPI
                 return null;
             }
 
-            if (maintenance.ServiceDate == default ||
+            if (maintenance.PlannedDurationMinutes <= 0 || maintenance.PlannedDurationMinutes > 1440 ||
+                maintenance.ServiceStartTime == default ||
+                maintenance.ServiceDate == default ||
                 maintenance.ServiceDate == DateTime.MinValue ||
                 maintenance.ServiceDate == DateTime.MaxValue)
             {
@@ -448,6 +503,7 @@ namespace BusTrack.BusTrack.API.ServicesAPI
             maintenance.Description = description;
             maintenance.Status = normalizedStatus;
             maintenance.ServiceDate = AsUtc(maintenance.ServiceDate);
+            maintenance.ServiceStartTime = DateTime.MinValue.Add(maintenance.ServiceStartTime.TimeOfDay);
             maintenance.CompletedDate = completedDate.HasValue
                 ? AsUtc(completedDate.Value)
                 : null;

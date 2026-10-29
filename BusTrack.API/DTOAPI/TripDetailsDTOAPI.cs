@@ -14,6 +14,8 @@ namespace BusTrack.BusTrack.API.DTOAPI
 
         public DateTime DepartureTime { get; set; }
 
+        public int PlannedDurationMinutes { get; set; } = 60;
+
         public DateTime? StartedAt { get; set; }
 
         public DateTime? ArrivalTime { get; set; }

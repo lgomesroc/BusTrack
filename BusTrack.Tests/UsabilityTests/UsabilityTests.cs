@@ -1,5 +1,4 @@
-﻿
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
@@ -232,7 +231,7 @@ namespace BusTrack.BusTrack.Tests.UsabilityTests
 
             AcceptAlertIfPresent();
 
-            WaitForDashboard();
+            WaitForUrl("/dashboard");
 
             var passengersCard =
                 WaitForElementClickable(
@@ -363,37 +362,6 @@ namespace BusTrack.BusTrack.Tests.UsabilityTests
                     Thread.Sleep(250);
                 }
             }
-        }
-
-        private void WaitForDashboard()
-        {
-            var timeout = DateTime.UtcNow.AddSeconds(10);
-
-            while (DateTime.UtcNow < timeout)
-            {
-                try
-                {
-                    if (_driver.Url.EndsWith(
-                            "/admin-dashboard",
-                            StringComparison.OrdinalIgnoreCase)
-                        || _driver.Url.EndsWith(
-                            "/user-dashboard",
-                            StringComparison.OrdinalIgnoreCase))
-                    {
-                        return;
-                    }
-                }
-                catch (UnhandledAlertException)
-                {
-                    AcceptAlertIfPresent();
-                }
-
-                Thread.Sleep(250);
-            }
-
-            throw new Xunit.Sdk.XunitException(
-                "Nenhum dashboard por perfil foi alcançado após o login. " +
-                $"URL atual: '{_driver.Url}'.");
         }
 
         private void WaitForUrl(string expectedPath)

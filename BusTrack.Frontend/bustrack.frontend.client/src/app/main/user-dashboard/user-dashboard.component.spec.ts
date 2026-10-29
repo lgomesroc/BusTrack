@@ -1,4 +1,3 @@
-
 import {
   HttpClientTestingModule,
   HttpTestingController
@@ -15,7 +14,7 @@ import { of, throwError } from 'rxjs';
 
 import { UserDashboardComponent } from './user-dashboard.component';
 import { SessionService } from '../../services/session.service';
-import { TripService } from '../../services/trip.service';
+import { Trip, TripService } from '../../services/trip.service';
 import { environment } from '../../../environments/environment';
 
 describe('UserDashboardComponent', () => {
@@ -29,7 +28,7 @@ describe('UserDashboardComponent', () => {
   const presenceUrl =
     `${environment.apiUrl}/api/UserPresence/presence`;
 
-  const trip = {
+  const trip: Trip = {
     id: 't1',
     bus: null,
     driver: null,
@@ -42,11 +41,12 @@ describe('UserDashboardComponent', () => {
       distance: 10
     },
     departureTime: '2099-10-20T12:00:00Z',
+    plannedDurationMinutes: 60,
     startedAt: null,
     arrivalTime: null,
     duration: 30,
     limitPassengers: 20,
-    status: 'Agendada' as const,
+    status: 'Agendada',
     passengers: []
   };
 

@@ -23,13 +23,28 @@ namespace BusTrack.BusTrack.DB.Classes
 
         public DateTime DepartureTime { get; set; }
 
+        public int PlannedDurationMinutes { get; set; } = 60;
+
+        // Compatibilidade de leitura com documentos antigos que usam PlannedDuration.
+        [BsonElement("PlannedDuration")]
+        [BsonIgnoreIfNull]
+        public int? LegacyPlannedDuration
+        {
+            get => null;
+            set
+            {
+                if (value.HasValue)
+                {
+                    PlannedDurationMinutes = value.Value;
+                }
+            }
+        }
+
         public DateTime? StartedAt { get; set; }
 
         public DateTime? ArrivalTime { get; set; }
 
         public int Duration { get; set; }
-
-        public int PlannedDuration { get; set; }
 
         public int LimitPassengers { get; set; }
 

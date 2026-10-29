@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Router } from '@angular/router';
-import { forkJoin, of, throwError } from 'rxjs';
+import { of, throwError } from 'rxjs';
+
 import { TripsComponent } from './trips.component';
 import { TripService, Trip } from '../../services/trip.service';
 import { RouteService } from '../../services/route.service';
@@ -19,10 +20,24 @@ describe('TripsComponent', () => {
 
   const trip: Trip = {
     id: 'trip-1',
-    bus: { id: 'bus-1', number: '101', licensePlate: 'ABC1D23', model: 'Modelo', capacity: 40 },
+    bus: {
+      id: 'bus-1',
+      number: '101',
+      licensePlate: 'ABC1D23',
+      model: 'Modelo',
+      capacity: 40
+    },
     driver: { id: 'driver-1', name: 'Motorista', licenseNumber: '123' },
-    route: { id: 'route-1', name: 'Centro', description: '', origin: 'A', destination: 'B', distance: 10 },
+    route: {
+      id: 'route-1',
+      name: 'Centro',
+      description: '',
+      origin: 'A',
+      destination: 'B',
+      distance: 10
+    },
     departureTime: '2099-10-20T10:00:00Z',
+    plannedDurationMinutes: 60,
     startedAt: null,
     arrivalTime: null,
     duration: 0,
@@ -34,20 +49,33 @@ describe('TripsComponent', () => {
   beforeEach(async () => {
     tripService = jasmine.createSpyObj<TripService>(
       'TripService',
-      ['getTrips', 'getBuses', 'getDrivers', 'getRoutes', 'getMyTrips', 'createTrip', 'updateTrip', 'deleteTrip']
+      [
+        'getTrips',
+        'getBuses',
+        'getDrivers',
+        'getRoutes',
+        'getMyTrips',
+        'createTrip',
+        'updateTrip',
+        'deleteTrip'
+      ]
     );
+
     routeService = jasmine.createSpyObj<RouteService>(
       'RouteService',
       ['getRoutes', 'createRoute', 'updateRoute', 'deleteRoute']
     );
+
     driverService = jasmine.createSpyObj<DriverService>(
       'DriverService',
       ['getDrivers', 'createDriver', 'updateDriver', 'deleteDriver']
     );
+
     sessionService = jasmine.createSpyObj<SessionService>(
       'SessionService',
       ['isAdmin', 'isAuthenticated']
     );
+
     router = jasmine.createSpyObj<Router>('Router', ['navigate']);
 
     tripService.getTrips.and.returnValue(of([trip]));
@@ -87,9 +115,12 @@ describe('TripsComponent', () => {
       throwError(() => new Error('API indisponível'))
     );
 
+    spyOn(console, 'error');
     component.carregarDados();
 
-    expect(component.errorMessage).toContain('Não foi possível carregar os dados das viagens');
+    expect(component.errorMessage).toContain(
+      'Não foi possível carregar os dados das viagens'
+    );
     expect(component.isLoading).toBeFalse();
   });
 
@@ -107,12 +138,33 @@ describe('TripsComponent', () => {
     expect(component.errorMessage).toContain('não podem ser alteradas');
   });
 
+  it('loads the planned duration of a trip into the edit form', () => {
+    component.iniciarEdicao({ ...trip, plannedDurationMinutes: 90 });
+
+    expect(component.editingTrip).not.toBeNull();
+    expect(component.tripForm.plannedDurationMinutes).toBe(90);
+  });
+
   it('prevents saving when required trip fields are missing', () => {
     component.iniciarCriacao();
     component.salvarViagem();
 
     expect(tripService.createTrip).not.toHaveBeenCalled();
-    expect(component.errorMessage).toContain('Informe o ônibus');
+    expect(component.errorMessage).toContain('Informe ônibus');
+  });
+
+  it('rejects a planned duration outside the 1 to 1440 minute range', () => {
+    component.iniciarCriacao();
+    component.tripForm.busId = 'bus-1';
+    component.tripForm.driverId = 'driver-1';
+    component.tripForm.routeId = 'route-1';
+    component.tripForm.departureTime = '2099-10-20T10:00';
+    component.tripForm.plannedDurationMinutes = 1441;
+
+    component.salvarViagem();
+
+    expect(tripService.createTrip).not.toHaveBeenCalled();
+    expect(component.errorMessage).toContain('entre 1 e 1440 minutos');
   });
 
   it('does not allow completed trips to be changed or deleted', () => {
@@ -131,7 +183,7 @@ describe('TripsComponent', () => {
   });
 
   it('identifies related entities safely when information is missing', () => {
-    const incomplete = { ...trip, bus: null, driver: null, route: null };
+    const incomplete: Trip = { ...trip, bus: null, driver: null, route: null };
 
     expect(component.identificarOnibus(incomplete)).toBe('Não informado');
     expect(component.identificarMotorista(incomplete)).toBe('Não informado');

@@ -38,9 +38,9 @@ namespace BusTrack.Tests.UnitTests.Rules
         public async Task CreateTrip_WhenPlannedDurationIsInvalid_Rejects()
         {
             var trip = CreateTrip(DateTime.UtcNow.AddMinutes(10));
-            trip.PlannedDuration = 0;
+            trip.PlannedDurationMinutes = 0;
             var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.CreateTripAsync(trip));
-            Assert.Contains("duração prevista", exception.Message);
+            Assert.Contains("duração planejada", exception.Message);
             _tripRepository.Verify(repository => repository.AddTripAsync(It.IsAny<TripDB>()), Times.Never);
         }
 
@@ -55,7 +55,7 @@ namespace BusTrack.Tests.UnitTests.Rules
             Assert.Null(result.StartedAt);
             Assert.Null(result.ArrivalTime);
             Assert.Equal(0, result.Duration);
-            Assert.Equal(60, result.PlannedDuration);
+            Assert.Equal(60, result.PlannedDurationMinutes);
             Assert.Equal(0, result.LimitPassengers);
         }
 
@@ -64,7 +64,7 @@ namespace BusTrack.Tests.UnitTests.Rules
         {
             var departure = DateTime.UtcNow.AddHours(2);
             var existing = CreateDbTrip("Agendada", departure.AddMinutes(-30));
-            existing.PlannedDuration = 60;
+            existing.PlannedDurationMinutes = 60;
             _tripRepository.Setup(repository => repository.GetAllTripsAsync()).ReturnsAsync(new[] { existing });
 
             var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.CreateTripAsync(CreateTrip(departure)));
@@ -79,7 +79,7 @@ namespace BusTrack.Tests.UnitTests.Rules
             var departure = DateTime.UtcNow.AddHours(2);
             var existing = CreateDbTrip("Agendada", departure.AddMinutes(-30));
             existing.BusId = "other-bus";
-            existing.PlannedDuration = 60;
+            existing.PlannedDurationMinutes = 60;
             _tripRepository.Setup(repository => repository.GetAllTripsAsync()).ReturnsAsync(new[] { existing });
 
             var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.CreateTripAsync(CreateTrip(departure)));
@@ -93,7 +93,7 @@ namespace BusTrack.Tests.UnitTests.Rules
         {
             var departure = DateTime.UtcNow.AddHours(2);
             var existing = CreateDbTrip("Agendada", departure.AddMinutes(-60));
-            existing.PlannedDuration = 60;
+            existing.PlannedDurationMinutes = 60;
             _tripRepository.Setup(repository => repository.GetAllTripsAsync()).ReturnsAsync(new[] { existing });
             _tripRepository.Setup(repository => repository.AddTripAsync(It.IsAny<TripDB>())).ReturnsAsync((TripDB value) => value);
 
@@ -108,7 +108,7 @@ namespace BusTrack.Tests.UnitTests.Rules
         {
             var departure = DateTime.UtcNow.AddHours(2);
             var existing = CreateDbTrip("Concluída", departure.AddMinutes(-30));
-            existing.PlannedDuration = 60;
+            existing.PlannedDurationMinutes = 60;
             _tripRepository.Setup(repository => repository.GetAllTripsAsync()).ReturnsAsync(new[] { existing });
             _tripRepository.Setup(repository => repository.AddTripAsync(It.IsAny<TripDB>())).ReturnsAsync((TripDB value) => value);
 
@@ -126,7 +126,7 @@ namespace BusTrack.Tests.UnitTests.Rules
             _tripRepository.Setup(repository => repository.GetTripByIdAsync(existing.Id!)).ReturnsAsync(existing);
             _tripRepository.Setup(repository => repository.GetAllTripsAsync()).ReturnsAsync(new[] { existing });
             _tripRepository.Setup(repository => repository.UpdateTripAsync(existing.Id!, It.IsAny<TripDB>())).ReturnsAsync((string _, TripDB value) => value);
-            var result = await _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Em andamento", PlannedDuration = existing.PlannedDuration });
+            var result = await _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Em andamento", PlannedDurationMinutes = existing.PlannedDurationMinutes });
             Assert.Equal("Em andamento", result!.Status);
             Assert.NotNull(result.StartedAt);
             Assert.Equal(0, result.Duration);
@@ -138,7 +138,7 @@ namespace BusTrack.Tests.UnitTests.Rules
         {
             var existing = CreateDbTrip("Agendada", DateTime.UtcNow.AddMinutes(5));
             _tripRepository.Setup(repository => repository.GetTripByIdAsync(existing.Id!)).ReturnsAsync(existing);
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Em andamento", PlannedDuration = existing.PlannedDuration }));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Em andamento", PlannedDurationMinutes = existing.PlannedDurationMinutes }));
             Assert.Contains("só pode entrar em andamento", exception.Message);
             _tripRepository.Verify(repository => repository.UpdateTripAsync(It.IsAny<string>(), It.IsAny<TripDB>()), Times.Never);
         }
@@ -153,7 +153,7 @@ namespace BusTrack.Tests.UnitTests.Rules
             _tripRepository.Setup(repository => repository.GetTripByIdAsync(existing.Id!)).ReturnsAsync(existing);
             _tripRepository.Setup(repository => repository.GetAllTripsAsync()).ReturnsAsync(new[] { existing });
             _tripRepository.Setup(repository => repository.UpdateTripAsync(existing.Id!, It.IsAny<TripDB>())).ReturnsAsync((string _, TripDB value) => value);
-            var result = await _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Cancelada", PlannedDuration = existing.PlannedDuration });
+            var result = await _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Cancelada", PlannedDurationMinutes = existing.PlannedDurationMinutes });
             Assert.Equal("Cancelada", result!.Status);
             Assert.Null(result.ArrivalTime);
             Assert.Equal(0, result.Duration);
@@ -172,7 +172,7 @@ namespace BusTrack.Tests.UnitTests.Rules
             _tripRepository.Setup(repository => repository.GetTripByIdAsync(existing.Id!)).ReturnsAsync(existing);
             _tripRepository.Setup(repository => repository.GetAllTripsAsync()).ReturnsAsync(new[] { existing });
             _tripRepository.Setup(repository => repository.UpdateTripAsync(existing.Id!, It.IsAny<TripDB>())).ReturnsAsync((string _, TripDB value) => value);
-            var result = await _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Concluída", ArrivalTime = arrival, Duration = 59, LimitPassengers = 35, PlannedDuration = existing.PlannedDuration });
+            var result = await _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Concluída", ArrivalTime = arrival, Duration = 59, LimitPassengers = 35, PlannedDurationMinutes = existing.PlannedDurationMinutes });
             Assert.Equal("Concluída", result!.Status);
             Assert.Equal(arrival, result.ArrivalTime);
             Assert.Equal(59, result.Duration);
@@ -186,7 +186,7 @@ namespace BusTrack.Tests.UnitTests.Rules
             var existing = CreateDbTrip("Em andamento", started);
             existing.StartedAt = started;
             _tripRepository.Setup(repository => repository.GetTripByIdAsync(existing.Id!)).ReturnsAsync(existing);
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Concluída", Duration = 30, LimitPassengers = 20, PlannedDuration = existing.PlannedDuration }));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Concluída", Duration = 30, LimitPassengers = 20, PlannedDurationMinutes = existing.PlannedDurationMinutes }));
             Assert.Contains("data e o horário reais de chegada", exception.Message);
         }
 
@@ -197,7 +197,7 @@ namespace BusTrack.Tests.UnitTests.Rules
             var existing = CreateDbTrip("Em andamento", started);
             existing.StartedAt = started;
             _tripRepository.Setup(repository => repository.GetTripByIdAsync(existing.Id!)).ReturnsAsync(existing);
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Concluída", ArrivalTime = DateTime.UtcNow.AddMinutes(1), Duration = 11, LimitPassengers = 20, PlannedDuration = existing.PlannedDuration }));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Concluída", ArrivalTime = DateTime.UtcNow.AddMinutes(1), Duration = 11, LimitPassengers = 20, PlannedDurationMinutes = existing.PlannedDurationMinutes }));
             Assert.Contains("não pode estar no futuro", exception.Message);
         }
 
@@ -208,7 +208,7 @@ namespace BusTrack.Tests.UnitTests.Rules
             var existing = CreateDbTrip("Em andamento", started);
             existing.StartedAt = started;
             _tripRepository.Setup(repository => repository.GetTripByIdAsync(existing.Id!)).ReturnsAsync(existing);
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Concluída", ArrivalTime = started.AddMinutes(-1), Duration = 0, LimitPassengers = 20, PlannedDuration = existing.PlannedDuration }));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Concluída", ArrivalTime = started.AddMinutes(-1), Duration = 0, LimitPassengers = 20, PlannedDurationMinutes = existing.PlannedDurationMinutes }));
             Assert.Contains("anterior ao início", exception.Message);
         }
 
@@ -220,7 +220,7 @@ namespace BusTrack.Tests.UnitTests.Rules
             var existing = CreateDbTrip("Em andamento", started);
             existing.StartedAt = started;
             _tripRepository.Setup(repository => repository.GetTripByIdAsync(existing.Id!)).ReturnsAsync(existing);
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Concluída", ArrivalTime = arrival, Duration = 30, LimitPassengers = 0, PlannedDuration = existing.PlannedDuration }));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Concluída", ArrivalTime = arrival, Duration = 30, LimitPassengers = 0, PlannedDurationMinutes = existing.PlannedDurationMinutes }));
             Assert.Contains("quantidade de passageiros", exception.Message);
         }
 
@@ -232,7 +232,7 @@ namespace BusTrack.Tests.UnitTests.Rules
             var existing = CreateDbTrip("Em andamento", started);
             existing.StartedAt = started;
             _tripRepository.Setup(repository => repository.GetTripByIdAsync(existing.Id!)).ReturnsAsync(existing);
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Concluída", ArrivalTime = arrival, Duration = 29, LimitPassengers = 20, PlannedDuration = existing.PlannedDuration }));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Concluída", ArrivalTime = arrival, Duration = 29, LimitPassengers = 20, PlannedDurationMinutes = existing.PlannedDurationMinutes }));
             Assert.Contains("duração informada deve corresponder", exception.Message);
         }
 
@@ -245,7 +245,7 @@ namespace BusTrack.Tests.UnitTests.Rules
             _tripRepository.Setup(repository => repository.GetTripByIdAsync(existing.Id!)).ReturnsAsync(existing);
             _tripRepository.Setup(repository => repository.GetAllTripsAsync()).ReturnsAsync(new[] { existing });
             _tripRepository.Setup(repository => repository.UpdateTripAsync(existing.Id!, It.IsAny<TripDB>())).ReturnsAsync((string _, TripDB value) => value);
-            var result = await _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Concluída", ArrivalTime = arrival, Duration = 30, LimitPassengers = 25, PlannedDuration = existing.PlannedDuration });
+            var result = await _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Concluída", ArrivalTime = arrival, Duration = 30, LimitPassengers = 25, PlannedDurationMinutes = existing.PlannedDurationMinutes });
             Assert.Equal("Concluída", result!.Status);
             Assert.Equal(arrival, result.ArrivalTime);
             Assert.Equal(30, result.Duration);
@@ -257,7 +257,7 @@ namespace BusTrack.Tests.UnitTests.Rules
         {
             var existing = CreateDbTrip("Agendada", DateTime.UtcNow.AddMinutes(10));
             _tripRepository.Setup(repository => repository.GetTripByIdAsync(existing.Id!)).ReturnsAsync(existing);
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Agendada", PlannedDuration = existing.PlannedDuration }));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Agendada", PlannedDurationMinutes = existing.PlannedDurationMinutes }));
             Assert.Contains("Transição de 'Agendada' para 'Agendada' não permitida", exception.Message);
         }
 
@@ -268,7 +268,7 @@ namespace BusTrack.Tests.UnitTests.Rules
             var existing = CreateDbTrip("Em andamento", started);
             existing.StartedAt = started;
             _tripRepository.Setup(repository => repository.GetTripByIdAsync(existing.Id!)).ReturnsAsync(existing);
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Agendada", PlannedDuration = existing.PlannedDuration }));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Agendada", PlannedDurationMinutes = existing.PlannedDurationMinutes }));
             Assert.Contains("Transição de 'Em andamento' para 'Agendada' não permitida", exception.Message);
         }
 
@@ -281,7 +281,7 @@ namespace BusTrack.Tests.UnitTests.Rules
             existing.Duration = 59;
             existing.LimitPassengers = 30;
             _tripRepository.Setup(repository => repository.GetTripByIdAsync(existing.Id!)).ReturnsAsync(existing);
-            await Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Cancelada", PlannedDuration = existing.PlannedDuration }));
+            await Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Cancelada", PlannedDurationMinutes = existing.PlannedDurationMinutes }));
             _tripRepository.Verify(repository => repository.UpdateTripAsync(It.IsAny<string>(), It.IsAny<TripDB>()), Times.Never);
         }
 
@@ -290,7 +290,7 @@ namespace BusTrack.Tests.UnitTests.Rules
         {
             var existing = CreateDbTrip("Cancelada", DateTime.UtcNow.AddMinutes(-60));
             _tripRepository.Setup(repository => repository.GetTripByIdAsync(existing.Id!)).ReturnsAsync(existing);
-            await Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Agendada", PlannedDuration = existing.PlannedDuration }));
+            await Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateTripAsync(existing.Id, new TripDTOAPI { Status = "Agendada", PlannedDurationMinutes = existing.PlannedDurationMinutes }));
             _tripRepository.Verify(repository => repository.UpdateTripAsync(It.IsAny<string>(), It.IsAny<TripDB>()), Times.Never);
         }
 
@@ -300,7 +300,7 @@ namespace BusTrack.Tests.UnitTests.Rules
             DriverId = "driver",
             RouteId = "route",
             DepartureTime = departure,
-            PlannedDuration = 60,
+            PlannedDurationMinutes = 60,
             Status = "Agendada"
         };
 
@@ -311,7 +311,7 @@ namespace BusTrack.Tests.UnitTests.Rules
             DriverId = "driver",
             RouteId = "route",
             DepartureTime = departure,
-            PlannedDuration = 60,
+            PlannedDurationMinutes = 60,
             Status = status,
             Duration = 0,
             LimitPassengers = 0,
